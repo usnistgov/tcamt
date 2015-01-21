@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+	<h:form id="actorForm">
+		<p:accordionPanel widgetVar="ActorLibPanel">
+			<p:tab title="Actor DashBoard" >
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton
+									value="Create New Actor" icon="ui-icon-plus"
+									update=":#{p:component('createActorForm')}"
+									actionListener="#{actorRequestBean.createActor}"
+									oncomplete="PF('createActor').show();" />
+						</td>
+					</tr>
+				</table>
+
+				<p:dataTable id="actorList" var="actor" value="#{actorRequestBean.actors}">
+					<p:column headerText="Name">
+						<h:outputText value="#{actor.name}" />
+					</p:column>
+
+					<p:column headerText="Role">
+						<h:outputText value="#{actor.role}" />
+					</p:column>
+
+					<p:column headerText="Reference">
+						<h:outputText value="#{actor.reference}" />
+					</p:column>
+					
+					<p:column headerText="Version">
+						<h:outputText value="#{actor.version}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandButton
+									value="Edit" icon="ui-icon-pencil"
+									update=":#{p:component('editActorForm')}"
+									actionListener="#{actorRequestBean.selectEditActor}"
+									oncomplete="PF('editActor').show();" >
+									<f:attribute name="actor" value="#{actor}" />
+						</p:commandButton>
+						<p:commandButton value="Cloning"
+							actionListener="#{actorRequestBean.cloneActor}"
+							update=":#{p:component('actorForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="actor" value="#{actor}" />
+						</p:commandButton>
+						<p:commandButton
+									value="Sharing" icon="ui-icon-transfer-e-w"
+									update=":#{p:component('shareActorForm')}"
+									actionListener="#{actorRequestBean.selectEditActor}"
+									oncomplete="PF('shareActor').show();" >
+									<f:attribute name="actor" value="#{actor}" />
+						</p:commandButton>
+						<p:commandButton value="Del"
+							actionListener="#{actorRequestBean.delActor}"
+							update=":#{p:component('actorForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="actor" value="#{actor}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			
+		</p:accordionPanel>
+	</h:form>
+	
+	<h:form id="createActorForm">
+		<p:dialog id="createActorDialog" header="Create Actor"
+			widgetVar="createActor">
+			<h:panelGrid id="createActorPanel" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{actorRequestBean.newActor.name}" />
+				<h:outputText value="Role: " />
+				<p:inputText value="#{actorRequestBean.newActor.role}" />
+				<h:outputText value="Reference: " />
+				<p:inputText value="#{actorRequestBean.newActor.reference}" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Create" icon="ui-icon-plus"
+							update=":#{p:component('actorList')}"
+							actionListener="#{actorRequestBean.addActor}"
+							onclick="PF('createActor').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="shareActorForm">
+		<p:dialog id="shareActorDialog" header="Share Actor"
+			widgetVar="shareActor">
+			<h:panelGrid id="shareActorPanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{actorRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('actorList')}"
+							actionListener="#{actorRequestBean.shareActor}"
+							onclick="PF('shareActor').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	<h:form id="editActorForm">
+		<p:dialog id="editActorDialog" header="Edit Actor"
+			widgetVar="editActor">
+			<h:panelGrid id="editActorPanel" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{actorRequestBean.editActor.name}" />
+				<h:outputText value="Role: " />
+				<p:inputText value="#{actorRequestBean.editActor.role}" />
+				<h:outputText value="Reference: " />
+				<p:inputText value="#{actorRequestBean.editActor.reference}" />
+				
+				<h:inputHidden value="#{actorRequestBean.editActor.id}" />
+				<h:inputHidden value="#{actorRequestBean.editActor.version}" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Apply" icon="ui-icon-pencil"
+							update=":#{p:component('actorList')} :#{p:component('interactionList')}"
+							actionListener="#{actorRequestBean.editActor}"
+							onclick="PF('editActor').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+
+	</h:form>
+</composite:implementation>
+
+</html>

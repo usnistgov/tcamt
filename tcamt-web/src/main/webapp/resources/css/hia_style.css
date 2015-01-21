@@ -1,0 +1,168 @@
+BODY  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	LINE-HEIGHT:10pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+H1  { 
+	FONT-SIZE:14pt; COLOR:#121266; ALIGN:center;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	FONT-WEIGHT:bold; FONT-STYLE:italic 
+}
+H2  { 
+	FONT-SIZE:14pt; COLOR:#555555;
+	FONT-FAMILY:Arial, Helvetica, sans-serif ;
+	padding-left:1; padding-right:1;
+	padding-top:1; padding-bottom:1 
+}
+H3  { 
+	FONT-SIZE:13pt; COLOR:maroon;
+	FONT-FAMILY:Arial, Helvetica, sans-serif ;
+	padding-left:1; padding-right:1;
+	padding-top:1; padding-bottom:0 
+} 
+
+H4  { 
+	FONT-SIZE:12pt; COLOR:#123456;
+	FONT-FAMILY:Arial, Helvetica, sans-serif 
+}
+H5  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	FONT-FAMILY:Arial, Helvetica, sans-serif 
+}
+P  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	LINE-HEIGHT:10pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+LI  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	LINE-HEIGHT:12pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+UL  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	LINE-HEIGHT:12pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+DIV.body  { 
+	FONT-SIZE:10pt; COLOR:#123456;
+	LINE-HEIGHT:10pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+ 
+link  { 
+	border-style:outset; border-width:1;
+	FONT-SIZE:10pt; COLOR:#000080;
+	FONT-FAMILY:Century Gothic, Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none; FONT-WEIGHT:normal;
+	background-color:#CECECE; padding-left:2;
+	padding-right:2; padding-top:2;
+	padding-bottom:0 
+}
+.links  { 
+	border-style:outset; border-width:1;
+	FONT-SIZE:10pt; COLOR:#000080;
+	FONT-FAMILY:Century Gothic, Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none; FONT-WEIGHT:normal;
+	background-color:#CECECE; padding-left:2;
+	padding-right:2; padding-top:2;
+	padding-bottom:0 
+} 
+
+.orangelinks  { 
+	border-style:solid; border-width:1;
+	FONT-WEIGHT:normal; FONT-SIZE:10pt;
+	COLOR:#800000;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none; padding-left:2;
+	padding-right:1; padding-top:1;
+	padding-bottom:1 
+}
+.booklinks  { 
+	border-style:solid; border-width:1;
+	FONT-WEIGHT:bold; FONT-SIZE:10pt;
+	COLOR:#800000;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none; padding-left:4;
+	padding-right:4; padding-top:1;
+	padding-bottom:1; background-color:#E9E9E9 
+} 
+
+
+.whitelinks  { 
+	border-style:solid; border-width:1;
+	FONT-WEIGHT:normal; FONT-SIZE:10pt;
+	COLOR:#FFFFFF;
+	FONT-FAMILY:Century Gothic, Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none; padding-left:1;
+	padding-right:1; padding-top:1;
+	padding-bottom:1 
+}
+.graylinks  { 
+	FONT-WEIGHT:bolder; FONT-SIZE:10pt;
+	COLOR:#123456;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+.bodytext  { 
+	FONT-SIZE:10pt; COLOR:#666666;
+	LINE-HEIGHT:10pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+.greenheader  { 
+	COLOR:#008080;
+	FONT-FAMILY:Arial, Helvetica, sans-serif 
+}
+.copyright  { 
+	FONT-SIZE:8pt; COLOR:#666666; LINE-HEIGHT:8pt;
+	FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+ADDRESS  { 
+	FONT-SIZE:8pt; COLOR:#666666; LINE-HEIGHT:8pt;
+	FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+.selectlinks  { 
+	border-style:outset; border-width:1;
+	FONT-SIZE:10pt; COLOR:#000000;
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none;
+	background-color:#EEEEFF; padding-left:1;
+	padding-right:1; padding-top:0;
+	padding-bottom:0 
+}
+
+.navlinks  { 
+	border-style:outset; border-width:1;
+	FONT-SIZE:7pt; COLOR:#111111;
+	FONT-FAMILY: Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none;
+	background-color:#EEEEFF; padding-left:1;
+	padding-right:1; padding-top:0;
+	padding-bottom:0 
+}
+td  { 
+	FONT-SIZE:10pt; COLOR:#666666;
+	LINE-HEIGHT:10pt; FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+}
+
+
+th { 
+	FONT-SIZE:10pt; COLOR:maroon;
+	LINE-HEIGHT:10pt; FONT-WEIGHT:bold;
+	FONT-STYLE:normal;
+	FONT-FAMILY:Arial, Helvetica, sans-serif;
+	TEXT-DECORATION:none 
+} 
+

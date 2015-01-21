@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+	<h:form id="messageForm" enctype="multipart/form-data">
+		<p:accordionPanel widgetVar="MessageLibPanel">
+			<p:tab title="Message DashBoard">
+				<table width="100%">
+					<tr>
+						<td align="right"><p:commandButton value="Create New Message"
+								icon="ui-icon-plus"
+								update=":#{p:component('createMessageForm')}"
+								actionListener="#{messageProfileRequestBean.createMessage}"
+								oncomplete="PF('createMessage').show();" /></td>
+					</tr>
+				</table>
+
+				<p:dataTable id="messageList" var="message"
+					value="#{messageProfileRequestBean.messages}">
+					<p:column headerText="Name">
+						<h:outputText value="#{message.name}" />
+					</p:column>
+
+					<p:column headerText="Description">
+						<h:outputText value="#{message.description}" />
+					</p:column>
+
+					<p:column headerText="Version">
+						<h:outputText value="#{message.version}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandButton value="Edit" icon="ui-icon-pencil"
+							update=":#{p:component('editMessageForm')}"
+							actionListener="#{messageProfileRequestBean.selectEditMessage}"
+							oncomplete="PF('editMessage').show();">
+							<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+
+						<p:commandButton value="View Message Profile"
+							icon="ui-icon-search"
+							update=":#{p:component('viewMessageProfileForm')}"
+							actionListener="#{messageProfileRequestBean.selectEditMessage}"
+							oncomplete="PF('viewMSGP').show();">
+							<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+
+						<p:commandButton value="Test Data and Validation" icon="ui-icon-search"
+							actionListener="#{messageRequestBean.selectEditMessage}"
+							update=":#{p:component('manageMessageForm')}"
+							oncomplete="PF('viewMSG').show();">
+							<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+						
+						<p:commandButton value="Cloning"
+							actionListener="#{messageProfileRequestBean.cloneMessage}"
+							update=":#{p:component('messageForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+						
+						<p:commandButton
+									value="Sharing" icon="ui-icon-transfer-e-w"
+									update=":#{p:component('shareMessageForm')}"
+									actionListener="#{messageRequestBean.selectEditMessage}"
+									oncomplete="PF('shareMessage').show();" >
+									<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+
+						<p:commandButton value="Del"
+							actionListener="#{messageProfileRequestBean.delMessage}"
+							update=":#{p:component('messageForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="message" value="#{message}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+		</p:accordionPanel>
+	</h:form>
+	
+	<h:form id="createMessageForm">
+		<p:dialog id="createMessageDialog" header="Create Message"
+			widgetVar="createMessage">
+			<h:panelGrid id="createMessagePanel1" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{messageProfileRequestBean.newMessage.name}"/>
+				<h:outputText value="Description: " />
+				<p:inputText value="#{messageProfileRequestBean.newMessage.description}"/>
+				<h:outputText value="Message Profile: " />
+				<h:panelGrid id="createMessagePanel2" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{messageProfileRequestBean.newMessage.messageProfile == null}"
+						fileUploadListener="#{messageProfileRequestBean.uploadMessageProfile}"
+						update=":#{p:component('createMessagePanel2')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(PROFILE|xml)$/" />
+					<h:outputText
+						rendered="#{messageProfileRequestBean.newMessage.messageProfile != null}"
+						value="Message Profile Uploaded" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Create"
+							icon="ui-icon-plus" update=":#{p:component('messageList')}"
+							actionListener="#{messageProfileRequestBean.addMessage}"
+							onclick="PF('createMessage').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="shareMessageForm">
+		<p:dialog id="shareMessageDialog" header="Share message"
+			widgetVar="shareMessage">
+			<h:panelGrid id="shareMessagePanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{messageRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('messageList')}"
+							actionListener="#{messageRequestBean.shareMessage}"
+							onclick="PF('shareMessage').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="editMessageForm">
+		<p:dialog id="editMessageDialog" header="Edit Message"
+			widgetVar="editMessage">
+			<h:panelGrid id="editMessagePanel" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{messageProfileRequestBean.editMessage.name}" />
+				<h:outputText value="Description: " />
+				<p:inputText value="#{messageProfileRequestBean.editMessage.description}" />
+
+				<h:inputHidden value="#{messageProfileRequestBean.editMessage.id}" />
+				<h:inputHidden value="#{messageProfileRequestBean.editMessage.version}" />
+					
+				<h:outputText value="Reload Profile: " />
+				<p:fileUpload fileUploadListener="#{messageProfileRequestBean.updateMessageProfile}"
+					mode="advanced"
+					auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(PROFILE)$/" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Apply"
+							icon="ui-icon-pencil" update=":#{p:component('messageList')}  :#{p:component('interactionList')}"
+							actionListener="#{messageProfileRequestBean.editMessage}"
+							onclick="PF('editMessage').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="viewMessageProfileForm">
+		<p:dialog header="View Message Profile : #{messageProfileRequestBean.editMessage.name}" draggable="true" width="90%" height="700px" widgetVar="viewMSGP">
+			<p:scrollPanel style="width:100%;height:99%" mode="native">
+				<p:fieldset legend="Message Definition" toggleable="true">
+					<p:scrollPanel style="width:100%;height:200px" mode="native">
+						<p:treeTable id="messageProfileTreeTable"
+							value="#{messageProfileRequestBean.selectedMessageElementRoot}"
+							var="model" resizableColumns="true"
+							selection="#{messageProfileRequestBean.selectedNode}"
+							selectionMode="single">
+							<p:ajax event="select"
+								listener="#{messageProfileRequestBean.onNodeSelect}"
+								update=":#{p:component('segmentTreeTable')}" />
+							<p:column headerText="Location">
+								<h:outputText value="#{model.path}" style="width:50%;" />
+							</p:column>
+							<p:column headerText="Name" style="width:20%;">
+								<h:outputText value="#{model.name}" />
+							</p:column>
+							<p:column headerText="Usage"
+								style="width:10%; text-align: center;">
+								<h:outputText value="#{model.node.usage}" />
+							</p:column>
+							<p:column headerText="Cardinality"
+								style="width:20%; text-align: center;">
+								<h:outputText value="[#{model.node.min} ~ " />
+								<h:outputText value="#{model.node.max}]" />
+							</p:column>
+						</p:treeTable>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Segment Definition (Selected)" toggleable="true">
+					<p:scrollPanel style="width:100%;height:400px" mode="native">
+						<p:treeTable id="segmentTreeTable"
+							value="#{messageProfileRequestBean.selectedSegmentTreeRoot}"
+							var="model" resizableColumns="true">
+							<p:column headerText="Location">
+								<h:outputText value="#{model.path}" style="width:15%;" />
+							</p:column>
+							<p:column headerText="Name" style="width:20%;">
+								<h:outputText value="#{model.name}" />
+							</p:column>
+							<p:column headerText="DT" style="width:8%; text-align: center;">
+								<h:outputText value="#{model.node.datatype.name}" />
+							</p:column>
+							<p:column headerText="Cardinality"
+								style="width:8%; text-align: center;">
+								<h:outputText
+									rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
+									value="[#{model.node.min} ~ " />
+								<h:outputText
+									rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
+									value="#{model.node.max}]" />
+							</p:column>
+
+							<p:column headerText="Usage"
+								style="width:8%; text-align: center;">
+								<h:outputText value="#{model.node.usage}" />
+							</p:column>
+
+							<p:column headerText="Length"
+								style="width:8%; text-align: center;">
+								<h:outputText rendered="#{model.isLeafNode()}"
+									value="[#{model.node.minLength} ~ " />
+								<h:outputText rendered="#{model.isLeafNode()}"
+									value="#{model.node.maxLength}]" />
+							</p:column>
+
+							<p:column headerText="Data" style="width:7%; text-align: center;">
+								<h:outputText rendered="#{model.isLeafNode()}"
+									value="#{model.data}" />
+							</p:column>
+							<p:column headerText="Conf Statement"
+								style="width:8%; text-align: center;">
+								<p:commandButton icon="ui-icon-circle-zoomin" process="@this"
+									immediate="true"
+									rendered="#{!empty model.node.conformanceStatementList}"
+									value="#{model.node.conformanceStatementList.size()}">
+								</p:commandButton>
+							</p:column>
+
+							<p:column headerText="Predicate"
+								style="width:8%; text-align: center;">
+								<p:commandButton rendered="#{model.node.predicate != null}"
+									icon="ui-icon-circle-zoomin" process="@this" immediate="true">
+								</p:commandButton>
+							</p:column>
+
+							<p:column headerText="Value Set"
+								style="width:10%; text-align: center;">
+								<p:commandButton icon="ui-icon-circle-zoomin" process="@this"
+									immediate="true" rendered="#{model.node.codeTable != null}"
+									value="#{model.node.codeTable.name}">
+								</p:commandButton>
+							</p:column>
+
+						</p:treeTable>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Conformance Statements" toggleable="true"
+					collapsed="false">
+					<p:scrollPanel style="width:100%;height:222px" mode="native">
+						<p:dataTable id="messageProfileConformanceStatement" var="cs"
+							value="#{messageProfileRequestBean.editMessage.listCSs}"
+							paginator="true" rows="5"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<p:column headerText="Name">
+								<h:outputText value="#{cs.name}" />
+							</p:column>
+							<p:column headerText="Path">
+								<h:outputText value="#{cs.statementDetails.path}" />
+							</p:column>
+							<p:column headerText="Description">
+								<h:outputText value="#{cs.description}" />
+							</p:column>
+						</p:dataTable>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Conditional Predicates" toggleable="true"
+					collapsed="false">
+					<p:scrollPanel style="width:100%;height:222px" mode="native">
+						<p:dataTable id="messageProfileConditionalPredicate" var="cp"
+							value="#{messageProfileRequestBean.editMessage.listCPs}"
+							paginator="true" rows="5"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15">
+							<p:column headerText="Path">
+								<h:outputText value="#{cp.predicateDetails.path}" />
+							</p:column>
+							<p:column headerText="Condition">
+								<h:outputText value="#{cp.description}" />
+							</p:column>
+							<p:column headerText="True Usage">
+								<h:outputText value="#{cp.trueUsage}" />
+							</p:column>
+							<p:column headerText="False Usage">
+								<h:outputText value="#{cp.falseUsage}" />
+							</p:column>
+						</p:dataTable>
+					</p:scrollPanel>
+				</p:fieldset>
+			</p:scrollPanel>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="manageMessageForm">
+		<p:dialog header="Test Data and Validation: #{messageRequestBean.editMessage.name}" draggable="true" width="90%" height="700px" dynamic="false" widgetVar="viewMSG">
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton id="constructMessageBTN" value="Construct Message"
+							icon="ui-icon-pencil"
+							update=":#{p:component('constructMessageForm')}"
+							oncomplete="PF('constructMSG').show();" />
+						<p:commandButton value="Save"
+							icon="ui-icon-disk"
+							update=":#{p:component('messageList')}  :#{p:component('interactionList')}"
+							actionListener="#{messageRequestBean.saveMessage}"
+							onclick="PF('viewMSG').hide();" /></td>
+				</tr>
+			</table>
+			<p:scrollPanel id="mInstancePanel" style="width:100%;height:99%" mode="native">
+				<p:fieldset legend="HL7 Message" toggleable="true">
+					<p:scrollPanel id="mmdPanel" style="width:100%;" mode="native">
+						<tcamt:sampleMessage hl7EndcodedMessage="#{messageRequestBean.editMessage.hl7EndcodedMessage}" 
+							bean="#{messageRequestBean}"
+							mdPanelCode=":#{p:component('mmdPanel')}"
+							sdPanelCode=":#{p:component('msdPanel')}"/>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Test Data" toggleable="true">
+					<p:scrollPanel id="msdPanel" style="width:100%;" mode="native">
+						<tcamt:segmentDefinition
+							bean="#{messageRequestBean}"
+							instancePanelCode=":#{p:component('mInstancePanel')}"
+							mdPanelCode=":#{p:component('mmdPanel')}"
+							sdPanelCode=":#{p:component('msdPanel')}"
+							vcPanelCode=":#{p:component('mvcPanel')}"/>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Validation Contexts" toggleable="true">
+					<p:scrollPanel id="mvcPanel" style="width:100%;" mode="native">
+						<tcamt:validationContextTable validationContexts="#{messageRequestBean.editMessage.validationContexts}" />
+					</p:scrollPanel>
+				</p:fieldset>
+			</p:scrollPanel>
+			
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="constructMessageForm">
+		<p:dialog header="Define structure for #{messageRequestBean.editMessage.name}" width="300px" height="500px" dynamic="false" modal="true" widgetVar="constructMSG">
+			<p:tree value="#{messageRequestBean.messageTreeRoot}" var="node">
+        		<p:treeNode>
+            		<h:outputText value="#{node.path}" />
+        		</p:treeNode>
+    		</p:tree>
+		</p:dialog>
+	</h:form>
+</composite:implementation>
+
+</html>

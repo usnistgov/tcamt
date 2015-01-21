@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:vsm="http://java.sun.com/jsf/composite/vsm">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="resources/css/main.css" />
+	<link type="text/css" rel="stylesheet" href="resources/css/primeface.custom.css" />
+</h:head>
+
+<h:body>
+		<h:form id="globalStatusDlg_form" prependId="false">
+			<p:dialog widgetVar="globalStatusDlg" id="globalStatusDlg_id"
+				draggable="false" modal="true" closable="false" resizable="false"
+				header="Please wait...">
+				<p:graphicImage title="Operation in progress..."
+					value="/images/ajax-loader.gif" />
+			</p:dialog>
+		</h:form>
+		<p:ajaxStatus style="text-align:center;width:32px;height:32px"
+			onstart="globalStatusDlg.show()" onerror="globalStatusDlg.hide();"
+			oncomplete="globalStatusDlg.hide();" />
+</h:body>
+</html>

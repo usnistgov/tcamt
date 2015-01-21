@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="bean" />
+	<composite:attribute name="mdPanelCode" />
+	<composite:attribute name="sdPanelCode" />
+	<composite:attribute name="vcPanelCode" />
+</composite:interface>
+
+<composite:implementation>
+	<p:dataTable var="ts"
+		value="#{cc.attrs.bean.editTestCase.testSteps}">
+		<p:column headerText="#" style="width:5%">
+			<h:outputText value="#{ts.sequenceNum}" />
+		</p:column>
+		<p:column headerText="Type" style="width:15%">
+			<h:outputText value="#{ts.type}" />
+		</p:column>
+		<p:column headerText="Description" style="width:15%">
+			<h:outputText value="#{ts.description}" />
+		</p:column>
+		<p:column headerText="Interaction Name" style="width:15%">
+			<h:outputText rendered="#{ts.interaction != null}"
+				value="#{ts.interaction.name}" />
+		</p:column>
+		<p:column headerText="Sending Actor" style="width:15%">
+			<h:outputText rendered="#{ts.interaction != null}"
+				value="#{ts.interaction.sActor.name}" />
+		</p:column>
+		<p:column headerText="Message" style="width:15%">
+			<h:outputText rendered="#{ts.interaction != null}"
+				value="#{ts.interaction.message.name}" />
+		</p:column>
+		<p:column headerText="Recieving Actor" style="width:15%">
+			<h:outputText rendered="#{ts.interaction != null}"
+				value="#{ts.interaction.rActor.name}" />
+		</p:column>
+		<p:column style="width:5%">
+			<p:commandButton id="selectButton"
+				update="#{cc.attrs.mdPanelCode} #{cc.attrs.sdPanelCode} #{cc.attrs.vcPanelCode}" icon="ui-icon-search"
+				title="View">
+				<f:setPropertyActionListener value="#{ts.interaction}"
+					target="#{cc.attrs.bean.selectedInteraction}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+</composite:implementation>
+
+</html>

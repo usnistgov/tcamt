@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
+
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+	<h:form id="testStepForm">
+		<p:accordionPanel widgetVar="TestStepLibPanel">
+			<p:tab title="Test Step DashBoard">
+				<table width="100%">
+					<tr>
+						<td align="right"><p:commandButton
+								value="Create New Test Step" icon="ui-icon-plus"
+								update=":#{p:component('createTestStepPanel')}"
+								actionListener="#{testStepRequestBean.createTestStep}"
+								oncomplete="PF('createTestStep').show();" /></td>
+					</tr>
+				</table>
+
+				<p:dataTable id="testStepList" var="ts"
+					value="#{testStepRequestBean.testSteps}">
+					<p:column headerText="Name">
+						<h:outputText value="#{ts.name}" />
+					</p:column>
+
+					<p:column headerText="Type">
+						<h:outputText value="#{ts.type}" />
+					</p:column>
+
+					<p:column headerText="Description">
+						<h:outputText value="#{ts.description}" />
+					</p:column>
+					
+					<p:column headerText="Interaction">
+						<h:outputText rendered="#{sessionBeanTCAMT.isLatestInteraction(ts.interaction) and ts.type=='Interaction'}" value="#{ts.interaction.name}(#{ts.interaction.version})" />
+						<p:graphicImage	rendered="#{!sessionBeanTCAMT.isLatestInteraction(ts.interaction) and ts.type=='Interaction'}" value="images/warning.png" />
+						<h:outputText rendered="#{!sessionBeanTCAMT.isLatestInteraction(ts.interaction) and ts.type=='Interaction'}" style="color:red;" value="#{ts.interaction.name}(#{ts.interaction.version})" />
+					</p:column>
+
+					<p:column headerText="Sending Actor">
+						<h:outputText value="#{ts.interaction.sActor.name}" />
+					</p:column>
+
+					<p:column headerText="Message">
+						<h:outputText value="#{ts.interaction.message.name}" />
+					</p:column>
+
+					<p:column headerText="Receiving Actor">
+						<h:outputText value="#{ts.interaction.rActor.name}" />
+					</p:column>
+
+					<p:column headerText="Target Actor for Manual">
+						<h:outputText value="#{ts.targetActor.name}" />
+					</p:column>
+					
+					<p:column headerText="Version">
+						<h:outputText value="#{ts.version}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandButton value="Reload" icon="ui-icon-arrowrefresh-1-w"
+							update=":#{p:component('testStepForm')}"
+							actionListener="#{testStepRequestBean.reloadTestStep}">
+							<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+
+						<p:commandButton value="Edit" icon="ui-icon-pencil"
+							update=":#{p:component('editTestStepPanel')}"
+							actionListener="#{testStepRequestBean.selectEditTestStep}"
+							oncomplete="PF('editTestStep').show();">
+							<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+
+						<p:commandButton value="Test Data and Validation"
+							icon="ui-icon-search"
+							update=":#{p:component('manageTestStepForm')}"
+							actionListener="#{testStepRequestBean.selectEditTestStep}"
+							oncomplete="PF('viewMSGForTS').show();">
+							<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+
+						<p:commandButton value="Cloning"
+							actionListener="#{testStepRequestBean.cloneTestStep}"
+							update=":#{p:component('testStepForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+						
+						<p:commandButton
+									value="Sharing" icon="ui-icon-transfer-e-w"
+									update=":#{p:component('shareTestStepForm')}"
+									actionListener="#{testStepRequestBean.selectEditTestStep}"
+									oncomplete="PF('shareTestStep').show();" >
+									<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+
+						<p:commandButton value="Del" update=":#{p:component('testStepDelConfirmPanel')}" icon="ui-icon-close"
+											actionListener="#{testStepRequestBean.checkTestStepToDelete}" onclick="PF('testStepDelConfirmDialog').show()" title="Del">
+							<f:attribute name="teststep" value="#{ts}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+		</p:accordionPanel>
+		
+		<p:confirmDialog id="testStepDelConfirm" message="Do you want to delete?" header="Deleting TestStep" severity="alert" widgetVar="testStepDelConfirmDialog">
+			<h:panelGrid id="testStepDelConfirmPanel" columns="2" cellpadding="5">
+				<p:commandButton rendered="#{testStepRequestBean.canDelete}" value="Yes" actionListener="#{testStepRequestBean.delTestStep}" update=":#{p:component('testStepForm')}" oncomplete="PF('testStepDelConfirmDialog').hide()"/>
+				<p:commandButton rendered="#{testStepRequestBean.canDelete}" value="No" onclick="PF('testStepDelConfirmDialog').hide();" type="button" />
+				<h:outputText rendered="#{!testStepRequestBean.canDelete}" value="This TestStep cannot be deleted becasue it is used by TestCase(s)." />
+				<p:commandButton rendered="#{!testStepRequestBean.canDelete}" value="OK" onclick="PF('testStepDelConfirmDialog').hide();" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
+	</h:form>
+
+	<h:form id="createTestStepForm">
+		<p:dialog id="createTestStepDialog" header="Create Test Step"
+			widgetVar="createTestStep">
+			<h:panelGrid id="createTestStepPanel" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{testStepRequestBean.newTestStep.name}">
+					<p:ajax event="blur" />
+				</p:inputText>
+
+				<h:outputText value="Description: " />
+				<p:inputText value="#{testStepRequestBean.newTestStep.description}">
+					<p:ajax event="blur" />
+				</p:inputText>
+
+				<h:outputText value="Type: " />
+				<p:selectOneMenu value="#{testStepRequestBean.newTestStep.type}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Manual" itemValue="Manual" />
+					<f:selectItem itemLabel="Profile" itemValue="Profile" />
+					<f:selectItem itemLabel="Message" itemValue="Message" />
+					<f:selectItem itemLabel="Interaction" itemValue="Interaction" />
+
+					<p:ajax update=":#{p:component('createTestStepPanel')}" />
+				</p:selectOneMenu>
+				
+				<h:outputText rendered="#{testStepRequestBean.newTestStep.type == 'Manual'}" value="Target Actor: " />
+				<p:selectOneMenu rendered="#{testStepRequestBean.newTestStep.type == 'Manual'}" value="#{testStepRequestBean.targetActorId}" effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{actorRequestBean.actors}" var="actor" itemLabel="#{actor.name}" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+				
+				<h:outputText rendered="#{testStepRequestBean.newTestStep.type == 'Profile'}" value="Message Profile: " />
+				<p:fileUpload rendered="#{testStepRequestBean.newTestStep.type == 'Profile'}"
+						fileUploadListener="#{testStepRequestBean.uploadMessageProfile}"
+						update=":#{p:component('createTestStepPanel')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(PROFILE|xml)$/" />
+				
+				<h:outputText rendered="#{testStepRequestBean.newTestStep.type == 'Message'}" value="Message: " />
+				<p:selectOneMenu rendered="#{testStepRequestBean.newTestStep.type == 'Message'}" value="#{testStepRequestBean.interactionId}" effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{messageProfileRequestBean.messages}" var="message" itemLabel="#{message.name}(#{message.version})" itemValue="#{message.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText rendered="#{testStepRequestBean.newTestStep.type == 'Interaction'}" value="Interaction: " />
+				<p:selectOneMenu rendered="#{testStepRequestBean.newTestStep.type == 'Interaction'}" value="#{testStepRequestBean.interactionId}" effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{interactionRequestBean.interactions}" var="interaction" itemLabel="#{interaction.name}(#{interaction.version})" itemValue="#{interaction.id}" />
+					<p:ajax listener="#{testStepRequestBean.addInteraction}" update=":#{p:component('createTestStepPanel')}" />
+				</p:selectOneMenu>
+				<h:outputText value=" " />
+
+				<h:outputText value="" />
+				<h:outputText rendered="#{testStepRequestBean.interactionId != null and testStepRequestBean.newTestStep.type == 'Interaction'}" value="#{testStepRequestBean.newTestStep.interaction.sActor.name} --(#{testStepRequestBean.newTestStep.interaction.message.name})--> #{testStepRequestBean.newTestStep.interaction.rActor.name}" />
+
+			</h:panelGrid>
+
+
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Create"
+							icon="ui-icon-plus" update=":#{p:component('testStepList')}"
+							actionListener="#{testStepRequestBean.addTestStep}"
+							onclick="PF('createTestStep').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+
+	<h:form id="shareTestStepForm">
+		<p:dialog id="shareTestStepDialog" header="Share Test Step"
+			widgetVar="shareTestStep">
+			<h:panelGrid id="shareTestStepPanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{testStepRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('testStepList')}"
+							actionListener="#{testStepRequestBean.shareTestStep}"
+							onclick="PF('shareTestStep').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="editTestStepForm">
+		<p:dialog id="editTestStepDialog" header="Edit TestStep"
+			widgetVar="editTestStep">
+			<h:panelGrid id="editTestStepPanel" columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{testStepRequestBean.editTestStep.name}">
+					<p:ajax event="blur" />
+				</p:inputText>
+
+				<h:outputText value="Description: " />
+				<p:inputText value="#{testStepRequestBean.editTestStep.description}">
+					<p:ajax event="blur" />
+				</p:inputText>
+
+				<h:outputText value="Type: " />
+				<p:selectOneMenu value="#{testStepRequestBean.editTestStep.type}" effect="fade">
+					<f:selectItem itemLabel="Manual" itemValue="Manual" />
+					<f:selectItem itemLabel="Interaction" itemValue="Interaction" />
+
+					<p:ajax update=":#{p:component('editTestStepPanel')}" />
+				</p:selectOneMenu>
+				
+				<h:outputText rendered="#{testStepRequestBean.editTestStep.type == 'Manual'}" value="Target Actor: " />
+				<p:selectOneMenu rendered="#{testStepRequestBean.editTestStep.type == 'Manual'}" value="#{testStepRequestBean.targetActorId}" effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{actorRequestBean.actors}" var="actor" itemLabel="#{actor.name}" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText
+					rendered="#{testStepRequestBean.editTestStep.type == 'Interaction'}"
+					value="Interaction: " />
+				<p:selectOneMenu
+					rendered="#{testStepRequestBean.editTestStep.type == 'Interaction'}"
+					value="#{testStepRequestBean.interactionId}" effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{interactionRequestBean.interactions}"
+						var="interaction"
+						itemLabel="#{interaction.name}(#{interaction.version})"
+						itemValue="#{interaction.id}" />
+
+					<p:ajax listener="#{testStepRequestBean.updateInteraction}"
+						update=":#{p:component('editTestStepPanel')}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="" />
+				<h:outputText
+					rendered="#{testStepRequestBean.interactionId != null and testStepRequestBean.editTestStep.type == 'Interaction'}"
+					value="#{testStepRequestBean.editTestStep.interaction.sActor.name} --(#{testStepRequestBean.editTestStep.interaction.message.name})--> #{testStepRequestBean.editTestStep.interaction.rActor.name}" />
+
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Apply"
+							icon="ui-icon-plus" update=":#{p:component('testStepList')}"
+							actionListener="#{testStepRequestBean.updateTestStep}"
+							onclick="PF('editTestStep').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+
+	<h:form id="manageTestStepForm">
+		<p:dialog
+			header="Test Data and Validation: #{testStepRequestBean.editTestStep.name}"
+			widgetVar="viewMSGForTS" draggable="true" width="90%" height="700px"
+			dynamic="true">
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Save"
+							icon="ui-icon-plus" update=":#{p:component('testStepList')}"
+							actionListener="#{testStepRequestBean.saveTestStep}"
+							onclick="PF('viewMSGForTS').hide();" /></td>
+				</tr>
+			</table>
+			<p:scrollPanel id="tsInstancePanel" style="width:100%;height:99%"
+				mode="native">
+
+				<p:fieldset legend="Test Step Story" toggleable="true">
+					<p:panel id="testStepStoryDesc" header="Test Step Story Description"
+						toggleable="true" toggleSpeed="500" widgetVar="testStepStoryDescPanel"
+						style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryDescWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.description}" />
+					</p:panel>
+					<p:panel id="testStepStoryComments" header="Comments" toggleable="true"
+						toggleSpeed="500" widgetVar="testStepStoryCommentsPanel"
+						style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryCommentsWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.comments}" />
+					</p:panel>
+					<p:panel id="testStepStoryPreCondition" header="Pre-Condition"
+						toggleable="true" toggleSpeed="500"
+						widgetVar="testStepStoryPreConditionPanel" style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryPreConditionWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.preCondition}" />
+					</p:panel>
+					<p:panel id="testStepStoryPostCondition" header="Post-Condition"
+						toggleable="true" toggleSpeed="500"
+						widgetVar="testStepStoryPostConditionPanel" style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryPostConditionWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.postCondition}" />
+					</p:panel>
+					<p:panel id="testStepStoryTestObjectives" header="Test Objectives"
+						toggleable="true" toggleSpeed="500"
+						widgetVar="testStepStoryTestObjectivesPanel"
+						style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryTestObjectivesWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.testObjectives}" />
+					</p:panel>
+					<p:panel id="testStepStoryNotes" header="Notes to Testers"
+						toggleable="true" toggleSpeed="500"
+						widgetVar="testStepStoryNotesPanel" style="margin-bottom:20px">
+						<p:editor widgetVar="testStepStoryNotesWidget" height="100"
+							value="#{testStepRequestBean.editTestStep.testStepStory.notes}" />
+					</p:panel>
+				</p:fieldset>
+
+
+				<p:fieldset legend="HL7 Message" toggleable="true">
+					<p:scrollPanel id="tsmdPanel" style="width:100%;" mode="native">
+						<tcamt:sampleMessage
+							hl7EndcodedMessage="#{testStepRequestBean.editTestStep.interaction.message.hl7EndcodedMessage}"
+							bean="#{testStepRequestBean}"
+							mdPanelCode=":#{p:component('tsmdPanel')}"
+							sdPanelCode=":#{p:component('tssdPanel')}" />
+					</p:scrollPanel>
+				</p:fieldset>
+
+				<p:fieldset legend="Test Data" toggleable="true">
+					<p:scrollPanel id="tssdPanel" style="width:100%;" mode="native">
+						<tcamt:segmentDefinition bean="#{testStepRequestBean}"
+							instancePanelCode=":#{p:component('tsInstancePanel')}"
+							mdPanelCode=":#{p:component('tsmdPanel')}"
+							sdPanelCode=":#{p:component('tssdPanel')}"
+							vcPanelCode=":#{p:component('tsvcPanel')}" />
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Validation Contexts" toggleable="true">
+					<p:scrollPanel id="tsvcPanel" style="width:100%;" mode="native">
+						<tcamt:validationContextTable
+							validationContexts="#{testStepRequestBean.editTestStep.interaction.message.validationContexts}" />
+					</p:scrollPanel>
+				</p:fieldset>
+			</p:scrollPanel>
+		</p:dialog>
+	</h:form>
+</composite:implementation>
+
+</html>

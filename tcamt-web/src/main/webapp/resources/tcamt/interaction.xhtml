@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
+
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+	<h:form id="interactionForm" enctype="multipart/form-data">
+		<p:accordionPanel widgetVar="InteractionLibPanel">
+			<p:tab title="Interaction DashBoard">
+				<table width="100%">
+					<tr>
+						<td align="right"><p:commandButton
+								value="Create New Interaction" icon="ui-icon-plus"
+								update=":#{p:component('creatInteractionPanel')}"
+								actionListener="#{interactionRequestBean.createInteraction}"
+								oncomplete="PF('createInteraction').show();" /></td>
+					</tr>
+				</table>
+
+				<p:dataTable id="interactionList" var="interaction"
+					value="#{interactionRequestBean.interactions}">
+					<p:column headerText="Name">
+						<h:outputText value="#{interaction.name}" />
+					</p:column>
+
+					<p:column headerText="Description">
+						<h:outputText value="#{interaction.description}" />
+					</p:column>
+
+					<p:column headerText="Sending Actor">
+						<h:outputText rendered="#{sessionBeanTCAMT.isLatestActor(interaction.sActor)}" value="#{interaction.sActor.name}(#{interaction.sActor.version})" />
+						<p:graphicImage	rendered="#{!sessionBeanTCAMT.isLatestActor(interaction.sActor)}" value="images/warning.png" />
+						<h:outputText rendered="#{!sessionBeanTCAMT.isLatestActor(interaction.sActor)}" style="color:red;" value="#{interaction.sActor.name}(#{interaction.sActor.version})" />
+					</p:column>
+
+					<p:column headerText="Receiving Actor">
+						<h:outputText rendered="#{sessionBeanTCAMT.isLatestActor(interaction.rActor)}" value="#{interaction.rActor.name}(#{interaction.rActor.version})" />
+						<p:graphicImage	rendered="#{!sessionBeanTCAMT.isLatestActor(interaction.rActor)}" value="images/warning.png" />
+						<h:outputText rendered="#{!sessionBeanTCAMT.isLatestActor(interaction.rActor)}" style="color:red;" value="#{interaction.rActor.name}(#{interaction.rActor.version})" />
+					</p:column>
+
+					<p:column headerText="Message">
+						<h:outputText rendered="#{sessionBeanTCAMT.isLatestMessage(interaction.message)}" value="#{interaction.message.name}(#{interaction.message.version})" />
+						<p:graphicImage	rendered="#{!sessionBeanTCAMT.isLatestMessage(interaction.message)}" value="images/warning.png" />
+						<h:outputText rendered="#{!sessionBeanTCAMT.isLatestMessage(interaction.message)}" style="color:red;" value="#{interaction.message.name}(#{interaction.message.version})" />
+					</p:column>
+
+					<p:column headerText="Version">
+						<h:outputText value="#{interaction.version}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandButton value="Reload" icon="ui-icon-arrowrefresh-1-w"
+							update=":#{p:component('interactionForm')}"
+							actionListener="#{interactionRequestBean.reloadInteraction}">
+							<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+						
+						<p:commandButton value="Edit" icon="ui-icon-pencil"
+							update=":#{p:component('editInteractionPanel')} :#{p:component('iInstancePanel')}"
+							actionListener="#{interactionRequestBean.selectEditInteraction}"
+							oncomplete="PF('editInteraction').show();">
+							<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+					
+						<p:commandButton value="Test Data and Validation" icon="ui-icon-search"
+							update=":#{p:component('manageInteractionForm')}"
+							actionListener="#{interactionRequestBean.selectEditInteraction}"
+							oncomplete="PF('viewMSGForIA').show();">
+							<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+						
+						<p:commandButton value="Cloning"
+							actionListener="#{interactionRequestBean.cloneInteraction}"
+							update=":#{p:component('interactionForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+						
+						<p:commandButton
+									value="Sharing" icon="ui-icon-transfer-e-w"
+									update=":#{p:component('shareInteractionForm')}"
+									actionListener="#{interactionRequestBean.selectEditInteraction}"
+									oncomplete="PF('shareInteraction').show();" >
+									<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+
+						<p:commandButton value="Del"
+							actionListener="#{interactionRequestBean.delInteraction}"
+							update=":#{p:component('interactionForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="interaction" value="#{interaction}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+
+		</p:accordionPanel>
+	</h:form>
+	
+	<h:form id="createInteractionForm">
+		<p:dialog id="createInteractionDialog" header="Create Interaction"
+			widgetVar="createInteraction">
+			<h:panelGrid id="creatInteractionPanel" columns="2" cellpadding="5">
+
+				<h:outputText value="Name: " />
+				<p:inputText value="#{interactionRequestBean.newInteraction.name}" />
+
+				<h:outputText value="Description: " />
+				<p:inputText value="#{interactionRequestBean.newInteraction.description}"/>
+
+				<h:outputText value="Sending Actor: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.sActorId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{actorRequestBean.actors}"
+						var="actor" itemLabel="#{actor.name}(#{actor.version})" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Receiving Actor: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.rActorId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{actorRequestBean.actors}"
+						var="actor" itemLabel="#{actor.name}(#{actor.version})" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Message: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.messageId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{messageProfileRequestBean.messages}"
+						var="message" itemLabel="#{message.name}(#{message.version})"
+						itemValue="#{message.id}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Create"
+							icon="ui-icon-plus" update=":#{p:component('interactionList')}"
+							actionListener="#{interactionRequestBean.addInteraction}"
+							onclick="PF('createInteraction').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="shareInteractionForm">
+		<p:dialog id="shareInteractionDialog" header="Share Interaction"
+			widgetVar="shareInteraction">
+			<h:panelGrid id="shareInteractionPanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{interactionRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('interactionList')}"
+							actionListener="#{interactionRequestBean.shareInteraction}"
+							onclick="PF('shareInteraction').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="editInteractionForm">
+		<p:dialog id="editInteractionDialog" header="Edit Interaction"
+			widgetVar="editInteraction">
+			<h:panelGrid id="editInteractionPanel" columns="2" cellpadding="5">
+
+				<h:outputText value="Name: " />
+				<p:inputText value="#{interactionRequestBean.editInteraction.name}" />
+
+				<h:outputText value="Description: " />
+				<p:inputText value="#{interactionRequestBean.editInteraction.description}"/>
+
+				<h:outputText value="Sending Actor: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.sActorId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{actorRequestBean.actors}"
+						var="actor" itemLabel="#{actor.name}(#{actor.version})" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Receiving Actor: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.rActorId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{actorRequestBean.actors}"
+						var="actor" itemLabel="#{actor.name}(#{actor.version})" itemValue="#{actor.id}" />
+				</p:selectOneMenu>
+
+				<h:outputText value="Message: " />
+				<p:selectOneMenu
+					value="#{interactionRequestBean.messageId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems
+						value="#{messageProfileRequestBean.messages}"
+						var="message" itemLabel="#{message.name}(#{message.version})"
+						itemValue="#{message.id}" />
+				</p:selectOneMenu>
+
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Apply"
+							icon="ui-icon-plus" update=":#{p:component('interactionList')}"
+							actionListener="#{interactionRequestBean.updateInteraction}"
+							onclick="PF('editInteraction').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="manageInteractionForm">
+		<p:dialog header="Test Data and Validation: #{interactionRequestBean.editInteraction.name}" widgetVar="viewMSGForIA" draggable="true" width="90%" height="700px" dynamic="true">
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Save"
+							icon="ui-icon-plus"
+							update=":#{p:component('interactionList')} :#{p:component('transactionList')}"
+							actionListener="#{interactionRequestBean.saveInteraction}"
+							onclick="PF('viewMSGForIA').hide();" /></td>
+				</tr>
+			</table>
+			<p:scrollPanel id="iInstancePanel" style="width:100%;height:99%" mode="native">
+				<p:fieldset legend="HL7 Message" toggleable="true">
+					<p:scrollPanel id="imdPanel" style="width:100%;" mode="native">
+						<tcamt:sampleMessage hl7EndcodedMessage="#{interactionRequestBean.editInteraction.message.hl7EndcodedMessage}" 
+							bean="#{interactionRequestBean}"
+							mdPanelCode=":#{p:component('imdPanel')}"
+							sdPanelCode=":#{p:component('isdPanel')}"/>
+					</p:scrollPanel>
+				</p:fieldset>
+
+				<p:fieldset legend="Test Data" toggleable="true">
+					<p:scrollPanel id="isdPanel" style="width:100%;" mode="native">
+						<tcamt:segmentDefinition
+							bean="#{interactionRequestBean}"
+							instancePanelCode=":#{p:component('iInstancePanel')}"
+							mdPanelCode=":#{p:component('imdPanel')}"
+							sdPanelCode=":#{p:component('isdPanel')}"
+							vcPanelCode=":#{p:component('ivcPanel')}"/>
+					</p:scrollPanel>
+				</p:fieldset>
+				<p:fieldset legend="Validation Contexts" toggleable="true">
+					<p:scrollPanel id="ivcPanel" style="width:100%;" mode="native">
+						<tcamt:validationContextTable validationContexts="#{interactionRequestBean.editInteraction.message.validationContexts}" />
+					</p:scrollPanel>
+				</p:fieldset>
+			</p:scrollPanel>
+		</p:dialog>
+	</h:form>
+</composite:implementation>
+
+</html>

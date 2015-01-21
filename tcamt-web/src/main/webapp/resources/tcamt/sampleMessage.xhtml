@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="bean" />
+	<composite:attribute name="hl7EndcodedMessage" />
+	<composite:attribute name="mdPanelCode" />
+	<composite:attribute name="sdPanelCode" />
+</composite:interface>
+
+<composite:implementation>
+	<p:inputTextarea value="#{cc.attrs.hl7EndcodedMessage}" style="width:100%;">
+		<p:ajax event="blur" listener="#{cc.attrs.bean.readHL7Message}" update="#{cc.attrs.mdPanelCode} #{cc.attrs.sdPanelCode}"/>
+	</p:inputTextarea>
+</composite:implementation>
+
+</html>

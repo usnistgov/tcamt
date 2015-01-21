@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="resources/css/igamt.css" />
+</h:head>
+
+<h:body>
+	<p:tabView>  
+		<p:ajax event="tabChange" listener="#{sessionBeanTCAMT.onTabChange}"/>
+
+  		<p:tab id="tab1" title="Home">  
+			<tcamt:home />
+    	</p:tab>
+    	
+    	<p:tab id="tab2" title="Actor">  
+			<tcamt:actor />
+    	</p:tab> 
+    	
+    	<p:tab id="tab3" title="Message"> 
+    		<tcamt:message />
+    	</p:tab>
+    	
+    	<p:tab id="tab4" title="Interaction">  
+			<tcamt:interaction />
+    	</p:tab> 
+    	
+    	<p:tab id="tab5" title="Test Step">  
+			<tcamt:teststep />
+    	</p:tab> 
+    	
+    	<p:tab id="tab6" title="Test Step Group">  
+			<tcamt:transaction />
+    	</p:tab> 
+    	
+    	<p:tab id="tab7" title="Test Case">  
+			<tcamt:testcase />
+    	</p:tab>
+    	
+    	<p:tab id="tab8" title="Test Plan">  
+			<tcamt:testplan />
+    	</p:tab>
+  
+	</p:tabView> 
+</h:body>
+</html>
