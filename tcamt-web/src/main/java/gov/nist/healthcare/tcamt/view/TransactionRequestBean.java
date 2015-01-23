@@ -115,9 +115,14 @@ public class TransactionRequestBean implements Serializable {
 		FacesContext context = FacesContext.getCurrentInstance();
 	    HttpServletRequest myRequest = (HttpServletRequest) context.getExternalContext().getRequest();
 	    String source =  myRequest.getParameter("code");
-		if(tsc != null){
+
+	    if(tsc != null){
 			source = tsc.getUmld();
 			
+		}
+		
+		if(source == null || source.equals("")){
+			return null;
 		}
 		
 		ByteArrayOutputStream outputStream = null;
