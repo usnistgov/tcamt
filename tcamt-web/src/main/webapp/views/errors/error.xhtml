@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:view locale="en" contentType="text/html">
+		<h:head>
+			<title>IGAMT @NIST</title>
+			<link type="text/css" rel="stylesheet"
+				href="resources/css/standard.css" />
+		</h:head>
+		<h:body>
+			<p:panel>
+				<f:facet name="header">
+					<h:outputFormat>
+						<ui:insert name="contentTitle">Error</ui:insert>
+						<p:spacer width="10" />
+						<h:outputLink value="#{request.contextPath}/">
+							<h:outputText value="Click to return." />
+						</h:outputLink>
+					</h:outputFormat>
+				</f:facet>
+				<ui:insert name="content">
+				</ui:insert>
+
+				<ui:insert name="action">
+					<!--    <h:panelGroup rendered="#{requestScope['mail.sent']}">	
+     <h:outputText escape="false" value="Our team has already been notified and is working to resolve this issue.ERROR CODE is #{requestScope['error.token']} " />
+   	  <br />
+   	  <br />
+   	</h:panelGroup> -->
+				</ui:insert>
+
+				<ui:insert name="comments_questions">
+					<h:outputText escape="false"
+						value="If you have any question or comments, please feel free to email the administrator with any ERROR CODE provided and the description of the steps you took before the error happens." />
+					<br />
+					<br />
+				</ui:insert>
+
+				<ui:insert name="apology">
+					<h:outputText escape="false"
+						value="We apologize for the inconvenience," />
+					<br />
+					<br />
+				</ui:insert>
+
+
+				<ui:insert name="signature">
+					<h:outputText value="NIST TCAMT Team." />
+					<br />
+					<br />
+				</ui:insert>
+
+
+				<ui:insert name="debug">
+					<h:outputText escape="false"
+						value="To help resolve this issue, please send us the  following debugging information:" />
+					<h2>Debug Information:</h2>
+					<ul>
+						<li>Date: #{requestScope['error.date']}</li>
+						<li>ERROR CODE: #{requestScope['error.token']}</li>
+						<li>User agent: #{header['user-agent']}</li>
+						<li>User IP: #{empty header['x-forwarded-for'] ?
+							request.remoteAddr : fn:split(header['x-forwarded-for'], ',')[0]}</li>
+						<li>Request URI: <a
+							href="#{requestScope['javax.servlet.error.request_uri']}">#{requestScope['javax.servlet.error.request_uri']}</a></li>
+						<li>Ajax request: #{requestScope['ajaxRequest'] ? 'Yes' :
+							'No'}</li>
+						<li>Status code:
+							#{requestScope['javax.servlet.error.status_code']}</li>
+						<li>Exception type:
+							#{requestScope['javax.servlet.error.exception_type']}</li>
+						<li style="color:red; fontweigth:bold">Exception message:
+							#{requestScope['javax.servlet.error.message']}</li>
+						
+					</ul>
+					<br />
+					<br />
+					<!--       </h:panelGroup>
+ -->
+				</ui:insert>
+
+			</p:panel>
+		</h:body>
+	</f:view>
+</ui:composition>
