@@ -286,7 +286,7 @@
 							value="#{messageProfileRequestBean.editMessage.listCSs}"
 							paginator="true" rows="5"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15">
+							rowsPerPageTemplate="5,10,15,100">
 							<p:column headerText="Name">
 								<h:outputText value="#{cs.name}" />
 							</p:column>
@@ -306,7 +306,7 @@
 							value="#{messageProfileRequestBean.editMessage.listCPs}"
 							paginator="true" rows="5"
 							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15">
+							rowsPerPageTemplate="5,10,15,100">
 							<p:column headerText="Path">
 								<h:outputText value="#{cp.predicateDetails.path}" />
 							</p:column>
