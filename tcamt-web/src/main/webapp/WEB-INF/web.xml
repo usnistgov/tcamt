@@ -24,7 +24,7 @@
 
 	<filter>
 		<filter-name>xfsFilter</filter-name>
-		<filter-class>gov.nist.healtcare.tcamt.web.XFSFilter</filter-class>
+		<filter-class>gov.nist.healthcare.tcamt.web.XFSFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>xfsFilter</filter-name>
@@ -33,7 +33,7 @@
 
 	<filter>
 		<filter-name>urlFilter</filter-name>
-		<filter-class>gov.nist.healtcare.tcamt.web.URLFilter</filter-class>
+		<filter-class>gov.nist.healthcare.tcamt.web.URLFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>urlFilter</filter-name>
@@ -42,7 +42,7 @@
 
 	<filter>
 		<filter-name>cachingDisabledFilter</filter-name>
-		<filter-class>gov.nist.healtcare.tcamt.web.CachingDisableFilter
+		<filter-class>gov.nist.healthcare.tcamt.web.CachingDisableFilter
 		</filter-class>
 	</filter>
 	<filter-mapping>
@@ -54,7 +54,7 @@
 	
 	<!--  Listeners -->
 	<listener>
-		<listener-class>gov.nist.healtcare.tcamt.web.Log4jConfigListener
+		<listener-class>gov.nist.healthcare.tcamt.web.Log4jConfigListener
 		</listener-class>
 	</listener>
 	

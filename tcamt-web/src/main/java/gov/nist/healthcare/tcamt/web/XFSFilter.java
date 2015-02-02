@@ -1,7 +1,7 @@
 /**
  * 
  */
-package gov.nist.healtcare.tcamt.web;
+package gov.nist.healthcare.tcamt.web;
 
 import java.io.IOException;
 

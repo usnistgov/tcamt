@@ -3,7 +3,7 @@
  * the National Institute of Standards and Technology (NIST). See the "nist.disclaimer" file given
  * in the distribution for information on the use and redistribution of this software.
  */
-package gov.nist.healtcare.tcamt.web;
+package gov.nist.healthcare.tcamt.web;
 
 import java.io.IOException;
 

@@ -3,4 +3,23 @@
               xmlns="http://java.sun.com/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_1.xsd">
-</faces-config>
+	<application>
+		<locale-config>
+			<default-locale>en</default-locale>
+			<supported-locale>en</supported-locale>
+		</locale-config>
+
+		<!-- internationalization -->
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msgs</var>
+		</resource-bundle>
+	</application>
+ 
+	
+ 	<factory>
+   	 	<exception-handler-factory>gov.nist.healthcare.tcamt.web.GeneralExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+
+	
+</faces-config> 

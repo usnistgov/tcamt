@@ -93,7 +93,7 @@ public class TestStepRequestBean implements Serializable {
 		this.init();
 	}
 	
-	public void delInstanceSegment(ActionEvent event) {
+	public void delInstanceSegment(ActionEvent event) throws IOException, ParserException, CloneNotSupportedException {
 		int rowIndex = (Integer)event.getComponent().getAttributes().get("rowIndex");
 		String[] lines = this.editTestStep.getInteraction().getMessage().getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		String editedHl7EndcodedMessage = "";
@@ -134,8 +134,7 @@ public class TestStepRequestBean implements Serializable {
 	}
 	
 	public void uploadMessageProfile(FileUploadEvent event)
-			throws ConversionException {
-		try {
+			throws Exception {
 			if(event.getFile().getFileName().endsWith(".PROFILE")){
 				JSONConverterService jConverterService = new JSONConverterService();
 				MessageProfile profile = jConverterService.fromStream(event.getFile().getInputstream());
@@ -155,11 +154,6 @@ public class TestStepRequestBean implements Serializable {
 				interaction.setMessage(message);
 				this.newTestStep.setInteraction(interaction);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void addTestStep() throws CloneNotSupportedException {
@@ -205,7 +199,7 @@ public class TestStepRequestBean implements Serializable {
 		this.targetActorId = null;
 	}
 	
-	public void selectEditTestStep(ActionEvent event) {
+	public void selectEditTestStep(ActionEvent event) throws IOException, ParserException, CloneNotSupportedException {
 		this.init();
 		this.existTestStep = (TestStep) event.getComponent().getAttributes().get("teststep");
 		this.editTestStep.setId(existTestStep.getId());
@@ -322,9 +316,8 @@ public class TestStepRequestBean implements Serializable {
 	}
 	
 	
-	public void readHL7Message(){
+	public void readHL7Message() throws IOException, ParserException, CloneNotSupportedException{
 		if(this.editTestStep.getInteraction().getMessage().getHl7EndcodedMessage() != null && !this.editTestStep.getInteraction().getMessage().getHl7EndcodedMessage().replaceAll("\\s","").equals("")){
-			try {
 				List<ValidationContext> newVC = new ArrayList<ValidationContext>();
 				for(ValidationContext vc:this.editTestStep.getInteraction().getMessage().getValidationContexts()){
 					if(!vc.getLevel().equals("Profile Fixed")) newVC.add(vc);
@@ -346,11 +339,6 @@ public class TestStepRequestBean implements Serializable {
 				
 				this.manageInstanceService.updateInstanceSegmentsByTestDataTypeList(this.editTestStep.getInteraction().getMessage(), this.instanceSegments);
 				this.selectedInstanceSegment = new InstanceSegment();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParserException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

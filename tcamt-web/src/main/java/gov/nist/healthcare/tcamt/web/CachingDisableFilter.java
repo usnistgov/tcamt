@@ -3,7 +3,7 @@
  * the National Institute of Standards and Technology (NIST). See the "nist.disclaimer" file given
  * in the distribution for information on the use and redistribution of this software.
  */
-package gov.nist.healtcare.tcamt.web;
+package gov.nist.healthcare.tcamt.web;
 
 import java.io.IOException;
 
@@ -42,7 +42,6 @@ public class CachingDisableFilter implements Filter {
 
 		HttpServletResponse resp = (HttpServletResponse) response;
 		HttpServletRequest req = (HttpServletRequest) request;
-		String path = req.getRequestURI();
 		if (req.getRequestURI().startsWith(
 				req.getContextPath() + ResourceHandler.RESOURCE_IDENTIFIER)) {
 			resp.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP

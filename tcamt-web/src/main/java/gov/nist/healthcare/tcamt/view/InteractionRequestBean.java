@@ -76,7 +76,7 @@ public class InteractionRequestBean implements Serializable {
 		this.init();
 	}
 	
-	public void delInstanceSegment(ActionEvent event) {
+	public void delInstanceSegment(ActionEvent event) throws IOException, ParserException, CloneNotSupportedException {
 		int rowIndex = (Integer)event.getComponent().getAttributes().get("rowIndex");
 		String[] lines = this.editInteraction.getMessage().getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		String editedHl7EndcodedMessage = "";
@@ -132,7 +132,7 @@ public class InteractionRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateInteractions();
 	}
 	
-	public void updateInteraction() throws CloneNotSupportedException{
+	public void updateInteraction() throws CloneNotSupportedException, IOException, ParserException{
 		this.editInteraction.setsActor(this.dbManager.getActorById(this.sActorId));
 		this.editInteraction.setrActor(this.dbManager.getActorById(this.rActorId));
 		this.editInteraction.setMessage(this.dbManager.getMessageById(this.messageId));
@@ -147,7 +147,7 @@ public class InteractionRequestBean implements Serializable {
 		this.messageId = null;
 	}
 	
-	public void selectEditInteraction(ActionEvent event) {
+	public void selectEditInteraction(ActionEvent event) throws IOException, ParserException, CloneNotSupportedException {
 		this.init();
 		this.existInteraction = (Interaction) event.getComponent().getAttributes().get("interaction");
 		this.editInteraction.setId(existInteraction.getId());
@@ -277,9 +277,8 @@ public class InteractionRequestBean implements Serializable {
 	}
 	
 	
-	public void readHL7Message(){
+	public void readHL7Message() throws IOException, ParserException, CloneNotSupportedException{
 		if(this.editInteraction.getMessage().getHl7EndcodedMessage() != null && !this.editInteraction.getMessage().getHl7EndcodedMessage().replaceAll("\\s","").equals("")){
-			try {
 				List<ValidationContext> newVC = new ArrayList<ValidationContext>();
 				for(ValidationContext vc:this.editInteraction.getMessage().getValidationContexts()){
 					if(!vc.getLevel().equals("Profile Fixed")) newVC.add(vc);
@@ -301,11 +300,6 @@ public class InteractionRequestBean implements Serializable {
 				
 				this.manageInstanceService.updateInstanceSegmentsByTestDataTypeList(this.editInteraction.getMessage(), this.instanceSegments);
 				this.selectedInstanceSegment = new InstanceSegment();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParserException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

@@ -71,7 +71,7 @@ public class MessageRequestBean implements Serializable {
 		this.selectedModel = null;
 	}
 
-	public void selectEditMessage(ActionEvent event) {
+	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException, ParserException {
 		this.init();
 		this.existMessage = (Message) event.getComponent().getAttributes().get("message");
 		this.editMessage.setId(existMessage.getId());
@@ -91,7 +91,7 @@ public class MessageRequestBean implements Serializable {
 		this.shareTo = "";
 	}
 
-	public void delInstanceSegment(ActionEvent event) {
+	public void delInstanceSegment(ActionEvent event) throws CloneNotSupportedException, IOException, ParserException {
 		int rowIndex = (Integer)event.getComponent().getAttributes().get("rowIndex");
 		String[] lines = this.editMessage.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		String editedHl7EndcodedMessage = "";
@@ -136,9 +136,8 @@ public class MessageRequestBean implements Serializable {
 		this.manageInstanceService.generateHL7Message(this.instanceSegments, this.editMessage);
 	}
 	
-	public void readHL7Message(){
+	public void readHL7Message() throws CloneNotSupportedException, IOException, ParserException{
 		if(this.editMessage.getHl7EndcodedMessage() != null && !this.editMessage.getHl7EndcodedMessage().equals("")){
-			try {
 				List<ValidationContext> newVC = new ArrayList<ValidationContext>();
 				for(ValidationContext vc:this.editMessage.getValidationContexts()){
 					if(!vc.getLevel().equals("Profile Fixed")) newVC.add(vc);
@@ -161,11 +160,6 @@ public class MessageRequestBean implements Serializable {
 				
 				this.manageInstanceService.updateInstanceSegmentsByTestDataTypeList(this.editMessage, this.instanceSegments);
 				this.selectedInstanceSegment = new InstanceSegment();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParserException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

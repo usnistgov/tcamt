@@ -105,7 +105,7 @@ public class MessageProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateMessages();
 	}
 
-	public void selectEditMessage(ActionEvent event) {
+	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException {
 		this.init();
 		this.editMessage = new Message();
 		this.existMessage = (Message) event.getComponent().getAttributes().get("message");		
@@ -125,8 +125,7 @@ public class MessageProfileRequestBean implements Serializable {
 	}
 
 	public void uploadMessageProfile(FileUploadEvent event)
-			throws ConversionException {
-		try {
+			throws IOException, Exception {
 			if(event.getFile().getFileName().endsWith(".PROFILE")){
 				JSONConverterService jConverterService = new JSONConverterService();
 				MessageProfile profile = jConverterService.fromStream(event.getFile().getInputstream());
@@ -140,25 +139,16 @@ public class MessageProfileRequestBean implements Serializable {
 			}
 			
 			this.manageInstanceService.generateProfilePathOccurIGData(this.newMessage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void updateMessageProfile(FileUploadEvent event)
-			throws ConversionException {
-		try {
+			throws ConversionException, CloneNotSupportedException, IOException {
 			JSONConverterService jConverterService = new JSONConverterService();
 			MessageProfile profile = jConverterService.fromStream(event.getFile().getInputstream());
 			this.editMessage.setMessageProfile(profile);
 			
 			this.manageInstanceService.loadMessage(this.editMessage, 0);
 			this.manageInstanceService.generateProfilePathOccurIGData(this.editMessage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void travelSegment(Segment s, String path, TreeNode parentNode) {

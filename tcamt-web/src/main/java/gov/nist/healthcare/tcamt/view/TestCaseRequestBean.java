@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.view;
 
+import gov.nist.healthcare.core.hl7.v2.parser.ParserException;
 import gov.nist.healthcare.hl7tools.domain.Component;
 import gov.nist.healthcare.hl7tools.domain.Field;
 import gov.nist.healthcare.hl7tools.domain.Message;
@@ -427,7 +428,7 @@ public class TestCaseRequestBean implements Serializable {
 	public String findTransactionNameForEdit(int num){
 		return this.editTestCase.getTransactions().get(num);
 	}
-	public void downloadResourceBundleForTestPlan(TestPlan tp) throws IOException, DocumentException, ConversionException{
+	public void downloadResourceBundleForTestPlan(TestPlan tp) throws IOException, DocumentException, ConversionException, ParserException, CloneNotSupportedException{
 		this.setTestStoryConverter(new JsonTestStoryConverter());
 		this.setTpConverter(new JsonTestPlanConverter());
 		this.setTcConverter(new JsonTestCaseConverter());
@@ -475,7 +476,7 @@ public class TestCaseRequestBean implements Serializable {
 		this.setZipResourceBundleFile(new DefaultStreamedContent(inputStream, "application/zip", outFilename));
 	}
 	
-	public void downloadResourceBundleForTestCase(TestCase tc) throws IOException, DocumentException, ConversionException{
+	public void downloadResourceBundleForTestCase(TestCase tc) throws IOException, DocumentException, ConversionException, ParserException, CloneNotSupportedException{
 		this.setTestStoryConverter(new JsonTestStoryConverter());
 		this.setTcConverter(new JsonTestCaseConverter());
 		this.setTsConverter(new JsonTestStepConverter());
@@ -606,7 +607,7 @@ public class TestCaseRequestBean implements Serializable {
         out.closeEntry();
 	}
 	
-	private String generateTestStory(TestStory testStory) {
+	private String generateTestStory(TestStory testStory) throws IOException {
 		if(testStory == null){
 			testStory = new TestStory();
 		}
@@ -617,7 +618,6 @@ public class TestCaseRequestBean implements Serializable {
         String absoluteDiskPath = servletContext.getRealPath(relativeWebPath);
         
 		byte[] encoded;
-		try {
 			encoded = Files.readAllBytes(Paths.get(absoluteDiskPath));
 			String testStoryStr = new String(encoded, StandardCharsets.UTF_8);
 			testStoryStr = testStoryStr.replace("?Description?", testStory.getDescription());
@@ -629,11 +629,6 @@ public class TestCaseRequestBean implements Serializable {
 			testStoryStr = testStoryStr.replace("<br>", " ");
 			testStoryStr = testStoryStr.replace("</br>", " ");
 			return testStoryStr;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
 	}
 	
 	private void generateMessageRB(ZipOutputStream out, String messageStr, String path) throws IOException {
@@ -772,7 +767,7 @@ public class TestCaseRequestBean implements Serializable {
 	
 	
 	
-	private void generateDataSheetRB(ZipOutputStream out, TestStep ts, String outPath) throws IOException, DocumentException {
+	private void generateDataSheetRB(ZipOutputStream out, TestStep ts, String outPath) throws IOException, DocumentException, ParserException, CloneNotSupportedException {
 		ManageInstance manageInstanceService = new ManageInstance();
 		
 		String relativeWebPath = "resources" + File.separator + "templates" + File.separator + "DataSheetTemplate.html";
@@ -782,7 +777,6 @@ public class TestCaseRequestBean implements Serializable {
         
         String dataSheetStr = "";
         byte[] encoded;
-		try {
 			encoded = Files.readAllBytes(Paths.get(absoluteDiskPath));
 			dataSheetStr = new String(encoded, StandardCharsets.UTF_8);
 			
@@ -870,9 +864,6 @@ public class TestCaseRequestBean implements Serializable {
 			dataSheetStr = dataSheetStr.replace("?TSNAME?", ts.getDescription());
 			dataSheetStr = dataSheetStr.replace("?Sheets?", htmlStr);
 			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(outPath + File.separator + "DataSheet.html"));

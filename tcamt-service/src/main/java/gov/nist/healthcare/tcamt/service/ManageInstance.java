@@ -280,7 +280,7 @@ public class ManageInstance  implements Serializable{
 		message.setHl7EndcodedMessage(messageString);
 	}
 	
-	public void updateOccurDataByHL7Message(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, Message message, TreeNode messageTreeRoot, List<InstanceSegment> iss){
+	public void updateOccurDataByHL7Message(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, Message message, TreeNode messageTreeRoot, List<InstanceSegment> iss) throws CloneNotSupportedException{
 		if(e.getName().contains(".")){
 			if(path.equals("")){
 				iPath = e.getName().substring(e.getName().lastIndexOf(".") + 1) + "[" + e.getInstanceNumber() + "]";
@@ -366,7 +366,7 @@ public class ManageInstance  implements Serializable{
 		
 	}
 	
-	public TreeNode loadMessage(Message m, int option) {
+	public TreeNode loadMessage(Message m, int option) throws CloneNotSupportedException {
 		List<Element> elements = m.getMessageProfile().getChildren();
 		String path = m.getName();
 		if (path == null || path.equals("")) {
@@ -728,7 +728,7 @@ public class ManageInstance  implements Serializable{
 		
 	}
 	
-	private void updateDataAndFieldOccur(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, List<InstanceSegment> iss) {
+	private void updateDataAndFieldOccur(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, List<InstanceSegment> iss) throws CloneNotSupportedException {
 		TreeMap<Integer, List<gov.nist.healthcare.core.hl7.v2.instance.Element>> tm = e.getChildren();
 		if(tm == null){
 			InstanceSegment is = iss.get(iss.size() - 1);
@@ -788,7 +788,6 @@ public class ManageInstance  implements Serializable{
 							if(((SegmentTreeModel)tn.getData()).getiPath().startsWith(iPathField.substring(0, iPathField.lastIndexOf("[")))){
 								
 								((SegmentTreeModel)tn.getData()).setOccurrence(fieldElms.size());
-								try {
 									SegmentTreeModel clonedSegmentTreeModel = (SegmentTreeModel) ((SegmentTreeModel)tn.getData()).clone();
 									clonedSegmentTreeModel.setiPath(iPathField);
 									TreeNode copyedTN = new DefaultTreeNode(clonedSegmentTreeModel, iss.get(iss.size() - 1).getSegmentTreeNode());
@@ -813,9 +812,7 @@ public class ManageInstance  implements Serializable{
 									tn.getParent().getChildren().add(index + fieldE.getInstanceNumber() - 1, copyedTN);
 									j = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().size();
 									
-								} catch (CloneNotSupportedException e1) {
-									e1.printStackTrace();
-								}
+								
 							}
 						}
 					}
@@ -825,7 +822,7 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 	
-	private void loadElement(Message m, Element el, String path, TreeNode parentTreeNode, int option) {
+	private void loadElement(Message m, Element el, String path, TreeNode parentTreeNode, int option) throws CloneNotSupportedException {
 		path = path + "." + el.getShortName();
 		String messageId = path.split("\\.")[0];
 		String messagePath = path.replace(messageId + ".", "");
@@ -834,13 +831,9 @@ public class ManageInstance  implements Serializable{
 			List<ConformanceStatement> css = el.getConformanceStatementList();
 			if (css != null && css.size() > 0) {
 				for (ConformanceStatement cs : css) {
-					try {
 						ConformanceStatement editedCS = cs.clone();
 						this.updateCS(editedCS, messagePath);
 						m.getListCSs().add(editedCS);
-					} catch (CloneNotSupportedException e) {
-						e.printStackTrace();
-					}
 				}
 			}
 			Predicate cp = el.getPredicate();
@@ -867,14 +860,14 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 	
-	private void loadSegment(Message m, Segment s, String path, int option) {
+	private void loadSegment(Message m, Segment s, String path, int option) throws CloneNotSupportedException {
 		List<Field> fields = s.getFields();
 		for (Field f : fields) {
 			loadField(m, f, path, option);
 		}
 	}
 	
-	private void loadField(Message m, Field f, String path, int option) {
+	private void loadField(Message m, Field f, String path, int option) throws CloneNotSupportedException {
 		path = path + "." + f.getPosition();
 		String messageId = path.split("\\.")[0];
 		String messagePath = path.replace(messageId + ".", "");
@@ -883,13 +876,9 @@ public class ManageInstance  implements Serializable{
 			List<ConformanceStatement> css = f.getConformanceStatementList();
 			if (css != null && css.size() > 0) {
 				for (ConformanceStatement cs : css) {
-					try {
 						ConformanceStatement editedCS = cs.clone();
 						this.updateCS(editedCS, messagePath);
 						m.getListCSs().add(editedCS);
-					} catch (CloneNotSupportedException e) {
-						e.printStackTrace();
-					}
 				}
 			}
 
@@ -905,7 +894,7 @@ public class ManageInstance  implements Serializable{
 		loadDT(m, dt, path, option);
 	}
 	
-	private void loadDT(Message m, Datatype dt, String path, int option) {
+	private void loadDT(Message m, Datatype dt, String path, int option) throws CloneNotSupportedException {
 		List<Component> components = dt.getComponents();
 		if (components == null) {
 		} else {
@@ -919,14 +908,10 @@ public class ManageInstance  implements Serializable{
 							.getConformanceStatementList();
 					if (css != null && css.size() > 0) {
 						for (ConformanceStatement cs : css) {
-							
-							try {
+
 								ConformanceStatement editedCS = cs.clone();
 								this.updateCS(editedCS, messagePath);
 								m.getListCSs().add(editedCS);
-							} catch (CloneNotSupportedException e) {
-								e.printStackTrace();
-							}
 						}
 					}
 					Predicate cp = c.getPredicate();
