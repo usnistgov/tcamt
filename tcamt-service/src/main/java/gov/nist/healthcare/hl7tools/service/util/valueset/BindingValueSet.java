@@ -304,23 +304,23 @@ public class BindingValueSet {
 		bindingValueSet.uploadBindingCSVForDT("src//main//resources//IZ//DT.csv");
 		
 		//ACK_IZ23-PROFILE-NIST.PROFILE <--------- Z23
-		bindingValueSet.uploadProfile("src//main//resources//IZ//ACK_IZ23-PROFILE-NIST.PROFILE");
+		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_ACK_Z23-PROFILE-NIST.PROFILE");
 		bindingValueSet.uploadBindingCSVForSegment("src//main//resources//IZ//Z23.csv");
 		
 		bindingValueSet.bindingDTtoProfile();
 		bindingValueSet.bindingSEGMENTtoProfile();
 		
-		bindingValueSet.downloadProfile("src//main//resources//IZ//result//ACK_IZ23-PROFILE-NIST.PROFILE");
+		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_ACK_Z23-PROFILE-NIST.PROFILE");
 		
 
 		//IZ_V.5_QBP_Z34-PROFILE-NIST.PROFILE <--------- Z34
-		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V.5_QBP_Z34-PROFILE-NIST.PROFILE");
+		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_QBP_Z34-PROFILE-NIST.PROFILE");
 		bindingValueSet.uploadBindingCSVForSegment("src//main//resources//IZ//Z34.csv");
 		
 		bindingValueSet.bindingDTtoProfile();
 		bindingValueSet.bindingSEGMENTtoProfile();
 		
-		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V.5_QBP_Z34-PROFILE-NIST.PROFILE");
+		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_QBP_Z34-PROFILE-NIST.PROFILE");
 		
 		//IZ_V1.5_QBP_Z44-PROFILE-NIST.PROFILE <--------- Z44
 		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_QBP_Z44-PROFILE-NIST.PROFILE");
@@ -332,13 +332,13 @@ public class BindingValueSet {
 		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_QBP_Z44-PROFILE-NIST.PROFILE");
 		
 		//IZ_V1.5_RSP_Z31_Nov3-PROFILE-NIST.PROFILE <--------- Z31
-		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_RSP_Z31_Nov3-PROFILE-NIST.PROFILE");
+		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_RSP_Z31-PROFILE-NIST.PROFILE");
 		bindingValueSet.uploadBindingCSVForSegment("src//main//resources//IZ//Z31.csv");
 		
 		bindingValueSet.bindingDTtoProfile();
 		bindingValueSet.bindingSEGMENTtoProfile();
 		
-		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_RSP_Z31_Nov3-PROFILE-NIST.PROFILE");
+		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_RSP_Z31-PROFILE-NIST.PROFILE");
 		
 		//IZ_V1.5_RSP_Z33-PROFILE-NIST.PROFILE <--------- Z33
 		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_RSP_Z33-PROFILE-NIST.PROFILE");
@@ -359,22 +359,22 @@ public class BindingValueSet {
 		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_RSP_Z42-PROFILE-NIST.PROFILE");
 		
 		//IZ_VXU_1.5_IZ22-PROFILE-NIST.PROFILE <--------- Z22
-		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_VXU_1.5_IZ22-PROFILE-NIST.PROFILE");
+		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_VXU_Z22-PROFILE-NIST.PROFILE");
 		bindingValueSet.uploadBindingCSVForSegment("src//main//resources//IZ//Z22.csv");
 		
 		bindingValueSet.bindingDTtoProfile();
 		bindingValueSet.bindingSEGMENTtoProfile();
 		
-		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_VXU_1.5_IZ22-PROFILE-NIST.PROFILE");
+		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_VXU_Z22-PROFILE-NIST.PROFILE");
 		
 		//IZ_VXU_1.5_IZ22-PROFILE-NIST.PROFILE <--------- Z32
-		bindingValueSet.uploadProfile("src//main//resources//IZ//Z32 - Return Complete IZ History-PROFILE-NIST.PROFILE");
+		bindingValueSet.uploadProfile("src//main//resources//IZ//IZ_V1.5_RSP_Z32-PROFILE-NIST.PROFILE");
 		bindingValueSet.uploadBindingCSVForSegment("src//main//resources//IZ//Z32.csv");
 		
 		bindingValueSet.bindingDTtoProfile();
 		bindingValueSet.bindingSEGMENTtoProfile();
 		
-		bindingValueSet.downloadProfile("src//main//resources//IZ//result//Z32 - Return Complete IZ History-PROFILE-NIST.PROFILE");
+		bindingValueSet.downloadProfile("src//main//resources//IZ//result//IZ_V1.5_RSP_Z32-PROFILE-NIST.PROFILE");
 
 	}
 
