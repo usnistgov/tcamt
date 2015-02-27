@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="45142b1a-7c52-4008-9b5b-e3d6f71cd83f">
+<ConformanceProfile ID="555da10d-463c-4db3-93f7-613ff306e119">
     <Messages>
-        <Message ID="c00ea323-b6bf-478c-a52b-bf46453e24eb" Type="QBP" Event="Q11" StructID="QBP_Q11" Description="Query by parameter">
+        <Message ID="119c8da0-9a0e-46e9-9f4b-b6bc22ece14f" Type="QBP" Event="Q11" StructID="QBP_Q11" Description="Query by parameter">
             <Segment Ref="81b911d9-6326-4066-88bd-8625899f8680" Usage="R" Min="1" Max="1"/>
             <Segment Ref="c6f22d54-0fc7-429e-95b6-43f20d0ac46b" Usage="O" Min="0" Max="*"/>
             <Segment Ref="e8a04314-6a1b-4555-bbca-ea20b1ca21aa" Usage="R" Min="1" Max="1"/>
@@ -30,7 +30,7 @@
             <Field Name="Country Code" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="3" Table="0399" ItemNo="00017"/>
             <Field Name="Character Set" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="16" Table="0211" ItemNo="00692"/>
             <Field Name="Principal Language Of Message" Usage="X" Min="0" Max="0" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00693"/>
-            <Field Name="Alternate Character Set Handling Scheme" Usage="O" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="20" Table="0356" ItemNo="01317"/>
+            <Field Name="Alternate Character Set Handling Scheme" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="20" Table="0356" ItemNo="01317"/>
             <Field Name="Message Profile Identifier" Usage="R" Min="1" Max="1" Datatype="a87b8121-6c0d-41f4-a6fb-617a17a0cb52" MinLength="1" MaxLength="427" Table="PHVS_ImmunizationProfileIdentifier_IIS" ItemNo="01598"/>
             <Field Name="Sending Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>
             <Field Name="Receiving Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>

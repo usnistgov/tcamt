@@ -6,8 +6,14 @@
         <TableElement Code="M" Codesys="HL70001" DisplayName="Male" Source="Local"/>
         <TableElement Code="U" Codesys="HL70001" DisplayName="Unknown/undifferentiated" Source="Local"/>
     </TableDefinition>
-    <TableDefinition AlternateId="HL70003_IZ" Codesys="HL70003" Id="HL70003_IZ" Name="Event type" Type="HL7" Version="1.5"/>
-    <TableDefinition AlternateId="HL70004_IZ" Codesys="HL70004" Id="HL70004_IZ" Name="Patient class" Type="HL7" Version="1.5"/>
+    <TableDefinition AlternateId="HL70003_IZ" Codesys="HL70003" Id="HL70003_IZ" Name="Event type" Type="HL7" Version="1.5">
+		<TableElement Code="V04" Codesys="HL70003" DisplayName="V04" Source="Local"/>
+		<TableElement Code="K11" Codesys="HL70003" DisplayName="K11" Source="Local"/>
+		<TableElement Code="Q11" Codesys="HL70003" DisplayName="Q11" Source="Local"/>
+    </TableDefinition>
+    <TableDefinition AlternateId="HL70004_IZ" Codesys="HL70004" Id="HL70004_IZ" Name="Patient class" Type="HL7" Version="1.5">
+		<TableElement Code="R" Codesys="HL70004" DisplayName="recurring patient" Source="Local"/>
+    </TableDefinition>
     <TableDefinition AlternateId="HL70005_IZ" Codesys="HL70005" Id="HL70005_IZ" Name="Race" Oid="2.16.840.1.113883.3.2074.1.1.3" Type="User" Version="1.5">
         <TableElement Code="1002-5" Codesys="HL70005" DisplayName="American Indian or Alaska Native" Source="Local"/>
         <TableElement Code="2028-9" Codesys="HL70005" DisplayName="Asian " Source="Local"/>
@@ -66,7 +72,9 @@
         <TableElement Code="VXU" Codesys="HL70076" DisplayName="Unsolicited vaccination record update" Source="Local"/>
     </TableDefinition>
     <TableDefinition AlternateId="HL70078_IZ" Codesys="HL70078" Id="HL70078_IZ" Name="Abnormal flags" Type="HL7" Version="1.5"/>
-    <TableDefinition AlternateId="HL70085_IZ" Codesys="HL70085" Id="HL70085_IZ" Name="Observation result status codes interpretation" Type="HL7" Version="1.5"/>
+    <TableDefinition AlternateId="HL70085_IZ" Codesys="HL70085" Id="HL70085_IZ" Name="Observation result status codes interpretation" Type="HL7" Version="1.5">
+		<TableElement Code="F" Codesys="HL70086" DisplayName="Final" Source="Local"/>
+    </TableDefinition>
     <TableDefinition AlternateId="HL70086_IZ" Codesys="HL70086" Id="HL70086_IZ" Name="Plan Type ID" Type="User" Version="1.5">
         <TableElement Code="5" Codesys="HL70086" DisplayName="Private Insurance" Source="Local"/>
         <TableElement Code="2" Codesys="HL70086" DisplayName="Medicaid" Source="Local"/>
@@ -121,7 +129,9 @@
         <TableElement Code="XPN" Codesys="HL70125" DisplayName="Extended Person Name" Source="Local"/>
         <TableElement Code="XTN" Codesys="HL70125" DisplayName="Extended telephone number" Source="Local"/>
     </TableDefinition>
-    <TableDefinition AlternateId="HL70126_IZ" Codesys="HL70126" Id="HL70126_IZ" Name="Quantity limited request " Type="HL7" Version="1.5"/>
+    <TableDefinition AlternateId="HL70126_IZ" Codesys="HL70126" Id="HL70126_IZ" Name="Quantity limited request " Type="HL7" Version="1.5">
+		<TableElement Code="RD" Codesys="HL70126" DisplayName="records" Source="Local"/>
+    </TableDefinition>
     <TableDefinition AlternateId="HL70136_IZ" Codesys="HL70136" Id="HL70136_IZ" Name="Yes/No indicator" Type="HL7" Version="1.5">
         <TableElement Code="Y" Codesys="HL70136" DisplayName="Yes" Source="Local"/>
         <TableElement Code="N" Codesys="HL70136" DisplayName="No" Source="Local"/>
@@ -3847,7 +3857,9 @@
     <TableDefinition AlternateId="HL70296_IZ" Codesys="HL70296" Id="HL70296_IZ" Name="Language" Type="User" Version="1.5"/>
     <TableDefinition AlternateId="HL70297_IZ" Codesys="HL70297" Id="HL70297_IZ" Name="CN ID source" Type="User" Version="1.5"/>
     <TableDefinition AlternateId="HL70300_IZ" Codesys="HL70300" Id="HL70300_IZ" Name="Namespace ID" Type="User" Version="1.5"/>
-    <TableDefinition AlternateId="HL70301_IZ" Codesys="HL70301" Id="HL70301_IZ" Name="Universal ID type" Type="HL7" Version="1.5"/>
+    <TableDefinition AlternateId="HL70301_IZ" Codesys="HL70301" Id="HL70301_IZ" Name="Universal ID type" Type="HL7" Version="1.5">
+		<TableElement Code="OID" Codesys="HL70301" DisplayName="OID" Source="Local"/>
+    </TableDefinition>
     <TableDefinition AlternateId="HL70322_IZ" Codesys="HL70322" Id="HL70322_IZ" Name="Completion status" Type="HL7" Version="1.5">
         <TableElement Code="CP" Codesys="HL70322" DisplayName="Complete" Source="Local"/>
         <TableElement Code="RE" Codesys="HL70322" DisplayName="Refused" Source="Local"/>

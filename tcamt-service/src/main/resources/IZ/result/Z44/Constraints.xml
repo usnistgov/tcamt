@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="bd0bd62a-d196-430f-9bcf-f5ec776a6bcf" xsi:noNamespaceSchemaLocation="ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="5e04bf1f-67e1-447d-9566-407b498e11c2" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>
@@ -163,47 +163,7 @@
                     </Assertion>
                 </Constraint>
             </ByID>
-            <ByID ID="f707f9ce-b112-41ad-8527-1416263dcf58">
-                <Constraint ID="IZ-55" Target="1[1]">
-                    <Description>The value of MSG.1 (Message Code) SHALL be 'RSP'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="RSP" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-55" Target="2[1]">
-                    <Description>The value of MSG.2 (Trigger Event) SHALL be 'K11'.</Description>
-                    <Assertion>
-                        <PlainText Path="2[1]" Text="K11" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-55" Target="3[1]">
-                    <Description>The value of MSG.3 (Message Structure) SHALL be 'RSP_K11'.</Description>
-                    <Assertion>
-                        <PlainText Path="3[1]" Text="RSP_K11" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
-            <ByID ID="15fba479-611e-4c04-b52d-27bd3a081559">
-                <Constraint ID="IZ-7" Target="1[1]">
-                    <Description>The value of VID.1 (Version ID) SHALL be '2.5.1'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="2.5.1" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
             <ByID ID="02b39f36-bea2-4e88-a2ef-9f25c0b7ee94">
-                <Constraint ID="IZ-64" Target="1[1]">
-                    <Description>The value of EI.1 (Entity Identifier) SHALL be 'Z44'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="Z44" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-64" Target="2[1]">
-                    <Description>The value of EI.2 (Namespace ID) SHALL be 'CDCPHINVS'.</Description>
-                    <Assertion>
-                        <PlainText Path="2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
                 <Constraint ID="IZ-3" Target="3[1]">
                     <Description>The value of EI.3 (Universal ID) SHALL be formatted with ISO-compliant OID.</Description>
                     <Assertion>
@@ -231,6 +191,14 @@
                     </Assertion>
                 </Constraint>
             </ByID>
+            <ByID ID="56137a3c-f1b5-4fae-aac1-ab33c138e39e">
+                <Constraint ID="IZ-2" Target="2[1]">
+                    <Description>The value of CQ.2 (Units) SHALL be 'RD'.</Description>
+                    <Assertion>
+                        <PlainText Path="2[1]" Text="RD" IgnoreCase="true"/>
+                    </Assertion>
+                </Constraint>
+            </ByID>
         </Datatype>
         <Segment>
             <ByID ID="1eb64ea1-495f-40cd-82ed-a6de483c60bc">
@@ -246,27 +214,54 @@
                         <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="SG[MSH]_CS_1" Target="7[1]">
-                    <Description>The value of MSH.7.1 (Time) SHALL be formatted with YYYYMMDD.</Description>
+                <Constraint ID="IZ-TS_Z" Target="7[1]">
+                    <Description>The value of MSH.7.1 (Time) SHALL be formatted with YYYYMMDD+-ZZZZ.</Description>
                     <Assertion>
-                        <Format Path="7[1].1[1]" Regex="([0-9]{4})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1])).*"/>
+                        <Format Path="7[1].1[1]" Regex="([0-9]{4})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1])).*((\+|\-)[0-9]{4})"/>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="IZ-XX" Target="15[1]">
+                <Constraint ID="IZ-55" Target="9[1]">
+                    <Description>The value of MSH.9 (Message Type) SHALL be 'QBP^Q11^QBP_Q11'.</Description>
+                    <Assertion>
+                        <AND>
+                            <PlainText Path="9[1].1[1]" Text="QBP" IgnoreCase="true"/>
+                            <AND>
+                                <PlainText Path="9[1].2[1]" Text="Q11" IgnoreCase="true"/>
+                                <PlainText Path="9[1].3[1]" Text="QBP_Q11" IgnoreCase="true"/>
+                            </AND>
+                        </AND>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-15" Target="12[1]">
+                    <Description>The value of MSH.12.1 (Version ID) SHALL be '2.5.1'.</Description>
+                    <Assertion>
+                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="true"/>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-57" Target="15[1]">
                     <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
                         <PlainText Path="15[1]" Text="NE" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="IZ-16" Target="16[1]">
+                <Constraint ID="IZ-58" Target="16[1]">
                     <Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'AL'.</Description>
                     <Assertion>
                         <PlainText Path="16[1]" Text="AL" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
+                <Constraint ID="IZ-64" Target="21[1]">
+                    <Description>The value of MSH.21 (Message Profile Identifier) SHALL be 'Z44^CDCPHINVS'.</Description>
+                    <Assertion>
+                        <AND>
+                            <PlainText Path="21[1].1[1]" Text="Z44" IgnoreCase="true"/>
+                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                        </AND>
+                    </Assertion>
+                </Constraint>
             </ByID>
             <ByID ID="faf37595-52fe-4520-a4c1-ab362d086a4f">
-                <Constraint ID="SG[QPD]_CS_1" Target="12[1]">
+                <Constraint ID="IZ-TS" Target="12[1]">
                     <Description>The value of QPD.12.1 (Time) SHALL be formatted with YYYYMMDD.</Description>
                     <Assertion>
                         <Format Path="12[1].1[1]" Regex="([0-9]{4})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1])).*"/>

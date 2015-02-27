@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="b2af9d0d-2b24-4cc0-87b3-b1f1b4c5e810">
+<ConformanceProfile ID="71c89086-adef-46fe-8de9-8426fa6c503f">
     <Messages>
-        <Message ID="f75e7be8-e68c-422d-be68-0b76d5edbd96" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
+        <Message ID="63e4dc8c-64ad-41c1-88e5-39081fef5526" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
             <Segment Ref="eccbc454-3592-41c4-9ea7-5d8850ecade8" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="d2127578-0af9-46f4-8448-5ae7e5f50da2" Usage="R" Min="1" Max="1"/>
@@ -47,7 +47,7 @@
             <Field Name="Character Set" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="16" ItemNo="00692"/>
             <Field Name="Principal Language Of Message" Usage="X" Min="0" Max="0" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00693"/>
             <Field Name="Alternate Character Set Handling Scheme" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="20" Table="HL70356_IZ" ItemNo="01317"/>
-            <Field Name="Message Profile Identifier" Usage="R" Min="1" Max="1" Datatype="67a3cefa-c06b-49f7-81c0-7d29500e27e7" MinLength="1" MaxLength="427" Table="PHVS_ImmunizationProfileIdentifier_IIS" ItemNo="01598"/>
+            <Field Name="Message Profile Identifier" Usage="R" Min="1" Max="*" Datatype="67a3cefa-c06b-49f7-81c0-7d29500e27e7" MinLength="1" MaxLength="427" Table="PHVS_ImmunizationProfileIdentifier_IIS" ItemNo="01598"/>
             <Field Name="Sending Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>
             <Field Name="Receiving Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>
         </Segment>
@@ -266,7 +266,7 @@
         <Segment ID="cb1095af-7b0e-4040-8eb0-4c20d529c94b" Name="IN1" Description="Insurance">
             <Field Name="Set ID - IN1" Usage="R" Min="1" Max="1" Datatype="SI" MinLength="1" MaxLength="4" ItemNo="00426"/>
             <Field Name="Insurance Plan ID" Usage="R" Min="1" Max="1" Datatype="af997328-bc8b-4e9d-a5f3-4f73df398228" MinLength="1" MaxLength="250" Table="0072" ItemNo="00368"/>
-            <Field Name="Insurance Company ID" Usage="R" Min="1" Max="*" Datatype="0e7398e7-59c5-4a8a-ae42-fee8e963443b" MinLength="1" MaxLength="250" ItemNo="00428"/>
+            <Field Name="Insurance Company ID" Usage="R" Min="1" Max="1" Datatype="0e7398e7-59c5-4a8a-ae42-fee8e963443b" MinLength="1" MaxLength="250" ItemNo="00428"/>
             <Field Name="Insurance Company Name" Usage="O" Min="0" Max="*" Datatype="75a00016-3385-4bad-9325-a16f20adada2" MinLength="1" MaxLength="250" ItemNo="00429"/>
             <Field Name="Insurance Company Address" Usage="O" Min="0" Max="*" Datatype="394a2715-f9ac-4859-99e0-2333de28f775" MinLength="1" MaxLength="250" ItemNo="00430"/>
             <Field Name="Insurance Co Contact Person" Usage="O" Min="0" Max="*" Datatype="e2d090f3-e904-40bc-a763-d4dfad795858" MinLength="1" MaxLength="250" ItemNo="00431"/>
@@ -278,7 +278,7 @@
             <Field Name="Plan Effective Date" Usage="O" Min="0" Max="1" Datatype="DT" MinLength="1" MaxLength="8" ItemNo="00437"/>
             <Field Name="Plan Expiration Date" Usage="O" Min="0" Max="1" Datatype="DT" MinLength="1" MaxLength="8" ItemNo="00438"/>
             <Field Name="Authorization Information" Usage="O" Min="0" Max="1" Datatype="AUI" MinLength="1" MaxLength="239" ItemNo="00439"/>
-            <Field Name="Plan Type" Usage="O" Min="0" Max="1" Datatype="IS" MinLength="1" MaxLength="3" Table="0086" ItemNo="00440"/>
+            <Field Name="Plan Type" Usage="R" Min="1" Max="1" Datatype="IS" MinLength="1" MaxLength="3" Table="0086" ItemNo="00440"/>
             <Field Name="Name Of Insured" Usage="O" Min="0" Max="*" Datatype="68d93ba7-f519-4202-82f3-0c44a1e41d31" MinLength="1" MaxLength="250" ItemNo="00441"/>
             <Field Name="Insured's Relationship To Patient" Usage="O" Min="0" Max="1" Datatype="9d061d46-a3b5-427d-813c-cffce4382fa7" MinLength="1" MaxLength="250" ItemNo="00442"/>
             <Field Name="Insured's Date Of Birth" Usage="O" Min="0" Max="1" Datatype="TS" MinLength="1" MaxLength="26" ItemNo="00443"/>
@@ -292,7 +292,7 @@
             <Field Name="Report Of Eligibility Date" Usage="O" Min="0" Max="1" Datatype="DT" MinLength="1" MaxLength="8" ItemNo="00451"/>
             <Field Name="Release Information Code" Usage="O" Min="0" Max="1" Datatype="IS" MinLength="1" MaxLength="2" Table="0093" ItemNo="00452"/>
             <Field Name="Pre-Admit Cert (PAC)" Usage="O" Min="0" Max="1" Datatype="ST" MinLength="1" MaxLength="15" ItemNo="00453"/>
-            <Field Name="Verification Date/Time" Usage="O" Min="0" Max="1" Datatype="TS" MinLength="1" MaxLength="26" ItemNo="00454"/>
+            <Field Name="Verification Date/Time" Usage="RE" Min="0" Max="1" Datatype="d57658ab-c1d0-475e-abb0-6cee0c8d9780" MinLength="1" MaxLength="26" ItemNo="00454"/>
             <Field Name="Verification By" Usage="O" Min="0" Max="*" Datatype="762dcf04-5592-411b-bf6d-44405c8e04bb" MinLength="1" MaxLength="250" ItemNo="00455"/>
             <Field Name="Type Of Agreement Code" Usage="O" Min="0" Max="1" Datatype="IS" MinLength="1" MaxLength="2" Table="0098" ItemNo="00456"/>
             <Field Name="Billing Status" Usage="O" Min="0" Max="1" Datatype="IS" MinLength="1" MaxLength="2" Table="0022" ItemNo="00457"/>
@@ -360,7 +360,7 @@
             <Field Name="Administered Amount" Usage="R" Min="1" Max="1" Datatype="NM" MinLength="1" MaxLength="20" ItemNo="00348"/>
             <Field Name="Administered Units" Usage="C" Min="0" Max="1" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="UCUM" ItemNo="00349"/>
             <Field Name="Administered Dosage Form" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00350"/>
-            <Field Name="Administration Notes" Usage="C" Min="1" Max="*" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="NIP001" ItemNo="00351"/>
+            <Field Name="Administration Notes" Usage="C" Min="0" Max="*" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="NIP001" ItemNo="00351"/>
             <Field Name="Administering Provider" Usage="C" Min="0" Max="1" Datatype="25694961-b7c7-48eb-987e-a7f2f93b9263" MinLength="1" MaxLength="250" ItemNo="00352"/>
             <Field Name="Administered-at Location" Usage="C" Min="0" Max="1" Datatype="241afa39-681f-48b6-b8a5-51565089f91a" MinLength="1" MaxLength="200" ItemNo="00353"/>
             <Field Name="Administered Per (Time Unit)" Usage="O" Min="0" Max="1" Datatype="ST" MinLength="1" MaxLength="20" ItemNo="00354"/>
@@ -368,11 +368,11 @@
             <Field Name="Administered Strength Units" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="01135"/>
             <Field Name="Substance Lot Number" Usage="C" Min="0" Max="*" Datatype="ST" MinLength="1" MaxLength="20" ItemNo="01129"/>
             <Field Name="Substance Expiration Date" Usage="C" Min="0" Max="1" Datatype="270dcbc5-4963-4d2f-a131-9c97b8e6f73d" MinLength="1" MaxLength="26" ItemNo="01130"/>
-            <Field Name="Substance Manufacturer Name" Usage="C" Min="0" Max="*" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="MVX" ItemNo="01131"/>
+            <Field Name="Substance Manufacturer Name" Usage="C" Min="0" Max="1" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="MVX" ItemNo="01131"/>
             <Field Name="Substance/Treatment Refusal Reason" Usage="C" Min="0" Max="*" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="250" Table="NIP002" ItemNo="01136"/>
             <Field Name="Indication" Usage="O" Min="0" Max="*" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="01123"/>
             <Field Name="Completion Status" Usage="RE" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="2" Table="HL70322_IZ" ItemNo="01223"/>
-            <Field Name="Action Code - RXA" Usage="C" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="2" Table="HL70323_IZ" ItemNo="01224"/>
+            <Field Name="Action Code - RXA" Usage="O" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="2" Table="HL70323_IZ" ItemNo="01224"/>
             <Field Name="System Entry Date/Time" Usage="O" Min="0" Max="1" Datatype="TS" MinLength="1" MaxLength="26" ItemNo="01225"/>
             <Field Name="Administered Drug Strength Volume" Usage="O" Min="0" Max="1" Datatype="NM" MinLength="1" MaxLength="5" ItemNo="01696"/>
             <Field Name="Administered Drug Strength Volume Units" Usage="O" Min="0" Max="1" Datatype="CWE" MinLength="1" MaxLength="250" ItemNo="01697"/>
@@ -1628,6 +1628,10 @@
             <Component Name="Address Validity Range" Usage="X" Datatype="c4e1858b-90f5-4528-b47b-d675c03c657e" MinLength="1" MaxLength="53"/>
             <Component Name="Effective Date" Usage="O" Datatype="TS" MinLength="1" MaxLength="26"/>
             <Component Name="Expiration Date" Usage="O" Datatype="TS" MinLength="1" MaxLength="26"/>
+        </Datatype>
+        <Datatype ID="d57658ab-c1d0-475e-abb0-6cee0c8d9780" Name="TS" Description="Time Stamp">
+            <Component Name="Time" Usage="R" Datatype="DTM" MinLength="1" MaxLength="24"/>
+            <Component Name="Degree of Precision" Usage="X" Datatype="ID" MinLength="1" MaxLength="1" Table="0529"/>
         </Datatype>
         <Datatype ID="762dcf04-5592-411b-bf6d-44405c8e04bb" Name="XCN" Description="Extended Composite ID Number and Name for Persons">
             <Component Name="ID Number" Usage="C" Datatype="ST" MinLength="1" MaxLength="15"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="714af416-5d7e-4439-88c7-139ed112fa8c">
+<ConformanceProfile ID="5e1ed832-6d45-4477-b6c4-09fce49dfc57">
     <Messages>
-        <Message ID="bc210b7e-0ccb-4d0e-9708-ae3efd553e0e" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
+        <Message ID="ff985f03-57f8-413b-8dc9-3905ed77c87f" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
             <Segment Ref="96f348da-5a3c-4e10-a5c2-c3d01ff84a7d" Usage="R" Min="1" Max="1"/>
             <Segment Ref="0283b46d-a01b-42ea-9989-ac1cc7948694" Usage="X" Min="0" Max="*"/>
             <Segment Ref="f9c1394f-7fd9-4ce1-ade9-0ec15432522e" Usage="R" Min="1" Max="1"/>
@@ -33,10 +33,10 @@
             <Field Name="Continuation Pointer" Usage="O" Min="0" Max="1" Datatype="ST" MinLength="1" MaxLength="180" ItemNo="00014"/>
             <Field Name="Accept Acknowledgment Type" Usage="RE" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="2" Table="HL70155_IZ" ItemNo="00015"/>
             <Field Name="Application Acknowledgment Type" Usage="RE" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="2" Table="HL70155_IZ" ItemNo="00016"/>
-            <Field Name="Country Code" Usage="O" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="3" Table="0399" ItemNo="00017"/>
-            <Field Name="Character Set" Usage="O" Min="0" Max="*" Datatype="ID" MinLength="1" MaxLength="16" Table="0211" ItemNo="00692"/>
-            <Field Name="Principal Language Of Message" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00693"/>
-            <Field Name="Alternate Character Set Handling Scheme" Usage="O" Min="0" Max="1" Datatype="ID" MinLength="1" MaxLength="20" Table="0356" ItemNo="01317"/>
+            <Field Name="Country Code" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="3" Table="0399" ItemNo="00017"/>
+            <Field Name="Character Set" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="16" Table="0211" ItemNo="00692"/>
+            <Field Name="Principal Language Of Message" Usage="X" Min="0" Max="0" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00693"/>
+            <Field Name="Alternate Character Set Handling Scheme" Usage="X" Min="0" Max="0" Datatype="ID" MinLength="1" MaxLength="20" Table="0356" ItemNo="01317"/>
             <Field Name="Message Profile Identifier" Usage="R" Min="1" Max="1" Datatype="75226da6-8eee-45ae-8f3d-1151e899be8c" MinLength="1" MaxLength="427" Table="PHVS_ImmunizationProfileIdentifier_IIS" ItemNo="01598"/>
             <Field Name="Sending Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>
             <Field Name="Receiving Responsible Organization" Usage="RE" Min="0" Max="1" Datatype="d9f39f92-06ff-4e00-b60b-22099d69aa3e" MinLength="1" MaxLength="*" Table="HL70362_IZ"/>

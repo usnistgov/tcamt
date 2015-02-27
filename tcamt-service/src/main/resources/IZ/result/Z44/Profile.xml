@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="cc9bd4a3-1a25-46ef-a0d2-f60401e71606">
+<ConformanceProfile ID="228705ce-07b3-4136-9ac2-8efbbc89ce7a">
     <Messages>
-        <Message ID="1c95ed2a-d831-4e3e-a103-382fc51f4614" Type="QBP" Event="Q11" StructID="QBP_Q11" Description="Query by parameter">
+        <Message ID="2ceab06f-fcaf-4598-95b4-1263cab612ce" Type="QBP" Event="Q11" StructID="QBP_Q11" Description="Query by parameter">
             <Segment Ref="1eb64ea1-495f-40cd-82ed-a6de483c60bc" Usage="R" Min="1" Max="1"/>
             <Segment Ref="73f5c80a-fc28-4f92-8fab-f359b36a45e7" Usage="O" Min="0" Max="*"/>
             <Segment Ref="faf37595-52fe-4520-a4c1-ab362d086a4f" Usage="R" Min="1" Max="1"/>

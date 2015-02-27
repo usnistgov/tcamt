@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="cbeece8a-8689-405b-ae5f-8f0b4284367e" xsi:noNamespaceSchemaLocation="ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="f8354dcf-aa20-46ee-8a26-ca5642837978" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for ACK</Description>
     </MetaData>
@@ -138,47 +138,7 @@
                     </Assertion>
                 </Constraint>
             </ByID>
-            <ByID ID="48550434-594f-4ccc-8c80-c4144e3d17df">
-                <Constraint ID="IZ-51" Target="1[1]">
-                    <Description>The value of MSG.1 (Message Code) SHALL be 'ACK'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="ACK" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-51" Target="2[1]">
-                    <Description>The value of MSG.2 (Trigger Event) SHALL be 'V04'.</Description>
-                    <Assertion>
-                        <PlainText Path="2[1]" Text="V04" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-51" Target="3[1]">
-                    <Description>The value of MSG.3 (Message Structure) SHALL be 'ACK'.</Description>
-                    <Assertion>
-                        <PlainText Path="3[1]" Text="ACK" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
-            <ByID ID="15fba479-611e-4c04-b52d-27bd3a081559">
-                <Constraint ID="IZ-7" Target="1[1]">
-                    <Description>The value of VID.1 (Version ID) SHALL be '2.5.1'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="2.5.1" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
             <ByID ID="7017c48b-da5a-45e2-b4a1-2da6a6f19f2f">
-                <Constraint ID="IZ-54" Target="1[1]">
-                    <Description>The value of EI.1 (Entity Identifier) SHALL be 'Z23'.</Description>
-                    <Assertion>
-                        <PlainText Path="1[1]" Text="Z23" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-54" Target="2[1]">
-                    <Description>The value of EI.2 (Namespace ID) SHALL be 'CDCPHINVS'.</Description>
-                    <Assertion>
-                        <PlainText Path="2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
                 <Constraint ID="IZ-3" Target="3[1]">
                     <Description>The value of EI.3 (Universal ID) SHALL be formatted with ISO-compliant OID.</Description>
                     <Assertion>
@@ -207,22 +167,49 @@
                         <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="IZ-XX1" Target="7[1]">
-                    <Description>The value of MSH.7.1 (Time) SHALL be formatted with YYYYMMDD.</Description>
+                <Constraint ID="IZ-TS_Z" Target="7[1]">
+                    <Description>The value of MSH.7.1 (Time) SHALL be formatted with YYYYMMDD+-ZZZZ.</Description>
                     <Assertion>
-                        <Format Path="7[1].1[1]" Regex="([0-9]{4})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1])).*"/>
+                        <Format Path="7[1].1[1]" Regex="([0-9]{4})((0[1-9])|(1[0-2]))((0[1-9])|([1-2][0-9])|(3[0-1])).*((\+|\-)[0-9]{4})"/>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-51" Target="9[1]">
+                    <Description>The value of MSH.9 (Message Type) SHALL be 'ACK^V04^ACK'.</Description>
+                    <Assertion>
+                        <AND>
+                            <PlainText Path="9[1].1[1]" Text="ACK" IgnoreCase="true"/>
+                            <AND>
+                                <PlainText Path="9[1].2[1]" Text="V04" IgnoreCase="true"/>
+                                <PlainText Path="9[1].3[1]" Text="ACK" IgnoreCase="true"/>
+                            </AND>
+                        </AND>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-15" Target="12[1]">
+                    <Description>The value of MSH.12.1 (Version ID) SHALL be '2.5.1'.</Description>
+                    <Assertion>
+                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-53" Target="15[1]">
+                    <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'NE'.</Description>
+                    <Assertion>
+                        <PlainText Path="15[1]" Text="NE" IgnoreCase="true"/>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-52" Target="16[1]">
                     <Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
                         <PlainText Path="16[1]" Text="NE" IgnoreCase="true"/>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="SG[MSH]_CS_4" Target="16[1]">
-                    <Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'NE'.</Description>
+                <Constraint ID="IZ-54" Target="21[1]">
+                    <Description>The value of MSH.21[1] (Message Profile Identifier) SHALL be 'Z23^CDCPHINVS'.</Description>
                     <Assertion>
-                        <PlainText Path="16[1]" Text="NE" IgnoreCase="true"/>
+                        <AND>
+                            <PlainText Path="21[1].1[1]" Text="Z23" IgnoreCase="true"/>
+                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                        </AND>
                     </Assertion>
                 </Constraint>
             </ByID>
