@@ -270,7 +270,7 @@
         </Datatype>
         <Datatype ID="56137a3c-f1b5-4fae-aac1-ab33c138e39e" Name="CQ" Description="Composite Quantity with Units">
             <Component Name="Quantity" Usage="R" Datatype="NM" MinLength="1" MaxLength="16"/>
-            <Component Name="Units" Usage="R" Datatype="cfff16a3-4c55-4c54-905d-ec01ac997dbe" MinLength="1" MaxLength="483" Table="HL70126_IZ"/>
+            <Component Name="Units" Usage="R" Datatype="ST" MinLength="1" MaxLength="483" Table="HL70126_IZ"/>
         </Datatype>
         <Datatype ID="SRT" Name="SRT" Description="Sort Order">
             <Component Name="Sort-by Field" Usage="R" Datatype="ST" MinLength="1" MaxLength="12"/>
