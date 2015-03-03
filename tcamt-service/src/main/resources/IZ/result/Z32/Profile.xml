@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="71c89086-adef-46fe-8de9-8426fa6c503f">
+<ConformanceProfile ID="9dad737c-c83b-473f-8bfc-26cd45868c1d">
     <Messages>
-        <Message ID="63e4dc8c-64ad-41c1-88e5-39081fef5526" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
+        <Message ID="a8e684d6-3b09-445b-b4ed-f7a6578c82f7" Type="RSP" Event="K11" StructID="RSP_K11" Description="Segment pattern response">
             <Segment Ref="eccbc454-3592-41c4-9ea7-5d8850ecade8" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="d2127578-0af9-46f4-8448-5ae7e5f50da2" Usage="R" Min="1" Max="1"/>

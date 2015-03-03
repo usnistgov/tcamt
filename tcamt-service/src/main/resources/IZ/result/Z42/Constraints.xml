@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="42a2481c-802c-4e16-8686-1fdbc9530a25" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="0816127a-7b95-4dc2-b445-a990b92ebe7a" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
@@ -337,14 +337,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -352,7 +352,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>

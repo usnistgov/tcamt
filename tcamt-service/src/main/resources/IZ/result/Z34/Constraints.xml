@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="1f8b2353-7566-4dbd-8c14-292e859ca895" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="b10cb1d6-e4ba-4d95-9caf-926a98d660cd" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>
@@ -167,14 +167,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -182,7 +182,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
