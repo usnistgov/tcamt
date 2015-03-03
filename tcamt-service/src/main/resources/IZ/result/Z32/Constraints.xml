@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="4e2e354e-89f7-4c0a-a4d0-9150b35b4c2b" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="5ec8b78d-aee9-4fad-8a35-fff184c0b676" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
@@ -177,14 +177,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -192,7 +192,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -271,14 +271,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -286,7 +286,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -295,14 +295,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -310,7 +310,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -748,14 +748,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -763,7 +763,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -772,14 +772,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -787,7 +787,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -998,14 +998,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -1013,7 +1013,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -1152,14 +1152,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="4[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="6[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -1167,7 +1167,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="7[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -2069,18 +2069,6 @@
                 </Constraint>
             </ByID>
             <ByID ID="2b7b772a-a944-491b-9667-7000d6af6c22">
-                <Constraint ID="IZ-XX" Target="1[1]">
-                    <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z34^Request Complete Immunization History^CDCPHINVS'.</Description>
-                    <Assertion>
-                        <AND>
-                            <PlainText Path="1[1].1[1]" Text="Z34" IgnoreCase="true"/>
-                            <AND>
-                                <PlainText Path="1[1].2[1]" Text="Request Complete Immunization History" IgnoreCase="true"/>
-                                <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="true"/>
-                            </AND>
-                        </AND>
-                    </Assertion>
-                </Constraint>
                 <Constraint ID="IZ-DT_D" Target="12[1]">
                     <Description>The value of QPD.5.12.1 (Time) SHALL be formatted with YYYYMMDD.</Description>
                     <Assertion>
@@ -2181,35 +2169,46 @@
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-48" Target="6[1]">
-                    <Description>If the value of RXA.20 (Completion Status) is 'RE', then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
+                    <Description>If RXA.20 (Completion Status) is valued and the value of RXA.20 (Completion Status) is 'RE' then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
                     <Assertion>
                         <OR>
                             <NOT>
-                                <PlainText Path="20[1]" Text="RE" IgnoreCase="true"/>
-                            </NOT>
-                            <PlainText Path="6[1]" Text="999" IgnoreCase="true"/>
-                        </OR>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ_50" Target="6[1]">
-                    <Description>If the value of RXA.9[1].1 (Identifier) is not '00', then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
-                    <Assertion>
-                        <OR>
-                            <NOT>
-                                <NOT>
-                                    <PlainText Path="9[1].1[1]" Text="00" IgnoreCase="true"/>
-                                </NOT>
+                                <AND>
+                                    <Presence Path="20[1]"/>
+                                    <PlainText Path="20[1]" Text="RE" IgnoreCase="true"/>
+                                </AND>
                             </NOT>
                             <PlainText Path="6[1]" Text="999" IgnoreCase="true"/>
                         </OR>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-49" Target="6[1]">
-                    <Description>If the value of RXA.5.3 (Name of Coding System) is '998', then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
+                    <Description>If RXA.5.3 (Name of Coding System) is valued and the value of RXA.5.3 (Name of Coding System) is '998' then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
                     <Assertion>
                         <OR>
                             <NOT>
-                                <PlainText Path="5[1].3[1]" Text="998" IgnoreCase="true"/>
+                                <AND>
+                                    <Presence Path="5[1].3[1]"/>
+                                    <PlainText Path="5[1].3[1]" Text="998" IgnoreCase="true"/>
+                                </AND>
+                            </NOT>
+                            <PlainText Path="6[1]" Text="999" IgnoreCase="true"/>
+                        </OR>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ_50" Target="6[1]">
+                    <Description>If RXA.9[1].1 (Identifier) is not valued or the value of RXA.9[1].1 (Identifier) is not '00' then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
+                    <Assertion>
+                        <OR>
+                            <NOT>
+                                <OR>
+                                    <NOT>
+                                        <Presence Path="9[1].1[1]"/>
+                                    </NOT>
+                                    <NOT>
+                                        <PlainText Path="9[1].1[1]" Text="00" IgnoreCase="true"/>
+                                    </NOT>
+                                </OR>
                             </NOT>
                             <PlainText Path="6[1]" Text="999" IgnoreCase="true"/>
                         </OR>
