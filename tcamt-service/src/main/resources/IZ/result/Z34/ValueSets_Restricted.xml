@@ -271,61 +271,7 @@
 		<TableElement Code="WCN" Codesys="HL70203" DisplayName="Workers占쏙옙Comp Number" Source="Local"/>
 		<TableElement Code="XX" Codesys="HL70203" DisplayName="Organization identifier" Source="Local"/>
 	</TableDefinition>
-	<TableDefinition AlternateId="HL70126_IZ" Codesys="" Id="HL70126_IZ" Name="Quantity limited request " Oid="" Type="HL7" Version="1.5">
-		<TableElement Code="RD" Codesys="HL70126" DisplayName="records" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="HL70361_IZ" Codesys="" Id="HL70361_IZ" Name="Application" Oid="" Type="HL7" Version="1.5"/>
-	<TableDefinition AlternateId="HL70091_IZ" Codesys="" Id="HL70091_IZ" Name="Query priority" Oid="" Type="HL7" Version="1.5"/>
-	<TableDefinition AlternateId="PHVS_ImmunizationFundingSource_IIS" Codesys="PHVS_ImmunizationFundingSource_IIS" Id="PHVS_ImmunizationFundingSource_IIS" Name="Immunization Funding Source (IIS)" Oid="2.16.840.1.114222.4.11.3287" Type="External" Version="1">
-		<TableElement Code="PHC70" Codesys="CDCPHINVS" DisplayName="Private funds " Source="Local"/>
-		<TableElement Code="VXC1" Codesys="CDCPHINVS" DisplayName="Federal funds " Source="Local"/>
-		<TableElement Code="VXC2" Codesys="CDCPHINVS" DisplayName="State funds" Source="Local"/>
-		<TableElement Code="PHC68" Codesys="CDCPHINVS" DisplayName="Military funds " Source="Local"/>
-		<TableElement Code="VXC3" Codesys="CDCPHINVS" DisplayName="Tribal funds" Source="Local"/>
-		<TableElement Code="OTH" Codesys="NULLFL" DisplayName="Other " Source="Local"/>
-		<TableElement Code="UNK" Codesys="NULLFL" DisplayName="Unspecified" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_VaccinationContraindication_IIS" Codesys="PHVS_VaccinationContraindication_IIS" Id="PHVS_VaccinationContraindication_IIS" Name="Vaccination Contraindication (IIS)" Oid="2.16.840.1.114222.4.11.3288" Type="External" Version="1">
-		<TableElement Code="VXC30" Codesys="CDCPHINVS" DisplayName="allergy (anaphylactic)  to proteins of rodent or neural origin" Source="Local"/>
-		<TableElement Code="VXC17" Codesys="CDCPHINVS" DisplayName="allergy (anaphylactic) to 2-phenoxyethanol" Source="Local"/>
-		<TableElement Code="VXC18" Codesys="CDCPHINVS" DisplayName="allergy to baker’s yeast (anaphylactic)" Source="Local"/>
-		<TableElement Code="91930004" Codesys="SCT" DisplayName="Allergy to eggs (disorder)" Source="Local"/>
-		<TableElement Code="294847001" Codesys="SCT" DisplayName="Gelatin allergy (disorder)" Source="Local"/>
-		<TableElement Code="294468006" Codesys="SCT" DisplayName="Neomycin allergy (disorder)" Source="Local"/>
-		<TableElement Code="294466005" Codesys="SCT" DisplayName="Streptomycin allergy (disorder)" Source="Local"/>
-		<TableElement Code="VXC19" Codesys="CDCPHINVS" DisplayName="allergy to thimerosal (anaphylactic)" Source="Local"/>
-		<TableElement Code="VXC20" Codesys="CDCPHINVS" DisplayName="allergy to previous dose of this vaccine or to any of its unlisted vaccine components (anaphylactic)" Source="Local"/>
-		<TableElement Code="402306009" Codesys="SCT" DisplayName="Allergy to aluminum (disorder)" Source="Local"/>
-		<TableElement Code="300916003" Codesys="SCT" DisplayName="Latex allergy (disorder)" Source="Local"/>
-		<TableElement Code="294530006" Codesys="SCT" DisplayName="Polymyxin B allergy (disorder)" Source="Local"/>
-		<TableElement Code="VXC21" Codesys="CDCPHINVS" DisplayName="Previous history of intussusception" Source="Local"/>
-		<TableElement Code="VXC22" Codesys="CDCPHINVS" DisplayName="encephalopathy within 7 days of previous dose of DTP or DTaP" Source="Local"/>
-		<TableElement Code="VXC23" Codesys="CDCPHINVS" DisplayName="current fever with moderate-to-severe illness" Source="Local"/>
-		<TableElement Code="VXC24" Codesys="CDCPHINVS" DisplayName="current acute illness, moderate to severe (with or without fever) (e.g., diarrhea, otitis media, vomiting)" Source="Local"/>
-		<TableElement Code="27624003" Codesys="SCT" DisplayName="Chronic disease (disorder)" Source="Local"/>
-		<TableElement Code="VXC25" Codesys="CDCPHINVS" DisplayName="History of Arthus hypersensitivity reaction to a tetanus-containing vaccine administered &lt; 10 yrs previously" Source="Local"/>
-		<TableElement Code="VXC26" Codesys="CDCPHINVS" DisplayName="underlying unstable, evolving neurologic disorders, (including seizure disorders, cerebral palsy, and developmental delay)" Source="Local"/>
-		<TableElement Code="VXC27" Codesys="CDCPHINVS" DisplayName="immunodeficiency due to any cause, including HIV (hematologic and solid tumors, congenital immunodeficiency, long-term immunosuppressive therapy, including steroids)" Source="Local"/>
-		<TableElement Code="77386006" Codesys="SCT" DisplayName="Patient currently pregnant (finding)" Source="Local"/>
-		<TableElement Code="302215000" Codesys="SCT" DisplayName="Thrombocytopenic disorder (disorder)" Source="Local"/>
-		<TableElement Code="161461006" Codesys="SCT" DisplayName="History of - purpura (situation)" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_VaccinationReaction_IIS" Codesys="PHVS_VaccinationReaction_IIS" Id="PHVS_VaccinationReaction_IIS" Name="Vaccination Reaction and Adverse Event (IIS)" Oid="2.16.840.1.114222.4.11.3289" Type="External" Version="2">
-		<TableElement Code="39579001" Codesys="SCT" DisplayName="Anaphylaxis" Source="Local"/>
-		<TableElement Code="81308009" Codesys="SCT" DisplayName="Encephalopathy" Source="Local"/>
-		<TableElement Code="VXC9" Codesys="CDCPHINVS" DisplayName="persistent, inconsolable crying lasting > 3 hours within 48 hours of dose " Source="Local"/>
-		<TableElement Code="VXC10" Codesys="CDCPHINVS" DisplayName="collapse or shock-like state within 48 hours of dose" Source="Local"/>
-		<TableElement Code="VXC11" Codesys="CDCPHINVS" DisplayName="convulsions (fits, seizures) within 72 hours of dose" Source="Local"/>
-		<TableElement Code="VXC12" Codesys="CDCPHINVS" DisplayName="fever of >40.5C (105F) within 48 hours of dose" Source="Local"/>
-		<TableElement Code="VXC13" Codesys="CDCPHINVS" DisplayName="Guillain-Barre syndrome (GBS) within 6 weeks of dose" Source="Local"/>
-		<TableElement Code="VXC14" Codesys="CDCPHINVS" DisplayName="Rash within 14 days of dose" Source="Local"/>
-		<TableElement Code="VXC15" Codesys="CDCPHINVS" DisplayName="Intussusception within 30 days of dose" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_VaccinationSpecialIndications_IIS" Codesys="PHVS_VaccinationSpecialIndications_IIS" Id="PHVS_VaccinationSpecialIndications_IIS" Name="Vaccination Special Indications - IIS" Oid="2.16.840.1.114222.4.11.3290" Type="External" Version="1.5">
-		<TableElement Code="VXC7" Codesys="CDCPHINVS" DisplayName="Rabies exposure within previous 10 days." Source="Local"/>
-		<TableElement Code="VXC8" Codesys="CDCPHINVS" DisplayName="Member of special group" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_ImmunizationProfileIdentifier_IIS" Codesys="PHVS_ImmunizationProfileIdentifier_IIS" Id="PHVS_ImmunizationProfileIdentifier_IIS" Name="Immunization Profile Identifier (IIS)" Oid="2.16.840.1.114222.4.11.3291" Type="External" Version="2">
+	<TableDefinition AlternateId="PHVS_ImmunizationProfileIdentifier_IIS" Codesys="" Id="PHVS_ImmunizationProfileIdentifier_IIS" Name="Immunization Profile Identifier (IIS)" Oid="" Type="HL7" Version="2">
 		<TableElement Code="Z44" Codesys="CDCPHINVS" DisplayName="Request Evaluated History and Forecast" Source="Local"/>
 		<TableElement Code="Z34" Codesys="CDCPHINVS" DisplayName="Request Immunization History" Source="Local"/>
 		<TableElement Code="Z23" Codesys="CDCPHINVS" DisplayName="Return Acknowledgement" Source="Local"/>
@@ -333,107 +279,9 @@
 		<TableElement Code="Z42" Codesys="CDCPHINVS" DisplayName="Return Evaluated History and Forecast" Source="Local"/>
 		<TableElement Code="Z32" Codesys="CDCPHINVS" DisplayName="Return Immunization History" Source="Local"/>
 	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_ImmunizationScheduleIdentifier_IIS" Codesys="PHVS_ImmunizationScheduleIdentifier_IIS" Id="PHVS_ImmunizationScheduleIdentifier_IIS" Name="Immunization Schedule Identifier (IIS)" Oid="2.16.840.1.114222.4.11.3292" Type="External" Version="1">
-		<TableElement Code="VXC16" Codesys="CDCPHINVS" DisplayName="Advisory Committee on Immunization Practices (ACIP) Schedule" Source="Local"/>
+	<TableDefinition AlternateId="HL70126_IZ" Codesys="" Id="HL70126_IZ" Name="Quantity limited request " Oid="" Type="HL7" Version="1.5">
+		<TableElement Code="RD" Codesys="HL70126" DisplayName="records" Source="Local"/>
 	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_HistoryOfDiseaseAsEvidenceOfImmunity_IIS" Codesys="PHVS_HistoryOfDiseaseAsEvidenceOfImmunity_IIS" Id="PHVS_HistoryOfDiseaseAsEvidenceOfImmunity_IIS" Name="History of Disease as Evidence of Immunity - IIS" Oid="2.16.840.1.114222.4.11.7244" Type="External" Version="1">
-		<TableElement Code="409498004" Codesys="SCT" DisplayName="Anthrax (disorder)" Source="Local"/>
-		<TableElement Code="397428000" Codesys="SCT" DisplayName="Diphtheria (disorder)" Source="Local"/>
-		<TableElement Code="76902006" Codesys="SCT" DisplayName="Tetanus (disorder)" Source="Local"/>
-		<TableElement Code="27836007" Codesys="SCT" DisplayName="Pertussis (disorder)" Source="Local"/>
-		<TableElement Code="40468003" Codesys="SCT" DisplayName="Viral hepatitis, type A (disorder)" Source="Local"/>
-		<TableElement Code="66071002" Codesys="SCT" DisplayName="Type B viral hepatitis (disorder)" Source="Local"/>
-		<TableElement Code="91428005" Codesys="SCT" DisplayName="Haemophilus influenzae infection (disorder)" Source="Local"/>
-		<TableElement Code="240532009" Codesys="SCT" DisplayName="Human papilloma virus infection (disorder)" Source="Local"/>
-		<TableElement Code="6142004" Codesys="SCT" DisplayName="Influenza (disorder)" Source="Local"/>
-		<TableElement Code="52947006" Codesys="SCT" DisplayName="Japanese encephalitis virus disease (disorder)" Source="Local"/>
-		<TableElement Code="14189004" Codesys="SCT" DisplayName="Measles (disorder)" Source="Local"/>
-		<TableElement Code="36989005" Codesys="SCT" DisplayName="Mumps (disorder)" Source="Local"/>
-		<TableElement Code="36653000" Codesys="SCT" DisplayName="Rubella (disorder)" Source="Local"/>
-		<TableElement Code="23511006" Codesys="SCT" DisplayName="Meningococcal infectious disease (disorder)" Source="Local"/>
-		<TableElement Code="16814004" Codesys="SCT" DisplayName="Pneumococcal infectious disease (disorder)" Source="Local"/>
-		<TableElement Code="398102009" Codesys="SCT" DisplayName="Acute poliomyelitis (disorder)" Source="Local"/>
-		<TableElement Code="14168008" Codesys="SCT" DisplayName="Rabies (disorder)" Source="Local"/>
-		<TableElement Code="18624000" Codesys="SCT" DisplayName="Disease due to Rotavirus (disorder)" Source="Local"/>
-		<TableElement Code="4834000" Codesys="SCT" DisplayName="Typhoid fever (disorder)" Source="Local"/>
-		<TableElement Code="111852003" Codesys="SCT" DisplayName="Vaccinia (disorder)" Source="Local"/>
-		<TableElement Code="38907003" Codesys="SCT" DisplayName="Varicella (disorder)" Source="Local"/>
-		<TableElement Code="16541001" Codesys="SCT" DisplayName="Yellow fever (disorder)" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_SerologicalEvidenceOfImmunity_IIS" Codesys="PHVS_SerologicalEvidenceOfImmunity_IIS" Id="PHVS_SerologicalEvidenceOfImmunity_IIS" Name="Serological Evidence of Immunity - IIS " Oid="2.16.840.1.114222.4.11.7245" Type="External" Version="1">
-		<TableElement Code="341112003" Codesys="SCT" DisplayName="Mumps (finding)" Source="Local"/>
-		<TableElement Code="278968001" Codesys="SCT" DisplayName="Rubella (finding)" Source="Local"/>
-		<TableElement Code="371111005" Codesys="SCT" DisplayName="Measles (finding)" Source="Local"/>
-		<TableElement Code="371113008" Codesys="SCT" DisplayName="Varicella (finding) " Source="Local"/>
-		<TableElement Code="271511000" Codesys="SCT" DisplayName="Hepatitis B (finding)" Source="Local"/>
-		<TableElement Code="278971009" Codesys="SCT" DisplayName="Hepatitis A (finding)" Source="Local"/>
-		<TableElement Code="341112003" Codesys="SCT" DisplayName="Mumps (finding)" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_VISBarcodes_IIS" Codesys="PHVS_VISBarcodes_IIS" Id="PHVS_VISBarcodes_IIS" Name="PHVS_VISBarcodes_IIS" Oid="2.16.840.1.114222.4.11.6041" Type="External" Version="1">
-		<TableElement Code="253088698300001111110714" Codesys="cdcgs1vis" DisplayName="Adenovirus VIS" Source="Local"/>
-		<TableElement Code="253088698300002811100310" Codesys="cdcgs1vis" DisplayName="Anthrax VIS" Source="Local"/>
-		<TableElement Code="253088698300004211111025" Codesys="cdcgs1vis" DisplayName="Hepatitis A VIS" Source="Local"/>
-		<TableElement Code="253088698300005911120202" Codesys="cdcgs1vis" DisplayName="Hepatitis B VIS" Source="Local"/>
-		<TableElement Code="253088698300006611981216" Codesys="cdcgs1vis" DisplayName="Haemophilus Influenzae type b VIS" Source="Local"/>
-		<TableElement Code="253088698300007311110503" Codesys="cdcgs1vis" DisplayName="Human papillomavirus Vaccine (Cervarix) VIS" Source="Local"/>
-		<TableElement Code="253088698300008011120222" Codesys="cdcgs1vis" DisplayName="Human papillomavirus Vaccine (Gardasil) VIS" Source="Local"/>
-		<TableElement Code="253088698300009711120702" Codesys="cdcgs1vis" DisplayName="Influenza Vaccine - Live, Intranasal VIS" Source="Local"/>
-		<TableElement Code="253088698300010311120702" Codesys="cdcgs1vis" DisplayName="Influenza Vaccine - Inactivated VIS" Source="Local"/>
-		<TableElement Code="253088698300011011111207" Codesys="cdcgs1vis" DisplayName="Japanese Encephalitis VIS" Source="Local"/>
-		<TableElement Code="253088698300012711120420" Codesys="cdcgs1vis" DisplayName="Measles/Mumps/Rubella VIS" Source="Local"/>
-		<TableElement Code="253088698300013411100521" Codesys="cdcgs1vis" DisplayName="Measles/Mumps/Rubella/Varicella VIS" Source="Local"/>
-		<TableElement Code="253088698300014111111014" Codesys="cdcgs1vis" DisplayName="Meningococcal VIS" Source="Local"/>
-		<TableElement Code="253088698300015811100416" Codesys="cdcgs1vis" DisplayName="Pneumococcal Conjugate (PCV13) VIS" Source="Local"/>
-		<TableElement Code="253088698300016511091006" Codesys="cdcgs1vis" DisplayName="Pneumococcal Polysaccharide VIS" Source="Local"/>
-		<TableElement Code="253088698300017211111108" Codesys="cdcgs1vis" DisplayName="Polio VIS" Source="Local"/>
-		<TableElement Code="253088698300018911091006" Codesys="cdcgs1vis" DisplayName="Rabies VIS" Source="Local"/>
-		<TableElement Code="253088698300020211091006" Codesys="cdcgs1vis" DisplayName="Shingles VIS" Source="Local"/>
-		<TableElement Code="253088698300022611120124" Codesys="cdcgs1vis" DisplayName="Tetanus/Diphtheria/(Pertussis) VIS" Source="Local"/>
-		<TableElement Code="253088698300023311120529" Codesys="cdcgs1vis" DisplayName="Typhoid VIS" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_FundingEligibilityObsMethod_IIS" Codesys="PHVS_FundingEligibilityObsMethod_IIS" Id="PHVS_FundingEligibilityObsMethod_IIS" Name="Funding Eligibility Observation Method (IIS)" Oid="2.16.840.1.114222.4.11.6039" Type="External" Version="1">
-		<TableElement Code="VXC40" Codesys="CDCPHINVS" DisplayName="Eligibility captured at the immunization level" Source="Local"/>
-		<TableElement Code="VXC41" Codesys="CDCPHINVS" DisplayName="Eligibility captured at the visit level" Source="Local"/>
-	</TableDefinition>
-	<TableDefinition AlternateId="PHVS_VISVaccines_IIS" Codesys="PHVS_VISVaccines_IIS" Id="PHVS_VISVaccines_IIS" Name="VIS Vaccines (IIS)" Oid="2.16.840.1.114222.4.11.6040" Type="External" Version="1">
-		<TableElement Code="106" Codesys="CVX" DisplayName="DTaP, 5 pertussis antigens" Source="Local"/>
-		<TableElement Code="146" Codesys="CVX" DisplayName="DTaP,IPV,Hib,HepB" Source="Local"/>
-		<TableElement Code="110" Codesys="CVX" DisplayName="DTaP-Hep B-IPV" Source="Local"/>
-		<TableElement Code="50" Codesys="CVX" DisplayName="DTaP-Hib" Source="Local"/>
-		<TableElement Code="120" Codesys="CVX" DisplayName="DTaP-Hib-IPV" Source="Local"/>
-		<TableElement Code="130" Codesys="CVX" DisplayName="DTaP-IPV" Source="Local"/>
-		<TableElement Code="52" Codesys="CVX" DisplayName="Hep A, adult" Source="Local"/>
-		<TableElement Code="83" Codesys="CVX" DisplayName="Hep A, ped/adol, 2 dose" Source="Local"/>
-		<TableElement Code="104" Codesys="CVX" DisplayName="Hep A-Hep B" Source="Local"/>
-		<TableElement Code="08" Codesys="CVX" DisplayName="Hep B, adolescent or pediatric" Source="Local"/>
-		<TableElement Code="42" Codesys="CVX" DisplayName="Hep B, adolescent/high risk infant" Source="Local"/>
-		<TableElement Code="43" Codesys="CVX" DisplayName="Hep B, adult" Source="Local"/>
-		<TableElement Code="44" Codesys="CVX" DisplayName="Hep B, dialysis" Source="Local"/>
-		<TableElement Code="49" Codesys="CVX" DisplayName="Hib (PRP-OMP)" Source="Local"/>
-		<TableElement Code="48" Codesys="CVX" DisplayName="Hib (PRP-T)" Source="Local"/>
-		<TableElement Code="51" Codesys="CVX" DisplayName="Hib-Hep B" Source="Local"/>
-		<TableElement Code="118" Codesys="CVX" DisplayName="HPV, bivalent" Source="Local"/>
-		<TableElement Code="62" Codesys="CVX" DisplayName="HPV, quadrivalent" Source="Local"/>
-		<TableElement Code="135" Codesys="CVX" DisplayName="Influenza, high dose seasonal" Source="Local"/>
-		<TableElement Code="111" Codesys="CVX" DisplayName="influenza, live, intranasal" Source="Local"/>
-		<TableElement Code="141" Codesys="CVX" DisplayName="Influenza, seasonal, injectable" Source="Local"/>
-		<TableElement Code="140" Codesys="CVX" DisplayName="Influenza, seasonal, injectable, preservative free" Source="Local"/>
-		<TableElement Code="144" Codesys="CVX" DisplayName="influenza, seasonal, intradermal, preservative free" Source="Local"/>
-		<TableElement Code="10" Codesys="CVX" DisplayName="IPV" Source="Local"/>
-		<TableElement Code="148" Codesys="CVX" DisplayName="Meningococcal C/Y-HIB PRP" Source="Local"/>
-		<TableElement Code="136" Codesys="CVX" DisplayName="Meningococcal MCV4O" Source="Local"/>
-		<TableElement Code="114" Codesys="CVX" DisplayName="meningococcal MCV4P" Source="Local"/>
-		<TableElement Code="32" Codesys="CVX" DisplayName="meningococcal MPSV4" Source="Local"/>
-		<TableElement Code="03" Codesys="CVX" DisplayName="MMR" Source="Local"/>
-		<TableElement Code="94" Codesys="CVX" DisplayName="MMRV" Source="Local"/>
-		<TableElement Code="133" Codesys="CVX" DisplayName="Pneumococcal conjugate PCV 13" Source="Local"/>
-		<TableElement Code="100" Codesys="CVX" DisplayName="pneumococcal conjugate PCV 7" Source="Local"/>
-		<TableElement Code="119" Codesys="CVX" DisplayName="rotavirus, monovalent" Source="Local"/>
-		<TableElement Code="116" Codesys="CVX" DisplayName="rotavirus, pentavalent" Source="Local"/>
-		<TableElement Code="138" Codesys="CVX" DisplayName="Td (adult)" Source="Local"/>
-		<TableElement Code="113" Codesys="CVX" DisplayName="Td (adult) preservative free" Source="Local"/>
-		<TableElement Code="09" Codesys="CVX" DisplayName="Td (adult), adsorbed" Source="Local"/>
-		<TableElement Code="115" Codesys="CVX" DisplayName="Tdap" Source="Local"/>
-		<TableElement Code="21" Codesys="CVX" DisplayName="varicella" Source="Local"/>
-	</TableDefinition>
+	<TableDefinition AlternateId="HL70361_IZ" Codesys="" Id="HL70361_IZ" Name="Application" Oid="" Type="HL7" Version="1.5"/>
+	<TableDefinition AlternateId="HL70091_IZ" Codesys="" Id="HL70091_IZ" Name="Query priority" Oid="" Type="HL7" Version="1.5"/>
 </TableLibrary>

@@ -1,35 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="ca6ceb95-c330-4ecc-a642-4068e11b9e6c" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="e9543c87-c012-4ca3-9171-56118b8c40c0" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
     <Predicates>
         <Datatype>
-            <ByID ID="5d62ecfe-7a05-4d34-b034-361171a92f2f">
-                <Predicate ID="[HD_IZ]1[1]" Target="1[1]" TrueUsage="R" FalseUsage="O">
-                    <Description>If HD.2 (Universal ID) is not valued.</Description>
-                    <Condition>
-                        <NOT>
-                            <Presence Path="2[1]"/>
-                        </NOT>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[HD_IZ]2[1]" Target="2[1]" TrueUsage="R" FalseUsage="O">
-                    <Description>If HD.1 (Namespace ID) is not valued.</Description>
-                    <Condition>
-                        <NOT>
-                            <Presence Path="1[1]"/>
-                        </NOT>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[HD_IZ]3[1]" Target="3[1]" TrueUsage="R" FalseUsage="X">
-                    <Description>If HD.2 (Universal ID) is valued.</Description>
+            <ByID ID="CX_IZ">
+                <Predicate ID="[CX_IZ]3[1]" Target="3[1]" TrueUsage="O" FalseUsage="X">
+                    <Description>If CX.2 (Check Digit) is valued.</Description>
                     <Condition>
                         <Presence Path="2[1]"/>
                     </Condition>
                 </Predicate>
             </ByID>
-            <ByID ID="75226da6-8eee-45ae-8f3d-1151e899be8c">
+            <ByID ID="EI_IZ_RSP_Z33">
                 <Predicate ID="[EI_IZ_RSP_Z33]2[1]" Target="2[1]" TrueUsage="R" FalseUsage="O">
                     <Description>If EI.3 (Universal ID) is not valued.</Description>
                     <Condition>
@@ -53,47 +37,7 @@
                     </Condition>
                 </Predicate>
             </ByID>
-            <ByID ID="d9f39f92-06ff-4e00-b60b-22099d69aa3e">
-                <Predicate ID="[XON_IZ]6[1]" Target="6[1]" TrueUsage="R" FalseUsage="O">
-                    <Description>If XON.10 (Organization Identifier) is valued.</Description>
-                    <Condition>
-                        <Presence Path="10[1]"/>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[XON_IZ]7[1]" Target="7[1]" TrueUsage="R" FalseUsage="X">
-                    <Description>If XON.10 (Organization Identifier) is valued.</Description>
-                    <Condition>
-                        <Presence Path="10[1]"/>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[XON_IZ]10[1]" Target="10[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If XON.1 (Organization Name) is valued.</Description>
-                    <Condition>
-                        <Presence Path="1[1]"/>
-                    </Condition>
-                </Predicate>
-            </ByID>
-            <ByID ID="aea35562-35c4-4c8a-bd8e-f8c490afa734">
-                <Predicate ID="[ERL_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If ERL.4 (Field Repetition) is valued.</Description>
-                    <Condition>
-                        <Presence Path="4[1]"/>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[ERL_IZ]5[1]" Target="5[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If ERL.5 (Component Number) is valued.</Description>
-                    <Condition>
-                        <Presence Path="5[1]"/>
-                    </Condition>
-                </Predicate>
-                <Predicate ID="[ERL_IZ]6[1]" Target="6[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If ERL.6 (Sub-Component Number) is valued.</Description>
-                    <Condition>
-                        <Presence Path="6[1]"/>
-                    </Condition>
-                </Predicate>
-            </ByID>
-            <ByID ID="e4b5c3e6-42bc-4a65-845f-478071c4ca80">
+            <ByID ID="CWE_IZ">
                 <Predicate ID="[CWE_IZ]3[1]" Target="3[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If CWE.1 (Identifier) is valued.</Description>
                     <Condition>
@@ -113,7 +57,27 @@
                     </Condition>
                 </Predicate>
             </ByID>
-            <ByID ID="cfff16a3-4c55-4c54-905d-ec01ac997dbe">
+            <ByID ID="ERL_IZ">
+                <Predicate ID="[ERL_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="RE">
+                    <Description>If ERL.4 (Field Repetition) is valued.</Description>
+                    <Condition>
+                        <Presence Path="4[1]"/>
+                    </Condition>
+                </Predicate>
+                <Predicate ID="[ERL_IZ]5[1]" Target="5[1]" TrueUsage="R" FalseUsage="RE">
+                    <Description>If ERL.5 (Component Number) is valued.</Description>
+                    <Condition>
+                        <Presence Path="5[1]"/>
+                    </Condition>
+                </Predicate>
+                <Predicate ID="[ERL_IZ]6[1]" Target="6[1]" TrueUsage="R" FalseUsage="RE">
+                    <Description>If ERL.6 (Sub-Component Number) is valued.</Description>
+                    <Condition>
+                        <Presence Path="6[1]"/>
+                    </Condition>
+                </Predicate>
+            </ByID>
+            <ByID ID="CE_IZ">
                 <Predicate ID="[CE_IZ]5[1]" Target="5[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If CE.4 (Alternate Identifier) is valued.</Description>
                     <Condition>
@@ -127,15 +91,7 @@
                     </Condition>
                 </Predicate>
             </ByID>
-            <ByID ID="4a48f501-29bd-467b-aa8d-cca57ccb00ab">
-                <Predicate ID="[CX_IZ]3[1]" Target="3[1]" TrueUsage="O" FalseUsage="X">
-                    <Description>If CX.2 (Check Digit) is valued.</Description>
-                    <Condition>
-                        <Presence Path="2[1]"/>
-                    </Condition>
-                </Predicate>
-            </ByID>
-            <ByID ID="96fb82f3-890c-4af7-bf15-1e8bf9ca6458">
+            <ByID ID="HD_IZ">
                 <Predicate ID="[HD_IZ]1[1]" Target="1[1]" TrueUsage="R" FalseUsage="O">
                     <Description>If HD.2 (Universal ID) is not valued.</Description>
                     <Condition>
@@ -159,7 +115,27 @@
                     </Condition>
                 </Predicate>
             </ByID>
-            <ByID ID="383b5ac9-b47e-46f9-8660-7a6edcc8c7a0">
+            <ByID ID="XON_IZ">
+                <Predicate ID="[XON_IZ]6[1]" Target="6[1]" TrueUsage="R" FalseUsage="O">
+                    <Description>If XON.10 (Organization Identifier) is valued.</Description>
+                    <Condition>
+                        <Presence Path="10[1]"/>
+                    </Condition>
+                </Predicate>
+                <Predicate ID="[XON_IZ]7[1]" Target="7[1]" TrueUsage="R" FalseUsage="X">
+                    <Description>If XON.10 (Organization Identifier) is valued.</Description>
+                    <Condition>
+                        <Presence Path="10[1]"/>
+                    </Condition>
+                </Predicate>
+                <Predicate ID="[XON_IZ]10[1]" Target="10[1]" TrueUsage="R" FalseUsage="RE">
+                    <Description>If XON.1 (Organization Name) is valued.</Description>
+                    <Condition>
+                        <Presence Path="1[1]"/>
+                    </Condition>
+                </Predicate>
+            </ByID>
+            <ByID ID="XTN_IZ">
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
@@ -189,21 +165,7 @@
     </Predicates>
     <Constraints>
         <Datatype>
-            <ByID ID="5d62ecfe-7a05-4d34-b034-361171a92f2f">
-                <Constraint ID="IZ-5" Target="2[1]">
-                    <Description>The value of HD.2 (Universal ID) SHALL be formatted with ISO-compliant OID.</Description>
-                    <Assertion>
-                        <Format Path="2[1]" Regex="[0-2](\.(0|[1-9][0-9]*))*"/>
-                    </Assertion>
-                </Constraint>
-                <Constraint ID="IZ-6" Target="3[1]">
-                    <Description>The value of HD.3 (Universal ID Type) SHALL be 'ISO'.</Description>
-                    <Assertion>
-                        <PlainText Path="3[1]" Text="ISO" IgnoreCase="true"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
-            <ByID ID="75226da6-8eee-45ae-8f3d-1151e899be8c">
+            <ByID ID="EI_IZ_RSP_Z33">
                 <Constraint ID="IZ-3" Target="3[1]">
                     <Description>The value of EI.3 (Universal ID) SHALL be formatted with ISO-compliant OID.</Description>
                     <Assertion>
@@ -217,7 +179,7 @@
                     </Assertion>
                 </Constraint>
             </ByID>
-            <ByID ID="96fb82f3-890c-4af7-bf15-1e8bf9ca6458">
+            <ByID ID="HD_IZ">
                 <Constraint ID="IZ-5" Target="2[1]">
                     <Description>The value of HD.2 (Universal ID) SHALL be formatted with ISO-compliant OID.</Description>
                     <Assertion>
@@ -233,7 +195,7 @@
             </ByID>
         </Datatype>
         <Segment>
-            <ByID ID="96f348da-5a3c-4e10-a5c2-c3d01ff84a7d">
+            <ByID ID="MSH_IZ 1_5_Z33">
                 <Constraint ID="IZ-12" Target="1[1]">
                     <Description>The value of MSH.1 (Field Separator) SHALL be '|'.</Description>
                     <Assertion>
