@@ -18,7 +18,10 @@
         	<h3>Welcome Test Case Authoring and Management Tool (TCAMT)!</h3>
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedId != null}" columns="1" cellpadding="5">
         		<p>Hello </p> <h:outputText value="#{userControl.id}" />
-        		<p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.logoutAction}"/>
+        		<!-- <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.logoutAction}"/>
+        		 -->
+        		 <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')}" actionListener="#{userControl.logoutAction}"/>
+        	
         	</h:panelGrid>
         	
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedId == null}" columns="2" cellpadding="5">
@@ -26,7 +29,9 @@
         		<p:inputText value="#{userControl.id}" />
         		<h:outputText value="Passwords: " />
         		<p:password value="#{userControl.password}" />
-        		<p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.loginAction}"/>
+        		<!-- <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.loginAction}"/>
+        		 -->
+        		 <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')}" actionListener="#{userControl.loginAction}"/>
         	</h:panelGrid>
     	</p:outputPanel>
 	</h:form>

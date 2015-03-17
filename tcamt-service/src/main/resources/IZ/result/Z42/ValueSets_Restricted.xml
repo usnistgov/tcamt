@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
-<TableLibrary xmlns="http://www.nist.gov/healthcare/data" Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
+<TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
 	<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="V04" Codesys="HL70003" DisplayName="V04" Source="Local"/>
 		<TableElement Code="K11" Codesys="HL70003" DisplayName="K11" Source="Local"/>
@@ -583,11 +583,11 @@
 		<TableElement Code="WC" Codesys="HL70396" DisplayName="WHO ATC" Source="Local"/>
 	</TableDefinition>
 	<TableDefinition AlternateId="HL70208_IZ" Codesys="" Id="HL70208_IZ" Name="Query response status" Oid="" Type="HL7" Version="1.5">
-		<TableElement Code="OK" Codesys="HL70200" DisplayName="Data found, no errors (this is the default)" Source="Local"/>
-		<TableElement Code="NF" Codesys="HL70200" DisplayName="No data found, no errors" Source="Local"/>
-		<TableElement Code="AE" Codesys="HL70200" DisplayName="Application error" Source="Local"/>
-		<TableElement Code="AR" Codesys="HL70200" DisplayName="Application reject" Source="Local"/>
-		<TableElement Code="TM" Codesys="HL70200" DisplayName="Too many candidates found" Source="Local"/>
+		<TableElement Code="OK" Codesys="HL70208" DisplayName="Data found, no errors (this is the default)" Source="Local"/>
+		<TableElement Code="NF" Codesys="HL70208" DisplayName="No data found, no errors" Source="Local"/>
+		<TableElement Code="AE" Codesys="HL70208" DisplayName="Application error" Source="Local"/>
+		<TableElement Code="AR" Codesys="HL70208" DisplayName="Application reject" Source="Local"/>
+		<TableElement Code="TM" Codesys="HL70208" DisplayName="Too many candidates found" Source="Local"/>
 	</TableDefinition>
 	<TableDefinition AlternateId="HL70203_IZ" Codesys="" Id="HL70203_IZ" Name="Identifier type" Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="AN" Codesys="HL70203" DisplayName="Account number " Source="Local"/>

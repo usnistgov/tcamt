@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceProfile ID="e50b2a0b-4cee-48cb-bbb7-b944ae0264dd">
+<ConformanceProfile ID="a52d805d-7e5a-4c8a-88f2-e7875f03e40e">
     <Messages>
-        <Message ID="0bf49e19-f262-4428-b553-5b086966c680" Type="ACK" Event="ACK" StructID="ACK" Description="General acknowledgment message">
+        <Message ID="d6d572d5-8309-442f-b16d-e09d34b0ba06" Type="ACK" Event="ACK" StructID="ACK" Description="General acknowledgment message">
             <Segment Ref="3bf4af76-c6f5-4114-baa7-7147064c325e" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="0d9050cd-69dd-4dc2-ae68-ce5cccdd90f4" Usage="R" Min="1" Max="1"/>

@@ -302,11 +302,11 @@
     </TableDefinition>
     <TableDefinition AlternateId="HL70207_IZ" Codesys="HL70207" Id="HL70207_IZ" Name="Processing mode" Type="HL7" Version="1.5"/>
     <TableDefinition AlternateId="HL70208_IZ" Codesys="HL70208" Id="HL70208_IZ" Name="Query response status" Type="User" Version="1.5">
-        <TableElement Code="OK" Codesys="HL70200" DisplayName="Data found, no errors (this is the default)" Source="Local"/>
-        <TableElement Code="NF" Codesys="HL70200" DisplayName="No data found, no errors" Source="Local"/>
-        <TableElement Code="AE" Codesys="HL70200" DisplayName="Application error" Source="Local"/>
-        <TableElement Code="AR" Codesys="HL70200" DisplayName="Application reject" Source="Local"/>
-        <TableElement Code="TM" Codesys="HL70200" DisplayName="Too many candidates found" Source="Local"/>
+        <TableElement Code="OK" Codesys="HL70208" DisplayName="Data found, no errors (this is the default)" Source="Local"/>
+        <TableElement Code="NF" Codesys="HL70208" DisplayName="No data found, no errors" Source="Local"/>
+        <TableElement Code="AE" Codesys="HL70208" DisplayName="Application error" Source="Local"/>
+        <TableElement Code="AR" Codesys="HL70208" DisplayName="Application reject" Source="Local"/>
+        <TableElement Code="TM" Codesys="HL70208" DisplayName="Too many candidates found" Source="Local"/>
     </TableDefinition>
     <TableDefinition AlternateId="HL70215_IZ" Codesys="HL70215" Id="HL70215_IZ" Name="Publicity code" Type="HL7" Version="1.5">
         <TableElement Code="01" Codesys="HL70215" DisplayName="No reminder/recall" Source="Local"/>

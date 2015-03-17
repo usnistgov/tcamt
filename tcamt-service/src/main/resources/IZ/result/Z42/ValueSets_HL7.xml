@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<TableLibrary xmlns="http://www.nist.gov/healthcare/data" Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
+<TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
   <TableDefinition AlternateId="0339" Codesys="" Id="0339" Name="Advanced Beneficiary Notice Code" Oid="" Type="HL7" Version="">
     <TableElement Code="1" Codesys="0339" DisplayName="Service is subject to medical necessity procedures" Source="Local"/>
     <TableElement Code="2" Codesys="0339" DisplayName="Patient has been informed of responsibility, and agrees to pay for service" Source="Local"/>

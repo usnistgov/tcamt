@@ -172,7 +172,7 @@
 			<table width="100%">
 				<tr>
 					<td align="right"><p:commandButton value="Apply"
-							icon="ui-icon-pencil" update=":#{p:component('messageList')}  :#{p:component('interactionList')}"
+							icon="ui-icon-pencil" update=":#{p:component('messageList')}"
 							actionListener="#{messageProfileRequestBean.editMessage}"
 							onclick="PF('editMessage').hide();" /></td>
 				</tr>
@@ -337,7 +337,7 @@
 							oncomplete="PF('constructMSG').show();" />
 						<p:commandButton value="Save"
 							icon="ui-icon-disk"
-							update=":#{p:component('messageList')}  :#{p:component('interactionList')}"
+							update=":#{p:component('messageList')}"
 							actionListener="#{messageRequestBean.saveMessage}"
 							onclick="PF('viewMSG').hide();" /></td>
 				</tr>

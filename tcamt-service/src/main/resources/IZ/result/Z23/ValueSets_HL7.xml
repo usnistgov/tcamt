@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<TableLibrary xmlns="http://www.nist.gov/healthcare/data" Description="Automatically generated vacab for ACK" Name="Vocab for ACK" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
+<TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for ACK" Name="Vocab for ACK" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
   <TableDefinition AlternateId="0201" Codesys="" Id="0201" Name="Telecommunication use code" Oid="" Type="HL7" Version="">
     <TableElement Code="ASN" Codesys="0201" DisplayName="Answering Service Number" Source="Local"/>
     <TableElement Code="BPN" Codesys="0201" DisplayName="Beeper Number" Source="Local"/>
