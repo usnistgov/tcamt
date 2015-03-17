@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="5cf714ee-61e1-4ab3-b5d8-d4c32702f600" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="567b39de-4d19-4964-9a81-da95f90afc2c" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>
@@ -223,7 +223,7 @@
                 </Constraint>
             </ByID>
             <ByID ID="QPD_IZ1_5">
-                <Constraint ID="IZ-XX" Target="1[1]">
+                <Constraint ID="IZ-67" Target="1[1]">
                     <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z34^Request Complete Immunization History^CDCPHINVS'.</Description>
                     <Assertion>
                         <AND>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="3c8bc0ef-eef4-4a36-9b9f-77241bc5d841" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="07fd8301-16e3-484d-99b1-3ded0cf584d7" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
@@ -285,6 +285,20 @@
                         <AND>
                             <PlainText Path="21[1].1[1]" Text="Z31" IgnoreCase="true"/>
                             <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                        </AND>
+                    </Assertion>
+                </Constraint>
+            </ByID>
+            <ByID ID="QPD_IZ1_5">
+                <Constraint ID="IZ-67" Target="1[1]">
+                    <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z34^Request Immunization History^CDCPHINVS'.</Description>
+                    <Assertion>
+                        <AND>
+                            <PlainText Path="1[1].1[1]" Text="Z34" IgnoreCase="true"/>
+                            <AND>
+                                <PlainText Path="1[1].2[1]" Text="Request Immunization History" IgnoreCase="true"/>
+                                <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                            </AND>
                         </AND>
                     </Assertion>
                 </Constraint>

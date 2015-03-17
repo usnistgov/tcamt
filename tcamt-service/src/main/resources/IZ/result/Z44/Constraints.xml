@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="494e2b5c-03fc-4e13-9f4f-c9c95280bc5b" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="8a3255a4-bd59-4b15-b2f6-015bf12e6ec1" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>
@@ -223,7 +223,7 @@
                 </Constraint>
             </ByID>
             <ByID ID="QPD_IZ">
-                <Constraint ID="IZ-XX" Target="1[1]">
+                <Constraint ID="IZ-68" Target="1[1]">
                     <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z44^Request Evaluated History and Forecast^CDCPHINVS'.</Description>
                     <Assertion>
                         <AND>

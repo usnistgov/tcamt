@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="e9543c87-c012-4ca3-9171-56118b8c40c0" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="92439f11-032b-480c-a98d-5450c9c46cbc" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
@@ -251,6 +251,29 @@
                             <PlainText Path="21[1].1[1]" Text="Z33" IgnoreCase="true"/>
                             <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
                         </AND>
+                    </Assertion>
+                </Constraint>
+            </ByID>
+            <ByID ID="QPD_IZ1_5">
+                <Constraint ID="IZ-71" Target="1[1]">
+                    <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z34^Request Immunization History^CDCPHINVS' OR the value of QPD.1 (Message Query Name) SHALL be 'Z44^Request Evaluated History and Forecast^CDCPHINVS'.</Description>
+                    <Assertion>
+                        <OR>
+                            <AND>
+                                <PlainText Path="1[1].1[1]" Text="Z34" IgnoreCase="true"/>
+                                <AND>
+                                    <PlainText Path="1[1].2[1]" Text="Request Immunization History" IgnoreCase="true"/>
+                                    <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                                </AND>
+                            </AND>
+                            <AND>
+                                <PlainText Path="1[1].1[1]" Text="Z44" IgnoreCase="true"/>
+                                <AND>
+                                    <PlainText Path="1[1].2[1]" Text="Request Evaluated History and Forecast" IgnoreCase="true"/>
+                                    <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                                </AND>
+                            </AND>
+                        </OR>
                     </Assertion>
                 </Constraint>
             </ByID>
