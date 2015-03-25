@@ -133,7 +133,7 @@
                             <NOT>
                                 <Presence Path="2[1]"/>
                             </NOT>
-                            <PlainText Path="3[1]" Text="ISO" IgnoreCase="true"/>
+                            <PlainText Path="3[1]" Text="ISO" IgnoreCase="false"/>
                         </OR>
                     </Assertion>
                 </Constraint>
@@ -148,7 +148,7 @@
                 <Constraint ID="IZ-4" Target="4[1]">
                     <Description>The value of EI.5.4 (Universal ID Type) SHALL be 'ISO'.</Description>
                     <Assertion>
-                        <PlainText Path="4[1]" Text="ISO" IgnoreCase="true"/>
+                        <PlainText Path="4[1]" Text="ISO" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
             </ByID>
@@ -158,13 +158,13 @@
                 <Constraint ID="IZ-12" Target="1[1]">
                     <Description>The value of MSH.1 (Field Separator) SHALL be '|'.</Description>
                     <Assertion>
-                        <PlainText Path="1[1]" Text="|" IgnoreCase="true"/>
+                        <PlainText Path="1[1]" Text="|" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-13" Target="2[1]">
                     <Description>The value of MSH.2 (Encoding Characters) SHALL be '^~\&amp;'.</Description>
                     <Assertion>
-                        <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-TS_Z" Target="7[1]">
@@ -177,10 +177,10 @@
                     <Description>The value of MSH.9 (Message Type) SHALL be 'ACK^V04^ACK'.</Description>
                     <Assertion>
                         <AND>
-                            <PlainText Path="9[1].1[1]" Text="ACK" IgnoreCase="true"/>
+                            <PlainText Path="9[1].1[1]" Text="ACK" IgnoreCase="false"/>
                             <AND>
-                                <PlainText Path="9[1].2[1]" Text="V04" IgnoreCase="true"/>
-                                <PlainText Path="9[1].3[1]" Text="ACK" IgnoreCase="true"/>
+                                <PlainText Path="9[1].2[1]" Text="V04" IgnoreCase="false"/>
+                                <PlainText Path="9[1].3[1]" Text="ACK" IgnoreCase="false"/>
                             </AND>
                         </AND>
                     </Assertion>
@@ -188,27 +188,27 @@
                 <Constraint ID="IZ-15" Target="12[1]">
                     <Description>The value of MSH.12.1 (Version ID) SHALL be '2.5.1'.</Description>
                     <Assertion>
-                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="true"/>
+                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-53" Target="15[1]">
                     <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
-                        <PlainText Path="15[1]" Text="NE" IgnoreCase="true"/>
+                        <PlainText Path="15[1]" Text="NE" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-52" Target="16[1]">
                     <Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
-                        <PlainText Path="16[1]" Text="NE" IgnoreCase="true"/>
+                        <PlainText Path="16[1]" Text="NE" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-54" Target="21[1]">
                     <Description>The value of MSH.21[1] (Message Profile Identifier) SHALL be 'Z23^CDCPHINVS'.</Description>
                     <Assertion>
                         <AND>
-                            <PlainText Path="21[1].1[1]" Text="Z23" IgnoreCase="true"/>
-                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                            <PlainText Path="21[1].1[1]" Text="Z23" IgnoreCase="false"/>
+                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="false"/>
                         </AND>
                     </Assertion>
                 </Constraint>

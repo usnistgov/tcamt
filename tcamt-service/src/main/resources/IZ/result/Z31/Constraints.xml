@@ -139,14 +139,14 @@
                 <Predicate ID="[XTN_IZ]4[1]" Target="4[1]" TrueUsage="R" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is 'NET'.</Description>
                     <Condition>
-                        <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="NET" IgnoreCase="false"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XTN_IZ]6[1]" Target="6[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="false"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -154,7 +154,7 @@
                     <Description>If the value of XTN.2 (Telecommunication Use Code) is not 'NET'.</Description>
                     <Condition>
                         <NOT>
-                            <PlainText Path="2[1]" Text="NET" IgnoreCase="true"/>
+                            <PlainText Path="2[1]" Text="NET" IgnoreCase="false"/>
                         </NOT>
                     </Condition>
                 </Predicate>
@@ -165,13 +165,13 @@
                 <Predicate ID="[PID_IZ 1_5_Z31]25[1]" Target="25[1]" TrueUsage="RE" FalseUsage="O">
                     <Description>If the value of PID.24 (Multiple Birth Indicator) is 'Y'.</Description>
                     <Condition>
-                        <PlainText Path="24[1]" Text="Y" IgnoreCase="true"/>
+                        <PlainText Path="24[1]" Text="Y" IgnoreCase="false"/>
                     </Condition>
                 </Predicate>
                 <Predicate ID="[PID_IZ 1_5_Z31]29[1]" Target="29[1]" TrueUsage="RE" FalseUsage="X">
                     <Description>If the value of PID.30 (Patient Death Indicator) is 'Y'.</Description>
                     <Condition>
-                        <PlainText Path="30[1]" Text="Y" IgnoreCase="true"/>
+                        <PlainText Path="30[1]" Text="Y" IgnoreCase="false"/>
                     </Condition>
                 </Predicate>
             </ByID>
@@ -210,7 +210,7 @@
                 <Constraint ID="IZ-4" Target="4[1]">
                     <Description>The value of EI.4 (Universal ID Type) SHALL be 'ISO'.</Description>
                     <Assertion>
-                        <PlainText Path="4[1]" Text="ISO" IgnoreCase="true"/>
+                        <PlainText Path="4[1]" Text="ISO" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
             </ByID>
@@ -224,7 +224,7 @@
                 <Constraint ID="IZ-6" Target="3[1]">
                     <Description>The value of HD.3 (Universal ID Type) SHALL be 'ISO'.</Description>
                     <Assertion>
-                        <PlainText Path="3[1]" Text="ISO" IgnoreCase="true"/>
+                        <PlainText Path="3[1]" Text="ISO" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
             </ByID>
@@ -234,13 +234,13 @@
                 <Constraint ID="IZ-12" Target="1[1]">
                     <Description>The value of MSH.1 (Field Separator) SHALL be '|'.</Description>
                     <Assertion>
-                        <PlainText Path="1[1]" Text="|" IgnoreCase="true"/>
+                        <PlainText Path="1[1]" Text="|" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-13" Target="2[1]">
                     <Description>The value of MSH.2 (Encoding Characters) SHALL be '^~\&amp;'.</Description>
                     <Assertion>
-                        <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="true"/>
+                        <PlainText Path="2[1]" Text="^~\&amp;" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-TS_Z" Target="7[1]">
@@ -253,10 +253,10 @@
                     <Description>The value of MSH.9 (Message Type) SHALL be 'RSP^K11^RSP_K11'.</Description>
                     <Assertion>
                         <AND>
-                            <PlainText Path="9[1].1[1]" Text="RSP" IgnoreCase="true"/>
+                            <PlainText Path="9[1].1[1]" Text="RSP" IgnoreCase="false"/>
                             <AND>
-                                <PlainText Path="9[1].2[1]" Text="K11" IgnoreCase="true"/>
-                                <PlainText Path="9[1].3[1]" Text="RSP_K11" IgnoreCase="true"/>
+                                <PlainText Path="9[1].2[1]" Text="K11" IgnoreCase="false"/>
+                                <PlainText Path="9[1].3[1]" Text="RSP_K11" IgnoreCase="false"/>
                             </AND>
                         </AND>
                     </Assertion>
@@ -264,27 +264,27 @@
                 <Constraint ID="IZ-15" Target="12[1]">
                     <Description>The value of MSH.12.1 (Version ID) SHALL be '2.5.1'.</Description>
                     <Assertion>
-                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="true"/>
+                        <PlainText Path="12[1].1[1]" Text="2.5.1" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-53" Target="15[1]">
                     <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
-                        <PlainText Path="15[1]" Text="NE" IgnoreCase="true"/>
+                        <PlainText Path="15[1]" Text="NE" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-52" Target="16[1]">
                     <Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'NE'.</Description>
                     <Assertion>
-                        <PlainText Path="16[1]" Text="NE" IgnoreCase="true"/>
+                        <PlainText Path="16[1]" Text="NE" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-61" Target="21[1]">
                     <Description>The value of MSH.21 (Message Profile Identifier) SHALL be 'Z31^CDCPHINVS'.</Description>
                     <Assertion>
                         <AND>
-                            <PlainText Path="21[1].1[1]" Text="Z31" IgnoreCase="true"/>
-                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                            <PlainText Path="21[1].1[1]" Text="Z31" IgnoreCase="false"/>
+                            <PlainText Path="21[1].2[1]" Text="CDCPHINVS" IgnoreCase="false"/>
                         </AND>
                     </Assertion>
                 </Constraint>
@@ -294,10 +294,10 @@
                     <Description>The value of QPD.1 (Message Query Name) SHALL be 'Z34^Request Immunization History^CDCPHINVS'.</Description>
                     <Assertion>
                         <AND>
-                            <PlainText Path="1[1].1[1]" Text="Z34" IgnoreCase="true"/>
+                            <PlainText Path="1[1].1[1]" Text="Z34" IgnoreCase="false"/>
                             <AND>
-                                <PlainText Path="1[1].2[1]" Text="Request Immunization History" IgnoreCase="true"/>
-                                <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="true"/>
+                                <PlainText Path="1[1].2[1]" Text="Request Immunization History" IgnoreCase="false"/>
+                                <PlainText Path="1[1].3[1]" Text="CDCPHINVS" IgnoreCase="false"/>
                             </AND>
                         </AND>
                     </Assertion>
@@ -313,13 +313,13 @@
                 <Constraint ID="IZ-XX" Target="5[1]">
                     <Description>The value of PID.5[1].7 (Name Type Code) SHALL be 'L'.</Description>
                     <Assertion>
-                        <PlainText Path="5[1].7[1]" Text="L" IgnoreCase="true"/>
+                        <PlainText Path="5[1].7[1]" Text="L" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-XX" Target="13[1]">
                     <Description>The value of PID.13[1].2 (Telecommunication Use Code) SHALL be 'PRN'.</Description>
                     <Assertion>
-                        <PlainText Path="13[1].2[1]" Text="PRN" IgnoreCase="true"/>
+                        <PlainText Path="13[1].2[1]" Text="PRN" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
             </ByID>
