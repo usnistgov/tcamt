@@ -1,6 +1,7 @@
 package gov.nist.healthcare.tcamt.view;
 
 import gov.nist.healthcare.tcamt.db.DBImpl;
+import gov.nist.healthcare.tcamt.domain.Actor;
 
 import java.util.List;
 
@@ -17,6 +18,11 @@ public class UserControl {
 
 	private String id;
 	private String password;
+	
+	private String newId;
+	private String newPassword;
+	private String selectedUser;
+	
 
 	private DBImpl dbManager = new DBImpl();
 
@@ -38,7 +44,7 @@ public class UserControl {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
+	
 	public void loginAction(ActionEvent actionEvent) {
 		boolean result = dbManager.getUserPasswordById(this.id, this.password);
 
@@ -61,6 +67,32 @@ public class UserControl {
 		
 		sessionBeanTCAMT.retriveAllData();
 	}
+	
+	public void editUser(){
+		this.dbManager.modifyPassWord(this.selectedUser, this.newPassword);
+		this.selectedUser = new String();
+		this.newPassword = new String();
+	}
+	
+	public void selectEditUser(ActionEvent event) {
+		this.selectedUser = (String) event.getComponent().getAttributes().get("user");
+	}
+	
+	
+	public void delUser(ActionEvent event) {
+		this.dbManager.deleteUset((String) event.getComponent().getAttributes().get("user"));
+	}
+	
+	public void createUser() {
+		this.newId = new String();
+		this.newPassword = new String();
+	}
+	
+	public void addUser() {
+		this.dbManager.addUser(this.newId, this.newPassword);
+		this.newPassword = new String();
+		this.newId = new String();
+	}
 
 	public void addMessage(String summary) {
 		FacesMessage msgs = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
@@ -77,6 +109,30 @@ public class UserControl {
 	
 	public List<String> getUsers(){
 		return dbManager.getAllUsers();
+	}
+
+	public String getNewId() {
+		return newId;
+	}
+
+	public void setNewId(String newId) {
+		this.newId = newId;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
+	}
+
+	public String getSelectedUser() {
+		return selectedUser;
+	}
+
+	public void setSelectedUser(String selectedUser) {
+		this.selectedUser = selectedUser;
 	}
 	
 	

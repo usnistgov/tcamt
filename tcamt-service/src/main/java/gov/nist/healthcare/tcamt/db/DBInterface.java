@@ -55,6 +55,9 @@ public interface DBInterface {
 	
 	public boolean getUserPasswordById(String id, String password);
 	public List<String> getAllUsers();
+	public int addUser(String id, String pw);
+	public int modifyPassWord(String id, String pw);
+	public int deleteUset(String id);
 	
 	public boolean checkAvailabilityDeleteTestStep(Integer id);
 	public boolean checkAvailabilityDeleteTestCase(Integer id);

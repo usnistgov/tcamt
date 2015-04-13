@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for VXU_V04" Name="Vocab for VXU_V04" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
+<TableSet>	
 	<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="V04" Codesys="HL70003" DisplayName="V04" Source="Local"/>
 		<TableElement Code="K11" Codesys="HL70003" DisplayName="K11" Source="Local"/>
@@ -290,6 +291,11 @@
 		<TableElement Code="W2" Codesys="HL70396" DisplayName="WHO record # drug codes (8 digit)" Source="Local"/>
 		<TableElement Code="W4" Codesys="HL70396" DisplayName="WHO record # code with ASTM extension" Source="Local"/>
 		<TableElement Code="WC" Codesys="HL70396" DisplayName="WHO ATC" Source="Local"/>
+		<TableElement Code="UCUM" Codesys="HL70396" DisplayName="Unified Code for Units of Measure" Source="Local"/>
+		<TableElement Code="NIP0001" Codesys="HL70396" DisplayName="NIP0001" Source="Local"/>
+		<TableElement Code="NIP0002" Codesys="HL70396" DisplayName="NIP0002" Source="Local"/>
+		<TableElement Code="NIP0003" Codesys="HL70396" DisplayName="NIP0003" Source="Local"/>
+		<TableElement Code="CDCREC" Codesys="HL70396" DisplayName="CDCREC" Source="Local"/>
 	</TableDefinition>
 	<TableDefinition AlternateId="HL70063_IZ" Codesys="" Id="HL70063_IZ" Name="Relationship" Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="BRO" Codesys="HL70063" DisplayName="Brother" Source="Local"/>
@@ -391,4 +397,5 @@
 	<TableDefinition AlternateId="HL70126_IZ" Codesys="" Id="HL70126_IZ" Name="Quantity limited request " Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="RD" Codesys="HL70126" DisplayName="records" Source="Local"/>
 	</TableDefinition>
+</TableSet>
 </TableLibrary>

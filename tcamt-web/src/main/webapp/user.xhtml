@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:vsm="http://java.sun.com/jsf/composite/vsm">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="resources/css/main.css" />
+	<link type="text/css" rel="stylesheet" href="resources/css/primeface.custom.css" />
+</h:head>
+
+<h:body>
+	<h:body id="tcamtbody">
+		<ui:include src="/views/header.xhtml" />
+		
+		<h:form id="userForm">
+		<p:accordionPanel widgetVar="UserPanel">
+			<p:tab title="Users DashBoard" >
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton
+									value="Create New User" icon="ui-icon-plus"
+									update=":#{p:component('createUserForm')}"
+									actionListener="#{userControl.createUser}"
+									oncomplete="PF('createUser').show();" />
+						</td>
+					</tr>
+				</table>
+
+				<p:dataTable id="userList" var="user" value="#{userControl.users}">
+					<p:column headerText="ID">
+						<h:outputText value="#{user}" />
+					</p:column>
+					
+					<p:column headerText="Action">
+						<p:commandButton
+									value="Edit" icon="ui-icon-pencil"
+									update=":#{p:component('editUserForm')}"
+									actionListener="#{userControl.selectEditUser}"
+									oncomplete="PF('editUser').show();" >
+									<f:attribute name="user" value="#{user}" />
+						</p:commandButton>
+						<p:commandButton value="Del"
+							actionListener="#{userControl.delUser}"
+							update=":#{p:component('userForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="user" value="#{user}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			
+		</p:accordionPanel>
+	</h:form>
+	
+	<h:form id="createUserForm">
+		<p:dialog id="createUserDialog" header="Create User"
+			widgetVar="createUser">
+			<h:panelGrid id="createUserPanel" columns="2" cellpadding="5">
+				<h:outputText value="ID: " />
+				<p:inputText value="#{userControl.newId}" />
+				<h:outputText value="Password: " />
+				<p:inputText value="#{userControl.newPassword}" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Create" icon="ui-icon-plus"
+							update=":#{p:component('userList')}"
+							actionListener="#{userControl.addUser}"
+							onclick="PF('createUser').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+
+	<h:form id="editUserForm">
+		<p:dialog id="editUserDialog" header="Edit User"
+			widgetVar="editUser">
+			<h:panelGrid id="editUserPanel" columns="2" cellpadding="5">
+				<h:outputText value="ID: " />
+				<h:outputText value="#{userControl.selectedUser}" />
+				<h:outputText value="New Password: " />
+				<p:inputText value="#{userControl.newPassword}" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Apply" icon="ui-icon-pencil"
+							update=":#{p:component('userList')}"
+							actionListener="#{userControl.editUser}"
+							onclick="PF('editUser').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+
+	</h:form>
+		
+		
+		
+		
+		<ui:include src="/views/footer.xhtml" />
+	</h:body>
+</h:body>
+</html>

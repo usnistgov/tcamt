@@ -10,9 +10,9 @@ import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.ProfilePathOccurIGData;
 import gov.nist.healthcare.tcamt.domain.TestCase;
 import gov.nist.healthcare.tcamt.domain.TestPlan;
-import gov.nist.healthcare.tcamt.domain.Transaction;
 import gov.nist.healthcare.tcamt.domain.TestStep;
 import gov.nist.healthcare.tcamt.domain.TestStory;
+import gov.nist.healthcare.tcamt.domain.Transaction;
 import gov.nist.healthcare.tcamt.domain.ValidationContext;
 
 import java.io.ByteArrayInputStream;
@@ -1314,6 +1314,72 @@ public class DBImpl implements DBInterface {
 		return users;
 	}
 	
+	public int addUser(String id, String pw) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		DBCon db = new DBCon();
+		int result = 0;
+		try {
+			conn = db.connect();
+			String sql = "insert into users (id, password) values(?,?)";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, id);
+			stmt.setString(2, pw);
+			result = stmt.executeUpdate();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.close(stmt, conn);
+		}
+		return result;
+	}
+
+	public int modifyPassWord(String id, String pw) {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		DBCon db = new DBCon();
+		int result = 0;
+		try {
+			conn = db.connect();
+			String sql = "update users set password=? where id=?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, pw);
+			stmt.setString(2, id);
+			result = stmt.executeUpdate();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.close(stmt, conn);
+		}
+		return result;
+	}
+
+	public int deleteUset(String id) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		DBCon db = new DBCon();
+		int result = 0;
+		try {
+			conn = db.connect();
+			String sql = "delete from users where id=?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			result = pstmt.executeUpdate();
+		} catch (SQLException se) {
+			se.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.close(pstmt, conn);
+		}
+		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public boolean checkAvailabilityDeleteTestStep(Integer id) {		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -1351,6 +1417,7 @@ public class DBImpl implements DBInterface {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean checkAvailabilityDeleteTestCase(Integer id) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;

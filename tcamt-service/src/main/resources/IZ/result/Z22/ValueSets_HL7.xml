@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  Description="Automatically generated vacab for VXU_V04" Name="Vocab for VXU_V04" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-  <TableDefinition AlternateId="0151" Codesys="" Id="0151" Name="Second Opinion Status" Oid="" Type="HL7" Version="">
+  <TableSet>
+<TableDefinition AlternateId="0151" Codesys="" Id="0151" Name="Second Opinion Status" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0151" DisplayName="No suggested values defined" Source="Local"/>
   </TableDefinition>
   <TableDefinition AlternateId="0150" Codesys="" Id="0150" Name="Certification patient type" Oid="" Type="HL7" Version="">
@@ -803,93 +804,58 @@
     <TableElement Code="..." Codesys="0399" DisplayName="use 3-character (alphabetic) form of ISO 3166" Source="Local"/>
   </TableDefinition>
   <TableDefinition AlternateId="0396" Codesys="" Id="0396" Name="Coding system" Oid="" Type="HL7" Version="">
-    <TableElement Code="99zzz or L" Codesys="0396" DisplayName="Local general code (where z is an alphanumeric character)" Source="Local"/>
-    <TableElement Code="ACR" Codesys="0396" DisplayName="American College of Radiology finding codes" Source="Local"/>
-    <TableElement Code="ANS+" Codesys="0396" DisplayName="HL7 set of units of measure" Source="Local"/>
-    <TableElement Code="ART" Codesys="0396" DisplayName="WHO Adverse Reaction Terms" Source="Local"/>
-    <TableElement Code="AS4" Codesys="0396" DisplayName="ASTM E1238/ E1467 Universal" Source="Local"/>
-    <TableElement Code="AS4E" Codesys="0396" DisplayName="AS4 Neurophysiology Codes" Source="Local"/>
-    <TableElement Code="ATC" Codesys="0396" DisplayName="American Type Culture Collection" Source="Local"/>
-    <TableElement Code="C4" Codesys="0396" DisplayName="CPT-4" Source="Local"/>
-    <TableElement Code="C5" Codesys="0396" DisplayName="CPT-5" Source="Local"/>
-    <TableElement Code="CAS" Codesys="0396" DisplayName="Chemical abstract codes" Source="Local"/>
-    <TableElement Code="CD2" Codesys="0396" DisplayName="CDT-2 Codes" Source="Local"/>
-    <TableElement Code="CDCA" Codesys="0396" DisplayName="CDC Analyte Codes" Source="Local"/>
-    <TableElement Code="CDCM" Codesys="0396" DisplayName="CDC Methods/Instruments Codes" Source="Local"/>
-    <TableElement Code="CDS" Codesys="0396" DisplayName="CDC Surveillance" Source="Local"/>
-    <TableElement Code="CE" Codesys="0396" DisplayName="CEN ECG diagnostic codes" Source="Local"/>
-    <TableElement Code="CLP" Codesys="0396" DisplayName="CLIP" Source="Local"/>
-    <TableElement Code="CPTM" Codesys="0396" DisplayName="CPT Modifier Code" Source="Local"/>
-    <TableElement Code="CST" Codesys="0396" DisplayName="COSTART" Source="Local"/>
-    <TableElement Code="CVX" Codesys="0396" DisplayName="CDC Vaccine Codes" Source="Local"/>
-    <TableElement Code="DCM" Codesys="0396" DisplayName="DICOM Controlled Terminology" Source="Local"/>
-    <TableElement Code="E" Codesys="0396" DisplayName="EUCLIDES" Source="Local"/>
-    <TableElement Code="E5" Codesys="0396" DisplayName="Euclides  quantity codes" Source="Local"/>
-    <TableElement Code="E6" Codesys="0396" DisplayName="Euclides Lab method codes" Source="Local"/>
-    <TableElement Code="E7" Codesys="0396" DisplayName="Euclides Lab equipment codes" Source="Local"/>
-    <TableElement Code="ENZC" Codesys="0396" DisplayName="Enzyme Codes" Source="Local"/>
-    <TableElement Code="FDDC" Codesys="0396" DisplayName="First DataBank Drug Codes" Source="Local"/>
-    <TableElement Code="FDDX" Codesys="0396" DisplayName="First DataBank Diagnostic Codes" Source="Local"/>
-    <TableElement Code="FDK" Codesys="0396" DisplayName="FDA K10" Source="Local"/>
-    <TableElement Code="HB" Codesys="0396" DisplayName="HIBCC" Source="Local"/>
-    <TableElement Code="HCPCS" Codesys="0396" DisplayName="CMS (formerly HCFA)  Common Procedure Coding System" Source="Local"/>
-    <TableElement Code="HCPT" Codesys="0396" DisplayName="Health Care Provider Taxonomy" Source="Local"/>
-    <TableElement Code="HHC" Codesys="0396" DisplayName="Home Health Care" Source="Local"/>
-    <TableElement Code="HI" Codesys="0396" DisplayName="Health Outcomes" Source="Local"/>
-    <TableElement Code="HL7nnnn" Codesys="0396" DisplayName="HL7 Defined Codes where nnnn is the HL7 table number" Source="Local"/>
-    <TableElement Code="HOT" Codesys="0396" DisplayName="Japanese Nationwide Medicine Code" Source="Local"/>
-    <TableElement Code="HPC" Codesys="0396" DisplayName="CMS (formerly HCFA )Procedure Codes (HCPCS)" Source="Local"/>
-    <TableElement Code="I10" Codesys="0396" DisplayName="ICD-10" Source="Local"/>
-    <TableElement Code="I10P" Codesys="0396" DisplayName="ICD-10  Procedure Codes" Source="Local"/>
-    <TableElement Code="I9" Codesys="0396" DisplayName="ICD9" Source="Local"/>
-    <TableElement Code="I9C" Codesys="0396" DisplayName="ICD-9CM" Source="Local"/>
-    <TableElement Code="IBT" Codesys="0396" DisplayName="ISBT" Source="Local"/>
-    <TableElement Code="IBTnnnn" Codesys="0396" DisplayName="ISBT 128 codes where nnnn  specifies a specific table within ISBT 128." Source="Local"/>
-    <TableElement Code="IC2" Codesys="0396" DisplayName="ICHPPC-2" Source="Local"/>
-    <TableElement Code="ICD10AM" Codesys="0396" DisplayName="ICD-10 Australian modification" Source="Local"/>
-    <TableElement Code="ICD10CA" Codesys="0396" DisplayName="ICD-10 Canada" Source="Local"/>
-    <TableElement Code="ICDO" Codesys="0396" DisplayName="International Classification of Diseases for Oncology" Source="Local"/>
-    <TableElement Code="ICS" Codesys="0396" DisplayName="ICCS" Source="Local"/>
-    <TableElement Code="ICSD" Codesys="0396" DisplayName="International Classification of Sleep Disorders" Source="Local"/>
-    <TableElement Code="ISO+" Codesys="0396" DisplayName="ISO 2955.83 (units of measure) with HL7 extensions" Source="Local"/>
-    <TableElement Code="ISOnnnn" Codesys="0396" DisplayName="ISO Defined Codes where nnnn is the ISO table number" Source="Local"/>
-    <TableElement Code="IUPC" Codesys="0396" DisplayName="IUPAC/IFCC Component Codes" Source="Local"/>
-    <TableElement Code="IUPP" Codesys="0396" DisplayName="IUPAC/IFCC Property Codes" Source="Local"/>
-    <TableElement Code="JC10" Codesys="0396" DisplayName="JLAC/JSLM, nationwide laboratory code" Source="Local"/>
-    <TableElement Code="JC8" Codesys="0396" DisplayName="Japanese Chemistry" Source="Local"/>
-    <TableElement Code="JJ1017" Codesys="0396" DisplayName="Japanese Image Examination Cache" Source="Local"/>
-    <TableElement Code="LB" Codesys="0396" DisplayName="Local billing code" Source="Local"/>
-    <TableElement Code="LN" Codesys="0396" DisplayName="Logical Observation Identifier Names and Codes (LOINC횂짰)" Source="Local"/>
-    <TableElement Code="MCD" Codesys="0396" DisplayName="Medicaid" Source="Local"/>
-    <TableElement Code="MCR" Codesys="0396" DisplayName="Medicare" Source="Local"/>
-    <TableElement Code="MDDX" Codesys="0396" DisplayName="Medispan Diagnostic Codes" Source="Local"/>
-    <TableElement Code="MEDC" Codesys="0396" DisplayName="Medical Economics Drug Codes" Source="Local"/>
-    <TableElement Code="MEDR" Codesys="0396" DisplayName="Medical Dictionary for Drug Regulatory Affairs (MEDDRA)" Source="Local"/>
-    <TableElement Code="MEDX" Codesys="0396" DisplayName="Medical Economics Diagnostic Codes" Source="Local"/>
-    <TableElement Code="MGPI" Codesys="0396" DisplayName="Medispan GPI" Source="Local"/>
-    <TableElement Code="MVX" Codesys="0396" DisplayName="CDC Vaccine Manufacturer Codes" Source="Local"/>
-    <TableElement Code="NDA" Codesys="0396" DisplayName="NANDA" Source="Local"/>
-    <TableElement Code="NDC" Codesys="0396" DisplayName="National drug codes" Source="Local"/>
-    <TableElement Code="NIC" Codesys="0396" DisplayName="Nursing Interventions Classification" Source="Local"/>
-    <TableElement Code="NPI" Codesys="0396" DisplayName="National Provider Identifier" Source="Local"/>
-    <TableElement Code="NUBC" Codesys="0396" DisplayName="National Uniform Billing Committee Code" Source="Local"/>
-    <TableElement Code="OHA" Codesys="0396" DisplayName="Omaha System" Source="Local"/>
-    <TableElement Code="POS" Codesys="0396" DisplayName="POS Codes" Source="Local"/>
-    <TableElement Code="RC" Codesys="0396" DisplayName="Read Classification" Source="Local"/>
-    <TableElement Code="SDM" Codesys="0396" DisplayName="SNOMED- DICOM Microglossary" Source="Local"/>
-    <TableElement Code="SNM" Codesys="0396" DisplayName="Systemized Nomenclature of Medicine (SNOMED)" Source="Local"/>
-    <TableElement Code="SNM3" Codesys="0396" DisplayName="SNOMED International" Source="Local"/>
-    <TableElement Code="SNT" Codesys="0396" DisplayName="SNOMED topology codes (anatomic sites)" Source="Local"/>
-    <TableElement Code="UC" Codesys="0396" DisplayName="UCDS" Source="Local"/>
-    <TableElement Code="UMD" Codesys="0396" DisplayName="MDNS" Source="Local"/>
-    <TableElement Code="UML" Codesys="0396" DisplayName="Unified Medical Language" Source="Local"/>
-    <TableElement Code="UPC" Codesys="0396" DisplayName="Universal Product Code" Source="Local"/>
-    <TableElement Code="UPIN" Codesys="0396" DisplayName="UPIN" Source="Local"/>
-    <TableElement Code="USPS" Codesys="0396" DisplayName="United States Postal Service" Source="Local"/>
-    <TableElement Code="W1" Codesys="0396" DisplayName="WHO record # drug codes (6 digit)" Source="Local"/>
-    <TableElement Code="W2" Codesys="0396" DisplayName="WHO record # drug codes (8 digit)" Source="Local"/>
-    <TableElement Code="W4" Codesys="0396" DisplayName="WHO record # code with ASTM extension" Source="Local"/>
-    <TableElement Code="WC" Codesys="0396" DisplayName="WHO ATC" Source="Local"/>
+    <TableElement Code="99zzz or L" Codesys="HL70396" DisplayName="Local general code (where z is an alphanumeric character)" Source="Local"/>
+		<TableElement Code="ART" Codesys="HL70396" DisplayName="WHO Adverse Reaction Terms" Source="Local"/>
+		<TableElement Code="C4" Codesys="HL70396" DisplayName="CPT-4" Source="Local"/>
+		<TableElement Code="C5" Codesys="HL70396" DisplayName="CPT-5" Source="Local"/>
+		<TableElement Code="CDCA" Codesys="HL70396" DisplayName="CDC Analyte Codes" Source="Local"/>
+		<TableElement Code="CDCM" Codesys="HL70396" DisplayName="CDC Methods/Instruments Codes" Source="Local"/>
+		<TableElement Code="CDCPHINVS" Codesys="HL70396" DisplayName="PHIN VS (CDC Local Coding System)" Source="Local"/>
+		<TableElement Code="CDS" Codesys="HL70396" DisplayName="CDC Surveillance" Source="Local"/>
+		<TableElement Code="CPTM" Codesys="HL70396" DisplayName="CPT Modifier Code" Source="Local"/>
+		<TableElement Code="CST" Codesys="HL70396" DisplayName="COSTART" Source="Local"/>
+		<TableElement Code="CVX" Codesys="HL70396" DisplayName="CDC Vaccine Codes" Source="Local"/>
+		<TableElement Code="E" Codesys="HL70396" DisplayName="EUCLIDES" Source="Local"/>
+		<TableElement Code="E5" Codesys="HL70396" DisplayName="Euclides  quantity codes" Source="Local"/>
+		<TableElement Code="E6" Codesys="HL70396" DisplayName="Euclides Lab method codes" Source="Local"/>
+		<TableElement Code="E7" Codesys="HL70396" DisplayName="Euclides Lab equipment codes" Source="Local"/>
+		<TableElement Code="ENZC" Codesys="HL70396" DisplayName="Enzyme Codes" Source="Local"/>
+		<TableElement Code="HB" Codesys="HL70396" DisplayName="HIBCC" Source="Local"/>
+		<TableElement Code="HCPCS" Codesys="HL70396" DisplayName="HCFA Common Procedure Coding System" Source="Local"/>
+		<TableElement Code="HHC" Codesys="HL70396" DisplayName="Home Health Care" Source="Local"/>
+		<TableElement Code="HL7nnnn" Codesys="HL70396" DisplayName="HL7 Defined Codes where nnnn is the HL7 table number" Source="Local"/>
+		<TableElement Code="HPC" Codesys="HL70396" DisplayName="HCFA Procedure Codes (HCPCS)" Source="Local"/>
+		<TableElement Code="I10" Codesys="HL70396" DisplayName="ICD-10" Source="Local"/>
+		<TableElement Code="I10P" Codesys="HL70396" DisplayName="ICD-10  Procedure Codes" Source="Local"/>
+		<TableElement Code="I9" Codesys="HL70396" DisplayName="ICD9" Source="Local"/>
+		<TableElement Code="I9C" Codesys="HL70396" DisplayName="ICD-9CM" Source="Local"/>
+		<TableElement Code="ISOnnnn" Codesys="HL70396" DisplayName="ISO Defined Codes where nnnn is the ISO table number" Source="Local"/>
+		<TableElement Code="LB" Codesys="HL70396" DisplayName="Local billing code" Source="Local"/>
+		<TableElement Code="LN" Codesys="HL70396" DisplayName="Logical Observation Identifier Names and Codes (LOINC占쏙옙" Source="Local"/>
+		<TableElement Code="MCD" Codesys="HL70396" DisplayName="Medicaid" Source="Local"/>
+		<TableElement Code="MCR" Codesys="HL70396" DisplayName="Medicare" Source="Local"/>
+		<TableElement Code="MEDR" Codesys="HL70396" DisplayName="Medical Dictionary for Drug Regulatory Affairs (MEDDRA)" Source="Local"/>
+		<TableElement Code="MVX" Codesys="HL70396" DisplayName="CDC Vaccine Manufacturer Codes" Source="Local"/>
+		<TableElement Code="NDC" Codesys="HL70396" DisplayName="National drug codes" Source="Local"/>
+		<TableElement Code="NCIT" Codesys="HL70396" DisplayName="NCI Thesaurus" Source="Local"/>
+		<TableElement Code="NPI" Codesys="HL70396" DisplayName="National Provider Identifier" Source="Local"/>
+		<TableElement Code="SNM" Codesys="HL70396" DisplayName="Systemized Nomenclature of Medicine (SNOMED占쏙옙" Source="Local"/>
+		<TableElement Code="SCT" Codesys="HL70396" DisplayName="SNOMED Clinical Terminology" Source="Local"/>
+		<TableElement Code="SCT2" Codesys="HL70396" DisplayName="SNOMED Clinical Terms alphanumeric codes" Source="Local"/>
+		<TableElement Code="SNM3" Codesys="HL70396" DisplayName="SNOMED International" Source="Local"/>
+		<TableElement Code="SNT" Codesys="HL70396" DisplayName="SNOMED topology codes (anatomic sites)" Source="Local"/>
+		<TableElement Code="UML" Codesys="HL70396" DisplayName="Unified Medical Language" Source="Local"/>
+		<TableElement Code="UPC" Codesys="HL70396" DisplayName="Universal Product Code" Source="Local"/>
+		<TableElement Code="UPIN" Codesys="HL70396" DisplayName="UPIN" Source="Local"/>
+		<TableElement Code="W1" Codesys="HL70396" DisplayName="WHO record # drug codes (6 digit)" Source="Local"/>
+		<TableElement Code="W2" Codesys="HL70396" DisplayName="WHO record # drug codes (8 digit)" Source="Local"/>
+		<TableElement Code="W4" Codesys="HL70396" DisplayName="WHO record # code with ASTM extension" Source="Local"/>
+		<TableElement Code="WC" Codesys="HL70396" DisplayName="WHO ATC" Source="Local"/>
+		<TableElement Code="UCUM" Codesys="HL70396" DisplayName="Unified Code for Units of Measure" Source="Local"/>
+		<TableElement Code="NIP0001" Codesys="HL70396" DisplayName="NIP0001" Source="Local"/>
+		<TableElement Code="NIP0002" Codesys="HL70396" DisplayName="NIP0002" Source="Local"/>
+		<TableElement Code="NIP0003" Codesys="HL70396" DisplayName="NIP0003" Source="Local"/>
+		<TableElement Code="CDCREC" Codesys="HL70396" DisplayName="CDCREC" Source="Local"/>
   </TableDefinition>
   <TableDefinition AlternateId="0093" Codesys="" Id="0093" Name="Release Information" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0093" DisplayName="user-defined codes" Source="Local"/>
@@ -1388,4 +1354,6 @@
   <TableDefinition AlternateId="0032" Codesys="" Id="0032" Name="Charge/Price Indicator" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0032" DisplayName="no suggested values" Source="Local"/>
   </TableDefinition>
+  </TableSet>
+
 </TableLibrary>
