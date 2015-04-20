@@ -2,7 +2,6 @@
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for VXU_V04" Name="Vocab for VXU_V04" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
 <TableSet>
-	
 	<TableDefinition AlternateId="NIP003" Codesys="" Id="NIP003" Name="Observation identifiers " Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="64994-7" Codesys="LN" DisplayName="Vaccine funding program eligibility category" Source="Local"/>
 		<TableElement Code="30963-3" Codesys="LN" DisplayName="Vaccine funding source" Source="Local"/>
@@ -20,9 +19,9 @@
 		<TableElement Code="29769-7" Codesys="LN" DisplayName="Date Vaccine Information Statement Presented" Source="Local"/>
 		<TableElement Code="30973-2" Codesys="LN" DisplayName="30973-2 -- Dose number in series" Source="Local"/>
 		<TableElement Code="30979-9" Codesys="LN" DisplayName="Vaccines due next" Source="Local"/>
-		<TableElement Code="30980-7" Codesys="LN" DisplayName="30980-7 占쏙옙Date vaccine due " Source="Local"/>
-		<TableElement Code="30981-5" Codesys="LN" DisplayName="30981-5 占쏙옙Earliest date to give " Source="Local"/>
-		<TableElement Code="30982-3" Codesys="LN" DisplayName="30982-3 占쏙옙Reason applied by forecast logic to project this vaccine" Source="Local"/>
+		<TableElement Code="30980-7" Codesys="LN" DisplayName="30980-7 Date vaccine due " Source="Local"/>
+		<TableElement Code="30981-5" Codesys="LN" DisplayName="30981-5 Earliest date to give " Source="Local"/>
+		<TableElement Code="30982-3" Codesys="LN" DisplayName="30982-3 Reason applied by forecast logic to project this vaccine" Source="Local"/>
 		<TableElement Code="59779-9" Codesys="LN" DisplayName="Immunization Schedule used" Source="Local"/>
 		<TableElement Code="59777-3" Codesys="LN" DisplayName="Latest date next dose may be given" Source="Local"/>
 		<TableElement Code="59778-1" Codesys="LN" DisplayName="Reason Code" Source="Local"/>
@@ -37,8 +36,8 @@
 		<TableElement Code="00" Codesys="NIP001" DisplayName="New immunization record" Source="Local"/>
 		<TableElement Code="01" Codesys="NIP001" DisplayName="Historical information - source unspecified" Source="Local"/>
 		<TableElement Code="02" Codesys="NIP001" DisplayName="Historical information - from other provider" Source="Local"/>
-		<TableElement Code="03" Codesys="NIP001" DisplayName="Historical information - from parent占쎌뀼 written record" Source="Local"/>
-		<TableElement Code="04" Codesys="NIP001" DisplayName="Historical information - from parent占쎌뀼 recall" Source="Local"/>
+		<TableElement Code="03" Codesys="NIP001" DisplayName="Historical information - from parent written record" Source="Local"/>
+		<TableElement Code="04" Codesys="NIP001" DisplayName="Historical information - from parent recall" Source="Local"/>
 		<TableElement Code="05" Codesys="NIP001" DisplayName="Historical information - from other registry" Source="Local"/>
 		<TableElement Code="06" Codesys="NIP001" DisplayName="Historical information - from birth certificate" Source="Local"/>
 		<TableElement Code="07" Codesys="NIP001" DisplayName="Historical information - from school record" Source="Local"/>

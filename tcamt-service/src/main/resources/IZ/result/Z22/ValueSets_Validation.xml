@@ -63,6 +63,8 @@
 		<id>0447</id>
 		<id>0448</id>
 		<id>0552</id>
+		<id>HL70361_IZ</id>
+		<id>HL70362_IZ</id>
 	</NoValidation>
 	<TableSet>
 		<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">
@@ -135,9 +137,9 @@
 			<TableElement Code="29769-7" Codesys="LN" DisplayName="Date Vaccine Information Statement Presented" Source="Local"/>
 			<TableElement Code="30973-2" Codesys="LN" DisplayName="30973-2 -- Dose number in series" Source="Local"/>
 			<TableElement Code="30979-9" Codesys="LN" DisplayName="Vaccines due next" Source="Local"/>
-			<TableElement Code="30980-7" Codesys="LN" DisplayName="30980-7 占쏙옙Date vaccine due " Source="Local"/>
-			<TableElement Code="30981-5" Codesys="LN" DisplayName="30981-5 占쏙옙Earliest date to give " Source="Local"/>
-			<TableElement Code="30982-3" Codesys="LN" DisplayName="30982-3 占쏙옙Reason applied by forecast logic to project this vaccine" Source="Local"/>
+			<TableElement Code="30980-7" Codesys="LN" DisplayName="30980-7 Date vaccine due " Source="Local"/>
+			<TableElement Code="30981-5" Codesys="LN" DisplayName="30981-5 Earliest date to give " Source="Local"/>
+			<TableElement Code="30982-3" Codesys="LN" DisplayName="30982-3 Reason applied by forecast logic to project this vaccine" Source="Local"/>
 			<TableElement Code="59779-9" Codesys="LN" DisplayName="Immunization Schedule used" Source="Local"/>
 			<TableElement Code="59777-3" Codesys="LN" DisplayName="Latest date next dose may be given" Source="Local"/>
 			<TableElement Code="59778-1" Codesys="LN" DisplayName="Reason Code" Source="Local"/>
@@ -152,8 +154,8 @@
 			<TableElement Code="00" Codesys="NIP001" DisplayName="New immunization record" Source="Local"/>
 			<TableElement Code="01" Codesys="NIP001" DisplayName="Historical information - source unspecified" Source="Local"/>
 			<TableElement Code="02" Codesys="NIP001" DisplayName="Historical information - from other provider" Source="Local"/>
-			<TableElement Code="03" Codesys="NIP001" DisplayName="Historical information - from parent占쎌뀼 written record" Source="Local"/>
-			<TableElement Code="04" Codesys="NIP001" DisplayName="Historical information - from parent占쎌뀼 recall" Source="Local"/>
+			<TableElement Code="03" Codesys="NIP001" DisplayName="Historical information - from parent  written record" Source="Local"/>
+			<TableElement Code="04" Codesys="NIP001" DisplayName="Historical information - from parent recall" Source="Local"/>
 			<TableElement Code="05" Codesys="NIP001" DisplayName="Historical information - from other registry" Source="Local"/>
 			<TableElement Code="06" Codesys="NIP001" DisplayName="Historical information - from birth certificate" Source="Local"/>
 			<TableElement Code="07" Codesys="NIP001" DisplayName="Historical information - from school record" Source="Local"/>
@@ -170,7 +172,7 @@
 			<TableElement Code="OK" Codesys="HL70119" DisplayName="Order accepted &amp; OK" Source="Local"/>
 			<TableElement Code="RE" Codesys="HL70119" DisplayName="Observations to follow" Source="Local"/>
 		</TableDefinition>
-		<TableDefinition AlternateId="HL70363_IZ" Codesys="" Id="HL70363_IZ" Name="Assigning Authority" Oid="" Type="HL7" Version="1.5">
+		<TableDefinition AlternateId="HL70363_IZ" Codesys="" Id="HL70363_IZ" Name="Assigning Authority" Oid="" Type="HL7" Version="1.5" Extensibility="Open">
 			<TableElement Code="AKA" Codesys="HL70363" DisplayName="ALASKA" Source="Local"/>
 			<TableElement Code="ALA" Codesys="HL70363" DisplayName="ALABAMA" Source="Local"/>
 			<TableElement Code="ARA" Codesys="HL70363" DisplayName="ARKANSAS" Source="Local"/>
@@ -253,7 +255,7 @@
 			<TableElement Code="VXU_V04" Codesys="HL70354" DisplayName="VXU" Source="Local"/>
 		</TableDefinition>
 		<TableDefinition AlternateId="HL70085_IZ" Codesys="" Id="HL70085_IZ" Name="Observation result status codes interpretation" Oid="" Type="HL7" Version="1.5">
-			<TableElement Code="F" Codesys="HL70086" DisplayName="Final" Source="Local"/>
+			<TableElement Code="F" Codesys="HL70085" DisplayName="Final" Source="Local"/>
 		</TableDefinition>
 		<TableDefinition AlternateId="HL70076_IZ" Codesys="" Id="HL70076_IZ" Name="Message type" Oid="" Type="HL7" Version="1.5">
 			<TableElement Code="ACK" Codesys="HL70076" DisplayName="General acknowledgment" Source="Local"/>
@@ -613,7 +615,7 @@
 			<TableElement Code="I9C" Codesys="HL70396" DisplayName="ICD-9CM" Source="Local"/>
 			<TableElement Code="ISOnnnn" Codesys="HL70396" DisplayName="ISO Defined Codes where nnnn is the ISO table number" Source="Local"/>
 			<TableElement Code="LB" Codesys="HL70396" DisplayName="Local billing code" Source="Local"/>
-			<TableElement Code="LN" Codesys="HL70396" DisplayName="Logical Observation Identifier Names and Codes (LOINC占쏙옙" Source="Local"/>
+			<TableElement Code="LN" Codesys="HL70396" DisplayName="Logical Observation Identifier Names and Codes (LOINC)" Source="Local"/>
 			<TableElement Code="MCD" Codesys="HL70396" DisplayName="Medicaid" Source="Local"/>
 			<TableElement Code="MCR" Codesys="HL70396" DisplayName="Medicare" Source="Local"/>
 			<TableElement Code="MEDR" Codesys="HL70396" DisplayName="Medical Dictionary for Drug Regulatory Affairs (MEDDRA)" Source="Local"/>
@@ -621,7 +623,7 @@
 			<TableElement Code="NDC" Codesys="HL70396" DisplayName="National drug codes" Source="Local"/>
 			<TableElement Code="NCIT" Codesys="HL70396" DisplayName="NCI Thesaurus" Source="Local"/>
 			<TableElement Code="NPI" Codesys="HL70396" DisplayName="National Provider Identifier" Source="Local"/>
-			<TableElement Code="SNM" Codesys="HL70396" DisplayName="Systemized Nomenclature of Medicine (SNOMED占쏙옙" Source="Local"/>
+			<TableElement Code="SNM" Codesys="HL70396" DisplayName="Systemized Nomenclature of Medicine (SNOMED)" Source="Local"/>
 			<TableElement Code="SCT" Codesys="HL70396" DisplayName="SNOMED Clinical Terminology" Source="Local"/>
 			<TableElement Code="SCT2" Codesys="HL70396" DisplayName="SNOMED Clinical Terms alphanumeric codes" Source="Local"/>
 			<TableElement Code="SNM3" Codesys="HL70396" DisplayName="SNOMED International" Source="Local"/>
@@ -634,9 +636,9 @@
 			<TableElement Code="W4" Codesys="HL70396" DisplayName="WHO record # code with ASTM extension" Source="Local"/>
 			<TableElement Code="WC" Codesys="HL70396" DisplayName="WHO ATC" Source="Local"/>
 			<TableElement Code="UCUM" Codesys="HL70396" DisplayName="Unified Code for Units of Measure" Source="Local"/>
-			<TableElement Code="NIP0001" Codesys="HL70396" DisplayName="NIP0001" Source="Local"/>
-			<TableElement Code="NIP0002" Codesys="HL70396" DisplayName="NIP0002" Source="Local"/>
-			<TableElement Code="NIP0003" Codesys="HL70396" DisplayName="NIP0003" Source="Local"/>
+			<TableElement Code="NIP001" Codesys="HL70396" DisplayName="NIP001" Source="Local"/>
+			<TableElement Code="NIP002" Codesys="HL70396" DisplayName="NIP002" Source="Local"/>
+			<TableElement Code="NIP003" Codesys="HL70396" DisplayName="NIP003" Source="Local"/>
 			<TableElement Code="CDCREC" Codesys="HL70396" DisplayName="CDCREC" Source="Local"/>
 		</TableDefinition>
 		<TableDefinition AlternateId="HL70063_IZ" Codesys="" Id="HL70063_IZ" Name="Relationship" Oid="" Type="HL7" Version="1.5">
@@ -671,7 +673,7 @@
 			<TableElement Code="DDS" Codesys="HL70203" DisplayName="Dentist license number" Source="Local"/>
 			<TableElement Code="DEA" Codesys="HL70203" DisplayName="Drug Enforcement Administration registration number" Source="Local"/>
 			<TableElement Code="DFN" Codesys="HL70203" DisplayName="Drug Furnishing or prescriptive authority Number" Source="Local"/>
-			<TableElement Code="DL" Codesys="HL70203" DisplayName="Driver占쎌뀼 license number" Source="Local"/>
+			<TableElement Code="DL" Codesys="HL70203" DisplayName="Driver's license number" Source="Local"/>
 			<TableElement Code="DN" Codesys="HL70203" DisplayName="Doctor number" Source="Local"/>
 			<TableElement Code="DPM" Codesys="HL70203" DisplayName="Podiatrist license number" Source="Local"/>
 			<TableElement Code="DO" Codesys="HL70203" DisplayName="Osteopathic License number" Source="Local"/>
@@ -730,10 +732,10 @@
 			<TableElement Code="SS" Codesys="HL70203" DisplayName="Social Security number " Source="Local"/>
 			<TableElement Code="TAX" Codesys="HL70203" DisplayName="Tax ID number" Source="Local"/>
 			<TableElement Code="U" Codesys="HL70203" DisplayName="Unspecified identifier" Source="Local"/>
-			<TableElement Code="UPIN" Codesys="HL70203" DisplayName="Medicare/CMS (formerly HCFA)占쎌뀼 Universal Physician Identification numbers" Source="Local"/>
+			<TableElement Code="UPIN" Codesys="HL70203" DisplayName="Medicare/CMS (formerly HCFA) Universal Physician Identification numbers" Source="Local"/>
 			<TableElement Code="VN" Codesys="HL70203" DisplayName="Visit number" Source="Local"/>
 			<TableElement Code="WC" Codesys="HL70203" DisplayName="WIC identifier" Source="Local"/>
-			<TableElement Code="WCN" Codesys="HL70203" DisplayName="Workers占쏙옙Comp Number" Source="Local"/>
+			<TableElement Code="WCN" Codesys="HL70203" DisplayName="Workers' Comp Number" Source="Local"/>
 			<TableElement Code="XX" Codesys="HL70203" DisplayName="Organization identifier" Source="Local"/>
 		</TableDefinition>
 		<TableDefinition AlternateId="CDCREC" Codesys="" Id="CDCREC" Name="Ethnic Group" Oid="" Type="HL7" Version="1.5">
@@ -1347,7 +1349,7 @@
 			<TableElement Code="HL7" Codesys="0301" DisplayName="Reserved for future HL7 registration schemes" Source="Local"/>
 			<TableElement Code="ISO" Codesys="0301" DisplayName="An International Standards Organization Object Identifier" Source="Local"/>
 			<TableElement Code="L,M,N" Codesys="0301" DisplayName="These are reserved for locally defined coding schemes." Source="Local"/>
-			<TableElement Code="Random" Codesys="0301" DisplayName="Usually a base64 encoded string of random bits.&lt;p&gt;The uniqueness depends on the length of the bits. Mail systems often generate ASCII string 占�?unique names,&quot; from a combination of random bits and system names. Obviously, such identifiers will not be cons" Source="Local"/>
+			<TableElement Code="Random" Codesys="0301" DisplayName="Usually a base64 encoded string of random bits.&lt;p&gt;The uniqueness depends on the length of the bits. Mail systems often generate ASCII string unique names,&quot; from a combination of random bits and system names. Obviously, such identifiers will not be cons" Source="Local"/>
 			<TableElement Code="URI" Codesys="0301" DisplayName="Uniform Resource Identifier" Source="Local"/>
 			<TableElement Code="UUID" Codesys="0301" DisplayName="The DCE Universal Unique Identifier" Source="Local"/>
 			<TableElement Code="x400" Codesys="0301" DisplayName="An X.400 MHS format identifier" Source="Local"/>
@@ -1896,7 +1898,7 @@
 			<TableElement Code="I9C" Codesys="HL70396" DisplayName="ICD-9CM" Source="Local"/>
 			<TableElement Code="ISOnnnn" Codesys="HL70396" DisplayName="ISO Defined Codes where nnnn is the ISO table number" Source="Local"/>
 			<TableElement Code="LB" Codesys="HL70396" DisplayName="Local billing code" Source="Local"/>
-			<TableElement Code="LN" Codesys="HL70396" DisplayName="Logical Observation Identifier Names and Codes (LOINC占쏙옙" Source="Local"/>
+			<TableElement Code="LN" Codesys="HL70396" DisplayName="Logical Observation Identifier Names and Codes (LOINC)" Source="Local"/>
 			<TableElement Code="MCD" Codesys="HL70396" DisplayName="Medicaid" Source="Local"/>
 			<TableElement Code="MCR" Codesys="HL70396" DisplayName="Medicare" Source="Local"/>
 			<TableElement Code="MEDR" Codesys="HL70396" DisplayName="Medical Dictionary for Drug Regulatory Affairs (MEDDRA)" Source="Local"/>
@@ -1904,7 +1906,7 @@
 			<TableElement Code="NDC" Codesys="HL70396" DisplayName="National drug codes" Source="Local"/>
 			<TableElement Code="NCIT" Codesys="HL70396" DisplayName="NCI Thesaurus" Source="Local"/>
 			<TableElement Code="NPI" Codesys="HL70396" DisplayName="National Provider Identifier" Source="Local"/>
-			<TableElement Code="SNM" Codesys="HL70396" DisplayName="Systemized Nomenclature of Medicine (SNOMED占쏙옙" Source="Local"/>
+			<TableElement Code="SNM" Codesys="HL70396" DisplayName="Systemized Nomenclature of Medicine (SNOMED)" Source="Local"/>
 			<TableElement Code="SCT" Codesys="HL70396" DisplayName="SNOMED Clinical Terminology" Source="Local"/>
 			<TableElement Code="SCT2" Codesys="HL70396" DisplayName="SNOMED Clinical Terms alphanumeric codes" Source="Local"/>
 			<TableElement Code="SNM3" Codesys="HL70396" DisplayName="SNOMED International" Source="Local"/>
@@ -2418,6 +2420,12 @@
 		</TableDefinition>
 		<TableDefinition AlternateId="0032" Codesys="" Id="0032" Name="Charge/Price Indicator" Oid="" Type="HL7" Version="">
 			<TableElement Code="..." Codesys="0032" DisplayName="no suggested values" Source="Local"/>
+		</TableDefinition>
+		<TableDefinition AlternateId="HL70086_IZ" Codesys="" Id="HL70086_IZ" Name="Plan Type ID" Oid="" Type="HL7" Version="1.5" Extensibility="Open">
+			<TableElement Code="5" Codesys="HL70086" DisplayName="Private Insurance" Source="Local"/>
+			<TableElement Code="2" Codesys="HL70086" DisplayName="Medicaid" Source="Local"/>
+			<TableElement Code="1" Codesys="HL70086" DisplayName="Medicare" Source="Local"/>
+			<TableElement Code="81" Codesys="HL70086" DisplayName="Self pay" Source="Local"/>
 		</TableDefinition>
 	</TableSet>
 </TableLibrary>

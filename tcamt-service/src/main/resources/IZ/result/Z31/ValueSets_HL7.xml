@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-  <TableDefinition AlternateId="0295" Codesys="" Id="0295" Name="Handicap" Oid="" Type="HL7" Version="">
+  <TableSet><TableDefinition AlternateId="0295" Codesys="" Id="0295" Name="Handicap" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0295" DisplayName="No suggested values defined" Source="Local"/>
   </TableDefinition>
   <TableDefinition AlternateId="0296" Codesys="" Id="0296" Name="Primary Language" Oid="" Type="HL7" Version="">
@@ -788,5 +788,5 @@
   </TableDefinition>
   <TableDefinition AlternateId="0448" Codesys="" Id="0448" Name="Name context" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0448" DisplayName="No suggested values defined" Source="Local"/>
-  </TableDefinition>
+  </TableDefinition></TableSet>
 </TableLibrary>

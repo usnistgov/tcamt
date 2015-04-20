@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for RSP_K11" Name="Vocab for RSP_K11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-  <TableDefinition AlternateId="0480" Codesys="" Id="0480" Name="Pharmacy Order Types" Oid="" Type="HL7" Version="">
+<TableSet>  <TableDefinition AlternateId="0480" Codesys="" Id="0480" Name="Pharmacy Order Types" Oid="" Type="HL7" Version="">
     <TableElement Code="M" Codesys="0480" DisplayName="Medication" Source="Local"/>
     <TableElement Code="O" Codesys="0480" DisplayName="Other solution as medication orders" Source="Local"/>
     <TableElement Code="S" Codesys="0480" DisplayName="IV Large Volume Solutions" Source="Local"/>
@@ -194,7 +194,7 @@
     <TableElement Code="HL7" Codesys="0301" DisplayName="Reserved for future HL7 registration schemes" Source="Local"/>
     <TableElement Code="ISO" Codesys="0301" DisplayName="An International Standards Organization Object Identifier" Source="Local"/>
     <TableElement Code="L,M,N" Codesys="0301" DisplayName="These are reserved for locally defined coding schemes." Source="Local"/>
-    <TableElement Code="Random" Codesys="0301" DisplayName="Usually a base64 encoded string of random bits.&lt;p&gt;The uniqueness depends on the length of the bits. Mail systems often generate ASCII string 占�?unique names,&quot; from a combination of random bits and system names. Obviously, such identifiers will not be cons" Source="Local"/>
+    <TableElement Code="Random" Codesys="0301" DisplayName="Usually a base64 encoded string of random bits.&lt;p&gt;The uniqueness depends on the length of the bits. Mail systems often generate ASCII string unique names,&quot; from a combination of random bits and system names. Obviously, such identifiers will not be cons" Source="Local"/>
     <TableElement Code="URI" Codesys="0301" DisplayName="Uniform Resource Identifier" Source="Local"/>
     <TableElement Code="UUID" Codesys="0301" DisplayName="The DCE Universal Unique Identifier" Source="Local"/>
     <TableElement Code="x400" Codesys="0301" DisplayName="An X.400 MHS format identifier" Source="Local"/>
@@ -1075,5 +1075,5 @@
   </TableDefinition>
   <TableDefinition AlternateId="0032" Codesys="" Id="0032" Name="Charge/Price Indicator" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0032" DisplayName="no suggested values" Source="Local"/>
-  </TableDefinition>
+  </TableDefinition></TableSet>
 </TableLibrary>

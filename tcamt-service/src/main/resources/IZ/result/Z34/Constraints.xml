@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="2f4d42dd-dd98-46c9-bfeb-ff3271de103d" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="2ddea23d-c681-4d94-afb4-8958b06fbc64" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="9e13d483-7322-4ce5-b2bf-5f6270966a48" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="d0845a4f-d31c-478e-ae0f-9ea8676a72b2" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for ACK</Description>
     </MetaData>

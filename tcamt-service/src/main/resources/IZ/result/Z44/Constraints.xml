@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="22dfbfdd-cfb3-4b3d-a5f5-8e1483555646" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="30bc778b-3025-47ab-8470-4ed55be6cbfc" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for QBP_Q11</Description>
     </MetaData>
@@ -201,9 +201,9 @@
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-57" Target="15[1]">
-                    <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'NE'.</Description>
+                    <Description>The value of MSH.15 (Accept Acknowledgment Type) SHALL be 'ER'.</Description>
                     <Assertion>
-                        <PlainText Path="15[1]" Text="NE" IgnoreCase="false"/>
+                        <PlainText Path="15[1]" Text="ER" IgnoreCase="false"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-58" Target="16[1]">

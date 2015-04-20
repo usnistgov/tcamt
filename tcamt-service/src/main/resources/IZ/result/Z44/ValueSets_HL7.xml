@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd"  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for QBP_Q11" Name="Vocab for QBP_Q11" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-  <TableDefinition AlternateId="0301" Codesys="" Id="0301" Name="Universal ID type" Oid="" Type="HL7" Version="">
+ <TableSet> <TableDefinition AlternateId="0301" Codesys="" Id="0301" Name="Universal ID type" Oid="" Type="HL7" Version="">
     <TableElement Code="DNS" Codesys="0301" DisplayName="An Internet dotted name. Either in ASCII or as integers" Source="Local"/>
     <TableElement Code="GUID" Codesys="0301" DisplayName="Same as UUID." Source="Local"/>
     <TableElement Code="HCD" Codesys="0301" DisplayName="The CEN Healthcare Coding Scheme Designator. (Identifiers used in DICOM follow this assignment scheme.)" Source="Local"/>
@@ -354,5 +354,5 @@
   </TableDefinition>
   <TableDefinition AlternateId="0288" Codesys="" Id="0288" Name="Census tract" Oid="" Type="HL7" Version="">
     <TableElement Code="..." Codesys="0288" DisplayName="No suggested values defined" Source="Local"/>
-  </TableDefinition>
+  </TableDefinition></TableSet>
 </TableLibrary>

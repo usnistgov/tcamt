@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ConformanceContext UUID="2173a9e2-01ba-4408-8c92-3c47325819b5" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ConformanceContext UUID="b7f9d5c8-b39d-420b-a0c2-3b40ff22103c" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
         <Description>Conformance context for RSP_K11</Description>
     </MetaData>
