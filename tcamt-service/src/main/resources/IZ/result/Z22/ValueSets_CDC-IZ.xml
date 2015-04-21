@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for VXU_V04" Name="Vocab for VXU_V04" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-<TableSet>
+<TableSet>	
 	<TableDefinition AlternateId="NIP003" Codesys="" Id="NIP003" Name="Observation identifiers " Oid="" Type="HL7" Version="1.5">
 		<TableElement Code="64994-7" Codesys="LN" DisplayName="Vaccine funding program eligibility category" Source="Local"/>
 		<TableElement Code="30963-3" Codesys="LN" DisplayName="Vaccine funding source" Source="Local"/>
@@ -610,5 +610,4 @@
 		<TableElement Code="21" Codesys="CVX" DisplayName="varicella" Source="Local"/>
 	</TableDefinition>
 </TableSet>
-
 </TableLibrary>

@@ -65,6 +65,7 @@
 		<id>0552</id>
 		<id>HL70361_IZ</id>
 		<id>HL70362_IZ</id>
+		<id>HL70363_IZ</id>
 	</NoValidation>
 	<TableSet>
 		<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">

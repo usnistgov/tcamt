@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
 <TableLibrary xsi:noNamespaceSchemaLocation="../ValueSets.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Description="Automatically generated vacab for VXU_V04" Name="Vocab for VXU_V04" OrganizationName="HL7 NIST" Status="Active" TableLibraryIdentifier="" TableLibraryVersion="1.0">
-	<TableSet>
-		<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">
+<TableSet>		<TableDefinition AlternateId="HL70003_IZ" Codesys="" Id="HL70003_IZ" Name="Event type" Oid="" Type="HL7" Version="1.5">
 			<TableElement Code="V04" Codesys="HL70003" DisplayName="V04" Source="Local"/>
 			<TableElement Code="K11" Codesys="HL70003" DisplayName="K11" Source="Local"/>
 			<TableElement Code="Q11" Codesys="HL70003" DisplayName="Q11" Source="Local"/>
@@ -403,5 +402,5 @@
 			<TableElement Code="1" Codesys="HL70086" DisplayName="Medicare" Source="Local"/>
 			<TableElement Code="81" Codesys="HL70086" DisplayName="Self pay" Source="Local"/>
 		</TableDefinition>
-	</TableSet>
+		</TableSet>
 </TableLibrary>
