@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
+
+<composite:interface>
+	<composite:attribute name="bean" />
+	<composite:attribute name="panelId" />
+</composite:interface>
+
+<composite:implementation>
+	<p:dataTable var="instanceSegment" value="#{cc.attrs.bean.instanceSegments}"
+		rowIndexVar="rowIndex"
+		selection="#{cc.attrs.bean.selectedInstanceSegment}"
+		selectionMode="single" rowKey="#{instanceSegment.ipath}">
+		<p:ajax event="rowSelect" listener="#{cc.attrs.bean.onInstanceSegmentSelect}" update="#{cc.attrs.panelId}" />
+		<p:column headerText="List of Instance Segments">
+			<h:outputText value="#{instanceSegment.ipath}" />
+		</p:column>
+		<p:column headerText="Action">
+			<p:commandButton value="Del Segment" actionListener="#{cc.attrs.bean.delInstanceSegment}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Del">
+				<f:attribute name="rowIndex" value="#{rowIndex}" />
+			</p:commandButton>
+		</p:column>
+	</p:dataTable>
+</composite:implementation>
+
+</html>

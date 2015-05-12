@@ -1,6 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.tcamt.db.DBImpl;
 import gov.nist.healthcare.tcamt.domain.Actor;
 
 import java.io.Serializable;
@@ -27,16 +26,14 @@ public class ActorRequestBean implements Serializable {
 	private Actor editActor = new Actor();
 	private Actor existActor;
 	
-	private String shareTo;
-	
-	private DBImpl dbManager = new DBImpl();
+	private Long shareTo;
 	
 	/**
 	 * 
 	 */
 
 	public void delActor(ActionEvent event) {
-		this.dbManager.actorDelete((Actor) event.getComponent().getAttributes().get("actor"));
+		this.sessionBeanTCAMT.getDbManager().actorDelete((Actor) event.getComponent().getAttributes().get("actor"));
 		this.sessionBeanTCAMT.updateActors();
 	}
 	
@@ -44,7 +41,9 @@ public class ActorRequestBean implements Serializable {
 		Actor a = (Actor)((Actor)event.getComponent().getAttributes().get("actor")).clone();
 		a.setName("Copy_" + a.getName());
 		a.setVersion(0);
-		this.dbManager.actorInsert(a, this.sessionBeanTCAMT.getLoggedId());
+		a.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+		
+		this.sessionBeanTCAMT.getDbManager().actorInsert(a);
 		this.sessionBeanTCAMT.updateActors();
 	}
 	
@@ -53,18 +52,25 @@ public class ActorRequestBean implements Serializable {
 	}
 	
 	public void addActor() {
-		this.dbManager.actorInsert(this.newActor, this.sessionBeanTCAMT.getLoggedId());
+		newActor.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+		newActor.setVersion(1);
+		this.sessionBeanTCAMT.getDbManager().actorInsert(this.newActor);
 		this.sessionBeanTCAMT.updateActors();
 	}
 	
 	public void shareActor() {
-		this.dbManager.actorInsert(this.editActor, this.shareTo);
+		System.out.println("SAHRE!!!!");
+		
+		
+		
+		this.editActor.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
+		this.sessionBeanTCAMT.getDbManager().actorInsert(this.editActor);
 		this.sessionBeanTCAMT.updateActors();
 	}
 	
 	public void editActor() {
 		this.editActor.setVersion(this.editActor.getVersion() + 1);
-		this.dbManager.actorUpdate(this.editActor);
+		this.sessionBeanTCAMT.getDbManager().actorUpdate(this.editActor);
 		this.sessionBeanTCAMT.updateActors();
 	}
 	
@@ -77,7 +83,8 @@ public class ActorRequestBean implements Serializable {
 		this.editActor.setReference(existActor.getReference());
 		this.editActor.setRole(existActor.getRole());
 		this.editActor.setVersion(existActor.getVersion());
-		this.setShareTo("");
+		this.editActor.setAuthor(existActor.getAuthor());
+		this.setShareTo(null);
 	}
 
 	/**
@@ -112,11 +119,11 @@ public class ActorRequestBean implements Serializable {
 		this.sessionBeanTCAMT = sessionBeanTCAMT;
 	}
 
-	public String getShareTo() {
+	public Long getShareTo() {
 		return shareTo;
 	}
 
-	public void setShareTo(String shareTo) {
+	public void setShareTo(Long shareTo) {
 		this.shareTo = shareTo;
 	}
 	

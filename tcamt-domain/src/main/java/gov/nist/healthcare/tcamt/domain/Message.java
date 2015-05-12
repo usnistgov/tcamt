@@ -1,49 +1,77 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import gov.nist.healthcare.hl7tools.domain.ConformanceStatement;
-import gov.nist.healthcare.hl7tools.domain.Predicate;
-import gov.nist.healthcare.hl7tools.v2.maker.core.domain.profile.MessageProfile;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,
 property = "@id")
+@Entity
+@Table
 public class Message implements Cloneable, Serializable{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7669461668488662066L;
-	private Integer id;
+	
+	
+	@Id
+    @GeneratedValue
+	private long id;
 	private String name;
 	private String description;
 	private Integer version;
-	private MessageProfile messageProfile;
-	private List<ConformanceStatement> listCSs;
-	private List<Predicate> listCPs;
-	private List<ProfilePathOccurIGData> profilePathOccurIGData;
-	private List<InstanceTestDataType> instanceTestDataTypes;
-	private List<ValidationContext> validationContexts;
+	
+	@Column(columnDefinition="longtext")
 	private String hl7EndcodedMessage;
+	
+	@Column(columnDefinition="longtext")
+	private String profile;
+	
+	@Column(columnDefinition="longtext")
+	private String constraints;
+	
+	@Column(columnDefinition="longtext")
+	private String valueSet;
+	
+	@Transient
+	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj;
+	
+	@ManyToOne
+    @JoinColumn(name="author_id")
+	private User author;	
+	
+	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+    @JoinTable(name = "message_validationcontext", joinColumns = {@JoinColumn(name="message_id")},
+               inverseJoinColumns = {@JoinColumn(name="validationcontext_id")} )
+	private List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
 
 	public Message() {
-		this.listCSs = new ArrayList<ConformanceStatement>();
-		this.listCPs = new ArrayList<Predicate>();
-		this.profilePathOccurIGData = new ArrayList<ProfilePathOccurIGData>();
-		this.instanceTestDataTypes = new ArrayList<InstanceTestDataType>();
 		this.validationContexts = new ArrayList<ValidationContext>(); 
 	}
 
-	public Integer getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -70,74 +98,23 @@ public class Message implements Cloneable, Serializable{
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
-	
-	public MessageProfile getMessageProfile() {
-		return messageProfile;
-	}
-
-	public void setMessageProfile(MessageProfile messageProfile) {
-		this.messageProfile = messageProfile;
-	}
-
-	@Override
-	public String toString() {
-		return "Document [id=" + id + ", name=" + name + ", description="
-				+ description + ", messageProfile=" + messageProfile
-				+ ", version=" + version + "]";
-	}
-
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Message cloned = (Message)super.clone();
 		
-		List<ProfilePathOccurIGData> cInstancePathOccurIGData = new ArrayList<ProfilePathOccurIGData>();
 		List<ValidationContext> cValidationContexts = new ArrayList<ValidationContext>(); 
-		List<InstanceTestDataType> cinstanceTestDataTypes = new ArrayList<InstanceTestDataType>();
 		
-		for(ProfilePathOccurIGData i:this.profilePathOccurIGData){
-			cInstancePathOccurIGData.add((ProfilePathOccurIGData)i.clone());
-		}
-		
-		for(InstanceTestDataType i:this.instanceTestDataTypes){
-			cinstanceTestDataTypes.add((InstanceTestDataType)i.clone());
-		}
 		
 		for(ValidationContext v:this.validationContexts){
 			cValidationContexts.add((ValidationContext)v.clone());
 		}
 		
-		cloned.setProfilePathOccurIGData(cInstancePathOccurIGData);
-		cloned.setInstanceTestDataTypes(cinstanceTestDataTypes);
 		cloned.setValidationContexts(cValidationContexts);
 		
 		return cloned;
 	}
-
-	public List<ConformanceStatement> getListCSs() {
-		return listCSs;
-	}
-
-	public void setListCSs(List<ConformanceStatement> listCSs) {
-		this.listCSs = listCSs;
-	}
-
-	public List<Predicate> getListCPs() {
-		return listCPs;
-	}
-
-	public void setListCPs(List<Predicate> listCPs) {
-		this.listCPs = listCPs;
-	}
-
-	public List<ProfilePathOccurIGData> getProfilePathOccurIGData() {
-		return profilePathOccurIGData;
-	}
-
-	public void setProfilePathOccurIGData(List<ProfilePathOccurIGData> profilePathOccurIGData) {
-		this.profilePathOccurIGData = profilePathOccurIGData;
-	}
-
+	
 	public List <ValidationContext> getValidationContexts() {
 		return validationContexts;
 	}
@@ -154,12 +131,46 @@ public class Message implements Cloneable, Serializable{
 		this.hl7EndcodedMessage = hl7EndcodedMessage;
 	}
 
-	public List<InstanceTestDataType> getInstanceTestDataTypes() {
-		return instanceTestDataTypes;
+	public User getAuthor() {
+		return author;
 	}
 
-	public void setInstanceTestDataTypes(List<InstanceTestDataType> instanceTestDataTypes) {
-		this.instanceTestDataTypes = instanceTestDataTypes;
+	public void setAuthor(User author) {
+		this.author = author;
 	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public String getConstraints() {
+		return constraints;
+	}
+
+	public void setConstraints(String constraints) {
+		this.constraints = constraints;
+	}
+
+	public String getValueSet() {
+		return valueSet;
+	}
+
+	public void setValueSet(String valueSet) {
+		this.valueSet = valueSet;
+	}
+
+	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message getMessageObj() {
+		return messageObj;
+	}
+
+	public void setMessageObj(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
+		this.messageObj = messageObj;
+	}
+	
+	
 
 }

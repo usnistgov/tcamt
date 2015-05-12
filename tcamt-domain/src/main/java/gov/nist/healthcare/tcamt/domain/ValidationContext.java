@@ -2,23 +2,37 @@ package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import gov.nist.healthcare.hl7tools.domain.StatementDetails;
 
+@Entity
+@Table
 public class ValidationContext implements Cloneable, Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -3926211483462954685L;
-	private String id;
+	
+	@Id
+    @GeneratedValue
+	private long id;
+	
 	private String path;
 	private String description;
 	private String level;
 	private String script;
+	
+	@Column(columnDefinition="longblob")
 	private StatementDetails statementDetails;
 	
 	
 	
-	public ValidationContext(String id, String path, String description,
+	public ValidationContext(long id, String path, String description,
 			String level, String script, StatementDetails statementDetails) {
 		super();
 		this.id = id;
@@ -34,10 +48,10 @@ public class ValidationContext implements Cloneable, Serializable{
 	}
 	
 	
-	public String getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public String getPath() {

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="bean" />
+	<composite:attribute name="panelId" />
+</composite:interface>
+
+<composite:implementation>
+        		<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton value="Generate HL7 Message from Tree"
+								icon="ui-icon-refresh"
+								update="#{cc.attrs.panelId}"
+								actionListener="#{cc.attrs.bean.genrateHL7Message}"/></td>
+					</tr>
+				</table>
+        		<p:tree id="mTree" value="#{cc.attrs.bean.messageTreeRoot}" var="model" dynamic="true" 
+        			selectionMode="single" selection="#{cc.attrs.bean.selectedNode}" style="width:100%;border-width:0;">                    
+        			<p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+            			<h:outputText value="#{model.path}[#{model.node.usage}, {#{model.node.min}..#{model.node.max}}]"/>
+        			</p:treeNode>
+        			
+        			<p:treeNode type="*" icon="ui-icon-unlocked">
+            			<h:outputText style="font-weight:bold" value="#{model.path}{#{model.node.usage}, [#{model.node.min}..#{model.node.max}]}"/>
+        			</p:treeNode>
+        			<p:treeNode type="1" icon="ui-icon-locked">
+            			<h:outputText value="#{model.path}[#{model.node.usage}, {#{model.node.min}..#{model.node.max}}]"/>
+        			</p:treeNode>
+        			<p:treeNode type="0" icon="ui-icon-locked">
+            			<h:outputText value="#{model.path}[#{model.node.usage}, {#{model.node.min}..#{model.node.max}}]"/>
+        			</p:treeNode>
+        			
+    			</p:tree>
+    			<p:contextMenu for="mTree" nodeType="*">
+        			<p:menuitem value="Add" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.addNode}" icon="ui-icon-plus" />
+    			</p:contextMenu>
+    			<p:contextMenu for="mTree" nodeType="1">
+        			<p:menuitem value="NOT" icon="ui-icon-plus" />
+    			</p:contextMenu>
+    			<p:contextMenu for="mTree" nodeType="0">
+        			<p:menuitem value="NOT" icon="ui-icon-plus" />
+    			</p:contextMenu>
+</composite:implementation>
+
+</html>

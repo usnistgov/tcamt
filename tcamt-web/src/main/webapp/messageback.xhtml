@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:vsm="http://java.sun.com/jsf/composite/vsm">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="resources/css/main.css" />
+	<link type="text/css" rel="stylesheet" href="resources/css/primeface.custom.css" />
+</h:head>
+
+<h:body>
+
+	<p:dataTable id="messageList" var="message"
+					value="#{messageProfileRequestBean.messages}">
+					<p:column headerText="Name">
+						<h:outputText value="#{message.name}" />
+					</p:column>
+
+					<p:column headerText="Description">
+						<h:outputText value="#{message.description}" />
+					</p:column>
+
+					<p:column headerText="Version">
+						<h:outputText value="#{message.version}" />
+					</p:column>
+					
+					
+					<p:column headerText="HL7Message">
+						<p:inputTextarea autoResize="false" value="#{message.hl7EndcodedMessage}" rows="20" cols="3000" 
+        					style="overflow:scroll;overflow-y:scroll;overflow-x:scroll;overflow:-moz-scrollbars-vertical;">
+		
+	 					</p:inputTextarea>	
+					</p:column>
+				</p:dataTable>
+</h:body>
+</html>

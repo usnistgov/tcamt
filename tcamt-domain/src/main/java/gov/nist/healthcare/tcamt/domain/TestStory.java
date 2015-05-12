@@ -1,42 +1,54 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 
-public class TestStory implements Cloneable{
-	private String description;
+@Embeddable
+public class TestStory implements Cloneable, Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6305794633270389646L;
+	
+	@Column(columnDefinition="longtext")
+	private String teststorydesc;
+	@Column(columnDefinition="longtext")
 	private String comments;
+	@Column(columnDefinition="longtext")
 	private String preCondition;
+	@Column(columnDefinition="longtext")
 	private String postCondition;
+	@Column(columnDefinition="longtext")
 	private String testObjectives;
+	@Column(columnDefinition="longtext")
+	private String evaluationCriteria;
+	@Column(columnDefinition="longtext")
 	private String notes;
 	
-	public TestStory(String description, String comments, String preCondition,
-			String postCondition, String testObjectives, String notes) {
+	public TestStory(String teststorydesc, String comments, String preCondition,
+			String postCondition, String testObjectives, String evaluationCriteria, String notes) {
 		super();
-		this.description = description;
+		this.setTeststorydesc(teststorydesc);
 		this.comments = comments;
 		this.preCondition = preCondition;
 		this.postCondition = postCondition;
 		this.testObjectives = testObjectives;
+		this.evaluationCriteria = evaluationCriteria;
 		this.notes = notes;
 	}
 
 	public TestStory() {
 		super();
 		this.setComments("No Comments");
-		this.setDescription(" No Description");
+		this.setTeststorydesc(" No Description");
 		this.setNotes("No Note");
 		this.setPostCondition("No PostCondition");
 		this.setPreCondition("No PreCondition");
+		this.setEvaluationCriteria("No evaluation criteria");
 		this.setTestObjectives("No Test Objectives");
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 	public String getComments() {
@@ -84,4 +96,22 @@ public class TestStory implements Cloneable{
 		TestStory cloned = (TestStory)super.clone();
 		return cloned;
 	}
+
+	public String getTeststorydesc() {
+		return teststorydesc;
+	}
+
+	public void setTeststorydesc(String teststorydesc) {
+		this.teststorydesc = teststorydesc;
+	}
+
+	public String getEvaluationCriteria() {
+		return evaluationCriteria;
+	}
+
+	public void setEvaluationCriteria(String evaluationCriteria) {
+		this.evaluationCriteria = evaluationCriteria;
+	}
+	
+	
 }

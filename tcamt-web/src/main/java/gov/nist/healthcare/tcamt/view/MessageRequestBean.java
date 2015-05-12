@@ -1,29 +1,25 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.core.hl7.v2.parser.ParserException;
-import gov.nist.healthcare.hl7tools.domain.Component;
-import gov.nist.healthcare.hl7tools.domain.Element;
-import gov.nist.healthcare.hl7tools.domain.Field;
-import gov.nist.healthcare.tcamt.db.DBImpl;
-import gov.nist.healthcare.tcamt.domain.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.SegmentTreeModel;
 import gov.nist.healthcare.tcamt.domain.ValidationContext;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.SegmentTreeModel;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -38,15 +34,15 @@ public class MessageRequestBean implements Serializable {
 	private Message editMessage;
 	private Message existMessage;
 	private InstanceSegment selectedInstanceSegment;
+	private TreeNode segmentTreeRoot;
 	private TreeNode messageTreeRoot;
 	private List<InstanceSegment> instanceSegments;
-	private List<TreeNode> toBeDeletedTreeNodes;
-	private SegmentTreeModel toBeRepeatedModel;
 	private ManageInstance manageInstanceService;
-	private Object selectedModel;
-	private String shareTo;
+	private Long shareTo;
 	
-	private DBImpl dbManager = new DBImpl();
+	private TreeNode selectedNode;
+	
+	private int activeIndexOfMessageInstancePanel;
 	
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
@@ -61,37 +57,40 @@ public class MessageRequestBean implements Serializable {
 	
 	private void init(){
 		this.editMessage = new Message();
+		this.setActiveIndexOfMessageInstancePanel(1);
 		this.existMessage = new Message();
-		this.selectedInstanceSegment = new InstanceSegment();
+		this.selectedInstanceSegment = null;
+		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.messageTreeRoot = new DefaultTreeNode("root", null);
 		this.instanceSegments = new ArrayList<InstanceSegment>();
-		this.toBeDeletedTreeNodes = new ArrayList<TreeNode>();
-		this.toBeRepeatedModel = null;
 		this.manageInstanceService = new ManageInstance();
-		this.selectedModel = null;
 	}
 
-	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException, ParserException {
+	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException {
 		this.init();
 		this.existMessage = (Message) event.getComponent().getAttributes().get("message");
 		this.editMessage.setId(existMessage.getId());
 		this.editMessage.setName(existMessage.getName());
 		this.editMessage.setDescription(existMessage.getDescription());
 		this.editMessage.setVersion(existMessage.getVersion());
-		this.editMessage.setMessageProfile(existMessage.getMessageProfile());
-		this.editMessage.setListCSs(existMessage.getListCSs());
-		this.editMessage.setListCPs(existMessage.getListCPs());
-		this.editMessage.setProfilePathOccurIGData(existMessage.getProfilePathOccurIGData());
-		this.editMessage.setInstanceTestDataTypes(existMessage.getInstanceTestDataTypes());
+		this.editMessage.setProfile(existMessage.getProfile());
+		this.editMessage.setMessageObj(existMessage.getMessageObj());
+		this.editMessage.setConstraints(existMessage.getConstraints());
+		this.editMessage.setValueSet(existMessage.getValueSet());
 		this.editMessage.setValidationContexts(existMessage.getValidationContexts());
 		this.editMessage.setHl7EndcodedMessage(existMessage.getHl7EndcodedMessage());
-		this.messageTreeRoot = this.manageInstanceService.generateMessageTreeForElementOccur(this.editMessage);
+		this.editMessage.setAuthor(existMessage.getAuthor());
+		this.manageInstanceService.loadMessage(this.editMessage);
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.readHL7Message();
-		this.shareTo = "";
+		this.shareTo = null;
+		
+		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+		
+		this.setActiveIndexOfMessageInstancePanel(2);
 	}
 
-	public void delInstanceSegment(ActionEvent event) throws CloneNotSupportedException, IOException, ParserException {
+	public void delInstanceSegment(ActionEvent event) throws CloneNotSupportedException, IOException {
 		int rowIndex = (Integer)event.getComponent().getAttributes().get("rowIndex");
 		String[] lines = this.editMessage.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		String editedHl7EndcodedMessage = "";
@@ -105,123 +104,76 @@ public class MessageRequestBean implements Serializable {
 	}
 
 	public void createValidationContext(SegmentTreeModel stm) {
-		this.manageInstanceService.createVC(stm, this.editMessage, "Message");
+//		this.manageInstanceService.createVC(stm, this.editMessage, "Message");
 	}
 
 	public void shareMessage() {
-		this.dbManager.messageInsert(this.editMessage, this.shareTo);
+		this.editMessage.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
+		this.editMessage.setId(0);
+		this.editMessage.setVersion(1);
+		
+		for(ValidationContext vc:editMessage.getValidationContexts()){
+			vc.setId(0);
+		}
+		this.sessionBeanTCAMT.getDbManager().messageInsert(this.editMessage);
 		this.sessionBeanTCAMT.updateMessages();
 	}
 
 	public void saveMessage() {
 		this.editMessage.setVersion(this.editMessage.getVersion() + 1);
-		this.dbManager.messageUpdate(this.editMessage);
+		this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);
 		this.sessionBeanTCAMT.updateMessages();
 	}
 
-	public void updateInstanceFieldOccur(SegmentTreeModel stm)
-			throws NumberFormatException, CloneNotSupportedException {
-		this.toBeRepeatedModel = this.manageInstanceService.findOccurField(
-				this.toBeDeletedTreeNodes, this.toBeRepeatedModel,
-				this.selectedInstanceSegment.getSegmentTreeNode(),
-				((Field) stm.getNode()).getPosition(), stm.getOccurrence());
-		this.manageInstanceService.adjustOccur(this.editMessage,
-				this.toBeDeletedTreeNodes, this.toBeRepeatedModel,
-				this.selectedInstanceSegment, stm.getOccurrence());
-		this.toBeRepeatedModel = null;
-		this.toBeDeletedTreeNodes = new ArrayList<TreeNode>();
-	}
-
-	public void updateInstanceData(SegmentTreeModel stm) {
-		this.manageInstanceService.generateHL7Message(this.instanceSegments, this.editMessage);
+	public void updateInstanceData(Object model) throws CloneNotSupportedException, IOException {
+		int lineNum = this.instanceSegments.indexOf(this.selectedInstanceSegment);
+		this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.editMessage);
+		this.readHL7Message();
+		this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
+		this.activeIndexOfMessageInstancePanel = 3;
 	}
 	
-	public void readHL7Message() throws CloneNotSupportedException, IOException, ParserException{
+	public void onInstanceSegmentSelect(SelectEvent event){
+		this.segmentTreeRoot = new DefaultTreeNode("root", null);
+		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment);
+		this.activeIndexOfMessageInstancePanel = 3;
+	}
+	
+	public void readHL7Message() throws CloneNotSupportedException, IOException{
+		this.instanceSegments = new ArrayList<InstanceSegment>();
 		if(this.editMessage.getHl7EndcodedMessage() != null && !this.editMessage.getHl7EndcodedMessage().equals("")){
-				List<ValidationContext> newVC = new ArrayList<ValidationContext>();
-				for(ValidationContext vc:this.editMessage.getValidationContexts()){
-					if(!vc.getLevel().equals("Profile Fixed")) newVC.add(vc);
-				}
-				this.editMessage.setValidationContexts(newVC);
-				
-				
-				
-				this.instanceSegments = new ArrayList<InstanceSegment>();
-				gov.nist.healthcare.core.hl7.v2.instance.Message hl7Message = this.manageInstanceService.readHL7Message(this.editMessage);
-				
-				TreeMap<Integer, List<gov.nist.healthcare.core.hl7.v2.instance.Element>> tmElements = hl7Message.getChildren();
-				Set<Integer> keySet = tmElements.keySet();
-				for(Integer i:keySet){
-					List<gov.nist.healthcare.core.hl7.v2.instance.Element> childElms = tmElements.get(i);
-					for(gov.nist.healthcare.core.hl7.v2.instance.Element childE : childElms){
-						this.manageInstanceService.updateOccurDataByHL7Message(childE, "", "", this.editMessage, this.messageTreeRoot, this.instanceSegments);
-					}
-				}
-				
-				this.manageInstanceService.updateInstanceSegmentsByTestDataTypeList(this.editMessage, this.instanceSegments);
-				this.selectedInstanceSegment = new InstanceSegment();
+			this.manageInstanceService.loadMessageInstance(this.editMessage, this.instanceSegments);
+			this.selectedInstanceSegment = null;
 		}
+		this.activeIndexOfMessageInstancePanel = 2;
 	}
 	
-	public int vcSize(Object model) {
-		if (model instanceof SegmentTreeModel) {
-			SegmentTreeModel stm = (SegmentTreeModel) model;
-			if (stm.getNode() instanceof Field) {
-				Field f = (Field) stm.getNode();
-				int vcSize = 0;
-				if (f.getConformanceStatementList() != null) {
-					vcSize += f.getConformanceStatementList().size();
-				}
-				if (f.getPredicate() != null) {
-					vcSize++;
-				}
-
-				return vcSize;
-			} else if (stm.getNode() instanceof Component) {
-				Component c = (Component) stm.getNode();
-				int vcSize = 0;
-				if (c.getConformanceStatementList() != null) {
-					vcSize += c.getConformanceStatementList().size();
-				}
-				if (c.getPredicate() != null) {
-					vcSize++;
-				}
-
-				return vcSize;
-			}
-		} else if (model instanceof MessageTreeModel) {
-			MessageTreeModel mtm = (MessageTreeModel) model;
-			Element el = (Element) mtm.getNode();
-			int vcSize = 0;
-			if (el.getConformanceStatementList() != null) {
-				vcSize += el.getConformanceStatementList().size();
-			}
-			if (el.getPredicate() != null) {
-				vcSize++;
-			}
-
-			return vcSize;
-
-		}
-		return 0;
-
+	public void addRepeatedField(FieldModel fieldModel){
+		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot);
+	}
+	
+	public void addNode(){
+		
+		TreeNode parent = this.selectedNode.getParent();
+		
+		int position = parent.getChildren().indexOf(this.selectedNode);
+		
+		MessageTreeModel model = (MessageTreeModel)this.selectedNode.getData();
+		MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
+		TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
+		
+		this.manageInstanceService.populateTreeNode(newNode);
+		
+		parent.getChildren().add(position + 1, newNode);
 	}
 
-	public void selectModel(ActionEvent event) {
-		this.selectedModel = event.getComponent().getAttributes().get("model");
+	public void genrateHL7Message() throws CloneNotSupportedException, IOException{
+		this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot));
+		this.readHL7Message();
 	}
-
 	/**
 	 * 
 	 */
-	
-	public List<TreeNode> getToBeDeletedTreeNodes() {
-		return toBeDeletedTreeNodes;
-	}
-
-	public void setToBeDeletedTreeNodes(List<TreeNode> toBeDeletedTreeNodes) {
-		this.toBeDeletedTreeNodes = toBeDeletedTreeNodes;
-	}
 
 	public List<InstanceSegment> getInstanceSegments() {
 		return instanceSegments;
@@ -239,29 +191,13 @@ public class MessageRequestBean implements Serializable {
 			InstanceSegment selectedInstanceSegment) {
 		this.selectedInstanceSegment = selectedInstanceSegment;
 	}
-
-	public SegmentTreeModel getToBeRepeatedModel() {
-		return toBeRepeatedModel;
-	}
-
-	public void setToBeRepeatedModel(SegmentTreeModel toBeRepeatedModel) {
-		this.toBeRepeatedModel = toBeRepeatedModel;
-	}
-
+	
 	public ManageInstance getManageInstanceService() {
 		return manageInstanceService;
 	}
 
 	public void setManageInstanceService(ManageInstance manageInstanceService) {
 		this.manageInstanceService = manageInstanceService;
-	}
-
-	public Object getSelectedModel() {
-		return selectedModel;
-	}
-
-	public void setSelectedModel(Object selectedModel) {
-		this.selectedModel = selectedModel;
 	}
 
 	public Message getExistMessage() {
@@ -280,20 +216,12 @@ public class MessageRequestBean implements Serializable {
 		this.editMessage = editMessage;
 	}
 
-	public TreeNode getMessageTreeRoot() {
-		return messageTreeRoot;
+	public TreeNode getSegmentTreeRoot() {
+		return segmentTreeRoot;
 	}
 
-	public void setMessageTreeRoot(TreeNode messageTreeRoot) {
-		this.messageTreeRoot = messageTreeRoot;
-	}
-
-	public DBImpl getDbManager() {
-		return dbManager;
-	}
-
-	public void setDbManager(DBImpl dbManager) {
-		this.dbManager = dbManager;
+	public void setSegmentTreeRoot(TreeNode segmentTreeRoot) {
+		this.segmentTreeRoot = segmentTreeRoot;
 	}
 
 	public SessionBeanTCAMT getSessionBeanTCAMT() {
@@ -304,12 +232,37 @@ public class MessageRequestBean implements Serializable {
 		this.sessionBeanTCAMT = sessionBeanTCAMT;
 	}
 
-	public String getShareTo() {
+	public Long getShareTo() {
 		return shareTo;
 	}
 
-	public void setShareTo(String shareTo) {
+	public void setShareTo(Long shareTo) {
 		this.shareTo = shareTo;
+	}
+
+	public int getActiveIndexOfMessageInstancePanel() {
+		return activeIndexOfMessageInstancePanel;
+	}
+
+	public void setActiveIndexOfMessageInstancePanel(
+			int activeIndexOfMessageInstancePanel) {
+		this.activeIndexOfMessageInstancePanel = activeIndexOfMessageInstancePanel;
+	}
+
+	public TreeNode getMessageTreeRoot() {
+		return messageTreeRoot;
+	}
+
+	public void setMessageTreeRoot(TreeNode messageTreeRoot) {
+		this.messageTreeRoot = messageTreeRoot;
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
 	}
 	
 	

@@ -1,7 +1,6 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.tcamt.db.DBImpl;
-import gov.nist.healthcare.tcamt.domain.Actor;
+import gov.nist.healthcare.tcamt.domain.User;
 
 import java.util.List;
 
@@ -16,44 +15,21 @@ import javax.faces.event.ActionEvent;
 @SessionScoped
 public class UserControl {
 
-	private String id;
-	private String password;
-	
-	private String newId;
-	private String newPassword;
-	private String selectedUser;
-	
-
-	private DBImpl dbManager = new DBImpl();
+	private User user = new User();
+	private User newUser = new User();
 
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
 	
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
 	public void loginAction(ActionEvent actionEvent) {
-		boolean result = dbManager.getUserPasswordById(this.id, this.password);
+		this.user = this.sessionBeanTCAMT.getDbManager().isValidUser(user);
 
-		if (result) {
-			addMessage("Hello " + this.id);
-			sessionBeanTCAMT.setLoggedId(this.id);
+		if (this.user != null) {
+			addMessage("Hello " + this.user.getUserId());
+			sessionBeanTCAMT.setLoggedUser(user);
 		} else {
-			this.id = null;
-			sessionBeanTCAMT.setLoggedId(null);
+			this.user = new User();
+			sessionBeanTCAMT.setLoggedUser(null);
 			addMessage("Sorry but failed!");
 		}
 		
@@ -61,37 +37,34 @@ public class UserControl {
 	}
 
 	public void logoutAction(ActionEvent actionEvent) {
-		this.setId(null);
-		sessionBeanTCAMT.setLoggedId(null);
+		this.user = new User();
+		sessionBeanTCAMT.setLoggedUser(null);
 		addMessage("Bye");
 		
 		sessionBeanTCAMT.retriveAllData();
 	}
 	
 	public void editUser(){
-		this.dbManager.modifyPassWord(this.selectedUser, this.newPassword);
-		this.selectedUser = new String();
-		this.newPassword = new String();
+		this.sessionBeanTCAMT.getDbManager().updateUser(newUser);
+		this.newUser = new User();
 	}
 	
 	public void selectEditUser(ActionEvent event) {
-		this.selectedUser = (String) event.getComponent().getAttributes().get("user");
+		this.newUser = (User) event.getComponent().getAttributes().get("user");
 	}
 	
 	
 	public void delUser(ActionEvent event) {
-		this.dbManager.deleteUset((String) event.getComponent().getAttributes().get("user"));
+		this.sessionBeanTCAMT.getDbManager().deleteUser((User) event.getComponent().getAttributes().get("user"));
 	}
 	
 	public void createUser() {
-		this.newId = new String();
-		this.newPassword = new String();
+		this.newUser = new User();
 	}
 	
 	public void addUser() {
-		this.dbManager.addUser(this.newId, this.newPassword);
-		this.newPassword = new String();
-		this.newId = new String();
+		this.sessionBeanTCAMT.getDbManager().addUser(this.newUser);
+		this.newUser = new User();
 	}
 
 	public void addMessage(String summary) {
@@ -107,32 +80,24 @@ public class UserControl {
 		this.sessionBeanTCAMT = sessionBeanTCAMT;
 	}
 	
-	public List<String> getUsers(){
-		return dbManager.getAllUsers();
+	public List<User> getUsers(){
+		return this.sessionBeanTCAMT.getDbManager().getAllUsers();
+	}
+	
+	public User getUser() {
+		return user;
 	}
 
-	public String getNewId() {
-		return newId;
+	public void setUser(User user) {
+		this.user = user;
 	}
 
-	public void setNewId(String newId) {
-		this.newId = newId;
+	public User getNewUser() {
+		return newUser;
 	}
 
-	public String getNewPassword() {
-		return newPassword;
-	}
-
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
-	}
-
-	public String getSelectedUser() {
-		return selectedUser;
-	}
-
-	public void setSelectedUser(String selectedUser) {
-		this.selectedUser = selectedUser;
+	public void setNewUser(User newUser) {
+		this.newUser = newUser;
 	}
 	
 	

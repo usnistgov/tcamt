@@ -1054,11 +1054,14 @@ input[type=text].maker-validation-noerror {
 }
 
 .zeroOccurRow {
-	color: Red;
+	background-color: #9f9f9f;
+	color: #cccccc;
 }
 
 .normalRow {
 	font-weight:bold;
+	color: #000000;
+	background-color: #feffff;
 }
 
 .xUsageRow {

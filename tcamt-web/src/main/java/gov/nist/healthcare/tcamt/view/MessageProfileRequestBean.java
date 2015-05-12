@@ -1,23 +1,16 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.hl7tools.domain.Component;
-import gov.nist.healthcare.hl7tools.domain.ConformanceStatement;
-import gov.nist.healthcare.hl7tools.domain.Datatype;
-import gov.nist.healthcare.hl7tools.domain.Element;
-import gov.nist.healthcare.hl7tools.domain.Field;
-import gov.nist.healthcare.hl7tools.domain.Segment;
-import gov.nist.healthcare.hl7tools.domain.StatementDetails;
-import gov.nist.healthcare.hl7tools.service.serializer.ProfileSchemaVersion;
-import gov.nist.healthcare.hl7tools.service.serializer.XMLDeserializer;
-import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.hl7tools.v2.maker.core.domain.profile.MessageProfile;
-import gov.nist.healthcare.hl7tools.v2.profilemaker.service.JSONConverterService;
-import gov.nist.healthcare.tcamt.db.DBImpl;
 import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.SegmentTreeModel;
-import gov.nist.healthcare.tcamt.domain.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.ValidationContext;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.SegmentTreeModel;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,6 +21,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -52,8 +46,6 @@ public class MessageProfileRequestBean implements Serializable {
 	private TreeNode selectedMessageElementRoot;
 	private ManageInstance manageInstanceService;
 	private TreeNode selectedNode;
-	
-	private DBImpl dbManager = new DBImpl();
 
 	/**
 	 * 
@@ -76,16 +68,24 @@ public class MessageProfileRequestBean implements Serializable {
 	
 	
 	public void delMessage(ActionEvent event) {
-		this.dbManager.messageDelete((Message) event.getComponent().getAttributes().get("message"));
+		this.sessionBeanTCAMT.getDbManager().messageDelete((Message) event.getComponent().getAttributes().get("message"));
 		this.sessionBeanTCAMT.updateMessages();
 		this.init();
 	}
 	
 	public void cloneMessage(ActionEvent event) throws CloneNotSupportedException {	
 		Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
+		m.setId(0);
 		m.setName("Copy_" + m.getName());
-		m.setVersion(0);
-		this.dbManager.messageInsert(m, this.sessionBeanTCAMT.getLoggedId());
+		m.setVersion(1);
+		m.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+		
+		for(ValidationContext vc:m.getValidationContexts()){
+			vc.setId(0);
+		}
+		
+		
+		this.sessionBeanTCAMT.getDbManager().messageInsert(m);
 		this.sessionBeanTCAMT.updateMessages();
 		this.init();
 	}
@@ -95,13 +95,15 @@ public class MessageProfileRequestBean implements Serializable {
 	}
 
 	public void addMessage() {
-		this.dbManager.messageInsert(this.newMessage, this.sessionBeanTCAMT.getLoggedId());
+		this.newMessage.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+		this.newMessage.setVersion(1);
+		this.sessionBeanTCAMT.getDbManager().messageInsert(this.newMessage);
 		this.sessionBeanTCAMT.updateMessages();
 	}
 
 	public void editMessage() {
 		this.editMessage.setVersion(this.editMessage.getVersion() + 1);
-		this.dbManager.messageUpdate(this.editMessage);
+		this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);
 		this.sessionBeanTCAMT.updateMessages();
 	}
 
@@ -113,42 +115,55 @@ public class MessageProfileRequestBean implements Serializable {
 		this.editMessage.setName(existMessage.getName());
 		this.editMessage.setDescription(existMessage.getDescription());
 		this.editMessage.setVersion(existMessage.getVersion());
-		this.editMessage.setMessageProfile(existMessage.getMessageProfile());
-		this.editMessage.setListCSs(existMessage.getListCSs());
-		this.editMessage.setListCPs(existMessage.getListCPs());
-		this.editMessage.setProfilePathOccurIGData(existMessage.getProfilePathOccurIGData());
-		this.editMessage.setInstanceTestDataTypes(existMessage.getInstanceTestDataTypes());
+		this.editMessage.setProfile(existMessage.getProfile());
+		this.editMessage.setMessageObj(existMessage.getMessageObj());
+		this.editMessage.setConstraints(existMessage.getConstraints());
+		this.editMessage.setValueSet(existMessage.getValueSet());
 		this.editMessage.setValidationContexts(existMessage.getValidationContexts());
 		this.editMessage.setHl7EndcodedMessage(existMessage.getHl7EndcodedMessage());
+		this.editMessage.setAuthor(existMessage.getAuthor());
 		
-		this.selectedMessageElementRoot = this.manageInstanceService.loadMessage(this.editMessage, 1);
-	}
-
-	public void uploadMessageProfile(FileUploadEvent event)
-			throws IOException, Exception {
-			if(event.getFile().getFileName().endsWith(".PROFILE")){
-				JSONConverterService jConverterService = new JSONConverterService();
-				MessageProfile profile = jConverterService.fromStream(event.getFile().getInputstream());
-				this.newMessage.setMessageProfile(profile);
-				this.manageInstanceService.loadMessage(this.newMessage, 0);
-			}else if (event.getFile().getFileName().endsWith(".xml")){
-				XMLDeserializer xmlDeserializer = new XMLDeserializer();
-				MessageProfile profile = new MessageProfile(xmlDeserializer.deserialize(event.getFile().getInputstream(), ProfileSchemaVersion.V29));
-				this.newMessage.setMessageProfile(profile);
-				this.manageInstanceService.loadMessage(this.newMessage, 0);
-			}
-			
-			this.manageInstanceService.generateProfilePathOccurIGData(this.newMessage);
+		this.selectedMessageElementRoot = this.manageInstanceService.loadMessage(this.editMessage);
 	}
 	
-	public void updateMessageProfile(FileUploadEvent event)
-			throws ConversionException, CloneNotSupportedException, IOException {
-			JSONConverterService jConverterService = new JSONConverterService();
-			MessageProfile profile = jConverterService.fromStream(event.getFile().getInputstream());
-			this.editMessage.setMessageProfile(profile);
-			
-			this.manageInstanceService.loadMessage(this.editMessage, 0);
-			this.manageInstanceService.generateProfilePathOccurIGData(this.editMessage);
+	private void readProfile(Message m) throws CloneNotSupportedException{
+		if(m.getProfile() != null && m.getProfile().equals("") ){
+			if(m.getValueSet() != null && m.getValueSet().equals("") ){
+				if(m.getConstraints() != null && m.getConstraints().equals("") ){
+					this.manageInstanceService.loadMessage(this.newMessage);
+				}
+			}
+		}
+	}
+	
+	public void uploadProfile(FileUploadEvent event) throws IOException, CloneNotSupportedException{
+		this.newMessage.setProfile(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.newMessage);
+	}
+	
+	public void uploadConstraints(FileUploadEvent event) throws IOException, CloneNotSupportedException {
+		this.newMessage.setConstraints(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.newMessage);
+	}
+	
+	public void uploadValueSet(FileUploadEvent event) throws IOException, CloneNotSupportedException {
+		this.newMessage.setValueSet(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.newMessage);
+	}
+	
+	public void updateProfile(FileUploadEvent event) throws IOException, CloneNotSupportedException {
+		this.editMessage.setProfile(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.editMessage);
+	}
+	
+	public void updateConstraints(FileUploadEvent event) throws IOException, CloneNotSupportedException {
+		this.editMessage.setConstraints(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.editMessage);
+	}
+	
+	public void updateValueSet(FileUploadEvent event) throws IOException, CloneNotSupportedException {
+		this.editMessage.setValueSet(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+		this.readProfile(this.editMessage);
 	}
 
 	private void travelSegment(Segment s, String path, TreeNode parentNode) {
@@ -162,22 +177,6 @@ public class MessageProfileRequestBean implements Serializable {
 		path = path + "." + f.getPosition();
 		String segmentRootName = path.split("\\.")[0];
 		
-		String data = null;
-		TestDataCategorization type = null;
-		List<ConformanceStatement> css = f.getConformanceStatementList();
-		if (css != null && css.size() > 0) {
-			for (ConformanceStatement cs : css) {
-				StatementDetails statementDetails = (StatementDetails) cs.getStatementDetails();
-				if (statementDetails.getPattern().equals("Constant Value Check")) {
-					if(statementDetails.getSubPattern().equals("Single Value")) {
-						if(!statementDetails.getVerb().contains("not") && !statementDetails.getVerb().contains("NOT")){
-							data = statementDetails.getLiteralValue();
-							type = TestDataCategorization.ProfileFixed; 
-						}
-					} 
-				}
-			}
-		}
 		Datatype dt = f.getDatatype();	
 		List<Component> components = dt.getComponents();
 		boolean isLeafNode = false;
@@ -187,7 +186,7 @@ public class MessageProfileRequestBean implements Serializable {
 		}
 		
 
-		SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, f.getDescription(), f, path, path, data, type, null, isLeafNode, f.getMin());
+		SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, f.getName(), f, path, path, null, null, null, isLeafNode, f.getMin());
 		TreeNode treeNode = new DefaultTreeNode(segmentTreeModel,  parentNode);
 
 	
@@ -202,24 +201,6 @@ public class MessageProfileRequestBean implements Serializable {
 				String newPath = path + "." + c.getPosition();
 				String segmentRootName = newPath.split("\\.")[0];
 				
-				String data = null;
-				TestDataCategorization type = null;
-				List<ConformanceStatement> css = c.getConformanceStatementList();
-				if (css != null && css.size() > 0) {
-					for (ConformanceStatement cs : css) {
-						StatementDetails statementDetails = (StatementDetails) cs.getStatementDetails();
-						if (statementDetails.getPattern().equals("Constant Value Check")) {
-							if(statementDetails.getSubPattern().equals("Single Value")) {
-								if(!statementDetails.getVerb().contains("not") && !statementDetails.getVerb().contains("NOT")){
-									data = statementDetails.getLiteralValue();
-									type = TestDataCategorization.ProfileFixed; 
-								}
-							} 
-						}
-					}
-				}
-				
-				
 				Datatype childdt = c.getDatatype();	
 				List<Component> childComponents = childdt.getComponents();
 				boolean isLeafNode = false;
@@ -228,13 +209,26 @@ public class MessageProfileRequestBean implements Serializable {
 					isLeafNode = true;
 				}
 
-				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, c.getDescription(), c, newPath, newPath, data, type, null, isLeafNode, 1);
+				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, c.getName(), c, newPath, newPath, null, null, null, isLeafNode, 1);
 				TreeNode treeNode = (TreeNode) new DefaultTreeNode(segmentTreeModel, (org.primefaces.model.TreeNode) parentNode);
 
 				travelDT(c.getDatatype(), newPath, treeNode);
 			}
 		}
 
+	}
+	
+	public void onNodeSelect(NodeSelectEvent event) {
+		SegmentRefOrGroup segmentRefOrGroup = (SegmentRefOrGroup)((MessageTreeModel) event.getTreeNode().getData()).getNode();
+
+		if (segmentRefOrGroup != null) {
+			this.selectedSegmentTreeRoot = (TreeNode) new DefaultTreeNode("root", null);
+			
+			if(segmentRefOrGroup instanceof SegmentRef){
+				SegmentRef segmentRef = (SegmentRef)segmentRefOrGroup;
+				this.travelSegment(segmentRef.getRef(), segmentRef.getRef().getName(), selectedSegmentTreeRoot);	
+			}
+		}
 	}
 
 	/**
@@ -273,32 +267,12 @@ public class MessageProfileRequestBean implements Serializable {
 		this.selectedNode = selectedNode;
 	}
 
-	public void onNodeSelect(NodeSelectEvent event) {
-		Element el = (Element)((MessageTreeModel) event.getTreeNode().getData()).getNode();
-
-		if (el != null) {
-			Segment segment = el.getSegment();
-			this.selectedSegmentTreeRoot = (TreeNode) new DefaultTreeNode("root", null);
-			if(segment != null){
-				this.travelSegment(segment, segment.getName(), selectedSegmentTreeRoot);	
-			}
-		}
-	}
-
 	public TreeNode getSelectedMessageElementRoot() {
 		return selectedMessageElementRoot;
 	}
 
 	public void setSelectedMessageElementRoot(TreeNode selectedMessageElementRoot) {
 		this.selectedMessageElementRoot = selectedMessageElementRoot;
-	}
-
-	public DBImpl getDbManager() {
-		return dbManager;
-	}
-
-	public void setDbManager(DBImpl dbManager) {
-		this.dbManager = dbManager;
 	}
 	
 	public List<Message> getMessages(){

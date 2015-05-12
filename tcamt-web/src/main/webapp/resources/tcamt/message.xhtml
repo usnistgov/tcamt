@@ -13,7 +13,7 @@
 </composite:interface>
 
 <composite:implementation>
-	<h:form id="messageForm" enctype="multipart/form-data">
+	<h:form id="messageForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:accordionPanel widgetVar="MessageLibPanel">
 			<p:tab title="Message DashBoard">
 				<table width="100%">
@@ -91,7 +91,7 @@
 		</p:accordionPanel>
 	</h:form>
 	
-	<h:form id="createMessageForm">
+	<h:form id="createMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="createMessageDialog" header="Create Message"
 			widgetVar="createMessage">
 			<h:panelGrid id="createMessagePanel1" columns="2" cellpadding="5">
@@ -102,14 +102,38 @@
 				<h:outputText value="Message Profile: " />
 				<h:panelGrid id="createMessagePanel2" columns="1" cellpadding="0">
 					<p:fileUpload
-						rendered="#{messageProfileRequestBean.newMessage.messageProfile == null}"
-						fileUploadListener="#{messageProfileRequestBean.uploadMessageProfile}"
+						rendered="#{messageProfileRequestBean.newMessage.profile == null}"
+						fileUploadListener="#{messageProfileRequestBean.uploadProfile}"
 						update=":#{p:component('createMessagePanel2')}"
 						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(PROFILE|xml)$/" />
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
 					<h:outputText
-						rendered="#{messageProfileRequestBean.newMessage.messageProfile != null}"
+						rendered="#{messageProfileRequestBean.newMessage.profile != null}"
 						value="Message Profile Uploaded" />
+				</h:panelGrid>
+				<h:outputText value="Constraints: " />
+				<h:panelGrid id="createMessagePanel3" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{messageProfileRequestBean.newMessage.constraints == null}"
+						fileUploadListener="#{messageProfileRequestBean.uploadConstraints}"
+						update=":#{p:component('createMessagePanel3')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+					<h:outputText
+						rendered="#{messageProfileRequestBean.newMessage.constraints != null}"
+						value="Constraints Uploaded" />
+				</h:panelGrid>
+				<h:outputText value="ValueSet Lib: " />
+				<h:panelGrid id="createMessagePanel4" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{messageProfileRequestBean.newMessage.valueSet == null}"
+						fileUploadListener="#{messageProfileRequestBean.uploadValueSet}"
+						update=":#{p:component('createMessagePanel4')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+					<h:outputText
+						rendered="#{messageProfileRequestBean.newMessage.valueSet != null}"
+						value="ValueSet Library Uploaded" />
 				</h:panelGrid>
 			</h:panelGrid>
 			<table width="100%">
@@ -123,7 +147,7 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="shareMessageForm">
+	<h:form id="shareMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="shareMessageDialog" header="Share message"
 			widgetVar="shareMessage">
 			<h:panelGrid id="shareMessagePanel" columns="2" cellpadding="5">
@@ -133,7 +157,7 @@
 					value="#{messageRequestBean.shareTo}"
 					effect="fade">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user.userId}" itemValue="#{user.id}" />
 				</p:selectOneMenu>
 			</h:panelGrid>
 
@@ -151,7 +175,7 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="editMessageForm">
+	<h:form id="editMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="editMessageDialog" header="Edit Message"
 			widgetVar="editMessage">
 			<h:panelGrid id="editMessagePanel" columns="2" cellpadding="5">
@@ -164,9 +188,22 @@
 				<h:inputHidden value="#{messageProfileRequestBean.editMessage.version}" />
 					
 				<h:outputText value="Reload Profile: " />
-				<p:fileUpload fileUploadListener="#{messageProfileRequestBean.updateMessageProfile}"
-					mode="advanced"
-					auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(PROFILE)$/" />
+				<p:fileUpload
+						fileUploadListener="#{messageProfileRequestBean.updateProfile}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						
+				<h:outputText value="Reload Constraints: " />
+				<p:fileUpload
+						fileUploadListener="#{messageProfileRequestBean.updateConstraints}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+				
+				<h:outputText value="Reload ValueSet: " />
+				<p:fileUpload
+						fileUploadListener="#{messageProfileRequestBean.updateValueSet}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
 			</h:panelGrid>
 
 			<table width="100%">
@@ -180,7 +217,7 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="viewMessageProfileForm">
+	<h:form id="viewMessageProfileForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog header="View Message Profile : #{messageProfileRequestBean.editMessage.name}" draggable="true" width="90%" height="700px" widgetVar="viewMSGP">
 			<p:scrollPanel style="width:100%;height:99%" mode="native">
 				<p:fieldset legend="Message Definition" toggleable="true">
@@ -248,7 +285,7 @@
 									value="#{model.node.maxLength}]" />
 							</p:column>
 
-							<p:column headerText="Data" style="width:7%; text-align: center;">
+<!-- 							<p:column headerText="Data" style="width:7%; text-align: center;">
 								<h:outputText rendered="#{model.isLeafNode()}"
 									value="#{model.data}" />
 							</p:column>
@@ -274,12 +311,12 @@
 									immediate="true" rendered="#{model.node.codeTable != null}"
 									value="#{model.node.codeTable.name}">
 								</p:commandButton>
-							</p:column>
+							</p:column> -->
 
 						</p:treeTable>
 					</p:scrollPanel>
 				</p:fieldset>
-				<p:fieldset legend="Conformance Statements" toggleable="true"
+<!-- 				<p:fieldset legend="Conformance Statements" toggleable="true"
 					collapsed="false">
 					<p:scrollPanel style="width:100%;height:222px" mode="native">
 						<p:dataTable id="messageProfileConformanceStatement" var="cs"
@@ -321,7 +358,7 @@
 							</p:column>
 						</p:dataTable>
 					</p:scrollPanel>
-				</p:fieldset>
+				</p:fieldset> -->
 			</p:scrollPanel>
 		</p:dialog>
 	</h:form>
@@ -331,10 +368,10 @@
 			<table width="100%">
 				<tr>
 					<td align="right">
-						<p:commandButton id="constructMessageBTN" value="Construct Message"
+						<!-- <p:commandButton id="constructMessageBTN" value="Construct Message"
 							icon="ui-icon-pencil"
 							update=":#{p:component('constructMessageForm')}"
-							oncomplete="PF('constructMSG').show();" />
+							oncomplete="PF('constructMSG').show();" /> -->
 						<p:commandButton value="Save"
 							icon="ui-icon-disk"
 							update=":#{p:component('messageList')}"
@@ -342,44 +379,38 @@
 							onclick="PF('viewMSG').hide();" /></td>
 				</tr>
 			</table>
-			<p:scrollPanel id="mInstancePanel" style="width:100%;height:99%" mode="native">
-				<p:fieldset legend="HL7 Message" toggleable="true">
-					<p:scrollPanel id="mmdPanel" style="width:100%;" mode="native">
-						<tcamt:sampleMessage hl7EndcodedMessage="#{messageRequestBean.editMessage.hl7EndcodedMessage}" 
-							bean="#{messageRequestBean}"
-							mdPanelCode=":#{p:component('mmdPanel')}"
-							sdPanelCode=":#{p:component('msdPanel')}"/>
+			
+			<p:accordionPanel id="mInstancePanel" widgetVar="MessageInstancePanel" activeIndex="#{messageRequestBean.activeIndexOfMessageInstancePanel}">
+				<p:tab title="HL7 Message Tree">
+					<p:scrollPanel style="width:100%;" mode="native">
+						<tcamt:messageConstructor bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:scrollPanel>
-				</p:fieldset>
-				<p:fieldset legend="Test Data" toggleable="true">
-					<p:scrollPanel id="msdPanel" style="width:100%;" mode="native">
-						<tcamt:segmentDefinition
-							bean="#{messageRequestBean}"
-							instancePanelCode=":#{p:component('mInstancePanel')}"
-							mdPanelCode=":#{p:component('mmdPanel')}"
-							sdPanelCode=":#{p:component('msdPanel')}"
-							vcPanelCode=":#{p:component('mvcPanel')}"/>
+				</p:tab>
+				<p:tab title="HL7 Encoded Message">
+					<p:scrollPanel style="width:100%;" mode="native">
+						<tcamt:sampleMessage hl7EndcodedMessage="#{messageRequestBean.editMessage.hl7EndcodedMessage}" bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:scrollPanel>
-				</p:fieldset>
-				<p:fieldset legend="Validation Contexts" toggleable="true">
-					<p:scrollPanel id="mvcPanel" style="width:100%;" mode="native">
+				</p:tab>
+				<p:tab title="Segments List">
+					<p:scrollPanel style="width:100%;" mode="native">
+						<tcamt:segmentList bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
+					</p:scrollPanel>
+				</p:tab>
+				<p:tab title="TestData of Selected Segment">
+					<p:scrollPanel style="width:100%;" mode="native">
+						<tcamt:testDataOfSegment bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
+					</p:scrollPanel>
+				</p:tab>
+				<p:tab title="List Contraints">
+					<p:scrollPanel style="width:100%;" mode="native">
 						<tcamt:validationContextTable validationContexts="#{messageRequestBean.editMessage.validationContexts}" />
 					</p:scrollPanel>
-				</p:fieldset>
-			</p:scrollPanel>
+				</p:tab>
+			</p:accordionPanel>
 			
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="constructMessageForm">
-		<p:dialog header="Define structure for #{messageRequestBean.editMessage.name}" width="300px" height="500px" dynamic="false" modal="true" widgetVar="constructMSG">
-			<p:tree value="#{messageRequestBean.messageTreeRoot}" var="node">
-        		<p:treeNode>
-            		<h:outputText value="#{node.path}" />
-        		</p:treeNode>
-    		</p:tree>
-		</p:dialog>
-	</h:form>
 </composite:implementation>
 
 </html>

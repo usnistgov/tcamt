@@ -34,7 +34,7 @@
 
 				<p:dataTable id="userList" var="user" value="#{userControl.users}">
 					<p:column headerText="ID">
-						<h:outputText value="#{user}" />
+						<h:outputText value="#{user.userId}" />
 					</p:column>
 					
 					<p:column headerText="Action">
@@ -63,9 +63,9 @@
 			widgetVar="createUser">
 			<h:panelGrid id="createUserPanel" columns="2" cellpadding="5">
 				<h:outputText value="ID: " />
-				<p:inputText value="#{userControl.newId}" />
+				<p:inputText value="#{userControl.newUser.userId}" />
 				<h:outputText value="Password: " />
-				<p:inputText value="#{userControl.newPassword}" />
+				<p:inputText value="#{userControl.newUser.password}" />
 			</h:panelGrid>
 
 			<table width="100%">
@@ -87,9 +87,9 @@
 			widgetVar="editUser">
 			<h:panelGrid id="editUserPanel" columns="2" cellpadding="5">
 				<h:outputText value="ID: " />
-				<h:outputText value="#{userControl.selectedUser}" />
+				<h:outputText value="#{userControl.newUser.userId}" />
 				<h:outputText value="New Password: " />
-				<p:inputText value="#{userControl.newPassword}" />
+				<p:inputText value="#{userControl.newUser.password}" />
 			</h:panelGrid>
 
 			<table width="100%">

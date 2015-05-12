@@ -22,6 +22,15 @@
         <dependent-module archiveName="tcamt-domain-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tcamt-domain/tcamt-domain">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="igamt-lite-service-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/igamt-lite-service/igamt-lite-service">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="igamt-lite-repo-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/igamt-lite-repo/igamt-lite-repo">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="igamt-lite-domain-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/igamt-lite-domain/igamt-lite-domain">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <dependent-module archiveName="tcamt-service-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/tcamt-service/tcamt-service">
             <dependency-type>uses</dependency-type>
         </dependent-module>
@@ -45,6 +54,6 @@
         </dependent-module>
         <property name="context-root" value="tcamt"/>
         <property name="java-output-path" value="/tcamt-web/target/classes"/>
-        <property name="component.exclusion.patterns" value="WEB-INF/web.xml"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/lib/primefaces-4.0.jar"/>
     </wb-module>
 </project-modules>

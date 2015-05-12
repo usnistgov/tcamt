@@ -12,7 +12,7 @@
 </composite:interface>
 
 <composite:implementation>
-	<h:form id="actorForm">
+	<h:form id="actorForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:accordionPanel widgetVar="ActorLibPanel">
 			<p:tab title="Actor DashBoard" >
 				<table width="100%">
@@ -78,7 +78,7 @@
 		</p:accordionPanel>
 	</h:form>
 	
-	<h:form id="createActorForm">
+	<h:form id="createActorForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="createActorDialog" header="Create Actor"
 			widgetVar="createActor">
 			<h:panelGrid id="createActorPanel" columns="2" cellpadding="5">
@@ -104,7 +104,7 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="shareActorForm">
+	<h:form id="shareActorForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="shareActorDialog" header="Share Actor"
 			widgetVar="shareActor">
 			<h:panelGrid id="shareActorPanel" columns="2" cellpadding="5">
@@ -114,7 +114,7 @@
 					value="#{actorRequestBean.shareTo}"
 					effect="fade">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user}" itemValue="#{user}" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user.userId}" itemValue="#{user.id}" />
 				</p:selectOneMenu>
 			</h:panelGrid>
 
@@ -131,7 +131,8 @@
 			</table>
 		</p:dialog>
 	</h:form>
-	<h:form id="editActorForm">
+	
+	<h:form id="editActorForm" onkeypress="if (event.keyCode == 13) { return false; }">
 		<p:dialog id="editActorDialog" header="Edit Actor"
 			widgetVar="editActor">
 			<h:panelGrid id="editActorPanel" columns="2" cellpadding="5">
@@ -158,7 +159,6 @@
 				</tr>
 			</table>
 		</p:dialog>
-
 	</h:form>
 </composite:implementation>
 
