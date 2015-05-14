@@ -4,8 +4,11 @@ import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.SegmentTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
@@ -55,7 +58,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestCase selectedTestCase = null;
 	private DataInstanceTestCaseGroup selectedTestCaseGroup = null;
 	private Long message_id = null; 
-	private int activeIndex = 0;
 	private int activeIndexOfMessageInstancePanel = 0;
 	
 	private TreeNode testplanRoot;
@@ -87,8 +89,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.messageTreeRoot = new DefaultTreeNode("root", null);
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
-		
-		this.activeIndex = 0;
+		this.sessionBeanTCAMT.setDitActiveIndex(0);
 		this.setActiveIndexOfMessageInstancePanel(2);
 	}
 	
@@ -96,11 +97,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	public void createTestPlan() {
 		init();
 		this.selectedTestPlan.setName("New TestPlan");
-		
 		this.createTestPlanTree(this.selectedTestPlan);
-		
 		this.setActiveIndexOfMessageInstancePanel(2);
-		this.activeIndex = 1;
+		this.sessionBeanTCAMT.setDitActiveIndex(1);
 	}
 	
 	public void deleteTestPlan(ActionEvent event) {
@@ -113,7 +112,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedTestCase = null;
 		this.selectedTestCaseGroup = null;
 		this.createTestPlanTree(this.selectedTestPlan);
-		this.activeIndex = 1;
+		this.sessionBeanTCAMT.setDitActiveIndex(1);
 	}
 	
 	public void messageSelected() throws CloneNotSupportedException, IOException{
@@ -134,10 +133,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
 			new DefaultTreeNode("case", ditc, testplanNode);
 		}
-	}
-	
-	public void createValidationContext(SegmentTreeModel stm) {
-//		this.manageInstanceService.createVC(stm, this.selectedTestCase.getMessage(), "TestCase");
 	}
 
 	public void saveTestPlan() {
@@ -268,7 +263,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	public void onInstanceSegmentSelect(SelectEvent event){
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
-		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment);
+		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.selectedTestCase.getMessage());
 		this.activeIndexOfMessageInstancePanel = 3;
 	}
 	
@@ -346,6 +341,41 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         inTP.close();
 	}
 	
+	public void createTCAMTConstraint(Object model) {
+		String ipath = null;
+		String data = null;
+		String level = "DataInstanceTestCase";
+		TestDataCategorization tdc = null;
+		
+		if(model instanceof FieldModel){
+			FieldModel fModel = (FieldModel)model;
+			ipath = fModel.getIpath();
+			data = fModel.getData();
+			tdc = fModel.getTdc();
+		}else if(model instanceof ComponentModel){
+			ComponentModel cModel = (ComponentModel)model;
+			ipath = cModel.getIpath();
+			data = cModel.getData();
+			tdc = cModel.getTdc();
+		}
+		
+		if(tdc == null || tdc.getValue().equals("")){
+			this.selectedTestCase.getMessage().deleteTCAMTConstraintByIPath(ipath);
+		}else{
+			TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
+			tcamtConstraint.setCategorization(tdc);
+			tcamtConstraint.setData(data);
+			tcamtConstraint.setIpath(ipath);
+			tcamtConstraint.setLevel(level);
+			this.selectedTestCase.getMessage().addTCAMTConstraint(tcamtConstraint);
+		}
+	}
+	
+	public void deleteConstraint(String ipath){
+		this.selectedTestCase.getMessage().deleteTCAMTConstraintByIPath(ipath);
+		this.selectedInstanceSegment = null;
+	}
+	
 
 	public List<DataInstanceTestPlan> getTestPlans() {
 		return this.sessionBeanTCAMT.getDataInstanceTestPlans();
@@ -375,16 +405,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setSelectedTestCase(DataInstanceTestCase selectedTestCase) {
 		this.selectedTestCase = selectedTestCase;
-	}
-
-
-	public int getActiveIndex() {
-		return activeIndex;
-	}
-
-
-	public void setActiveIndex(int activeIndex) {
-		this.activeIndex = activeIndex;
 	}
 	
 	public TreeNode getTestplanRoot() {

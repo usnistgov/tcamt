@@ -13,7 +13,7 @@
 
 <composite:implementation>
 	<h:form id="IsolatedTestForm" onkeypress="if (event.keyCode == 13) { return false; }">
-		<p:accordionPanel widgetVar="IsolatedTestPanel" activeIndex="#{isolatedTestPlanRequestBean.activeIndex}">
+		<p:accordionPanel widgetVar="IsolatedTestPanel" activeIndex="#{sessionBeanTCAMT.itActiveIndex}">
 			<p:tab id="IsolatedTestPanel_List" title="Isolated Test Plan List">
 				<table width="100%">
 					<tr>
@@ -279,7 +279,7 @@
 										</p:tab>
 										<p:tab title="List Contraints">
 											<p:scrollPanel style="width:100%;" mode="native">
-												<tcamt:validationContextTable validationContexts="#{isolatedTestPlanRequestBean.selectedTestStep.message.validationContexts}" />
+												<tcamt:constraintsTable bean="#{isolatedTestPlanRequestBean}" panelId=":#{p:component('itInstancePanel')}" constraints="#{isolatedTestPlanRequestBean.selectedTestStep.message.tcamtConstraints}" />
 											</p:scrollPanel>
 										</p:tab>
 									</p:accordionPanel>								
@@ -355,7 +355,7 @@
 				<h:outputText value="Message: " />
 				<p:selectOneMenu value="#{isolatedTestPlanRequestBean.messageId}" effect="fade">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{messageProfileRequestBean.messages}" var="message" itemLabel="#{message.name}(#{message.version})" itemValue="#{message.id}" />
+					<f:selectItems value="#{messageRequestBean.messages}" var="message" itemLabel="#{message.name}(#{message.version})" itemValue="#{message.id}" />
 				</p:selectOneMenu>
 
 			</h:panelGrid>

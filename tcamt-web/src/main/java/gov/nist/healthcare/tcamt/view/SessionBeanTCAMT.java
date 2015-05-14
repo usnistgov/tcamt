@@ -31,24 +31,29 @@ public class SessionBeanTCAMT implements Serializable {
 	private List<DataInstanceTestPlan> dataInstanceTestPlans;
 	private List<IsolatedTestPlan> isolatedTestPlans;
 	
+	private int mActiveIndex = 0;
+	private int ditActiveIndex = 0;
+	private int itActiveIndex = 0;
+	
 	private User loggedUser;
 
 	/**
 	 * 
 	 */
-
-	
 	
 	public void onTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
 		if(tabTitle.equals("Actor")){
 			this.updateActors();
 		}else if(tabTitle.equals("Message")){
+			mActiveIndex = 0;
 			this.updateMessages();
 		}else if(tabTitle.equals("Data Instance Test")){
 			this.updateDataInstanceTestPlans();
+			ditActiveIndex = 0;
 		}else if(tabTitle.equals("Isolated Test")){
 			this.updateIsolatedTestPlans();
+			itActiveIndex = 0;
 		}
     }
 	
@@ -152,6 +157,30 @@ public class SessionBeanTCAMT implements Serializable {
 
 	public void setDbManager(DBImpl dbManager) {
 		this.dbManager = dbManager;
+	}
+
+	public int getDitActiveIndex() {
+		return ditActiveIndex;
+	}
+
+	public void setDitActiveIndex(int ditActiveIndex) {
+		this.ditActiveIndex = ditActiveIndex;
+	}
+
+	public int getItActiveIndex() {
+		return itActiveIndex;
+	}
+
+	public void setItActiveIndex(int itActiveIndex) {
+		this.itActiveIndex = itActiveIndex;
+	}
+
+	public int getmActiveIndex() {
+		return mActiveIndex;
+	}
+
+	public void setmActiveIndex(int mActiveIndex) {
+		this.mActiveIndex = mActiveIndex;
 	}
 	
 }

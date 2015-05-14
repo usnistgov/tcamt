@@ -6,8 +6,11 @@ import gov.nist.healthcare.tcamt.domain.IsolatedTestCase;
 import gov.nist.healthcare.tcamt.domain.IsolatedTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.IsolatedTestPlan;
 import gov.nist.healthcare.tcamt.domain.IsolatedTestStep;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.SegmentTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 
 import java.io.IOException;
@@ -41,7 +44,6 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	private IsolatedTestCase selectedTestCase = null;
 	private IsolatedTestCaseGroup selectedTestCaseGroup = null;
 	private IsolatedTestStep selectedTestStep = null;
-	private int activeIndex = 0;
 	private int activeIndexOfMessageInstancePanel = 0;
 	
 	private TreeNode testplanRoot;
@@ -81,7 +83,7 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		setrActorId(null);
 		setMessageId(null);
 		
-		this.activeIndex = 0;
+		this.sessionBeanTCAMT.setItActiveIndex(0);
 		this.setActiveIndexOfMessageInstancePanel(2);
 	}
 	
@@ -89,11 +91,8 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	public void createTestPlan() {
 		init();
 		this.selectedTestPlan.setName("New TestPlan");
-		
 		this.createTestPlanTree(this.selectedTestPlan);
-		
-		
-		this.activeIndex = 1;
+		this.sessionBeanTCAMT.setItActiveIndex(1);
 	}
 	
 	public void deleteTestPlan(ActionEvent event) {
@@ -109,7 +108,7 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		this.selectedTestStep = null;
 		this.selectedTestCaseGroup = null;
 		this.createTestPlanTree(this.selectedTestPlan);
-		this.activeIndex = 1;
+		this.sessionBeanTCAMT.setItActiveIndex(1);
 	}
 	
 	
@@ -127,9 +126,9 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	public void createValidationContext(SegmentTreeModel stm) {
-//		this.manageInstanceService.createVC(stm, this.selectedTestStep.getMessage(), "TestStep");
-	}
+//	public void createValidationContext(SegmentTreeModel stm) {
+////		this.manageInstanceService.createVC(stm, this.selectedTestStep.getMessage(), "TestStep");
+//	}
 
 	public void saveTestPlan() {
 		if(this.selectedTestPlan.getId() <= 0){
@@ -303,7 +302,7 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	
 	public void onInstanceSegmentSelect(SelectEvent event){
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
-		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment);
+		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.selectedTestStep.getMessage());
 		this.activeIndexOfMessageInstancePanel = 4;
 	}
 	
@@ -318,6 +317,41 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		this.readHL7Message();
 		this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
 		this.activeIndexOfMessageInstancePanel = 4;
+	}
+	
+	public void createTCAMTConstraint(Object model) {
+		String ipath = null;
+		String data = null;
+		String level = "IsolatedTestCase";
+		TestDataCategorization tdc = null;
+		
+		if(model instanceof FieldModel){
+			FieldModel fModel = (FieldModel)model;
+			ipath = fModel.getIpath();
+			data = fModel.getData();
+			tdc = fModel.getTdc();
+		}else if(model instanceof ComponentModel){
+			ComponentModel cModel = (ComponentModel)model;
+			ipath = cModel.getIpath();
+			data = cModel.getData();
+			tdc = cModel.getTdc();
+		}
+		
+		if(tdc == null || tdc.getValue().equals("")){
+			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(ipath);
+		}else{
+			TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
+			tcamtConstraint.setCategorization(tdc);
+			tcamtConstraint.setData(data);
+			tcamtConstraint.setIpath(ipath);
+			tcamtConstraint.setLevel(level);
+			this.selectedTestStep.getMessage().addTCAMTConstraint(tcamtConstraint);
+		}
+	}
+	
+	public void deleteConstraint(String ipath){
+		this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(ipath);
+		this.selectedInstanceSegment = null;
 	}
 
 	public List<IsolatedTestPlan> getTestPlans() {
@@ -372,16 +406,6 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	public void setSelectedTestStep(IsolatedTestStep selectedTestStep) {
 		this.selectedTestStep = selectedTestStep;
 	}
-
-	public int getActiveIndex() {
-		return activeIndex;
-	}
-
-
-	public void setActiveIndex(int activeIndex) {
-		this.activeIndex = activeIndex;
-	}
-
 
 	public TreeNode getTestplanRoot() {
 		return testplanRoot;

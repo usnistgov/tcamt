@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+	<composite:attribute name="bean" />
+	<composite:attribute name="panelId" />
+	<composite:attribute name="constraints" />
+</composite:interface>
+
+<composite:implementation>
+	<p:dataTable var="c" value="#{cc.attrs.constraints}" paginator="true" rows="5" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,30">
+		<p:column headerText="Path">
+			<h:outputText value="#{c.ipath}" />
+		</p:column>
+		<p:column headerText="Level">
+			<h:outputText value="#{c.level}" />
+		</p:column>
+		<p:column headerText="Categorization">
+			<h:outputText value="#{c.categorization.value}" />
+		</p:column>
+		<p:column headerText="Data">
+			<p:inputText style="width:90%;" value="#{c.data}">
+				<p:ajax event="blur" />
+			</p:inputText>
+		</p:column>
+		<p:column headerText="Comments">
+			<p:inputText style="width:90%;" value="#{c.comments}">
+				<p:ajax event="blur" />
+			</p:inputText>
+		</p:column>
+		<p:column headerText="Action">
+			<p:commandButton value="Delete" actionListener="#{cc.attrs.bean.deleteConstraint(c.ipath)}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Delete Constraint"/>
+		</p:column>
+	</p:dataTable>
+</composite:implementation>
+
+</html>

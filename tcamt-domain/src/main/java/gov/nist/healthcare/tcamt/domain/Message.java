@@ -1,5 +1,7 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,12 +61,11 @@ public class Message implements Cloneable, Serializable{
 	private User author;	
 	
 	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinTable(name = "message_validationcontext", joinColumns = {@JoinColumn(name="message_id")},
-               inverseJoinColumns = {@JoinColumn(name="validationcontext_id")} )
-	private List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+    @JoinTable(name = "message_tcamtconstraint", joinColumns = {@JoinColumn(name="message_id")}, inverseJoinColumns = {@JoinColumn(name="tcamtConstraint_id")} )
+	private List<TCAMTConstraint> tcamtConstraints = new ArrayList<TCAMTConstraint>();
 
 	public Message() {
-		this.validationContexts = new ArrayList<ValidationContext>(); 
+		this.tcamtConstraints = new ArrayList<TCAMTConstraint>();
 	}
 
 	public long getId() {
@@ -102,27 +103,14 @@ public class Message implements Cloneable, Serializable{
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Message cloned = (Message)super.clone();
-		
-		List<ValidationContext> cValidationContexts = new ArrayList<ValidationContext>(); 
-		
-		
-		for(ValidationContext v:this.validationContexts){
-			cValidationContexts.add((ValidationContext)v.clone());
+		List<TCAMTConstraint> cTcamtConstraints = new ArrayList<TCAMTConstraint>(); 
+		for(TCAMTConstraint c:this.tcamtConstraints){
+			cTcamtConstraints.add(c.clone());
 		}
-		
-		cloned.setValidationContexts(cValidationContexts);
-		
+		cloned.setTcamtConstraints(cTcamtConstraints);
 		return cloned;
 	}
 	
-	public List <ValidationContext> getValidationContexts() {
-		return validationContexts;
-	}
-
-	public void setValidationContexts(List <ValidationContext> validationContexts) {
-		this.validationContexts = validationContexts;
-	}
-
 	public String getHl7EndcodedMessage() {
 		return hl7EndcodedMessage;
 	}
@@ -170,7 +158,35 @@ public class Message implements Cloneable, Serializable{
 	public void setMessageObj(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
 		this.messageObj = messageObj;
 	}
+
+	public List<TCAMTConstraint> getTcamtConstraints() {
+		return tcamtConstraints;
+	}
+
+	public void setTcamtConstraints(List<TCAMTConstraint> tcamtConstraints) {
+		this.tcamtConstraints = tcamtConstraints;
+	}
 	
+	public void addTCAMTConstraint(TCAMTConstraint tcamtConstraint){
+		this.tcamtConstraints.add(tcamtConstraint);
+	}
 	
+	public void deleteTCAMTConstraintByIPath(String iPath){
+		for(TCAMTConstraint c:this.getTcamtConstraints()){
+			if(c.getIpath().equals(iPath)){
+				this.getTcamtConstraints().remove(c);
+				return;
+			}
+		}
+	}
+	
+	public TestDataCategorization findTCAMTConstraintByIPath(String iPath){
+		for(TCAMTConstraint c:this.getTcamtConstraints()){
+			if(c.getIpath().equals(iPath)){
+				return c.getCategorization();
+			}
+		}
+		return null;
+	}
 
 }

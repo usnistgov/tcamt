@@ -13,7 +13,7 @@
 
 <composite:implementation>
 	<h:form id="DataInstanceTestForm" onkeypress="if (event.keyCode == 13) { return false; }">
-		<p:accordionPanel widgetVar="DataInstanceTestPanel" activeIndex="#{dataInstanceTestPlanRequestBean.activeIndex}">
+		<p:accordionPanel widgetVar="DataInstanceTestPanel" activeIndex="#{sessionBeanTCAMT.ditActiveIndex}">
 			<p:tab id="DataInstanceTestPanel_List" title="Data Instance Test Plan List">
 				<table width="100%">
 					<tr>
@@ -198,7 +198,7 @@
 										</p:tab>
 										<p:tab title="List Contraints">
 											<p:scrollPanel style="width:100%;" mode="native">
-												<tcamt:validationContextTable validationContexts="#{dataInstanceTestPlanRequestBean.selectedTestCase.message.validationContexts}" />
+												<tcamt:constraintsTable bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('ditInstancePanel')}" constraints="#{dataInstanceTestPlanRequestBean.selectedTestCase.message.tcamtConstraints}" />
 											</p:scrollPanel>
 										</p:tab>
 									</p:accordionPanel>									

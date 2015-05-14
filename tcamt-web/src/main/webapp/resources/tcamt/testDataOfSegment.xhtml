@@ -65,7 +65,7 @@
 		</p:column>
 		
 		<p:column headerText="CA" style="width:8%; text-align: center;">
-			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.isLeafNode()}">
+			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
 				<f:selectItem itemLabel="Content Indifferent" itemValue="ContentIndifferent" />
@@ -76,9 +76,7 @@
 				<f:selectItem itemLabel="Test Case Fixed" itemValue="TestCaseFixed" />
 				<f:selectItem itemLabel="Test Case Fixed - List" itemValue="TestCaseFixedList" />
 				<f:selectItem itemLabel="Test Case Fixed - Length" itemValue="TestCaseFixedLength" />
-<!-- 				<p:ajax event="change"
-					listener="#{cc.attrs.bean.createValidationContext(model)}"
-					update="#{cc.attrs.vcPanelCode} #{cc.attrs.mdPanelCode}" /> -->
+ 				<p:ajax event="change" listener="#{cc.attrs.bean.createTCAMTConstraint(model)}" update="#{cc.attrs.panelId}" />
 			</p:selectOneMenu>
 		</p:column>
 		

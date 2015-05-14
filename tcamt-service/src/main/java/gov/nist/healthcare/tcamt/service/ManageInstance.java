@@ -1206,7 +1206,7 @@ public class ManageInstance  implements Serializable{
 		return null;
 	}
 
-	public void genSegmentTree(TreeNode segmentTreeRoot,InstanceSegment selectedInstanceSegment) {
+	public void genSegmentTree(TreeNode segmentTreeRoot,InstanceSegment selectedInstanceSegment, Message m) {
 		String segmentStr = selectedInstanceSegment.getLineStr();
 		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = selectedInstanceSegment.getSegmentRef().getRef();
 		
@@ -1232,7 +1232,7 @@ public class ManageInstance  implements Serializable{
 					String iPath = selectedInstanceSegment.getIpath() + "." + (i+1) + "[" + (j+1) + "]";
 					
 					if(segment.getFields().get(i).getDatatype().getComponents().size() > 0){
-						FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], null, false);
+						FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false);
 						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						
 						String[] componentStr = fieldStr[j].split("\\^");
@@ -1244,11 +1244,11 @@ public class ManageInstance  implements Serializable{
 							String[] subComponentStr;
 							if(k >= componentStr.length){
 								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", null, false);
+									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), false);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};	
 								}else{
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", null, true);
+									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), true);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};
 								}
@@ -1256,11 +1256,11 @@ public class ManageInstance  implements Serializable{
 								
 							}else{
 								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], null, false);
+									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), false);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");
 								}else{
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], null, true);
+									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), true);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");	
 								}
@@ -1272,23 +1272,23 @@ public class ManageInstance  implements Serializable{
 								String subComponentIPath = componentIPath + "." + (l+1) + "[1]";
 								
 								if(l >= subComponentStr.length){
-									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), "", null, true);
+									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), "", m.findTCAMTConstraintByIPath(subComponentIPath), true);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}else{
-									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), subComponentStr[l], null, true);
+									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), subComponentStr[l], m.findTCAMTConstraintByIPath(subComponentIPath), true);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}
 							}
 						}
 					}else{
 						if(path.equals("MSH.1")){
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "|", null, true);
+							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "|", m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else if(path.equals("MSH.2")){
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "^" + "~" + "\\" + "&", null, true);
+							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "^" + "~" + "\\" + "&", m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else {
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], null, true);
+							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);	
 						}
 					}

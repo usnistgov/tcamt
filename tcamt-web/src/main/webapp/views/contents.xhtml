@@ -13,7 +13,7 @@
 
 <h:body>
 	<p:tabView>  
-		<p:ajax event="tabChange" listener="#{sessionBeanTCAMT.onTabChange}"/>
+		<p:ajax event="tabChange" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')} :#{p:component('IsolatedTestForm')}" listener="#{sessionBeanTCAMT.onTabChange}"/>
 
   		<p:tab id="tab1" title="Home">  
 			<tcamt:home />
