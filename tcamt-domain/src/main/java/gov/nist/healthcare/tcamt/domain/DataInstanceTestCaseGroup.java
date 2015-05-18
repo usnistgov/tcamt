@@ -1,8 +1,8 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,23 +16,24 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class DataInstanceTestCaseGroup implements Serializable{
+public class DataInstanceTestCaseGroup implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2555650104975908781L;
-	
+
 	@Id
-    @GeneratedValue
+	@GeneratedValue
 	private long id;
 	private String name;
 	private String description;
 	private Integer version;
-	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
-    @JoinTable(name = "ditcg_ditc", joinColumns = {@JoinColumn(name="testcasegroup_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
-	private List<DataInstanceTestCase> testcases = new ArrayList<DataInstanceTestCase>();
+
+	// @OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+	@JoinTable(name = "ditcg_ditc", joinColumns = { @JoinColumn(name = "testcasegroup_id") }, inverseJoinColumns = { @JoinColumn(name = "testcase_id") })
+	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
 
 	public long getId() {
 		return id;
@@ -66,17 +67,16 @@ public class DataInstanceTestCaseGroup implements Serializable{
 		this.version = version;
 	}
 
-	public List<DataInstanceTestCase> getTestcases() {
+	public Set<DataInstanceTestCase> getTestcases() {
 		return testcases;
 	}
 
-	public void setTestcases(List<DataInstanceTestCase> testcases) {
+	public void setTestcases(Set<DataInstanceTestCase> testcases) {
 		this.testcases = testcases;
 	}
 
-	public void addTestCase(DataInstanceTestCase testcase){
+	public void addTestCase(DataInstanceTestCase testcase) {
 		this.testcases.add(testcase);
 	}
-	
-	
+
 }

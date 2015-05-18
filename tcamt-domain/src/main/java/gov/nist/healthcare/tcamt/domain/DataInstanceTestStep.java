@@ -9,13 +9,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class IsolatedTestStep implements Cloneable, Serializable{
+public class DataInstanceTestStep implements Cloneable, Serializable{
 	
 	/**
 	 * 
@@ -29,14 +28,6 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 	private String name;
 	private String description;
 	
-	@ManyToOne
-    @JoinColumn(name="s_actor_id")
-	private Actor sActor;
-	
-	@ManyToOne
-    @JoinColumn(name="r_actor_id")
-	private Actor rActor;
-	
 	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumn(name="message_id")
 	private Message message;
@@ -45,7 +36,7 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 	@Embedded
 	private TestStory testStepStory = new TestStory();
 	
-	public IsolatedTestStep(long id, String name, String description, Integer version) {
+	public DataInstanceTestStep(long id, String name, String description, Integer version) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -53,7 +44,7 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 		this.setVersion(version);
 	}
 
-	public IsolatedTestStep() {
+	public DataInstanceTestStep() {
 		super();
 		this.message = new Message();
 	}
@@ -90,22 +81,6 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 		this.version = version;
 	}
 
-	public Actor getsActor() {
-		return sActor;
-	}
-
-	public void setsActor(Actor sActor) {
-		this.sActor = sActor;
-	}
-
-	public Actor getrActor() {
-		return rActor;
-	}
-
-	public void setrActor(Actor rActor) {
-		this.rActor = rActor;
-	}
-
 	public Message getMessage() {
 		return message;
 	}
@@ -126,7 +101,7 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		IsolatedTestStep cloned = (IsolatedTestStep)super.clone();
+		DataInstanceTestStep cloned = (DataInstanceTestStep)super.clone();
 		cloned.setMessage((Message)this.message.clone());
 		
 		return cloned;

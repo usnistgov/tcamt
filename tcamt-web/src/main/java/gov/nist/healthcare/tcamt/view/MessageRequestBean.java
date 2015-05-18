@@ -115,6 +115,11 @@ public class MessageRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateMessages();
 	}
 	
+	public void editMessage(){
+		this.editMessage.setVersion(this.editMessage.getVersion() + 1);
+		this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);;
+		this.sessionBeanTCAMT.updateMessages();
+	}
 
 	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException {
 		this.init();

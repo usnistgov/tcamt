@@ -31,11 +31,11 @@ public class IsolatedTestPlan implements Serializable{
 	private String description;
 	private Integer version;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "itp_itc", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
 	private Set<IsolatedTestCase> testcases = new HashSet<IsolatedTestCase>();
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "itp_itcg", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcasegroup_id")} )
 	private Set<IsolatedTestCaseGroup> testcasegroups = new HashSet<IsolatedTestCaseGroup>();
 	

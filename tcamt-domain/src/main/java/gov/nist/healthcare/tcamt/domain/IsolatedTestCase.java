@@ -31,12 +31,14 @@ public class IsolatedTestCase implements Serializable{
 	private Integer version;
 	
 
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "itc_its", joinColumns = {@JoinColumn(name="testcase_id")}, inverseJoinColumns = {@JoinColumn(name="teststep_id")} )
 	private Set<IsolatedTestStep> teststeps = new HashSet<IsolatedTestStep>();
 	
 	@Embedded
 	private TestStory testCaseStory = new TestStory();
+	
+	
 	public long getId() {
 		return id;
 	}

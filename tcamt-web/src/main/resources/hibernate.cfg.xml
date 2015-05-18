@@ -22,6 +22,7 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.Message"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCase"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestStep"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestPlan"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestCase"></mapping>

@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,
@@ -41,25 +43,32 @@ public class Message implements Cloneable, Serializable{
 	private String description;
 	private Integer version;
 	
+	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String hl7EndcodedMessage;
 	
+	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String profile;
 	
+	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String constraints;
 	
+	@JsonIgnore 
 	@Column(columnDefinition="longtext")
 	private String valueSet;
 	
+	@JsonIgnore
 	@Transient
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj;
 	
+	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name="author_id")
 	private User author;	
 	
+	@JsonIgnore
 	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinTable(name = "message_tcamtconstraint", joinColumns = {@JoinColumn(name="message_id")}, inverseJoinColumns = {@JoinColumn(name="tcamtConstraint_id")} )
 	private List<TCAMTConstraint> tcamtConstraints = new ArrayList<TCAMTConstraint>();

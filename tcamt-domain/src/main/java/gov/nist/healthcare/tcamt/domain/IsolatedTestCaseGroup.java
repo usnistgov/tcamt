@@ -1,8 +1,9 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,9 +31,9 @@ public class IsolatedTestCaseGroup implements Serializable{
 	private String description;
 	private Integer version;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "itcg_itc", joinColumns = {@JoinColumn(name="testcasegroup_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
-	private List<IsolatedTestCase> testcases = new ArrayList<IsolatedTestCase>();
+	private Set<IsolatedTestCase> testcases = new HashSet<IsolatedTestCase>();
 
 	public long getId() {
 		return id;
@@ -66,11 +67,11 @@ public class IsolatedTestCaseGroup implements Serializable{
 		this.version = version;
 	}
 
-	public List<IsolatedTestCase> getTestcases() {
+	public Set<IsolatedTestCase> getTestcases() {
 		return testcases;
 	}
 
-	public void setTestcases(List<IsolatedTestCase> testcases) {
+	public void setTestcases(Set<IsolatedTestCase> testcases) {
 		this.testcases = testcases;
 	}
 

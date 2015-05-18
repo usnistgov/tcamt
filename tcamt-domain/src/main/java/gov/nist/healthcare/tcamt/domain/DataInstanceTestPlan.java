@@ -31,11 +31,13 @@ public class DataInstanceTestPlan implements Serializable{
 	private String description;
 	private Integer version;
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditc", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
 	
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditcg", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcasegroup_id")} )
 	private Set<DataInstanceTestCaseGroup> testcasegroups = new HashSet<DataInstanceTestCaseGroup>();
 	

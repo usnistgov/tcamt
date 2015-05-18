@@ -1,13 +1,18 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -25,9 +30,13 @@ public class DataInstanceTestCase implements Serializable{
 	private String description;
 	private Integer version;
 	
-	@ManyToOne
-    @JoinColumn(name="message_id")
-	private Message message;
+//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
+    @JoinTable(name = "ditc_dits", joinColumns = {@JoinColumn(name="testcase_id")}, inverseJoinColumns = {@JoinColumn(name="teststep_id")} )
+	private Set<DataInstanceTestStep> teststeps = new HashSet<DataInstanceTestStep>();
+	
+	
+	
 	@Embedded
 	private TestStory testCaseStory = new TestStory();
 	public long getId() {
@@ -54,11 +63,13 @@ public class DataInstanceTestCase implements Serializable{
 	public void setVersion(Integer version) {
 		this.version = version;
 	}
-	public Message getMessage() {
-		return message;
+	
+	
+	public Set<DataInstanceTestStep> getTeststeps() {
+		return teststeps;
 	}
-	public void setMessage(Message message) {
-		this.message = message;
+	public void setTeststeps(Set<DataInstanceTestStep> teststeps) {
+		this.teststeps = teststeps;
 	}
 	public TestStory getTestCaseStory() {
 		return testCaseStory;
@@ -66,4 +77,8 @@ public class DataInstanceTestCase implements Serializable{
 	public void setTestCaseStory(TestStory testCaseStory) {
 		this.testCaseStory = testCaseStory;
 	}
+	
+	public void addTestStep(DataInstanceTestStep teststep){
+		this.teststeps.add(teststep);
+	} 
 }
