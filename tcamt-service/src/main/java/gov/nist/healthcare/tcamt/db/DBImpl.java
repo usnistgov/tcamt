@@ -1,14 +1,8 @@
 package gov.nist.healthcare.tcamt.db;
 
 import gov.nist.healthcare.tcamt.domain.Actor;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestCase;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.IsolatedTestPlan;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestStep;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
