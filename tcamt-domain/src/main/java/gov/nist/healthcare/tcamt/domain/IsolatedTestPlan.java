@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class IsolatedTestPlan implements Serializable{
+public class IsolatedTestPlan implements Cloneable, Serializable{
 
 	/**
 	 * 
@@ -29,6 +29,7 @@ public class IsolatedTestPlan implements Serializable{
 	private long id;
 	private String name;
 	private String description;
+	private String lastUpdateDate;
 	private Integer version;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
@@ -56,6 +57,9 @@ public class IsolatedTestPlan implements Serializable{
 		this.name = name;
 	}
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
 		return description;
 	}
 	public void setDescription(String description) {
@@ -95,7 +99,32 @@ public class IsolatedTestPlan implements Serializable{
 		this.testcasegroups = testcasegroups;
 	}
 
-	
+	@Override
+	public IsolatedTestPlan clone() throws CloneNotSupportedException {
+		IsolatedTestPlan cloned = (IsolatedTestPlan)super.clone();
+		cloned.setId(0);
+		cloned.setVersion(0);
+		
+		Set<IsolatedTestCase> cTestcases = new HashSet<IsolatedTestCase>();
+		for(IsolatedTestCase testcase:this.testcases){
+			cTestcases.add(testcase.clone());
+		}
+		cloned.setTestcases(cTestcases);
+		
+		Set<IsolatedTestCaseGroup> ctestcasegroups = new HashSet<IsolatedTestCaseGroup>();
+		for(IsolatedTestCaseGroup group:this.testcasegroups){
+			ctestcasegroups.add(group.clone());
+		}
+		cloned.setTestcasegroups(ctestcasegroups);
+		
+		return cloned;
+	}
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
 	
 	
 	

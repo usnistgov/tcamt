@@ -7,6 +7,9 @@ import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -22,27 +25,33 @@ public class DBImpl implements DBInterface, Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 7820251230674334331L;
+	private SessionFactory sessionFactory;
 	private Session currentSession;
 	private Transaction currentTransaction;
 
-	public Session openCurrentSession() {
-		currentSession = getSessionFactory().openSession();
-		return currentSession;
+	
+	
+	public DBImpl() {
+		super();
+		System.out.println("DBImpl Object Created!");
+		sessionFactory = DBImpl.getSessionFactory();
+		this.currentSession = sessionFactory.openSession();
+	}
+	
+	public void finalize() {
+		System.out.println("DBImpl Object Closed!");
+		currentSession.close();
+		this.sessionFactory.close();
 	}
 
-	public Session openCurrentSessionwithTransaction() {
-		currentSession = getSessionFactory().openSession();
-		currentTransaction = currentSession.beginTransaction();
+	public Session openCurrentSession() {
+		currentSession = this.sessionFactory.getCurrentSession();
+		this.currentTransaction = currentSession.beginTransaction();
 		return currentSession;
 	}
 
 	public void closeCurrentSession() {
-		currentSession.close();
-	}
-
-	public void closeCurrentSessionwithTransaction() {
 		currentTransaction.commit();
-		currentSession.close();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -89,39 +98,39 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void addUser(User user) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.save(user);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void updateUser(User user) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.update(user);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void deleteUser(User user) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.delete(user);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void actorInsert(Actor a) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.save(a);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void actorUpdate(Actor a) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.update(a);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void actorDelete(Actor a) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.delete(a);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 
 	}
 
@@ -144,21 +153,28 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void messageInsert(Message m) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		m.setLastUpdateDate(dateFormat.format(date));
+		
 		this.currentSession.save(m);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void messageUpdate(Message m) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		m.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.update(m);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void messageDelete(Message m) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.delete(m);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -181,21 +197,27 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void dataInstanceTestPlanInsert(DataInstanceTestPlan ditp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		ditp.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.save(ditp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		ditp.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.update(ditp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.delete(ditp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author) {
@@ -227,21 +249,27 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void isolatedTestPlanInsert(IsolatedTestPlan itp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		itp.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.save(itp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void isolatedTestPlanUpdate(IsolatedTestPlan itp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		itp.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.update(itp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public void isolatedTestPlanDelete(IsolatedTestPlan itp) {
-		this.openCurrentSessionwithTransaction();
+		this.openCurrentSession();
 		this.currentSession.delete(itp);
-		this.closeCurrentSessionwithTransaction();
+		this.closeCurrentSession();
 	}
 
 	public List<IsolatedTestPlan> getAllIsolatedTestPlans(User author) {

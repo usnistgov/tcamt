@@ -28,7 +28,7 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 	private String name;
 	private String description;
 	
-	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="message_id")
 	private Message message;
 	private Integer version;
@@ -66,6 +66,9 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 	}
 
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
 		return description;
 	}
 
@@ -100,9 +103,12 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 	}
 
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public DataInstanceTestStep clone() throws CloneNotSupportedException {
 		DataInstanceTestStep cloned = (DataInstanceTestStep)super.clone();
-		cloned.setMessage((Message)this.message.clone());
+		cloned.setId(0);
+		Message cMessage = this.message.clone();
+		cloned.setMessage(cMessage);
+		cloned.setTestStepStory((TestStory)testStepStory.clone());
 		
 		return cloned;
 	}

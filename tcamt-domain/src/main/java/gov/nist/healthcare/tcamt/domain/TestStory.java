@@ -92,7 +92,7 @@ public class TestStory implements Cloneable, Serializable{
 	}
 	
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public TestStory clone() throws CloneNotSupportedException {
 		TestStory cloned = (TestStory)super.clone();
 		return cloned;
 	}

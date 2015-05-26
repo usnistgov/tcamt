@@ -20,8 +20,11 @@
 		selection="#{cc.attrs.bean.selectedInstanceSegment}"
 		selectionMode="single" rowKey="#{instanceSegment.ipath}">
 		<p:ajax event="rowSelect" listener="#{cc.attrs.bean.onInstanceSegmentSelect}" update="#{cc.attrs.panelId}" />
-		<p:column headerText="List of Instance Segments">
+		<p:column headerText="Path">
 			<h:outputText value="#{instanceSegment.ipath}" />
+		</p:column>
+		<p:column headerText="Usage">
+			<h:outputText value="#{instanceSegment.usageList}" />
 		</p:column>
 		<p:column headerText="Action">
 			<p:commandButton value="Del Segment" actionListener="#{cc.attrs.bean.delInstanceSegment}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Del">

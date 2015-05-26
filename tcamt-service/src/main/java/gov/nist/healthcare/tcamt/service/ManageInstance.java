@@ -1,17 +1,24 @@
 package gov.nist.healthcare.tcamt.service;
 
 import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.Constraint;
 import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,349 +26,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 public class ManageInstance  implements Serializable{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 574095903906379334L;
-	
-	
-//	public MessageProfile genMessageProfile(String str){
-//		JSONConverterService jConverterService = new JSONConverterService();
-//		try {
-//			return jConverterService.fromStream(new ByteArrayInputStream(str.getBytes(StandardCharsets.UTF_8)));
-//		} catch (ConversionException e) {
-//			e.printStackTrace();
-//		}
-//		
-//		return null;
-//	}
-	
-//	public TreeNode generateMessageTreeForElementOccur(Message message){
-//		TreeNode treeNode = new DefaultTreeNode("root", null);
-//		
-//		MessageProfile mp = genMessageProfile(message.getMessageProfile());
-//		String path = "";
-//		travelMessageForElementOccur(mp, path, treeNode, message);
-//		
-//		return treeNode;
-//		
-//	}
-	
-//	public SegmentTreeModel findOccurField(List<TreeNode> toBeDeletedTreeNodes, SegmentTreeModel toBeRepeatedModel, TreeNode tn, int fieldNumber, int occur) throws CloneNotSupportedException{
-//		for(TreeNode t: tn.getChildren()){
-//			SegmentTreeModel stm = (SegmentTreeModel)t.getData();
-//			if(((Field)stm.getNode()).getPosition() == fieldNumber){
-//				toBeDeletedTreeNodes.add(t);
-//				
-//				if(toBeRepeatedModel == null) {
-//					toBeRepeatedModel = (SegmentTreeModel)((SegmentTreeModel)t.getData()).clone();
-//					toBeRepeatedModel.setOccurrence(occur);
-//				}
-//			}
-//		}
-//		return toBeRepeatedModel;
-//	}
-	
-//	public void adjustOccur(Message message, List<TreeNode> toBeDeletedTreeNodes, SegmentTreeModel toBeRepeatedModel, InstanceSegment selectedInstanceSegment, int occur) throws CloneNotSupportedException{
-//		int index=0;
-//		for(TreeNode tn:toBeDeletedTreeNodes){
-//			index = selectedInstanceSegment.getSegmentTreeNode().getChildren().indexOf(tn);
-//			tn.getChildren().clear();
-//			tn.getParent().getChildren().remove(tn);
-//			
-//		}
-//		toBeDeletedTreeNodes = new ArrayList<TreeNode>();
-//		
-//		this.createRepeatedFieldByOccur(message, toBeRepeatedModel, occur, index, selectedInstanceSegment.getSegmentTreeNode());
-//
-//	}
-	
-//	public void generateProfilePathOccurIGData(Message message){
-//		message.setProfilePathOccurIGData(new ArrayList<ProfilePathOccurIGData>());
-//		MessageProfile mp = genMessageProfile(message.getMessageProfile());
-//		String path = "";
-//		travelMessageForProfilePathOccurIGData(mp, path, message);
-//		
-//	}
-	
-	
-	
-	
-//	public gov.nist.healthcare.core.hl7.v2.instance.Message readHL7Message(Message message) throws IOException, ParserException{
-//		XMLSerializer xmlSerializer = new XMLSerializer();
-//		MessageProfile mp = genMessageProfile(message.getMessageProfile());
-//		MetaData metaData = mp.getMetaData();
-//		String schemaV = metaData.getHl7RulesSchema();
-//		schemaV = schemaV.replace(".", "");
-//		ProfileSchemaVersion schemaVersion = ProfileSchemaVersion.valueOf("V" + schemaV);
-//		nu.xom.Element result = xmlSerializer.serialize(mp.getMessage(), metaData.getHl7Version(),	schemaVersion);
-//		Parser parser = new ParserImpl();
-//		return parser.parse(message.getHl7EndcodedMessage(), new Document(result).toXML());
-//	}
-	
-//	public void generateHL7Message(List<InstanceSegment> instanceSegments, Message message) {
-//		String messageString = "";
-//		String fieldSeparator ="|";
-//		String componentSeparator ="^";
-//		String subComponentSeparator ="&";
-//		String fieldRepeatSeparator ="~";
-//		String escapeCharacter ="\\";
-//
-//		for (InstanceSegment is : instanceSegments) {
-//			String segmentString = is.getPath().substring(is.getPath().lastIndexOf(".") + 1,is.getPath().lastIndexOf("["));
-//			TreeNode segmentTN = is.getSegmentTreeNode();
-//
-//			
-//			
-//			String fieldPath = "";
-//			for (TreeNode fieldTN : segmentTN.getChildren()) {
-//				SegmentTreeModel fModel = (SegmentTreeModel) fieldTN.getData();
-//				String fieldData;
-//				if(fModel.getData() != null && fModel.getData().contains("::")){
-//					fieldData = fModel.getData().split("::")[0];
-//				}else {
-//					fieldData = fModel.getData();
-//				}
-//				
-//				
-//				boolean isRepeat = (fModel.getPath().equals(fieldPath)) ? true:false;
-//				
-//				fieldPath = fModel.getPath();
-//
-//				if (fieldTN.getChildCount() == 0) {
-//					if (fModel.getData() == null) {
-//						if(fModel.getName().equals("Field Separator")){
-//							if(fModel.getData() != null && !fModel.getData().equals("")){
-//								fieldSeparator = fModel.getData();
-//							}
-//							segmentString = segmentString + fieldSeparator;
-//						}else if (fModel.getName().equals("Encoding Characters")){
-//							if(fModel.getData() != null && !fModel.getData().equals("") && fModel.getData().length() ==4){
-//								String encodigCharacters = fModel.getData();
-//								componentSeparator = encodigCharacters.substring(0, 1);
-//								subComponentSeparator = encodigCharacters.substring(3, 4);
-//								fieldRepeatSeparator = encodigCharacters.substring(1, 2);
-//								escapeCharacter = encodigCharacters.substring(2, 3);
-//							}
-//							segmentString = segmentString + componentSeparator + fieldRepeatSeparator + escapeCharacter + subComponentSeparator;
-//						}else {
-//							segmentString = segmentString + ((isRepeat) ? fieldRepeatSeparator:fieldSeparator);
-//						}
-//						
-//					} else {
-//						if(fModel.getName().equals("Field Separator")){
-//							if(fModel.getData() != null && !fModel.getData().equals("")){
-//								fieldSeparator = fModel.getData();
-//							}
-//							segmentString = segmentString + fieldSeparator;
-//						}else if (fModel.getName().equals("Encoding Characters")){
-//							if(fModel.getData() != null && !fModel.getData().equals("") && fModel.getData().length() ==4){
-//								String encodigCharacters = fModel.getData();
-//								componentSeparator = encodigCharacters.substring(0, 1);
-//								subComponentSeparator = encodigCharacters.substring(3, 4);
-//								fieldRepeatSeparator = encodigCharacters.substring(1, 2);
-//								escapeCharacter = encodigCharacters.substring(2, 3);
-//							}
-//							segmentString = segmentString + componentSeparator + fieldRepeatSeparator + escapeCharacter + subComponentSeparator;
-//						}else {
-//							segmentString = segmentString + ((isRepeat) ? fieldRepeatSeparator:fieldSeparator) + fieldData;
-//						}
-//					}
-//
-//				} else {
-//					segmentString = segmentString + ((isRepeat) ? fieldRepeatSeparator:fieldSeparator);
-//					int indexC = 0;
-//					if (fModel.getOccurrence() == 0) {
-//
-//					} else {
-//
-//						for (TreeNode componentTN : fieldTN.getChildren()) {
-//							indexC = indexC + 1;
-//							SegmentTreeModel cModel = (SegmentTreeModel) componentTN.getData();
-//
-//							String cData;
-//							if(cModel.getData() != null && cModel.getData().contains("::")){
-//								cData = cModel.getData().split("::")[0];
-//							}else {
-//								cData = cModel.getData();
-//							}
-//							
-//							if (componentTN.getChildCount() == 0) {
-//								if (cModel.getData() == null) {
-//									if (indexC == 1) {
-//									} else {
-//										segmentString = segmentString + componentSeparator;
-//									}
-//
-//								} else {
-//									if (indexC == 1) {
-//										segmentString = segmentString + cData;
-//									} else {
-//										segmentString = segmentString + componentSeparator + cData;
-//									}
-//								}
-//
-//							} else {
-//									if (indexC == 1) {
-//										int indexS = 0;
-//										for (TreeNode sComponentTN : componentTN.getChildren()) {
-//											indexS = indexS + 1;
-//											SegmentTreeModel sModel = (SegmentTreeModel) sComponentTN.getData();
-//
-//											String sData;
-//											if(sModel.getData() != null && sModel.getData().contains("::")){
-//												sData = sModel.getData().split("::")[0];
-//											}else {
-//												sData = sModel.getData();
-//											}
-//											
-//											if (sModel.getData() == null) {
-//												if (indexS == 1) {
-//												} else {
-//													segmentString = segmentString + subComponentSeparator;
-//												}
-//
-//											} else {
-//												if (indexS == 1) {
-//													segmentString = segmentString + sData;
-//												} else {
-//													segmentString = segmentString + subComponentSeparator + sData;
-//												}
-//											}
-//										}
-//										segmentString = this.removeSeperator(segmentString, subComponentSeparator);
-//									} else {
-//										segmentString = segmentString + componentSeparator;
-//										int indexS = 0;
-//										for (TreeNode sComponentTN : componentTN.getChildren()) {
-//											indexS = indexS + 1;
-//											SegmentTreeModel sModel = (SegmentTreeModel) sComponentTN.getData();
-//
-//											String sData;
-//											if(sModel.getData() != null && sModel.getData().contains("::")){
-//												sData = sModel.getData().split("::")[0];
-//											}else {
-//												sData = sModel.getData();
-//											}
-//											
-//											if (sModel.getData() == null) {
-//												if (indexS == 1) {
-//												} else {
-//													segmentString = segmentString + subComponentSeparator;
-//												}
-//
-//											} else {
-//												if (indexS == 1) {
-//													segmentString = segmentString + sData;
-//												} else {
-//													segmentString = segmentString + subComponentSeparator + sData;
-//												}
-//											}
-//										}
-//										segmentString = this.removeSeperator(segmentString, subComponentSeparator);
-//									}
-//							}
-//						}
-//						
-//						segmentString = this.removeSeperator(segmentString, componentSeparator);
-//					}
-//				}
-//			}
-//
-//			messageString = messageString + segmentString + System.lineSeparator();
-//		}
-//		message.setHl7EndcodedMessage(messageString);
-//	}
-	
-//	public void updateOccurDataByHL7Message(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, Message message, TreeNode messageTreeRoot, List<InstanceSegment> iss) throws CloneNotSupportedException{
-//		if(e.getName().contains(".")){
-//			if(path.equals("")){
-//				iPath = e.getName().substring(e.getName().lastIndexOf(".") + 1) + "[" + e.getInstanceNumber() + "]";
-//				path = e.getName().substring(e.getName().lastIndexOf(".") + 1);
-//			}else{
-//				iPath = iPath + "." + e.getName().substring(e.getName().lastIndexOf(".") + 1) + "[" + e.getInstanceNumber() + "]";
-//				path = path + "." + e.getName().substring(e.getName().lastIndexOf(".") + 1);
-//			}
-//		}else {
-//			if(path.equals("")){
-//				iPath = e.getName() + "[" + e.getInstanceNumber() + "]";
-//				path = e.getName();
-//			}else{
-//				iPath = iPath + "." + e.getName() + "[" + e.getInstanceNumber() + "]";
-//				path = path + "." + e.getName();
-//			}
-//		}
-//		
-//		if(e.getElementType().equals(gov.nist.healthcare.core.hl7.v2.enumeration.ElementType.SEGMENT)){			
-//			TreeNode segmentTreeNode = new DefaultTreeNode("root", null);
-//			this.travelSegment(message, this.findSegmentInMessage(messageTreeRoot, path), iPath, path, segmentTreeNode);
-//			InstanceSegment instanceSegment = new InstanceSegment(iPath, segmentTreeNode);
-//			iss.add(instanceSegment);
-//			updateDataAndFieldOccur(e , iPath, path, iss);
-//			
-//		}else if(e.getElementType().equals(gov.nist.healthcare.core.hl7.v2.enumeration.ElementType.GROUP)){
-//			TreeMap<Integer, List<gov.nist.healthcare.core.hl7.v2.instance.Element>> tmElements = e.getChildren();
-//			Set<Integer> keySet = tmElements.keySet();
-//			for(Integer i:keySet){
-//				List<gov.nist.healthcare.core.hl7.v2.instance.Element> childElms = tmElements.get(i);
-//				
-//				for(gov.nist.healthcare.core.hl7.v2.instance.Element childE : childElms){
-//					updateOccurDataByHL7Message(childE, iPath, path, message, messageTreeRoot, iss);
-//				}
-//			}
-//		}
-//	}
-	
-//	public void updateFieldData(String fieldStr, String cSeperator, String scSeperator, TreeNode tn){
-//		if(fieldStr == null){
-//			((SegmentTreeModel)tn.getData()).setData(null);
-//			for(TreeNode child:tn.getChildren()){
-//				((SegmentTreeModel)child.getData()).setData(null);
-//				((SegmentTreeModel)child.getData()).setOccurrence(0);
-//				for(TreeNode childchild:child.getChildren()){
-//					((SegmentTreeModel)childchild.getData()).setData(null);
-//					((SegmentTreeModel)childchild.getData()).setOccurrence(0);
-//				}
-//			}
-//		}else {
-//			if(fieldStr.contains(cSeperator)){
-//				String[] cStrs = fieldStr.split("\\" +  cSeperator);
-//				for(int i=0;i<cStrs.length; i++){
-//					if(cStrs[i].contains(scSeperator)){
-//						String[] scStrs = cStrs[i].split("\\" + scSeperator);
-//						for(int j=0;j<scStrs.length; j++){
-//							((SegmentTreeModel)tn.getChildren().get(i).getChildren().get(j).getData()).setData(scStrs[j]);
-//							((SegmentTreeModel)tn.getChildren().get(i).getChildren().get(j).getData()).setOccurrence(1);
-//						}
-//					}else{
-//						if(tn.getChildren().get(i).getChildCount() == 0){
-//							((SegmentTreeModel)tn.getChildren().get(i).getData()).setData(cStrs[i]);
-//							((SegmentTreeModel)tn.getChildren().get(i).getData()).setOccurrence(1);
-//						}else {
-//							((SegmentTreeModel)tn.getChildren().get(i).getChildren().get(0).getData()).setData(cStrs[i]);
-//							((SegmentTreeModel)tn.getChildren().get(i).getChildren().get(0).getData()).setOccurrence(1);
-//						}
-//					}
-//				}
-//			}else{
-//				if(tn.getChildCount() == 0){
-//					((SegmentTreeModel)tn.getData()).setData(fieldStr);
-//				}else if(tn.getChildren().get(0).getChildCount() == 0){
-//					((SegmentTreeModel)tn.getChildren().get(0).getData()).setData(fieldStr);
-//					((SegmentTreeModel)tn.getChildren().get(0).getData()).setOccurrence(1);;
-//				}else{
-//					((SegmentTreeModel)tn.getChildren().get(0).getChildren().get(0).getData()).setData(fieldStr);
-//					((SegmentTreeModel)tn.getChildren().get(0).getChildren().get(0).getData()).setOccurrence(1);;
-//				}
-//			}
-//		}
-//		
-//		
-//	}
 	
 	public TreeNode loadMessage(Message m) throws CloneNotSupportedException {
 		TreeNode treeNode = new DefaultTreeNode("root", null);
@@ -387,325 +65,6 @@ public class ManageInstance  implements Serializable{
 		return treeNode;
 	}
 	
-//	public void createVC(SegmentTreeModel stm, Message m, String level) {
-//		String iPath = stm.getiPath();
-//		String data = stm.getData();
-//		TestDataCategorization type = stm.getType();
-//		Usage usage = Usage.NA;
-//		String nodeName = "";
-//		if (stm.getNode() instanceof Field) {
-//			usage = ((Field) stm.getNode()).getUsage();
-//			nodeName = ((Field) stm.getNode()).getDescription();
-//		} else if (stm.getNode() instanceof Component) {
-//			usage = ((Component) stm.getNode()).getUsage();
-//			nodeName = ((Component) stm.getNode()).getDescription();
-//		}
-//
-//		this.removeExistVC(iPath, m);
-//		m.getInstanceTestDataTypes().add(new InstanceTestDataType(iPath, type));
-//		if (type==null) {
-//			
-//		} else if (type.equals(TestDataCategorization.Indifferent)) {
-//			
-//		} else if (type.equals(TestDataCategorization.ContentIndifferent)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.Configurable)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.SystemGenerated)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.TestCaseProper)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.ProfileFixedPresence)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.NotValued)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createNotRVC(iPath, nodeName, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.ProfileFixed)) {
-//			
-//		} else if (type.equals(TestDataCategorization.ProfileFixedList)) {
-//			
-//		} else if (type.equals(TestDataCategorization.TestCaseFixed)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//				this.createRVVC(iPath, nodeName, data, m, level);
-//			} else if (usage.equals(Usage.R)) {
-//				this.createRVVC(iPath, nodeName, data, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.TestCaseFixedList)) {
-//			if (usage.equals(Usage.RE)) {
-//				this.createRVC(iPath, nodeName, m, level);
-//				this.createListRVVC(iPath, nodeName, data, m, level);
-//			} else if (usage.equals(Usage.R)) {
-//				this.createListRVVC(iPath, nodeName, data, m, level);
-//			}
-//		} else if (type.equals(TestDataCategorization.TestCaseFixedLength)) {
-//			
-//		}
-//	}
-	
-//	public void updateInstanceSegmentsByTestDataTypeList(Message m, List<InstanceSegment> instanceSegments) {
-//		for(InstanceTestDataType itdt:m.getInstanceTestDataTypes()){
-//			InstanceSegment is = this.findInstanceSegmentByIPath(itdt.getiPath(), instanceSegments);
-//			if(is != null) this.updateInstanceSegmentByITDT(itdt, is, m.getValidationContexts());
-//		}
-//	}
-	
-//	private void travelMessageForElementOccur(MessageProfile mp, String path, TreeNode parent, Message message){
-//		List<Element> elements = mp.getChildren();
-//		for (Element e : elements) {
-//			travelElementForElementOccur(e, path, parent, message);
-//		}
-//	}
-	
-//	private void travelElementForElementOccur(Element el, String path, TreeNode parent, Message message) {
-//		if(path.equals("")){
-//			path = el.getShortName();
-//		}else{
-//			path = path + "." + el.getShortName();
-//		}
-//		
-//		
-//		MessageTreeModel messageTreeModel = new MessageTreeModel(message.getName(), el.getShortName(), el, path, findOccurByPath(path, message));
-//		TreeNode treeNode = new DefaultTreeNode(messageTreeModel, parent);
-//		
-//		
-//		if (el.getSegment() == null) {
-//			List<Element> elements = el.getChildren();
-//			for (Element e : elements) {
-//				travelElementForElementOccur(e, path, treeNode, message);
-//			}
-//		}
-//	}
-	
-//	private int findOccurByPath(String path, Message message){		
-//		for(ProfilePathOccurIGData oid : message.getProfilePathOccurIGData()){
-//			if(oid.getPath().equals(path)){
-//				return oid.getOccur();
-//			}
-//		}
-//		
-//		return -1;
-//	}
-	
-//	private Segment findSegmentInMessage(TreeNode messageTreeRoot, String path){
-//		List<MessageTreeModel> models = new ArrayList<MessageTreeModel>();
-//		this.findAllMessageTreeModel(messageTreeRoot, models);
-//		for(MessageTreeModel mtm:models){
-//			if(mtm.getPath().equals(path)) return ((Element)mtm.getNode()).getSegment();
-//		}
-//		return null;
-//	}
-//	
-//	private void findAllMessageTreeModel(TreeNode messageTreeRoot, List<MessageTreeModel> models){
-//		for(TreeNode tn:messageTreeRoot.getChildren()){
-//			models.add((MessageTreeModel)tn.getData());
-//			
-//			this.findAllMessageTreeModel(tn,models);
-//		}
-//	}
-	
-//	private void travelSegment(Message message, Segment s, String iPath, String path, TreeNode parentNode) {
-//		List<Field> fields = s.getFields();
-//		for (Field f : fields) {
-//			travelField(message, f, iPath, path, parentNode);
-//		}
-//	}
-	
-//	private void travelField(Message message, Field f, String iPath, String path, TreeNode parentNode) {
-//		path = path + "." + f.getPosition();
-//		iPath = iPath + "." + f.getPosition();
-//		String segmentRootName = path.split("\\.")[0];
-//		
-//		int occur = this.findOccurByPath(path, message);
-//		
-//
-//		Datatype dt = f.getDatatype();	
-//		List<Component> components = dt.getComponents();
-//		boolean isLeafNode = false;
-//		
-//		if(components == null || components.size() == 0){
-//			isLeafNode = true;
-//		}
-//		
-//	
-//		
-//		if(occur > 0){
-//			for(int i=0; i<occur; i++){
-//				String profileFixedData = this.findDataByPath(path, message);
-//				TestDataCategorization dataType = null;
-//				if(profileFixedData != null){
-//					dataType = TestDataCategorization.ProfileFixed;
-//					this.createRVVC(iPath, f.getDescription(), profileFixedData, message, dataType.getValue());
-//				}
-//				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, f.getDescription(), f, iPath + "[" + (i+1)+ "]", path, profileFixedData, dataType, null, isLeafNode, occur);
-//				TreeNode treeNode = new DefaultTreeNode(segmentTreeModel, parentNode);
-//				
-//				travelDT(message, dt, iPath + "[" + (i+1)+ "]", path, treeNode, occur);	
-//			}
-//		}else{
-//			String profileFixedData = this.findDataByPath(path, message);
-//			TestDataCategorization dataType = null;
-//			if(profileFixedData != null){
-//				dataType = TestDataCategorization.ProfileFixed;
-//			}
-//
-//			SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, f.getDescription(), f, iPath + "[1]", path, profileFixedData, dataType, null, isLeafNode, occur);
-//			TreeNode treeNode = new DefaultTreeNode(segmentTreeModel, parentNode);
-//			travelDT(message, dt, iPath + "[1]", path, treeNode, occur);	
-//		}
-//	}
-	
-//	private void travelDT(Message message, Datatype dt, String iPath, String path, TreeNode parentNode, int fieldOccurence) {
-//		List<Component> components = dt.getComponents();
-//		if (components == null) {
-//		} else {
-//			for (Component c : components) {
-//				String newPath = path + "." + c.getPosition();
-//				String newiPath = iPath + "." + c.getPosition();
-//				String messageName = newPath.split("\\.")[0];
-//
-//				String profileFixedData = this.findDataByPath(newPath, message);
-//				TestDataCategorization dataType = null;
-//				if(profileFixedData != null){
-//					dataType = TestDataCategorization.ProfileFixed;
-//					this.createRVVC(newiPath, c.getDescription(), profileFixedData, message, dataType.getValue());
-//				}
-//				
-//				Datatype childdt = c.getDatatype();	
-//				List<Component> childComponents = childdt.getComponents();
-//				boolean isLeafNode = false;
-//				
-//				if(childComponents == null || childComponents.size() == 0){
-//					isLeafNode = true;
-//				}
-//
-//				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(messageName, c.getDescription(), c, newiPath, newPath, profileFixedData, dataType, null, isLeafNode, fieldOccurence);
-//				TreeNode treeNode = new DefaultTreeNode(segmentTreeModel,
-//						parentNode);
-//				travelDT(message, c.getDatatype(), newiPath,  newPath, treeNode, fieldOccurence);
-//			}
-//		}
-//	}
-	
-//	private void createRepeatedFieldByOccur(Message message, SegmentTreeModel toBeRepeatedModel, int occur, int index, TreeNode parent) throws CloneNotSupportedException{
-//		if(occur == 0) occur = 1;
-//		
-//		for(int i=0; i<occur; i++){
-//			
-//			SegmentTreeModel stm = (SegmentTreeModel) toBeRepeatedModel.clone();
-//			String oldiPath = stm.getiPath();
-//			String newiPath = oldiPath.substring(0, oldiPath.lastIndexOf("[")) + "[" + (i+1) + "]";
-//			String newPath = stm.getPath();
-//			stm.setiPath(newiPath);
-//			
-//			
-//			TreeNode addedNode = new DefaultTreeNode(stm, parent);
-//			travelDT(message, ((Field) stm.getNode()).getDatatype(), newiPath, newPath, addedNode, stm.getOccurrence());
-//			
-//			
-//			parent.getChildren().add(index + i, addedNode);
-//		}
-//	}
-	
-//	private void travelMessageForProfilePathOccurIGData(MessageProfile mp, String path, Message message){
-//		List<Element> elements = mp.getChildren();
-//		for (Element e : elements) {
-//			travelElementForProfilePathOccurIGData(e, path, message);
-//		}
-//	}
-	
-//	private void travelElementForProfilePathOccurIGData(Element el, String path, Message message) {
-//		if(path.equals("")){
-//			path = el.getShortName();
-//		}else{
-//			path = path + "." + el.getShortName();
-//		}
-//
-//		message.getProfilePathOccurIGData().add(new ProfilePathOccurIGData(path, el.getMin(), null));
-//		
-//		if (el.getSegment() == null) {
-//			List<Element> elements = el.getChildren();
-//			for (Element e : elements) {
-//				travelElementForProfilePathOccurIGData(e, path, message);
-//			}
-//		} else {
-//			Segment s = el.getSegment();
-//			travelSegmentForProfilePathOccurIGData(s, path, message);
-//		}
-//	}
-	
-//	private void travelSegmentForProfilePathOccurIGData(Segment s, String path, Message message) {
-//		List<Field> fields = s.getFields();
-//		for (Field f : fields) {
-//			travelFieldForProfilePathOccurIGData(f, path, message);
-//		}
-//	}
-	
-//	private void travelFieldForProfilePathOccurIGData(Field f, String path, Message message) {
-//		path = path + "." + f.getPosition();
-//		
-//		String data = null;
-//		List<ConformanceStatement> css = f.getConformanceStatementList();
-//		if (css != null && css.size() > 0) {
-//			for (ConformanceStatement cs : css) {
-//				StatementDetails statementDetails = (StatementDetails) cs.getStatementDetails();
-//				if (statementDetails.getPattern().equals("Constant Value Check")) {
-//					if(statementDetails.getSubPattern().equals("Single Value")) {
-//						if(!statementDetails.getVerb().contains("not") && !statementDetails.getVerb().contains("NOT")){
-//							data = statementDetails.getLiteralValue();
-//						}
-//					} 
-//				}
-//			}
-//		}
-//		
-//		message.getProfilePathOccurIGData().add(new ProfilePathOccurIGData(path, f.getMin(), data));
-//		
-//		
-//		Datatype dt = f.getDatatype();
-//		travelDTForProfilePathOccurIGData(dt, path, message);
-//	}
-	
-//	private void travelDTForProfilePathOccurIGData(Datatype dt, String path, Message message) {
-//		List<Component> components = dt.getComponents();
-//		if (components == null) {
-//		} else {
-//			for (Component c : components) {
-//				String newPath = path + "." + c.getPosition();
-//				
-//				String data = null;
-//				List<ConformanceStatement> css = c.getConformanceStatementList();
-//				if (css != null && css.size() > 0) {
-//					for (ConformanceStatement cs : css) {
-//						StatementDetails statementDetails = (StatementDetails) cs.getStatementDetails();
-//						if (statementDetails.getPattern().equals("Constant Value Check")) {
-//							if(statementDetails.getSubPattern().equals("Single Value")) {
-//								if(!statementDetails.getVerb().contains("not") && !statementDetails.getVerb().contains("NOT")){
-//									data = statementDetails.getLiteralValue();
-//								}
-//							} 
-//						}
-//					}
-//				}
-//				
-//				message.getProfilePathOccurIGData().add(new ProfilePathOccurIGData(newPath, 1, data));
-//				travelDTForProfilePathOccurIGData(c.getDatatype(), newPath, message);
-//			}
-//		}
-//
-//	}
-	
 	private String removeSeperator(String substring, String separator){
 		if(substring.substring(substring.length()-1).equals(separator)){
 			substring = substring.substring(0, substring.length()-1);
@@ -717,100 +76,6 @@ public class ManageInstance  implements Serializable{
 		return substring;
 		
 	}
-	
-//	private void updateDataAndFieldOccur(gov.nist.healthcare.core.hl7.v2.instance.Element e, String iPath, String path, List<InstanceSegment> iss) throws CloneNotSupportedException {
-//		TreeMap<Integer, List<gov.nist.healthcare.core.hl7.v2.instance.Element>> tm = e.getChildren();
-//		if(tm == null){
-//			InstanceSegment is = iss.get(iss.size() - 1);
-//			for(TreeNode tn : is.getSegmentTreeNode().getChildren()){
-//				((SegmentTreeModel)tn.getData()).setOccurrence(0);
-//			}
-//		}else {
-//			for(int i=0; i<iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().size(); i++){
-//				TreeNode tn = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().get(i);
-//				((SegmentTreeModel)tn.getData()).setOccurrence(0);
-//				if(!((SegmentTreeModel)tn.getData()).isFirstField()){						
-//					tn.getChildren().clear();
-//			        tn.getParent().getChildren().remove(tn);
-//			        tn.setParent(null);
-//			        i = i - 1;
-//				}
-//				((SegmentTreeModel)tn.getData()).setData(null);
-//				for(TreeNode child:tn.getChildren()){
-//					((SegmentTreeModel)child.getData()).setData(null);
-//					for(TreeNode childchild:child.getChildren()){
-//						((SegmentTreeModel)childchild.getData()).setData(null);
-//					}
-//				}
-//				
-//			}
-//			Set<Integer> keySet = tm.keySet();
-//			for(Integer key:keySet){
-//				List<gov.nist.healthcare.core.hl7.v2.instance.Element> fieldElms = tm.get(key);
-//				for(int i=0; i<fieldElms.size(); i++){
-//					gov.nist.healthcare.core.hl7.v2.instance.Element fieldE = fieldElms.get(i);
-//					String iPathField = iPath + "." + fieldE.getPath().substring(fieldE.getPath().indexOf(".") + 1); 	
-//					
-//					if(fieldE.getInstanceNumber() == 1){
-//						for(int j=0; j<iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().size(); j++){
-//							TreeNode tn = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().get(j);
-//							if(((SegmentTreeModel)tn.getData()).getiPath().equals(iPathField)){
-//								((SegmentTreeModel)tn.getData()).setOccurrence(fieldElms.size());
-//								if(iPathField.contains("MSH[1].1[1]")){
-//									((SegmentTreeModel)tn.getData()).setData(e.getStringRepresentation().substring(3, 4));
-//								}else if(iPathField.contains("MSH[1].2[1]")){
-//									this.cSeperator = e.getStringRepresentation().substring(4, 5);
-//									this.scSeperator = e.getStringRepresentation().substring(7, 8);			
-//									((SegmentTreeModel)tn.getData()).setData(e.getStringRepresentation().substring(4, 8));
-//								}else {
-//									if(((Field)((SegmentTreeModel)tn.getData()).getNode()).getDatatype().getName().equals("varies")){
-//										((SegmentTreeModel)tn.getData()).setData(fieldE.getStringRepresentation());
-//									}else {
-//										updateFieldData(fieldE.getStringRepresentation(), this.cSeperator, this.scSeperator, tn);
-//									}
-//									
-//								}
-//							}
-//						}
-//					}else{
-//						for(int j=0; j<iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().size(); j++){
-//							TreeNode tn = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().get(j);
-//							if(((SegmentTreeModel)tn.getData()).getiPath().startsWith(iPathField.substring(0, iPathField.lastIndexOf("[")))){
-//								
-//								((SegmentTreeModel)tn.getData()).setOccurrence(fieldElms.size());
-//									SegmentTreeModel clonedSegmentTreeModel = (SegmentTreeModel) ((SegmentTreeModel)tn.getData()).clone();
-//									clonedSegmentTreeModel.setiPath(iPathField);
-//									TreeNode copyedTN = new DefaultTreeNode(clonedSegmentTreeModel, iss.get(iss.size() - 1).getSegmentTreeNode());
-//									for(int k=0; k<tn.getChildren().size();k++){
-//										TreeNode cTN = tn.getChildren().get(k);	
-//										SegmentTreeModel clonedCTNSegmentTreeModel = (SegmentTreeModel) ((SegmentTreeModel)cTN.getData()).clone();
-//										clonedCTNSegmentTreeModel.setiPath(iPathField + "." + (k+1));
-//										TreeNode copyedCTN = new DefaultTreeNode(clonedCTNSegmentTreeModel, copyedTN);
-//										for(int l=0; l<cTN.getChildren().size();l++){
-//											TreeNode scTN = cTN.getChildren().get(l);
-//											SegmentTreeModel clonedSCTNSegmentTreeModel = (SegmentTreeModel) ((SegmentTreeModel)scTN.getData()).clone();
-//											clonedSCTNSegmentTreeModel.setiPath(iPathField + "." + (k+1)+"." +(l+1));
-//											new DefaultTreeNode(clonedSCTNSegmentTreeModel, copyedCTN);
-//										}
-//									}
-//									if(((Field)((SegmentTreeModel)tn.getData()).getNode()).getDatatype().getName().equals("varies")){
-//										((SegmentTreeModel)tn.getData()).setData(fieldE.getStringRepresentation());
-//									}else {
-//										updateFieldData(fieldE.getStringRepresentation(), this.cSeperator, this.scSeperator, copyedTN);
-//									}
-//									int index = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().indexOf(tn);
-//									tn.getParent().getChildren().add(index + fieldE.getInstanceNumber() - 1, copyedTN);
-//									j = iss.get(iss.size() - 1).getSegmentTreeNode().getChildren().size();
-//									
-//								
-//							}
-//						}
-//					}
-//					
-//				}
-//			}
-//		}
-//	}
 	
 	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg, String path, TreeNode parentTreeNode) throws CloneNotSupportedException {
 		
@@ -837,273 +102,31 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 	
-//	private void updateCS(ConformanceStatement cs, String path){
-//		((StatementDetails)cs.getStatementDetails()).setPath(path);
-//	}
-//	
-//	private void updateCP(Predicate cp, String path, Usage usage){
-//		((StatementDetails)cp.getPredicateDetails()).setPath(path);
-//		
-//		if(usage.equals(Usage.C_O_O)){
-//			cp.setTrueFalseUsages(Usage.C_O_O);
-//			cp.setTrueUsage(Usage.O);
-//			cp.setFalseUsage(Usage.O);
-//		}else if(usage.equals(Usage.C_O_R)){
-//			cp.setTrueFalseUsages(Usage.C_O_R);
-//			cp.setTrueUsage(Usage.O);
-//			cp.setFalseUsage(Usage.R);
-//		}else if(usage.equals(Usage.C_O_RE)){
-//			cp.setTrueFalseUsages(Usage.C_O_RE);
-//			cp.setTrueUsage(Usage.O);
-//			cp.setFalseUsage(Usage.RE);
-//		}else if(usage.equals(Usage.C_O_X)){
-//			cp.setTrueFalseUsages(Usage.C_O_X);
-//			cp.setTrueUsage(Usage.O);
-//			cp.setFalseUsage(Usage.X);
-//		}else if(usage.equals(Usage.C_R_O)){
-//			cp.setTrueFalseUsages(Usage.C_R_O);
-//			cp.setTrueUsage(Usage.R);
-//			cp.setFalseUsage(Usage.O);
-//		}else if(usage.equals(Usage.C_R_R)){
-//			cp.setTrueFalseUsages(Usage.C_R_R);
-//			cp.setTrueUsage(Usage.R);
-//			cp.setFalseUsage(Usage.R);
-//		}else if(usage.equals(Usage.C_R_RE)){
-//			cp.setTrueFalseUsages(Usage.C_R_RE);
-//			cp.setTrueUsage(Usage.R);
-//			cp.setFalseUsage(Usage.RE);
-//		}else if(usage.equals(Usage.C_R_X)){
-//			cp.setTrueFalseUsages(Usage.C_R_X);
-//			cp.setTrueUsage(Usage.R);
-//			cp.setFalseUsage(Usage.X);
-//		}else if(usage.equals(Usage.C_RE_O)){
-//			cp.setTrueFalseUsages(Usage.C_RE_O);
-//			cp.setTrueUsage(Usage.RE);
-//			cp.setFalseUsage(Usage.O);
-//		}else if(usage.equals(Usage.C_RE_R)){
-//			cp.setTrueFalseUsages(Usage.C_RE_R);
-//			cp.setTrueUsage(Usage.RE);
-//			cp.setFalseUsage(Usage.R);
-//		}else if(usage.equals(Usage.C_RE_RE)){
-//			cp.setTrueFalseUsages(Usage.C_RE_RE);
-//			cp.setTrueUsage(Usage.RE);
-//			cp.setFalseUsage(Usage.RE);
-//		}else if(usage.equals(Usage.C_RE_X)){
-//			cp.setTrueFalseUsages(Usage.C_RE_X);
-//			cp.setTrueUsage(Usage.RE);
-//			cp.setFalseUsage(Usage.X);
-//		}else if(usage.equals(Usage.C_X_O)){
-//			cp.setTrueFalseUsages(Usage.C_X_O);
-//			cp.setTrueUsage(Usage.X);
-//			cp.setFalseUsage(Usage.O);
-//		}else if(usage.equals(Usage.C_X_R)){
-//			cp.setTrueFalseUsages(Usage.C_X_R);
-//			cp.setTrueUsage(Usage.X);
-//			cp.setFalseUsage(Usage.R);
-//		}else if(usage.equals(Usage.C_X_RE)){
-//			cp.setTrueFalseUsages(Usage.C_X_RE);
-//			cp.setTrueUsage(Usage.X);
-//			cp.setFalseUsage(Usage.RE);
-//		}
-//	}
-	
-//	private void removeExistVC(String iPath, Message m) {
-//		List<ValidationContext> newVCList = new ArrayList<ValidationContext>();
-//		for (ValidationContext vc : m.getValidationContexts()) {
-//			if (!vc.getPath().equals(iPath)) {
-//				newVCList.add(vc);
-//			}
-//		}
-//		
-//		List<InstanceTestDataType> newITDTList = new ArrayList<InstanceTestDataType>();
-//		for (InstanceTestDataType itdt : m.getInstanceTestDataTypes()) {
-//			if (!itdt.getiPath().equals(iPath)) {
-//				newITDTList.add(itdt);
-//			}
-//		}
-//		
-//		m.setValidationContexts(newVCList);
-//		m.setInstanceTestDataTypes(newITDTList);
-//	}
-//
-//	private void createRVC(String iPath, String nodeName, Message m, String level) {
-//		ValidationContext vcPresence = new ValidationContext();
-//		vcPresence.setLevel(level);
-//		vcPresence.setPath(iPath);
-//		StatementDetails sd = new StatementDetails();
-//		sd.setId("CREATED-RVC");
-//		sd.setConstructionType("Single");
-//		sd.setPattern("Presence Check");
-//		sd.setLevel(level);
-//		sd.setPredicate(false);
-//		sd.setAnotherNodeLocation(iPath);
-//		sd.setAnotherNodeName(nodeName);
-//		sd.setVerb("SHALL be");
-//		sd.generateStatementText(true, true);
-//		vcPresence.setStatementDetails(sd);
-//		vcPresence.setDescription(sd.getStatementText());
-//		m.getValidationContexts().add(vcPresence);
-//	}
-//	
-//	private void createNotRVC(String iPath, String nodeName, Message m, String level) {
-//		ValidationContext vcPresence = new ValidationContext();
-//		vcPresence.setLevel(level);
-//		vcPresence.setPath(iPath);
-//		StatementDetails sd = new StatementDetails();
-//		sd.setId("CREATED-NOTRVC");
-//		sd.setConstructionType("Single");
-//		sd.setPattern("Presence Check");
-//		sd.setLevel(level);
-//		sd.setPredicate(false);
-//		sd.setAnotherNodeLocation(iPath);
-//		sd.setAnotherNodeName(nodeName);
-//		sd.setVerb("SHALL NOT be");
-//		sd.generateStatementText(true, true);
-//		vcPresence.setStatementDetails(sd);
-//		vcPresence.setDescription(sd.getStatementText());
-//		m.getValidationContexts().add(vcPresence);
-//	}
-//
-//	private void createRVVC(String iPath, String nodeName, String data, Message m, String level) {
-//		ValidationContext vcConstant = new ValidationContext();
-//		vcConstant.setLevel(level);
-//		vcConstant.setPath(iPath);
-//		StatementDetails sd = new StatementDetails();
-//		sd.setId("CREATED-RVVC");
-//		sd.setConstructionType("Single");
-//		sd.setPattern("Constant Value Check");
-//		sd.setSubPattern("Single Value");
-//		sd.setLevel(level);
-//
-//		sd.setPredicate(false);
-//		sd.setTargetNodeLocation(iPath);
-//		sd.setTargetNodeName(nodeName);
-//		sd.setVerb("SHALL be");
-//		sd.setLiteralValue(data);
-//		sd.generateStatementText(true, true);
-//		vcConstant.setStatementDetails(sd);
-//		vcConstant.setDescription(sd.getStatementText());
-//		m.getValidationContexts().add(vcConstant);
-//	}
-//	
-//	private void createListRVVC(String iPath, String nodeName, String data, Message m, String level) {
-//		ValidationContext vcConstant = new ValidationContext();
-//		vcConstant.setLevel(level);
-//		vcConstant.setPath(iPath);
-//		StatementDetails sd = new StatementDetails();
-//		sd.setId("CREATED-LISTRVVC");
-//		sd.setConstructionType("Single");
-//		sd.setPattern("Constant Value Check");
-//		sd.setSubPattern("List Values");
-//		sd.setLevel(level);
-//
-//		sd.setPredicate(false);
-//		sd.setTargetNodeLocation(iPath);
-//		sd.setTargetNodeName(nodeName);
-//		sd.setVerb("should be");
-//		sd.setLiteralValues(Arrays.asList(data.split("::")));
-//		sd.generateStatementText(true, true);
-//		vcConstant.setStatementDetails(sd);
-//		vcConstant.setDescription(sd.getStatementText());
-//		m.getValidationContexts().add(vcConstant);
-//	}
-
-//	private void updateInstanceSegmentByITDT(InstanceTestDataType itdt, InstanceSegment is, List<ValidationContext> vclist) {
-//		for(TreeNode fieldTN:is.getSegmentTreeNode().getChildren()){
-//			SegmentTreeModel fstm = (SegmentTreeModel)fieldTN.getData();
-//			
-//			if(fstm.getiPath().equals(itdt.getiPath())){
-//				fstm.setType(itdt.getType());
-//				if(itdt.getType().equals(TestDataCategorization.TestCaseFixedList)){
-//					ValidationContext vc = this.findVCByIPath(vclist, itdt.getiPath());
-//					if(vc != null) {
-//						String data = "";;
-//						for(String s: vc.getStatementDetails().getLiteralValues()){
-//							data = data + "::" + s;
-//						}
-//						data = data.substring(2);
-//						fstm.setData(data);
-//					}
-//				}
-//				
-//				
-//				return;
-//			}
-//			
-//			for(TreeNode componentTN:fieldTN.getChildren()){
-//				SegmentTreeModel cstm = (SegmentTreeModel)componentTN.getData();
-//				
-//				if(cstm.getiPath().equals(itdt.getiPath())){
-//					cstm.setType(itdt.getType());
-//					if(itdt.getType().equals(TestDataCategorization.TestCaseFixedList)){
-//						ValidationContext vc = this.findVCByIPath(vclist, itdt.getiPath());
-//						if(vc != null) {
-//							String data = "";;
-//							for(String s: vc.getStatementDetails().getLiteralValues()){
-//								data = data + "::" + s;
-//							}
-//							data = data.substring(2);
-//							cstm.setData(data);
-//						}
-//					}
-//					return;
-//				}
-//				
-//				for(TreeNode subComponentTN:fieldTN.getChildren()){
-//					SegmentTreeModel scstm = (SegmentTreeModel)subComponentTN.getData();
-//					
-//					if(scstm.getiPath().equals(itdt.getiPath())){
-//						scstm.setType(itdt.getType());
-//						if(itdt.getType().equals(TestDataCategorization.TestCaseFixedList)){
-//							ValidationContext vc = this.findVCByIPath(vclist, itdt.getiPath());
-//							if(vc != null) {
-//								String data = "";;
-//								for(String s: vc.getStatementDetails().getLiteralValues()){
-//									data = data + "::" + s;
-//								}
-//								data = data.substring(2);
-//								scstm.setData(data);
-//							}
-//						}
-//						return;
-//					}
-//				}
-//			}
-//		}
-//		
-//	}
-
-//	private ValidationContext findVCByIPath(List<ValidationContext> vclist, String path) {
-//		for(ValidationContext vc:vclist){
-//			if(path.equals(vc.getPath())){
-//				return vc;
-//			}
-//		}
-//		return null;
-//	}
-
-//	private InstanceSegment findInstanceSegmentByIPath(String iPath, List<InstanceSegment> instanceSegments) {
-//		for(InstanceSegment is: instanceSegments){
-//			if(iPath.contains(is.getPath())){
-//				return is;
-//			}
-//		}
-//		return null;
-//	}
-	
-	
-	private void generateMessageStructure(SegmentRefOrGroup srog, Group parentGroup, String messageStructID, Map<String,SegmentRef> messageStrucutreMap){
+	private void generateMessageStructure(SegmentRefOrGroup srog, Group parentGroup, String messageStructID, Map<String,SegmentRef> messageStrucutreMap, Map<String,String> usageMap, String usageList, Map<String,String> positionPathMap, String postionPath){
 		if(srog instanceof SegmentRef){
 			SegmentRef sr = (SegmentRef)srog;
 			if(parentGroup == null){
 				messageStrucutreMap.put(sr.getRef().getName(), sr);
+				usageMap.put(sr.getRef().getName(), sr.getUsage().name());
+				positionPathMap.put(sr.getRef().getName(), "" + sr.getPosition());
 			}else{
 				messageStrucutreMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), sr);
+				usageMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), usageList + "-" + sr.getUsage().name());
+				positionPathMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), postionPath + "." + sr.getPosition());
 			}
 		}else if(srog instanceof Group){
 			Group gr = (Group)srog;			
 			for(SegmentRefOrGroup child:gr.getChildren()){
-				this.generateMessageStructure(child, gr, messageStructID, messageStrucutreMap);
+				String childUsageList;
+				String childPositionPath;
+				if(parentGroup == null){
+					childUsageList = gr.getUsage().name();
+					childPositionPath = "" + gr.getPosition();
+				}else{
+					childUsageList = usageList + "-" + gr.getUsage().name();
+					childPositionPath = postionPath + "." + gr.getPosition();
+				}
+				this.generateMessageStructure(child, gr, messageStructID, messageStrucutreMap, usageMap, childUsageList, positionPathMap, childPositionPath);
 			}
 		}
 		
@@ -1112,9 +135,12 @@ public class ManageInstance  implements Serializable{
 	public void loadMessageInstance(Message m, List<InstanceSegment> instanceSegments) {
 		List<String> ipathList = new ArrayList<String>();
 		List<String> pathList = new ArrayList<String>();
+		List<String> iPositionPathList = new ArrayList<String>();
 		Map<String,SegmentRef> messageStrucutreMap = new LinkedHashMap<String,SegmentRef>();
+		Map<String,String> usageMap = new LinkedHashMap<String,String>();
+		Map<String,String> positionPathMap = new LinkedHashMap<String,String>();
 		for(SegmentRefOrGroup srog:m.getMessageObj().getChildren()){
-			this.generateMessageStructure(srog, null, m.getMessageObj().getStructID(), messageStrucutreMap);
+			this.generateMessageStructure(srog, null, m.getMessageObj().getStructID(), messageStrucutreMap, usageMap, "", positionPathMap, "");
 		}
 		String[] lines = m.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		List<String> adjustedMessage = new ArrayList<String>();
@@ -1126,6 +152,7 @@ public class ManageInstance  implements Serializable{
 				if(path != null){
 					pathList.add(this.getPath(messageStrucutreMap.keySet(), segmentName));
 					ipathList.add(this.makeIPath(this.getPath(messageStrucutreMap.keySet(), segmentName)));
+					iPositionPathList.add(this.makeIPath(positionPathMap.get(this.getPath(messageStrucutreMap.keySet(), segmentName))));
 					adjustedMessage.add(line);
 				}else{
 					validMessage = false;
@@ -1136,13 +163,16 @@ public class ManageInstance  implements Serializable{
 		}
 		
 		this.modifyIPath(ipathList);
+		this.modifyIPath(iPositionPathList);
+		
+		
 		int previousPathSize = 1;
 		for(int i=0; i<pathList.size();i++){
 			String[] pathDivided = ipathList.get(i).split("\\.");
 			if(previousPathSize + 1 == pathDivided.length ){	
-				instanceSegments.add(new InstanceSegment(ipathList.get(i),pathList.get(i),  lines[i], true ,messageStrucutreMap.get(pathList.get(i))));
+				instanceSegments.add(new InstanceSegment(ipathList.get(i),pathList.get(i), m.getMessageObj().getStructID(), iPositionPathList.get(i), lines[i], true ,messageStrucutreMap.get(pathList.get(i)),usageMap.get(pathList.get(i))));
 			}else{
-				instanceSegments.add(new InstanceSegment(ipathList.get(i),pathList.get(i),  lines[i], false ,messageStrucutreMap.get(pathList.get(i))));
+				instanceSegments.add(new InstanceSegment(ipathList.get(i),pathList.get(i), m.getMessageObj().getStructID(), iPositionPathList.get(i), lines[i], false ,messageStrucutreMap.get(pathList.get(i)), usageMap.get(pathList.get(i))));
 			}
 			previousPathSize = pathDivided.length;
 		}
@@ -1154,26 +184,30 @@ public class ManageInstance  implements Serializable{
 			}
 			m.setHl7EndcodedMessage(message);
 		}
-	}
 	
+		this.generateXMLFromMesageInstance(m, instanceSegments, true);
+		this.generateXMLFromMesageInstance(m, instanceSegments, false);
+	}
+
 	private void modifyIPath(List<String> ipathList){
-		int previousPathSize = 1;
 		String previousSegName = "";
 		int segIndex = 1;
 		for(int i=0;i<ipathList.size();i++){
 			
 			String[] pathDivided = ipathList.get(i).split("\\.");
 			
-			if(previousPathSize + 1 == pathDivided.length ){	
+			if(pathDivided.length > 1){	
 				String groupName = ipathList.get(i).substring(0, ipathList.get(i).lastIndexOf("."));
 				
-				int groupIndex = 1;
+				int groupIndex = 0;
 				for(int j=i+1;j<ipathList.size();j++){
 					if(ipathList.get(i).equals(ipathList.get(j))){
 						groupIndex = groupIndex + 1;
 					}
+					
 					if(ipathList.get(j).startsWith(groupName)){
-						String newGroupName = groupName.substring(0,groupName.length()-3) + "[" + groupIndex + "]";
+						int currentIndex = Integer.parseInt(groupName.substring(groupName.lastIndexOf("[") + 1, groupName.lastIndexOf("]")));
+						String newGroupName = groupName.substring(0,groupName.lastIndexOf("[")) + "[" + (groupIndex + currentIndex) + "]";						
 						ipathList.set(j, ipathList.get(j).replace(groupName, newGroupName));
 					}
 					
@@ -1187,7 +221,6 @@ public class ManageInstance  implements Serializable{
 					segIndex = 1;
 				}
 			}
-			previousPathSize = pathDivided.length;
 			previousSegName = pathDivided[0].substring(0,3);
 		}
 		
@@ -1230,9 +263,11 @@ public class ManageInstance  implements Serializable{
 				for(int j=0;j<fieldStr.length; j++){
 					String path = selectedInstanceSegment.getPath() + "." + (i+1);
 					String iPath = selectedInstanceSegment.getIpath() + "." + (i+1) + "[" + (j+1) + "]";
+					String iPositionPath = selectedInstanceSegment.getiPositionPath() + "." + (i+1) + "[" + (j+1) + "]";
+					String usageList = selectedInstanceSegment.getUsageList() + "-" + segment.getFields().get(i).getUsage().name();
 					
 					if(segment.getFields().get(i).getDatatype().getComponents().size() > 0){
-						FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false);
+						FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false);
 						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						
 						String[] componentStr = fieldStr[j].split("\\^");
@@ -1240,15 +275,17 @@ public class ManageInstance  implements Serializable{
 						for(int k=0;k<segment.getFields().get(i).getDatatype().getComponents().size();k++){
 							String componentPath = path + "." + (k + 1);
 							String componentIPath = iPath + "." + (k+1) + "[1]";
+							String componentIPositionPath = iPositionPath + "." + (k+1) + "[1]";
+							String componentUsageList = usageList + "-" + segment.getFields().get(i).getDatatype().getComponents().get(k).getUsage().name();
 							TreeNode componentTreeNode;
 							String[] subComponentStr;
 							if(k >= componentStr.length){
 								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), false);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), false);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};	
 								}else{
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), true);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), true);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};
 								}
@@ -1256,11 +293,11 @@ public class ManageInstance  implements Serializable{
 								
 							}else{
 								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), false);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), false);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");
 								}else{
-									ComponentModel componentModel = new ComponentModel(componentPath, componentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), true);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), true);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");	
 								}
@@ -1270,25 +307,26 @@ public class ManageInstance  implements Serializable{
 							for(int l=0;l<segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size();l++){
 								String subComponentPath = componentPath + "." + (l + 1);
 								String subComponentIPath = componentIPath + "." + (l+1) + "[1]";
-								
+								String subComponentUsageList = componentUsageList + "-" + segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l).getUsage().name();
+								String subComponentIPositionPath = componentIPositionPath + "." + (l+1) + "[1]";
 								if(l >= subComponentStr.length){
-									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), "", m.findTCAMTConstraintByIPath(subComponentIPath), true);
+									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), "", m.findTCAMTConstraintByIPath(subComponentIPath), true);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}else{
-									ComponentModel subComponentModel = new ComponentModel(subComponentPath, subComponentIPath, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), subComponentStr[l], m.findTCAMTConstraintByIPath(subComponentIPath), true);
+									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), subComponentStr[l], m.findTCAMTConstraintByIPath(subComponentIPath), true);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}
 							}
 						}
 					}else{
 						if(path.equals("MSH.1")){
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "|", m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "|", m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else if(path.equals("MSH.2")){
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), "^" + "~" + "\\" + "&", m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "^" + "~" + "\\" + "&", m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else {
-							FieldModel fieldModel = new FieldModel(path, iPath, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), true);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);	
 						}
 					}
@@ -1383,10 +421,10 @@ public class ManageInstance  implements Serializable{
 		}
 		
 		String iPath = fieldModel.getIpath().substring(0,fieldModel.getIpath().length()-3) + "[" + (count + 1) + "]";
+		String iPositionPath = fieldModel.getiPositionPath().substring(0,fieldModel.getiPositionPath().length()-3) + "[" + (count + 1) + "]";
 		
 		
-		
-		FieldModel repeatedFieldModel = new FieldModel(path, iPath, fieldModel.getNode(), "", null, fieldModel.isLeafNode());
+		FieldModel repeatedFieldModel = new FieldModel(fieldModel.getMessageName(), path, iPath, iPositionPath, fieldModel.getUsageList(), fieldModel.getNode(), "", null, fieldModel.isLeafNode());
 		TreeNode addedField = new DefaultTreeNode(repeatedFieldModel, segmentTreeRoot);
 		
 		if(!fieldModel.isLeafNode()){
@@ -1394,21 +432,25 @@ public class ManageInstance  implements Serializable{
 				gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component c = fieldModel.getNode().getDatatype().getComponents().get(i);
 				String componentPath = path + "." + (i+1);
 				String componentIPath = iPath + "." + (i+1) + "[1]";
+				String componentIPositionPath = iPositionPath + "." + (i+1) + "[1]";
+				String componentUsageList = fieldModel.getUsageList() + "-" + c.getUsage().name();
 				
 				if(c.getDatatype().getComponents().size() > 0){
-					ComponentModel repatedComponentModel = new ComponentModel(componentPath, componentIPath, c, "", null, false);	
+					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList ,c, "", null, false);	
 					TreeNode addedComponent = new DefaultTreeNode(repatedComponentModel, addedField);
 					
 					for(int j=0;j<repatedComponentModel.getNode().getDatatype().getComponents().size();j++){
 						gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component sc = repatedComponentModel.getNode().getDatatype().getComponents().get(j);
 						String subComponentPath = componentPath + "." + (j+1);
 						String subComponentIPath = componentIPath + "." + (j+1) + "[1]";
+						String subComponentIPositionPath = componentIPositionPath + "." + (j+1) + "[1]";
+						String subComponentUsageList = componentUsageList + "-" + sc.getUsage().name();
 						
-						ComponentModel repatedSubComponentModel = new ComponentModel(subComponentPath, subComponentIPath, sc, "", null, true);
+						ComponentModel repatedSubComponentModel = new ComponentModel(fieldModel.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, sc, "", null, true);
 						new DefaultTreeNode(repatedSubComponentModel, addedComponent);
 					}
 				}else {
-					ComponentModel repatedComponentModel = new ComponentModel(componentPath, componentIPath, c, "", null, true);
+					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, c, "", null, true);
 					new DefaultTreeNode(repatedComponentModel, addedField);
 				}
 				
@@ -1506,5 +548,428 @@ public class ManageInstance  implements Serializable{
 		
 		
 		return message;
+	}
+
+	public void createConstraintDocument(org.w3c.dom.Document constraintDom, Message m) {
+		
+		Element elmConstraints = (Element)constraintDom.getElementsByTagName("Constraints").item(0);
+		Element elmGroup = (Element)elmConstraints.getElementsByTagName("Group").item(0);
+		
+		Element elmByName = constraintDom.createElement("ByName");
+		String messageName=null;
+		for(TCAMTConstraint c: m.getTcamtConstraints()){
+			messageName = c.getMessageName();
+			String usageList = c.getUsageList();
+			String iPositionPath = c.getiPosition();
+			String iPath = c.getIpath();
+			String tdc = c.getCategorization().getValue();
+			
+			
+			if(c.getCategorization().equals(TestDataCategorization.Indifferent)){
+			}else if(c.getCategorization().equals(TestDataCategorization.ContentIndifferent)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+			}else if(c.getCategorization().equals(TestDataCategorization.Configurable)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+			}else if(c.getCategorization().equals(TestDataCategorization.SystemGenerated)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseProper)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+			}else if(c.getCategorization().equals(TestDataCategorization.NotValued)){
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixed)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				this.createPlainTextCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixedList)){
+				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				this.createStringListCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
+			}
+		}
+		if(messageName != null){
+			elmByName.setAttribute("Name", messageName);	
+		}
+		elmGroup.appendChild(elmByName);
+	}
+	
+	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent){
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("GeneratedBy", "TCAMT");
+		elmReference.setAttribute("Path", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+		
+		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be one of list values: " + values + " because " + iPath + " is " + tdc + "."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
+		elmStringList.setAttribute("Path", iPositionPath);
+		elmStringList.setAttribute("CSV", values);
+		elmStringList.setAttribute("IgnoreCase", "false");
+		elmAssertion.appendChild(elmStringList);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent){
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("GeneratedBy", "TCAMT");
+		elmReference.setAttribute("Path", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+		
+		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be valued '" + value + "' because " + iPath + " is " + tdc + "."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
+		elmPlainText.setAttribute("Path", iPositionPath);
+		elmPlainText.setAttribute("Text", value);
+		elmPlainText.setAttribute("IgnoreCase", "false");
+		elmAssertion.appendChild(elmPlainText);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent){
+		String[] uList = usageList.split("-");
+		String myIPositionPath = "";
+		String myIPath = "";
+		for(int i=0; i<uList.length; i++){
+			if(i==0){
+				myIPositionPath = iPositionPath.split("\\.")[i];
+				myIPath = iPath.split("\\.")[i];
+			}else {
+				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
+				myIPath = myIPath + "." + iPath.split("\\.")[i];
+			}			
+			if(!uList[i].equals("R")){
+				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+				
+				Element elmReference = parent.getOwnerDocument().createElement("Reference");
+				elmReference.setAttribute("GeneratedBy", "TCAMT");
+				elmReference.setAttribute("Path", iPath);
+				elmReference.setAttribute("TestDataCategorization", tdc);
+				elmConstraint.appendChild(elmReference);
+				
+				elmConstraint.setAttribute("ID", "TCAMT_" + iPath + "_" + (i+1));
+				elmConstraint.setAttribute("Target", myIPositionPath);
+				Element elmDescription = parent.getOwnerDocument().createElement("Description");
+				elmDescription.appendChild(parent.getOwnerDocument().createTextNode(myIPath + " SHALL be valued, because " + iPath + " is " + tdc + "."));
+				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+				elmPresence.setAttribute("Path", myIPositionPath);
+				elmAssertion.appendChild(elmPresence);
+				elmConstraint.appendChild(elmDescription);
+				elmConstraint.appendChild(elmAssertion);
+				parent.appendChild(elmConstraint);
+			}
+		}
+	}
+
+	private void generateXMLFromMesageInstance(Message message, List<InstanceSegment> instanceSegments, boolean isSTD) {
+		try {
+			String messageName = message.getMessageObj().getStructID();
+			org.w3c.dom.Document xmlHL7MessageInstanceDom = XMLManager.stringToDom("<" + messageName + "/>");
+			Element rootElm = (Element)xmlHL7MessageInstanceDom.getElementsByTagName(messageName).item(0);
+			
+			rootElm.setAttribute("xmlns", "urn:hl7-org:v2xml");
+			rootElm.setAttribute("xmlns:xsi", "urn:hl7-org:v2xml");
+			rootElm.setAttribute("xsi:schemaLocation", "urn:hl7-org:v2xml " + messageName + ".xsd");
+
+			
+			for(InstanceSegment instanceSegment:instanceSegments){
+				String[] iPathList = instanceSegment.getIpath().split("\\.");
+				if(iPathList.length == 1){
+					Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPathList[0].substring(0, iPathList[0].lastIndexOf("[")));
+					if(isSTD) this.generateSegment(segmentElm, instanceSegment);
+					else this.generateNISTSegment(segmentElm, instanceSegment);
+					rootElm.appendChild(segmentElm);
+				}else {
+					Element parentElm = rootElm;
+					
+					for(int i=0; i<iPathList.length; i++){
+						String iPath = iPathList[i];
+						if(i==iPathList.length - 1){
+							Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPath.substring(0, iPath.lastIndexOf("[")));
+							if(isSTD) this.generateSegment(segmentElm, instanceSegment);
+							else this.generateNISTSegment(segmentElm, instanceSegment);
+							parentElm.appendChild(segmentElm);
+						}else {
+							String groupName = iPath.substring(0,iPath.lastIndexOf("["));
+							int groupIndex = Integer.parseInt(iPath.substring(iPath.lastIndexOf("[") + 1,iPath.lastIndexOf("]")));
+							
+							NodeList groups = parentElm.getElementsByTagName(messageName + "." + groupName);
+							if(groups == null || groups.getLength()<groupIndex){
+								Element group = xmlHL7MessageInstanceDom.createElement(messageName + "." + groupName);
+								parentElm.appendChild(group);
+								parentElm = group;
+								
+							}else {
+								parentElm = (Element)groups.item(groupIndex - 1);
+							}	
+						}
+					}
+				}
+				
+			}
+			
+			if(isSTD) message.setXmlEncodedSTDMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
+			else message.setXmlEncodedNISTMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+	}
+
+	private void generateNISTSegment(Element segmentElm, InstanceSegment instanceSegment) {
+		String lineStr = instanceSegment.getLineStr();
+		String segmentName = lineStr.substring(0,3);		
+		
+		if(lineStr.startsWith("MSH")){
+			lineStr = "MSH|%SEGMENTDVIDER%|%ENCODINGDVIDER%"+ lineStr.substring(8);
+		}
+		
+		String[] fieldStrs = lineStr.substring(4).split("\\|");
+		
+		for(int i=0; i<fieldStrs.length; i ++){
+			String[] fieldStrRepeats = fieldStrs[i].split("\\~");
+			for(String fieldStr:fieldStrRepeats){
+				if(fieldStr.equals("%SEGMENTDVIDER%")){
+					Element fieldElm = segmentElm.getOwnerDocument().createElement("MSH.1");
+					Text value = segmentElm.getOwnerDocument().createTextNode("|");
+					fieldElm.appendChild(value);
+					segmentElm.appendChild(fieldElm);
+				}else if(fieldStr.equals("%ENCODINGDVIDER%")){
+					Element fieldElm = segmentElm.getOwnerDocument().createElement("MSH.2");
+					Text value = segmentElm.getOwnerDocument().createTextNode("^~\\&");
+					fieldElm.appendChild(value);
+					segmentElm.appendChild(fieldElm);
+				}else {
+					if(fieldStr != null && !fieldStr.equals("")){
+						Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1));
+						String[] componentStrs = fieldStr.split("\\^");
+						
+						if(componentStrs.length == 1){
+							Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+							fieldElm.appendChild(value);
+						}else{
+							for(int j=0; j<componentStrs.length;j++){
+								String componentStr = componentStrs[j];
+								if(componentStr != null && !componentStr.equals("")){
+									Element componentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1));
+									String[] subComponentStrs = componentStr.split("\\&");
+									if(subComponentStrs.length == 1){
+										Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
+										componentElm.appendChild(value);
+									}else{
+										for(int k=0; k<subComponentStrs.length;k++){
+											Element subComponentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1) + "." + (k+1));
+											Text value = segmentElm.getOwnerDocument().createTextNode(subComponentStrs[k]);
+											subComponentElm.appendChild(value);
+											componentElm.appendChild(subComponentElm);
+										}
+									}
+									
+									fieldElm.appendChild(componentElm);
+								}
+								
+							}
+						}
+						segmentElm.appendChild(fieldElm);
+					}
+				}
+			}
+		}
+	}
+
+	private void generateSegment(Element segmentElm, InstanceSegment instanceSegment) {
+		String lineStr = instanceSegment.getLineStr();
+		String segmentName = lineStr.substring(0,3);
+		Segment segment = instanceSegment.getSegmentRef().getRef();
+		
+		String variesDT = "";
+		
+		
+		if(lineStr.startsWith("MSH")){
+			lineStr = "MSH|%SEGMENTDVIDER%|%ENCODINGDVIDER%"+ lineStr.substring(8);
+		}
+		
+		
+		String[] fieldStrs = lineStr.substring(4).split("\\|");
+		
+		for(int i=0; i<fieldStrs.length; i ++){
+			String[] fieldStrRepeats = fieldStrs[i].split("\\~");
+			for(String fieldStr:fieldStrRepeats){
+				if(fieldStr.equals("%SEGMENTDVIDER%")){
+					Element fieldElm = segmentElm.getOwnerDocument().createElement("MSH.1");
+					Text value = segmentElm.getOwnerDocument().createTextNode("|");
+					fieldElm.appendChild(value);
+					segmentElm.appendChild(fieldElm);
+				}else if(fieldStr.equals("%ENCODINGDVIDER%")){
+					Element fieldElm = segmentElm.getOwnerDocument().createElement("MSH.2");
+					Text value = segmentElm.getOwnerDocument().createTextNode("^~\\&");
+					fieldElm.appendChild(value);
+					segmentElm.appendChild(fieldElm);
+				}else {
+					if(fieldStr != null && !fieldStr.equals("")){
+						if(i<segment.getFields().size()){
+							Field field = segment.getFields().get(i);
+							Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + field.getPosition());
+							if(field.getDatatype().getComponents() == null || field.getDatatype().getComponents().size() == 0 ){
+								if(lineStr.startsWith("OBX")){
+									if(field.getPosition().equals(2)){
+										variesDT = fieldStr;
+										Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+										fieldElm.appendChild(value);
+									}else if (field.getPosition().equals(5)){
+										String[] componentStrs = fieldStr.split("\\^");
+										
+										for(int index = 0 ; index <componentStrs.length; index++){
+											String componentStr = componentStrs[index];
+											Element componentElm = segmentElm.getOwnerDocument().createElement(variesDT + "." + (index+1));
+											Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
+											componentElm.appendChild(value);
+											fieldElm.appendChild(componentElm);
+											
+										}
+									}
+								}else{
+									Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+									fieldElm.appendChild(value);
+								}
+							}else{
+								String[] componentStrs = fieldStr.split("\\^");
+								String componentDataTypeName = field.getDatatype().getName();
+								for(int j=0; j < componentStrs.length; j++){
+									if(j < field.getDatatype().getComponents().size()){
+										Component component = field.getDatatype().getComponents().get(j);
+										String componentStr = componentStrs[j];
+										if(componentStr!=null && !componentStr.equals("")){
+											Element componentElm = segmentElm.getOwnerDocument().createElement(componentDataTypeName + "." + (j+1));
+											if(component.getDatatype().getComponents() == null || component.getDatatype().getComponents().size() == 0 ){
+												Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
+												componentElm.appendChild(value);
+											}else{
+												String[] subComponentStrs = componentStr.split("\\&");
+												String subComponentDataTypeName = component.getDatatype().getName();
+												
+												for(int k=0; k < subComponentStrs.length; k++){
+													String subComponentStr = subComponentStrs[k];
+													if(subComponentStr!=null && !subComponentStr.equals("")){
+														Element subComponentElm = segmentElm.getOwnerDocument().createElement(subComponentDataTypeName + "." + (k+1));
+														Text value = segmentElm.getOwnerDocument().createTextNode(subComponentStr);
+														subComponentElm.appendChild(value);
+														componentElm.appendChild(subComponentElm);
+													}
+												}
+												
+											}
+											fieldElm.appendChild(componentElm);
+										}
+									}
+								}
+								
+							}
+							segmentElm.appendChild(fieldElm);
+						}
+					}
+				}
+			}
+		}
+			
+		
+	}
+
+	public TreeNode generateConstraintTree(Message m) {
+		TreeNode root = new DefaultTreeNode("", null);
+		for(TCAMTConstraint c:m.getTcamtConstraints()){
+			TreeNode cTreeNode = new DefaultTreeNode(c, root);
+			cTreeNode.setExpanded(true);
+			String usageList = c.getUsageList();
+			String iPositionPath = c.getiPosition();
+			String iPath = c.getIpath();
+			if(c.getCategorization().equals(TestDataCategorization.Indifferent)){
+			}else if(c.getCategorization().equals(TestDataCategorization.ContentIndifferent)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			}else if(c.getCategorization().equals(TestDataCategorization.Configurable)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			}else if(c.getCategorization().equals(TestDataCategorization.SystemGenerated)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseProper)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			}else if(c.getCategorization().equals(TestDataCategorization.NotValued)){
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixed)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPlainTextTree(c.getData(), iPositionPath,iPath, cTreeNode);
+			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixedList)){
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode);
+			}
+		}
+			
+			
+		return root;
+	}
+
+	private void createStringListTree(String data, String iPositionPath, String iPath, TreeNode parent) {
+		Constraint c = new Constraint();
+		c.setData(data);
+		c.setDescription("The value of " + iPath + " SHALL be one of List Values: " + data);
+		c.setId("TCAMT");
+		c.setIpath(iPath);
+		c.setiPositionPath(iPositionPath);
+		c.setType("StringList");
+		new DefaultTreeNode(c, parent);
+		
+	}
+
+	private void createPlainTextTree(String data, String iPositionPath, String iPath, TreeNode parent) {
+		Constraint c = new Constraint();
+		c.setData(data);
+		c.setDescription("The value of " + iPath + " SHALL be '" + data + "'.");
+		c.setId("TCAMT");
+		c.setIpath(iPath);
+		c.setiPositionPath(iPositionPath);
+		c.setType("PlainText");
+		new DefaultTreeNode(c, parent);
+		
+	}
+
+	private void createPresenceTree(String usageList, String iPositionPath, String iPath,  TreeNode parent) {
+		String[] uList = usageList.split("-");
+		String myIPositionPath = "";
+		String myIPath = "";
+		for(int i=0; i<uList.length; i++){
+			if(i==0){
+				myIPath = iPath.split("\\.")[i];
+				myIPositionPath = iPositionPath.split("\\.")[i];
+			}else {
+				myIPath = myIPath + "." + iPath.split("\\.")[i];
+				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
+			}			
+			if(!uList[i].equals("R")){
+				Constraint c = new Constraint();
+				c.setDescription(myIPath + " SHALL be valued.");
+				c.setId("TCAMT");
+				c.setIpath(myIPath);
+				c.setiPositionPath(myIPositionPath);
+				c.setType("Presence");
+				new DefaultTreeNode(c, parent);
+			}
+		}
+		
 	}
 }

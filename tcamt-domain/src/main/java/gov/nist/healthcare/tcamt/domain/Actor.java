@@ -84,7 +84,7 @@ public class Actor implements Cloneable, Serializable {
 	}
 
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public Actor clone() throws CloneNotSupportedException {
 		Actor cloned = (Actor) super.clone();
 		return cloned;
 	}

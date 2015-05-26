@@ -12,7 +12,7 @@
 </composite:interface>
 
 <composite:implementation>
-	<h:form id="IsolatedTestForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="IsolatedTestForm">
 		<p:accordionPanel widgetVar="IsolatedTestPanel" activeIndex="#{sessionBeanTCAMT.itActiveIndex}">
 			<p:tab id="IsolatedTestPanel_List" title="Isolated Test Plan List">
 				<table width="100%">
@@ -34,6 +34,10 @@
 					<p:column headerText="Description">
 						<h:outputText value="#{testplan.description}" />
 					</p:column>
+					
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{testplan.lastUpdateDate}" />
+					</p:column>
 
 					<p:column headerText="Version">
 						<h:outputText value="#{testplan.version}" />
@@ -45,6 +49,19 @@
 										update=":#{p:component('IsolatedTestForm')}" icon="ui-icon-search"
 										title="Select Test Plan">
 								<f:attribute name="testplan" value="#{testplan}" />
+						</p:commandButton>
+						<p:commandButton value="Cloning"
+							actionListener="#{isolatedTestPlanRequestBean.cloneTestPlan}"
+							update=":#{p:component('IsolatedTestForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="testplan" value="#{testplan}" />
+						</p:commandButton>
+						<p:commandButton
+							value="Sharing" icon="ui-icon-transfer-e-w"
+							update=":#{p:component('shareIsolatedTestPlanForm')}"
+							actionListener="#{isolatedTestPlanRequestBean.shareInit}"
+							oncomplete="PF('shareIsolatedTestPlan').show();" >
+							<f:attribute name="testplan" value="#{testplan}" />
 						</p:commandButton>
 						<p:commandButton value="Export" ajax="false" actionListener="#{isolatedTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan)}" icon="ui-icon-print">
 							<p:fileDownload value="#{isolatedTestPlanRequestBean.zipResourceBundleFile}" />
@@ -95,10 +112,12 @@
     					</p:contextMenu>
     					<p:contextMenu for="iTestplanTree" nodeType="group">
         					<p:menuitem value="Add TestCase" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.addTestCase}" icon="ui-icon-plus"/>
-        					<p:menuitem value="Delete TestCaseGroup" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.deleteTestCaseGroup}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Clone TestCaseGroup" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.cloneTestCaseGroup}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Delete TestCaseGroup" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.deleteTestCaseGroup}" icon="ui-icon-minus"/>
     					</p:contextMenu>
     					<p:contextMenu for="iTestplanTree" nodeType="case">
-        					<p:menuitem value="Delete TestCase" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.deleteTestCase}" icon="ui-icon-plus"/>
+    						<p:menuitem value="Clone TestCase" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.cloneTestCase}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Delete TestCase" update=":#{p:component('IsolatedTestForm')}" actionListener="#{isolatedTestPlanRequestBean.deleteTestCase}" icon="ui-icon-minus"/>
     					</p:contextMenu>
     				</p:layoutUnit>
     				<p:layoutUnit id="dashboard" position="center" style="border: 0;">
@@ -115,6 +134,10 @@
                 						<p:inputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestCase.description}" />
                 						<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
                 					</p:inplace>
+                					
+                					<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
+                					
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestCase.version}" />
             					</h:panelGrid>
@@ -203,6 +226,11 @@
 												update=":#{p:component('IsolatedTestForm')}" icon="ui-icon-search" title="Select Test Step">
 												<f:attribute name="teststep" value="#{teststep}" />
 											</p:commandButton>
+											<p:commandButton value="Update Profile" actionListener="#{isolatedTestPlanRequestBean.selectTestStep}"
+												update=":#{p:component('updateProfileIsolatedTestForm')}" icon="ui-icon-pencil" title="Update profile for Test Step"
+												oncomplete="PF('updateProfile').show();" >
+												<f:attribute name="teststep" value="#{teststep}" />
+											</p:commandButton>
 											<p:commandButton value="Delete" actionListener="#{isolatedTestPlanRequestBean.deleteTestStep}"
 												update=":#{p:component('IsolatedTestForm')}" icon="ui-icon-close" title="Delete Test Step">
 												<f:attribute name="teststep" value="#{teststep}" />
@@ -279,7 +307,7 @@
 										</p:tab>
 										<p:tab title="List Contraints">
 											<p:scrollPanel style="width:100%;" mode="native">
-												<tcamt:constraintsTable bean="#{isolatedTestPlanRequestBean}" panelId=":#{p:component('itInstancePanel')}" constraints="#{isolatedTestPlanRequestBean.selectedTestStep.message.tcamtConstraints}" />
+												<tcamt:constraintsTable bean="#{isolatedTestPlanRequestBean}" panelId=":#{p:component('itInstancePanel')}" />
 											</p:scrollPanel>
 										</p:tab>
 									</p:accordionPanel>								
@@ -299,6 +327,8 @@
                 						<p:inputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestCaseGroup.description}" />
                 						<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
         							</p:inplace>
+        							<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestCaseGroup.version}" />
             					</h:panelGrid>
@@ -317,6 +347,8 @@
                 						<p:inputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestPlan.description}" />
                 						<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
         							</p:inplace>
+        							<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{isolatedTestPlanRequestBean.selectedTestPlan.version}" />
                 					<h:outputText value="Author: " />
@@ -331,7 +363,7 @@
 		</p:accordionPanel>
 	</h:form>
 	
-	<h:form id="createTestStepForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="createTestStepForm">
 		<p:dialog id="createTestStepDialog" header="Create TestStep" widgetVar="createTestStep">
 			<h:panelGrid columns="2" cellpadding="5">
 				<h:outputText value="Name: " />
@@ -365,6 +397,72 @@
 						<p:commandButton value="Create" icon="ui-icon-plus" update=":#{p:component('IsolatedTestForm')}"
 							actionListener="#{isolatedTestPlanRequestBean.addTestStep}" onclick="PF('createTestStep').hide();" />
 					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="shareIsolatedTestPlanForm">
+		<p:dialog id="shareIsolatedTestPlanDialog" header="Share TestPlan"
+			widgetVar="shareIsolatedTestPlan">
+			<h:panelGrid id="shareIsolatedTestPlanPanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{isolatedTestPlanRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user.userId}" itemValue="#{user.id}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('IsolatedTestForm')}"
+							actionListener="#{isolatedTestPlanRequestBean.shareTestPlan}"
+							onclick="PF('shareIsolatedTestPlan').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="updateProfileIsolatedTestForm">
+		<p:dialog header="Update Profile" widgetVar="updateProfile">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<h:outputText value="#{isolatedTestPlanRequestBean.selectedTestStep.message.name}" />
+				<h:outputText value="Description: " />
+				<h:outputText value="#{isolatedTestPlanRequestBean.selectedTestStep.message.description}" />
+
+				<h:outputText value="Update Profile: " />
+				<p:fileUpload
+						fileUploadListener="#{isolatedTestPlanRequestBean.updateProfile}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						
+				<h:outputText value="Update Constraints: " />
+				<p:fileUpload
+						fileUploadListener="#{isolatedTestPlanRequestBean.updateConstraints}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+				
+				<h:outputText value="Update ValueSet: " />
+				<p:fileUpload
+						fileUploadListener="#{isolatedTestPlanRequestBean.updateValueSet}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Apply"
+							icon="ui-icon-pencil" update=":#{p:component('IsolatedTestForm')}"
+							actionListener="#{isolatedTestPlanRequestBean.profileUpdateMessage()}"
+							onclick="PF('updateProfile').hide();" /></td>
 				</tr>
 			</table>
 		</p:dialog>

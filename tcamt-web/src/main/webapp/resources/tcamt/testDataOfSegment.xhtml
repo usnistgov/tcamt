@@ -27,7 +27,7 @@
 			<h:outputText value="#{model.node.name}" />
 		</p:column>
 		<p:column headerText="DT" style="width:8%; text-align: center;">
-			<h:outputText value="#{model.node.datatype.name}" />
+			<h:outputText value="#{model.node.datatype.label}" />
 		</p:column>
 		<p:column headerText="Usage" style="width:7%; text-align: center;">
 			<h:outputText value="#{model.node.usage}" />
@@ -51,7 +51,7 @@
 			<h:outputText value="#{model.node.table.mappingId}" />
 		</p:column>
 		
-		<p:column headerText="Data" style="width:7%; text-align: center;">
+		<p:column headerText="Test Data" style="width:7%; text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
 			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.node.table == null}"  style="width:90%;" value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
@@ -64,8 +64,8 @@
 			</p:selectOneMenu>
 		</p:column>
 		
-		<p:column headerText="CA" style="width:8%; text-align: center;">
-			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode}">
+		<p:column headerText="TestData Cate." style="width:8%; text-align: center;">
+			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
 				<f:selectItem itemLabel="Content Indifferent" itemValue="ContentIndifferent" />

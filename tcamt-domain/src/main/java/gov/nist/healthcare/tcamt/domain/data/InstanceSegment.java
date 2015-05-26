@@ -12,16 +12,23 @@ public class InstanceSegment implements Serializable{
 	private static final long serialVersionUID = -3923342579339897927L;
 	private String ipath;
 	private String path;
+	private String messageName;
+	private String iPositionPath;
+	private String usageList;
+	
 	private String lineStr;
 	private boolean isAnchor;
-	private SegmentRef segmentRef; 
+	private SegmentRef segmentRef;
 
-	public InstanceSegment(String ipath, String path, String lineStr, boolean isAnchor ,SegmentRef segmentRef) {
+	public InstanceSegment(String ipath, String path, String messageName, String iPositionPath, String lineStr, boolean isAnchor ,SegmentRef segmentRef, String usageList) {
 		this.ipath = ipath;
 		this.path = path;
+		this.messageName = messageName;
+		this.iPositionPath = iPositionPath;
 		this.lineStr = lineStr;
 		this.setAnchor(isAnchor);
 		this.segmentRef = segmentRef;
+		this.usageList = usageList;
 	}
 	
 	public InstanceSegment(){
@@ -67,7 +74,30 @@ public class InstanceSegment implements Serializable{
 	public void setPath(String path) {
 		this.path = path;
 	}
-	
-	
 
+	public String getUsageList() {
+		return usageList;
+	}
+
+	public void setUsageList(String usageList) {
+		this.usageList = usageList;
+	}
+
+	public String getMessageName() {
+		return messageName;
+	}
+
+	public void setMessageName(String messageName) {
+		this.messageName = messageName;
+	}
+
+	public String getiPositionPath() {
+		return iPositionPath;
+	}
+
+	public void setiPositionPath(String iPositionPath) {
+		this.iPositionPath = iPositionPath;
+	}
+	
+	
 }

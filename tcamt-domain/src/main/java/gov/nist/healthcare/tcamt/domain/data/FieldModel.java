@@ -9,8 +9,11 @@ public class FieldModel implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -5288642864545218785L;
+	private String messageName;
 	private String path;
 	private String ipath;
+	private String iPositionPath;
+	private String usageList;
 	private Field node;
 	private String data;
 	private TestDataCategorization tdc;
@@ -18,11 +21,14 @@ public class FieldModel implements Serializable{
 	
 	
 	
-	public FieldModel(String path, String ipath, Field node, String data,
+	public FieldModel(String messageName, String path, String ipath, String iPositionPath, String usageList, Field node, String data,
 			TestDataCategorization tdc, boolean isLeafNode) {
 		super();
+		this.messageName = messageName;
 		this.path = path;
 		this.ipath = ipath;
+		this.iPositionPath = iPositionPath;
+		this.usageList = usageList;
 		this.setNode(node);
 		this.data = data;
 		this.tdc = tdc;
@@ -73,9 +79,47 @@ public class FieldModel implements Serializable{
 
 	public void setNode(Field node) {
 		this.node = node;
+	}
+
+
+	public String getUsageList() {
+		return usageList;
+	}
+
+
+	public void setUsageList(String usageList) {
+		this.usageList = usageList;
 	} 
 	
-	
+	public boolean checkTestDataCategorizationAvaiablility(){
+		String usage[] = this.usageList.split("-");
+		for(String u:usage){
+			if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+				return false;
+			}
+		}
+		return true;
+	}
+
+
+	public String getiPositionPath() {
+		return iPositionPath;
+	}
+
+
+	public void setiPositionPath(String iPositionPath) {
+		this.iPositionPath = iPositionPath;
+	}
+
+
+	public String getMessageName() {
+		return messageName;
+	}
+
+
+	public void setMessageName(String messageName) {
+		this.messageName = messageName;
+	}
 	
 	
 }

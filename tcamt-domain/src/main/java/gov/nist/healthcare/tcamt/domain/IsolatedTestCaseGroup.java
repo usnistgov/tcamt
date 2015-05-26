@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class IsolatedTestCaseGroup implements Serializable{
+public class IsolatedTestCaseGroup implements Cloneable, Serializable{
 
 	/**
 	 * 
@@ -51,6 +51,9 @@ public class IsolatedTestCaseGroup implements Serializable{
 	}
 
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
 		return description;
 	}
 
@@ -78,5 +81,17 @@ public class IsolatedTestCaseGroup implements Serializable{
 		this.testcases.add(testcase);
 	}
 	
-	
+	@Override
+	public IsolatedTestCaseGroup clone() throws CloneNotSupportedException {
+		IsolatedTestCaseGroup cloned = (IsolatedTestCaseGroup)super.clone();
+		cloned.setId(0);
+		
+		Set<IsolatedTestCase> cTestcases = new HashSet<IsolatedTestCase>();
+		for(IsolatedTestCase testcase:this.testcases){
+			cTestcases.add(testcase.clone());
+		}
+		cloned.setTestcases(cTestcases);
+		
+		return cloned;
+	}
 }

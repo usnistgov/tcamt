@@ -37,7 +37,7 @@ public class IsolatedTestStep implements Cloneable, Serializable{
     @JoinColumn(name="r_actor_id")
 	private Actor rActor;
 	
-	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="message_id")
 	private Message message;
 	private Integer version;
@@ -75,6 +75,9 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 	}
 
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
 		return description;
 	}
 
@@ -123,11 +126,15 @@ public class IsolatedTestStep implements Cloneable, Serializable{
 	public void setTestStepStory(TestStory testStepStory) {
 		this.testStepStory = testStepStory;
 	}
-
+	
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public IsolatedTestStep clone() throws CloneNotSupportedException {
 		IsolatedTestStep cloned = (IsolatedTestStep)super.clone();
-		cloned.setMessage((Message)this.message.clone());
+		cloned.setId(0);
+		cloned.setMessage(this.message.clone());
+		cloned.setrActor(rActor);
+		cloned.setsActor(sActor);
+		cloned.setTestStepStory((TestStory)testStepStory.clone());
 		
 		return cloned;
 	}

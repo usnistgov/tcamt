@@ -11,34 +11,36 @@
 <composite:interface>
 	<composite:attribute name="bean" />
 	<composite:attribute name="panelId" />
-	<composite:attribute name="constraints" />
 </composite:interface>
 
 <composite:implementation>
-	<p:dataTable var="c" value="#{cc.attrs.constraints}" paginator="true" rows="5" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="10,20,30">
-		<p:column headerText="Path">
+	<p:treeTable var="c" value="#{cc.attrs.bean.constraintTreeRoot}" resizableColumns="true" liveResize="true">
+		<p:column headerText="Path" style="width:30%;">
 			<h:outputText value="#{c.ipath}" />
 		</p:column>
-		<p:column headerText="Level">
-			<h:outputText value="#{c.level}" />
+		<p:column headerText="Level" style="width:10%;">
+			<h:outputText value="#{c.level}" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}"/>
+			<h:outputText value="-" rendered="#{c['class'].simpleName == 'Constraint'}"/>
 		</p:column>
-		<p:column headerText="Categorization">
-			<h:outputText value="#{c.categorization.value}" />
+		<p:column headerText="Type" style="width:10%;">
+			<h:outputText value="#{c.categorization.value}" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}" />
+			<h:outputText value="#{c.type}" rendered="#{c['class'].simpleName == 'Constraint'}" />
 		</p:column>
-		<p:column headerText="Data">
-			<p:inputText style="width:90%;" value="#{c.data}">
-				<p:ajax event="blur" />
-			</p:inputText>
+		<p:column headerText="Description" style="width:25%;">
+			<h:outputText value="-" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}" />
+			<h:outputText value="#{c.description}" rendered="#{c['class'].simpleName == 'Constraint'}"/>
 		</p:column>
-		<p:column headerText="Comments">
-			<p:inputText style="width:90%;" value="#{c.comments}">
-				<p:ajax event="blur" />
-			</p:inputText>
+		<p:column headerText="Data" style="width:20%;">
+			<h:outputText value="-" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}"/>
+			<h:outputText value="#{c.data}" rendered="#{c['class'].simpleName == 'Constraint'}"/>
 		</p:column>
-		<p:column headerText="Action">
-			<p:commandButton value="Delete" actionListener="#{cc.attrs.bean.deleteConstraint(c.ipath)}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Delete Constraint"/>
+		<p:column headerText="Action" style="width:5%;">
+				<p:commandButton
+					actionListener="#{cc.attrs.bean.deleteConstraint(c.ipath)}"
+					update="#{cc.attrs.panelId}" icon="ui-icon-close"
+					title="Delete Constraint" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}" />
 		</p:column>
-	</p:dataTable>
+	</p:treeTable>
 </composite:implementation>
 
 </html>

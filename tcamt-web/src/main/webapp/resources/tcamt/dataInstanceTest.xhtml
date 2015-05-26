@@ -12,7 +12,8 @@
 </composite:interface>
 
 <composite:implementation>
-	<h:form id="DataInstanceTestForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="DataInstanceTestForm">
+		<p:growl id="growl_DataInstanceTest" showDetail="true" sticky="true" />
 		<p:accordionPanel widgetVar="DataInstanceTestPanel" activeIndex="#{sessionBeanTCAMT.ditActiveIndex}">
 			<p:tab id="DataInstanceTestPanel_List" title="Data Instance Test Plan List">
 				<table width="100%">
@@ -34,6 +35,10 @@
 					<p:column headerText="Description">
 						<h:outputText value="#{testplan.description}" />
 					</p:column>
+					
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{testplan.lastUpdateDate}" />
+					</p:column>
 
 					<p:column headerText="Version">
 						<h:outputText value="#{testplan.version}" />
@@ -45,6 +50,19 @@
 										update=":#{p:component('DataInstanceTestForm')}" icon="ui-icon-search"
 										title="Select Test Plan">
 								<f:attribute name="testplan" value="#{testplan}" />
+						</p:commandButton>
+						<p:commandButton value="Cloning"
+							actionListener="#{dataInstanceTestPlanRequestBean.cloneTestPlan}"
+							update=":#{p:component('DataInstanceTestForm')}" icon="ui-icon-plus"
+							title="Cloning">
+							<f:attribute name="testplan" value="#{testplan}" />
+						</p:commandButton>
+						<p:commandButton
+							value="Sharing" icon="ui-icon-transfer-e-w"
+							update=":#{p:component('shareDataInstanceTestPlanForm')}"
+							actionListener="#{dataInstanceTestPlanRequestBean.shareInit}"
+							oncomplete="PF('shareDataInstanceTestPlan').show();" >
+							<f:attribute name="testplan" value="#{testplan}" />
 						</p:commandButton>
 						<p:commandButton value="Export" ajax="false" actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan)}" icon="ui-icon-print">
 							<p:fileDownload value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
@@ -72,7 +90,7 @@
 							</tr>
 						</table>
     				</p:layoutUnit>
-   		 			<p:layoutUnit position="west" resizable="true" size="300" minSize="40" maxSize="500" style="border: 0;">
+   		 			<p:layoutUnit position="west" header="TestPlan Structure" resizable="true" size="300" minSize="40" maxSize="500" style="border: 0;" collapsible="true">
    		 				<p:tree id="testplanTree" value="#{dataInstanceTestPlanRequestBean.testplanRoot}" var="node" selectionMode="single" selection="#{dataInstanceTestPlanRequestBean.selectedNode}" dynamic="true" style="border-width:0;">                    
         					<p:ajax event="select" update=":#{p:component('DataInstanceTestForm')}" listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}" />
         					
@@ -90,15 +108,17 @@
         					</p:treeNode>
     					</p:tree>
     					<p:contextMenu for="testplanTree" nodeType="plan">
-        					<p:menuitem value="Add TestCaseGroup" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCaseGroup}" icon="ui-icon-plus" />
-        					<p:menuitem value="Add TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Add new TestCaseGroup" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCaseGroup}" icon="ui-icon-plus" />
+        					<p:menuitem value="Add new TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}" icon="ui-icon-plus"/>
     					</p:contextMenu>
     					<p:contextMenu for="testplanTree" nodeType="group">
-        					<p:menuitem value="Add TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}" icon="ui-icon-plus"/>
-        					<p:menuitem value="Delete TestCaseGroup" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCaseGroup}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Add new TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Clone TestCaseGroup" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.cloneTestCaseGroup}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Delete TestCaseGroup" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCaseGroup}" icon="ui-icon-minus"/>
     					</p:contextMenu>
     					<p:contextMenu for="testplanTree" nodeType="case">
-        					<p:menuitem value="Delete TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCase}" icon="ui-icon-plus"/>
+							<p:menuitem value="Clone TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.cloneTestCase}" icon="ui-icon-plus"/>
+        					<p:menuitem value="Delete TestCase" update=":#{p:component('DataInstanceTestForm')}" actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCase}" icon="ui-icon-minus"/>
     					</p:contextMenu>
     				</p:layoutUnit>
     				<p:layoutUnit id="dashboard" position="center" style="border: 0;">
@@ -115,6 +135,8 @@
                 						<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCase.description}" />
                 						<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 					</p:inplace>
+                					<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCase.version}" />
             					</h:panelGrid>
@@ -195,6 +217,11 @@
 												update=":#{p:component('DataInstanceTestForm')}" icon="ui-icon-search" title="Select Test Step">
 												<f:attribute name="teststep" value="#{teststep}" />
 											</p:commandButton>
+											<p:commandButton value="Update Profile" actionListener="#{dataInstanceTestPlanRequestBean.selectTestStep}"
+												update=":#{p:component('updateProfileDataInstanceTestForm')}" icon="ui-icon-pencil" title="Update Profile for Test Step"
+												oncomplete="PF('updateProfile').show();" >
+												<f:attribute name="teststep" value="#{teststep}" />
+											</p:commandButton>
 											<p:commandButton value="Delete" actionListener="#{dataInstanceTestPlanRequestBean.deleteTestStep}"
 												update=":#{p:component('DataInstanceTestForm')}" icon="ui-icon-close" title="Delete Test Step">
 												<f:attribute name="teststep" value="#{teststep}" />
@@ -207,31 +234,31 @@
                 								<h:outputText value="Test Story Desc: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryDescWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
         										</p:inplace>
         							
         										<h:outputText value="Comments: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryCommentsWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 								</p:inplace>
                 					
                 								<h:outputText value="Pre-Condition: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryPreConditionWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 								</p:inplace>
                 					
                 								<h:outputText value="Post-Condition: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryPostConditionWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 								</p:inplace>
                 					
                 								<h:outputText value="Test Objectives: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryTestObjectivesWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 								</p:inplace>
                 					
                 								<h:outputText value="Evaluation Criteria: " />
@@ -243,7 +270,7 @@
                 								<h:outputText value="Notes: " />
                 								<p:inplace editor="true" >
                 									<p:editor widgetVar="testStepStoryNotesWidget" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" style="width:100%;" />
-                									<p:ajax event="save" update=":#{p:component('iTestplanTree')}" />
+                									<p:ajax event="save" update=":#{p:component('testplanTree')}" />
                 								</p:inplace>
             								</h:panelGrid>
         								</p:tab>
@@ -269,7 +296,7 @@
 										</p:tab>
 										<p:tab title="List Contraints">
 											<p:scrollPanel style="width:100%;" mode="native">
-												<tcamt:constraintsTable bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dInstancePanel')}" constraints="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.tcamtConstraints}" />
+												<tcamt:constraintsTable bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dInstancePanel')}" />
 											</p:scrollPanel>
 										</p:tab>
 									</p:accordionPanel>								
@@ -289,6 +316,8 @@
                 						<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.description}" />
                 						<p:ajax event="save" update=":#{p:component('testplanTree')}" />
         							</p:inplace>
+        							<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.version}" />
             					</h:panelGrid>
@@ -307,6 +336,8 @@
                 						<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.description}" />
                 						<p:ajax event="save" update=":#{p:component('testplanTree')}" />
         							</p:inplace>
+        							<h:outputText value="Last Updated: " />
+                					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
                 					<h:outputText value="Version: " />
                 					<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.version}" />
                 					<h:outputText value="Author: " />
@@ -320,7 +351,7 @@
 
 		</p:accordionPanel>
 	</h:form>
-	<h:form id="dCreateTestStepForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="dCreateTestStepForm">
 		<p:dialog id="dCreateTestStepDialog" header="Create TestStep" widgetVar="dCreateTestStep">
 			<h:panelGrid columns="2" cellpadding="5">
 				<h:outputText value="Name: " />
@@ -343,6 +374,72 @@
 						<p:commandButton value="Create" icon="ui-icon-plus" update=":#{p:component('DataInstanceTestForm')}"
 							actionListener="#{dataInstanceTestPlanRequestBean.addTestStep}" onclick="PF('dCreateTestStep').hide();" />
 					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="shareDataInstanceTestPlanForm">
+		<p:dialog id="shareDataInstanceTestPlanDialog" header="Share TestPlan"
+			widgetVar="shareDataInstanceTestPlan">
+			<h:panelGrid id="shareDataInstanceTestPlanPanel" columns="2" cellpadding="5">
+				<h:outputText value="To: " />
+				
+				<p:selectOneMenu
+					value="#{dataInstanceTestPlanRequestBean.shareTo}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{userControl.users}" var="user" itemLabel="#{user.userId}" itemValue="#{user.id}" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton
+							value="Share" icon="ui-icon-plus"
+							update=":#{p:component('DataInstanceTestForm')}"
+							actionListener="#{dataInstanceTestPlanRequestBean.shareTestPlan}"
+							onclick="PF('shareDataInstanceTestPlan').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="updateProfileDataInstanceTestForm">
+		<p:dialog header="Update Profile" widgetVar="updateProfile">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name}" />
+				<h:outputText value="Description: " />
+				<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.description}" />
+
+				<h:outputText value="Update Profile: " />
+				<p:fileUpload
+						fileUploadListener="#{dataInstanceTestPlanRequestBean.updateProfile}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						
+				<h:outputText value="Update Constraints: " />
+				<p:fileUpload
+						fileUploadListener="#{dataInstanceTestPlanRequestBean.updateConstraints}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+				
+				<h:outputText value="Update ValueSet: " />
+				<p:fileUpload
+						fileUploadListener="#{dataInstanceTestPlanRequestBean.updateValueSet}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Apply"
+							icon="ui-icon-pencil" update=":#{p:component('DataInstanceTestForm')}"
+							actionListener="#{dataInstanceTestPlanRequestBean.profileUpdateMessage()}"
+							onclick="PF('updateProfile').hide();" /></td>
 				</tr>
 			</table>
 		</p:dialog>

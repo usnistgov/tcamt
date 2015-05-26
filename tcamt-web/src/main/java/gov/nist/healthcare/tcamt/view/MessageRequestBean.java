@@ -21,9 +21,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.io.IOUtils;
@@ -45,10 +47,11 @@ public class MessageRequestBean implements Serializable {
 	private TreeNode selectedSegmentTreeRoot;
 	
 	private Message editMessage;
-	private Message existMessage;
+//	private Message existMessage;
 	private InstanceSegment selectedInstanceSegment;
 	private TreeNode segmentTreeRoot;
 	private TreeNode messageTreeRoot;
+	private TreeNode constraintTreeRoot;
 	private List<InstanceSegment> instanceSegments;
 	private ManageInstance manageInstanceService;
 	private Long shareTo;
@@ -74,68 +77,88 @@ public class MessageRequestBean implements Serializable {
 		this.selectedNode = null;
 		this.editMessage = new Message();
 		this.setActiveIndexOfMessageInstancePanel(1);
-		this.existMessage = new Message();
 		this.selectedInstanceSegment = null;
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.messageTreeRoot = new DefaultTreeNode("root", null);
+		this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
 	}
 	
 	public void delMessage(ActionEvent event) {
+		String deletedMessageName = ((Message) event.getComponent().getAttributes().get("message")).getName();
 		this.sessionBeanTCAMT.getDbManager().messageDelete((Message) event.getComponent().getAttributes().get("message"));
 		this.sessionBeanTCAMT.updateMessages();
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Message Deleted.",  "Message: " + deletedMessageName + " has been created.") );
+		
 		this.init();
 	}
 	
-	public void cloneMessage(ActionEvent event) throws CloneNotSupportedException {	
+	public void cloneMessage(ActionEvent event) throws CloneNotSupportedException, IOException {	
 		Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
-		m.setId(0);
 		m.setName("Copy_" + m.getName());
 		m.setVersion(1);
-		m.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
-		
-		for(TCAMTConstraint c:m.getTcamtConstraints()){
-			c.setId(0);
-		}
-		
 		this.sessionBeanTCAMT.getDbManager().messageInsert(m);
 		this.sessionBeanTCAMT.updateMessages();
-		this.init();
+		
+		
+		this.editMessage = m;
+		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+		this.instanceSegments = new ArrayList<InstanceSegment>();
+		this.readHL7Message();
+		this.shareTo = null;
+		
+		this.setActiveIndexOfMessageInstancePanel(2);
+		this.sessionBeanTCAMT.setmActiveIndex(2);
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Message Cloned.",  "Message: " + this.editMessage.getName() + " has been created.") );
 	}
 	
 	public void createMessage() {
 		this.newMessage = new Message();
 	}
 	
-	public void addMessage() {
+	public void addMessage() throws CloneNotSupportedException, IOException {
 		this.newMessage.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
 		this.newMessage.setVersion(1);
 		this.sessionBeanTCAMT.getDbManager().messageInsert(this.newMessage);
 		this.sessionBeanTCAMT.updateMessages();
+		
+		this.editMessage = newMessage;
+		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+		this.instanceSegments = new ArrayList<InstanceSegment>();
+		this.readHL7Message();
+		this.shareTo = null;
+		
+		this.setActiveIndexOfMessageInstancePanel(2);
+		this.sessionBeanTCAMT.setmActiveIndex(2);
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Message Created.",  "Message: " + this.editMessage.getName() + " has been created.") );
+        
+        
 	}
 	
-	public void editMessage(){
-		this.editMessage.setVersion(this.editMessage.getVersion() + 1);
-		this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);;
-		this.sessionBeanTCAMT.updateMessages();
+	public void profileUpdateMessage() throws CloneNotSupportedException, IOException{
+		this.setActiveIndexOfMessageInstancePanel(1);
+		this.sessionBeanTCAMT.setmActiveIndex(2);
+		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+		this.instanceSegments = new ArrayList<InstanceSegment>();
+		this.readHL7Message();
+		
 	}
 
 	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException {
 		this.init();
-		this.existMessage = (Message) event.getComponent().getAttributes().get("message");
-		this.editMessage.setId(existMessage.getId());
-		this.editMessage.setName(existMessage.getName());
-		this.editMessage.setDescription(existMessage.getDescription());
-		this.editMessage.setVersion(existMessage.getVersion());
-		this.editMessage.setProfile(existMessage.getProfile());
-		this.editMessage.setMessageObj(existMessage.getMessageObj());
-		this.editMessage.setConstraints(existMessage.getConstraints());
-		this.editMessage.setValueSet(existMessage.getValueSet());
-		this.editMessage.setTcamtConstraints(existMessage.getTcamtConstraints());
-		this.editMessage.setHl7EndcodedMessage(existMessage.getHl7EndcodedMessage());
-		this.editMessage.setAuthor(existMessage.getAuthor());
+		this.editMessage = (Message) event.getComponent().getAttributes().get("message");
+		this.editMessage = this.sessionBeanTCAMT.getDbManager().getMessageById(this.editMessage.getId());
+		
 		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.readHL7Message();
 		this.shareTo = null;
@@ -148,7 +171,7 @@ public class MessageRequestBean implements Serializable {
 		if(m.getProfile() != null && m.getProfile().equals("") ){
 			if(m.getValueSet() != null && m.getValueSet().equals("") ){
 				if(m.getConstraints() != null && m.getConstraints().equals("") ){
-					this.manageInstanceService.loadMessage(this.newMessage);
+					this.manageInstanceService.loadMessage(m);
 				}
 			}
 		}
@@ -266,6 +289,9 @@ public class MessageRequestBean implements Serializable {
 		String ipath = null;
 		String data = null;
 		String level = "Message";
+		String iPosition = null;
+		String messageName = null;
+		String usageList = null;
 		TestDataCategorization tdc = null;
 		
 		if(model instanceof FieldModel){
@@ -273,45 +299,61 @@ public class MessageRequestBean implements Serializable {
 			ipath = fModel.getIpath();
 			data = fModel.getData();
 			tdc = fModel.getTdc();
+			iPosition = fModel.getiPositionPath();
+			messageName = fModel.getMessageName();
+			usageList = fModel.getUsageList();
 		}else if(model instanceof ComponentModel){
 			ComponentModel cModel = (ComponentModel)model;
 			ipath = cModel.getIpath();
 			data = cModel.getData();
 			tdc = cModel.getTdc();
+			iPosition = cModel.getiPositionPath();
+			messageName = cModel.getMessageName();
+			usageList = cModel.getUsageList();
 		}
-		
-		if(tdc == null || tdc.getValue().equals("")){
-			this.editMessage.deleteTCAMTConstraintByIPath(ipath);
-		}else{
+		this.editMessage.deleteTCAMTConstraintByIPath(ipath);
+		if(tdc != null && !tdc.getValue().equals("")){
 			TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
 			tcamtConstraint.setCategorization(tdc);
 			tcamtConstraint.setData(data);
 			tcamtConstraint.setIpath(ipath);
 			tcamtConstraint.setLevel(level);
+			tcamtConstraint.setiPosition(iPosition);
+			tcamtConstraint.setMessageName(messageName);
+			tcamtConstraint.setUsageList(usageList);
 			this.editMessage.addTCAMTConstraint(tcamtConstraint);
 		}
+		
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
 	}
 	
 	public void deleteConstraint(String ipath){
 		this.editMessage.deleteTCAMTConstraintByIPath(ipath);
 		this.selectedInstanceSegment = null;
+		this.segmentTreeRoot = new DefaultTreeNode("root", null);
+		
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
 	}
 
-	public void shareMessage() {
+	public void shareMessage() throws CloneNotSupportedException {
+		this.editMessage = this.editMessage.clone();
 		this.editMessage.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
-		this.editMessage.setId(0);
 		this.editMessage.setVersion(1);
-		
-		for(TCAMTConstraint c:editMessage.getTcamtConstraints()){
-			c.setId(0);
-		}
 		this.sessionBeanTCAMT.getDbManager().messageInsert(this.editMessage);
 		this.sessionBeanTCAMT.updateMessages();
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Message sharing.",  "Message: " + this.editMessage.getName() + " has been sented to " + this.editMessage.getAuthor().getUserId()) );
+        
+        this.init();
+        
+        this.sessionBeanTCAMT.setmActiveIndex(0);
 	}
 
 	public void saveMessage() {
 		if(this.editMessage != null && this.editMessage.getVersion() != null){
-			this.sessionBeanTCAMT.setmActiveIndex(0);
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Message Saved.",  "Message: " + this.editMessage.getName() + " has been saved.") );
 			this.editMessage.setVersion(this.editMessage.getVersion() + 1);
 			this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);
 			this.sessionBeanTCAMT.updateMessages();	
@@ -393,14 +435,6 @@ public class MessageRequestBean implements Serializable {
 		this.manageInstanceService = manageInstanceService;
 	}
 
-	public Message getExistMessage() {
-		return existMessage;
-	}
-
-	public void setExistMessage(Message existMessage) {
-		this.existMessage = existMessage;
-	}
-
 	public Message getEditMessage() {
 		return editMessage;
 	}
@@ -476,6 +510,14 @@ public class MessageRequestBean implements Serializable {
 
 	public List<Message> getMessages(){
 		return this.sessionBeanTCAMT.getMessages();
+	}
+
+	public TreeNode getConstraintTreeRoot() {
+		return constraintTreeRoot;
+	}
+
+	public void setConstraintTreeRoot(TreeNode constraintTreeRoot) {
+		this.constraintTreeRoot = constraintTreeRoot;
 	}
 	
 	

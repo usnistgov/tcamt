@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table
 public class User implements Serializable {
@@ -21,10 +23,11 @@ public class User implements Serializable {
     @GeneratedValue
 	private long id;
 	
-	
+	@JsonIgnore
 	@Column(nullable = false)
 	private String userId;
 	
+	@JsonIgnore
 	@Column(nullable = false)
 	private String password;
 	

@@ -12,12 +12,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table
-public class IsolatedTestCase implements Serializable{
+public class IsolatedTestCase implements Cloneable, Serializable{
 	/**
 	 * 
 	 */
@@ -29,6 +30,10 @@ public class IsolatedTestCase implements Serializable{
 	private String name;
 	private String description;
 	private Integer version;
+	
+	@ManyToOne
+    @JoinColumn(name="sut_actor_id")
+	private Actor sutActor;
 	
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
@@ -52,6 +57,10 @@ public class IsolatedTestCase implements Serializable{
 		this.name = name;
 	}
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
+		
 		return description;
 	}
 	public void setDescription(String description) {
@@ -78,6 +87,28 @@ public class IsolatedTestCase implements Serializable{
 	
 	public void addTestStep(IsolatedTestStep teststep){
 		this.teststeps.add(teststep);
-	} 
+	}
+	
+	public Actor getSutActor() {
+		return sutActor;
+	}
+	public void setSutActor(Actor sutActor) {
+		this.sutActor = sutActor;
+	}
+	
+	@Override
+	public IsolatedTestCase clone() throws CloneNotSupportedException {
+		IsolatedTestCase cloned = (IsolatedTestCase)super.clone();
+		cloned.setId(0);
+		
+		Set<IsolatedTestStep> cTeststeps = new HashSet<IsolatedTestStep>();
+		for(IsolatedTestStep teststep:this.teststeps){
+			cTeststeps.add(teststep.clone());
+		}
+		cloned.setTeststeps(cTeststeps);
+		cloned.setTestCaseStory((TestStory)testCaseStory.clone());
+		cloned.setSutActor(sutActor.clone());
+		return cloned;
+	}
 	
 }

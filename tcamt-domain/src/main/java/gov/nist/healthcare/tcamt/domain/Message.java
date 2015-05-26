@@ -3,8 +3,8 @@ package gov.nist.healthcare.tcamt.domain;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -40,11 +40,20 @@ public class Message implements Cloneable, Serializable{
 	private long id;
 	private String name;
 	private String description;
+	private String lastUpdateDate;
 	private Integer version;
-	
+
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String hl7EndcodedMessage;
+	
+	@JsonIgnore
+	@Column(columnDefinition="longtext")
+	private String xmlEncodedSTDMessage;
+	
+	@JsonIgnore
+	@Column(columnDefinition="longtext")
+	private String xmlEncodedNISTMessage;
 	
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
@@ -68,12 +77,12 @@ public class Message implements Cloneable, Serializable{
 	private User author;	
 	
 	@JsonIgnore
-	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "message_tcamtconstraint", joinColumns = {@JoinColumn(name="message_id")}, inverseJoinColumns = {@JoinColumn(name="tcamtConstraint_id")} )
-	private List<TCAMTConstraint> tcamtConstraints = new ArrayList<TCAMTConstraint>();
+	private Set<TCAMTConstraint> tcamtConstraints = new HashSet<TCAMTConstraint>();
 
 	public Message() {
-		this.tcamtConstraints = new ArrayList<TCAMTConstraint>();
+		this.tcamtConstraints = new HashSet<TCAMTConstraint>();
 	}
 
 	public long getId() {
@@ -109,9 +118,10 @@ public class Message implements Cloneable, Serializable{
 	}
 
 	@Override
-	public Object clone() throws CloneNotSupportedException {
+	public Message clone() throws CloneNotSupportedException {
 		Message cloned = (Message)super.clone();
-		List<TCAMTConstraint> cTcamtConstraints = new ArrayList<TCAMTConstraint>(); 
+		cloned.setId(0);
+		Set<TCAMTConstraint> cTcamtConstraints = new HashSet<TCAMTConstraint>(); 
 		for(TCAMTConstraint c:this.tcamtConstraints){
 			cTcamtConstraints.add(c.clone());
 		}
@@ -167,11 +177,11 @@ public class Message implements Cloneable, Serializable{
 		this.messageObj = messageObj;
 	}
 
-	public List<TCAMTConstraint> getTcamtConstraints() {
+	public Set<TCAMTConstraint> getTcamtConstraints() {
 		return tcamtConstraints;
 	}
 
-	public void setTcamtConstraints(List<TCAMTConstraint> tcamtConstraints) {
+	public void setTcamtConstraints(Set<TCAMTConstraint> tcamtConstraints) {
 		this.tcamtConstraints = tcamtConstraints;
 	}
 	
@@ -195,6 +205,30 @@ public class Message implements Cloneable, Serializable{
 			}
 		}
 		return null;
+	}
+	
+	public String getXmlEncodedSTDMessage() {
+		return xmlEncodedSTDMessage;
+	}
+
+	public void setXmlEncodedSTDMessage(String xmlEncodedSTDMessage) {
+		this.xmlEncodedSTDMessage = xmlEncodedSTDMessage;
+	}
+
+	public String getXmlEncodedNISTMessage() {
+		return xmlEncodedNISTMessage;
+	}
+
+	public void setXmlEncodedNISTMessage(String xmlEncodedNISTMessage) {
+		this.xmlEncodedNISTMessage = xmlEncodedNISTMessage;
+	}
+
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
 	}
 
 }

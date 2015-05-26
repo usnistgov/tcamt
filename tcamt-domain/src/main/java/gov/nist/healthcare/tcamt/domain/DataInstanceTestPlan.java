@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class DataInstanceTestPlan implements Serializable{
+public class DataInstanceTestPlan implements Cloneable, Serializable{
 
 	/**
 	 * 
@@ -29,14 +29,13 @@ public class DataInstanceTestPlan implements Serializable{
 	private long id;
 	private String name;
 	private String description;
+	private String lastUpdateDate;
 	private Integer version;
 	
-//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditc", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
 	
-//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditcg", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcasegroup_id")} )
 	private Set<DataInstanceTestCaseGroup> testcasegroups = new HashSet<DataInstanceTestCaseGroup>();
@@ -58,6 +57,9 @@ public class DataInstanceTestPlan implements Serializable{
 		this.name = name;
 	}
 	public String getDescription() {
+		if(description == null || description.equals("")){
+			this.description = "No Description";
+		}
 		return description;
 	}
 	public void setDescription(String description) {
@@ -97,7 +99,32 @@ public class DataInstanceTestPlan implements Serializable{
 		this.testcasegroups = testcasegroups;
 	}
 
-	
+	@Override
+	public DataInstanceTestPlan clone() throws CloneNotSupportedException {
+		DataInstanceTestPlan cloned = (DataInstanceTestPlan)super.clone();
+		cloned.setId(0);
+		cloned.setVersion(0);
+		
+		Set<DataInstanceTestCase> cTestcases = new HashSet<DataInstanceTestCase>();
+		for(DataInstanceTestCase testcase:this.testcases){
+			cTestcases.add(testcase.clone());
+		}
+		cloned.setTestcases(cTestcases);
+		
+		Set<DataInstanceTestCaseGroup> ctestcasegroups = new HashSet<DataInstanceTestCaseGroup>();
+		for(DataInstanceTestCaseGroup group:this.testcasegroups){
+			ctestcasegroups.add(group.clone());
+		}
+		cloned.setTestcasegroups(ctestcasegroups);
+		
+		return cloned;
+	}
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
 	
 	
 	

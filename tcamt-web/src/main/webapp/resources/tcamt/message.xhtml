@@ -13,7 +13,8 @@
 </composite:interface>
 
 <composite:implementation>
-	<h:form id="messageForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="messageForm">
+		<p:growl id="growl_Message" showDetail="true" sticky="true" />  
 		<p:remoteCommand name="ctrls" update="messageForm" actionListener="#{messageRequestBean.saveMessage}" />
 		<p:accordionPanel widgetVar="MessageLibPanel" activeIndex="#{sessionBeanTCAMT.mActiveIndex}">
 			<p:tab title="Message List">
@@ -26,7 +27,6 @@
 								oncomplete="PF('createMessage').show();" /></td>
 					</tr>
 				</table>
-
 				<p:dataTable id="messageList" var="message"
 					value="#{messageRequestBean.messages}">
 					<p:column headerText="Name">
@@ -36,19 +36,16 @@
 					<p:column headerText="Description">
 						<h:outputText value="#{message.description}" />
 					</p:column>
+					
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{message.lastUpdateDate}" />
+					</p:column>
 
 					<p:column headerText="Version">
 						<h:outputText value="#{message.version}" />
 					</p:column>
 
 					<p:column headerText="Action">
-						<p:commandButton value="Edit" icon="ui-icon-pencil"
-							update=":#{p:component('editMessageForm')}"
-							actionListener="#{messageRequestBean.selectEditMessage}"
-							oncomplete="PF('editMessage').show();">
-							<f:attribute name="message" value="#{message}" />
-						</p:commandButton>
-
 						<p:commandButton value="Select Message"
 							icon="ui-icon-search"
 							update=":#{p:component('messageForm')}"
@@ -225,13 +222,23 @@
 				<table width="100%">
 					<tr>
 						<td align="right">
-							<p:commandButton value="Save"
+							<p:commandButton value="Update Profile" icon="ui-icon-pencil"
+								update=":#{p:component('editMessageForm')}"
+								oncomplete="PF('editMessage').show();">
+							</p:commandButton>
+							<p:commandButton value="Save Message"
 								icon="ui-icon-disk"
 								update=":#{p:component('messageForm')}"
 								actionListener="#{messageRequestBean.saveMessage}"/>
 						</td>
 					</tr>
 				</table>
+				<h:panelGrid id="editMessagePanel" columns="2" cellpadding="5">
+					<h:outputText value="Name: " />
+					<p:inputText value="#{messageRequestBean.editMessage.name}" />
+					<h:outputText value="Description: " />
+					<p:inputText value="#{messageRequestBean.editMessage.description}" />
+				</h:panelGrid>
 				<p:accordionPanel id="mInstancePanel" widgetVar="MessageInstancePanel" activeIndex="#{messageRequestBean.activeIndexOfMessageInstancePanel}">
 					<p:tab title="HL7 Message Tree">
 						<tcamt:messageConstructor bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
@@ -245,15 +252,21 @@
 					<p:tab title="TestData of Selected Segment">
 						<tcamt:testDataOfSegment bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:tab>
+					<p:tab title="STD XML Encoded Message">
+						<tcamt:hl7XMLMessage xmlEncodedMessage="#{messageRequestBean.editMessage.xmlEncodedSTDMessage}"/>
+					</p:tab>
+					<p:tab title="NIST XML Encoded Message">
+						<tcamt:hl7XMLMessage xmlEncodedMessage="#{messageRequestBean.editMessage.xmlEncodedNISTMessage}"/>
+					</p:tab>
 					<p:tab title="List Contraints">
-						<tcamt:constraintsTable bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}" constraints="#{messageRequestBean.editMessage.tcamtConstraints}" />
+						<tcamt:constraintsTable bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}" />
 					</p:tab>
 				</p:accordionPanel>
 			</p:tab>
 		</p:accordionPanel>
 	</h:form>
 	
-	<h:form id="createMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="createMessageForm">
 		<p:dialog id="createMessageDialog" header="Create Message"
 			widgetVar="createMessage">
 			<h:panelGrid id="createMessagePanel1" columns="2" cellpadding="5">
@@ -301,7 +314,7 @@
 			<table width="100%">
 				<tr>
 					<td align="right"><p:commandButton value="Create"
-							icon="ui-icon-plus" update=":#{p:component('messageList')}"
+							icon="ui-icon-plus" update=":#{p:component('messageForm')}"
 							actionListener="#{messageRequestBean.addMessage}"
 							onclick="PF('createMessage').hide();" /></td>
 				</tr>
@@ -309,7 +322,7 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="shareMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
+	<h:form id="shareMessageForm">
 		<p:dialog id="shareMessageDialog" header="Share message"
 			widgetVar="shareMessage">
 			<h:panelGrid id="shareMessagePanel" columns="2" cellpadding="5">
@@ -328,7 +341,7 @@
 					<td align="right">
 						<p:commandButton
 							value="Share" icon="ui-icon-plus"
-							update=":#{p:component('messageList')}"
+							update=":#{p:component('messageForm')}"
 							actionListener="#{messageRequestBean.shareMessage}"
 							onclick="PF('shareMessage').hide();" />
 					</td>
@@ -337,31 +350,28 @@
 		</p:dialog>
 	</h:form>
 	
-	<h:form id="editMessageForm" onkeypress="if (event.keyCode == 13) { return false; }">
-		<p:dialog id="editMessageDialog" header="Edit Message"
+	<h:form id="editMessageForm">
+		<p:dialog id="editMessageDialog" header="Update Profile"
 			widgetVar="editMessage">
 			<h:panelGrid id="editMessagePanel" columns="2" cellpadding="5">
 				<h:outputText value="Name: " />
-				<p:inputText value="#{messageRequestBean.editMessage.name}" />
+				<h:outputText value="#{messageRequestBean.editMessage.name}" />
 				<h:outputText value="Description: " />
-				<p:inputText value="#{messageRequestBean.editMessage.description}" />
+				<h:outputText value="#{messageRequestBean.editMessage.description}" />
 
-				<h:inputHidden value="#{messageRequestBean.editMessage.id}" />
-				<h:inputHidden value="#{messageRequestBean.editMessage.version}" />
-					
-				<h:outputText value="Reload Profile: " />
+				<h:outputText value="Update Profile: " />
 				<p:fileUpload
 						fileUploadListener="#{messageRequestBean.updateProfile}"
 						mode="advanced"
 						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
 						
-				<h:outputText value="Reload Constraints: " />
+				<h:outputText value="Update Constraints: " />
 				<p:fileUpload
 						fileUploadListener="#{messageRequestBean.updateConstraints}"
 						mode="advanced"
 						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
 				
-				<h:outputText value="Reload ValueSet: " />
+				<h:outputText value="Update ValueSet: " />
 				<p:fileUpload
 						fileUploadListener="#{messageRequestBean.updateValueSet}"
 						mode="advanced"
@@ -371,8 +381,8 @@
 			<table width="100%">
 				<tr>
 					<td align="right"><p:commandButton value="Apply"
-							icon="ui-icon-pencil" update=":#{p:component('messageList')}"
-							actionListener="#{messageRequestBean.editMessage}"
+							icon="ui-icon-pencil" update=":#{p:component('messageForm')}"
+							actionListener="#{messageRequestBean.profileUpdateMessage()}"
 							onclick="PF('editMessage').hide();" /></td>
 				</tr>
 			</table>
