@@ -226,7 +226,7 @@
 												update=":#{p:component('IsolatedTestForm')}" icon="ui-icon-search" title="Select Test Step">
 												<f:attribute name="teststep" value="#{teststep}" />
 											</p:commandButton>
-											<p:commandButton value="Update Profile" actionListener="#{isolatedTestPlanRequestBean.selectTestStep}"
+											<p:commandButton value="Reload Profile" actionListener="#{isolatedTestPlanRequestBean.selectTestStep}"
 												update=":#{p:component('updateProfileIsolatedTestForm')}" icon="ui-icon-pencil" title="Update profile for Test Step"
 												oncomplete="PF('updateProfile').show();" >
 												<f:attribute name="teststep" value="#{teststep}" />

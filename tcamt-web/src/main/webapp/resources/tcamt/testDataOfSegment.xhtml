@@ -15,7 +15,18 @@
 </composite:interface>
 
 <composite:implementation>
-	<p:treeTable value="#{cc.attrs.bean.segmentTreeRoot}" var="model" resizableColumns="true"
+	<table width="100%">
+		<tr>
+			<td align="right">
+				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
+					<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
+            		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
+            		<f:selectItem itemLabel="All" itemValue="all" />
+        		</p:selectOneButton>
+			</td>
+		</tr>
+	</table>
+	<p:treeTable value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true"
 		rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
 	
 			<!-- rowStyleClass="#{model.occurrence lt 0 or model.occurrence == 0? 'zeroOccurRow' : (model.node.usage == 'X' ? 'xUsageRow' : 
@@ -27,7 +38,7 @@
 			<h:outputText value="#{model.node.name}" />
 		</p:column>
 		<p:column headerText="DT" style="width:8%; text-align: center;">
-			<h:outputText value="#{model.node.datatype.label}" />
+			<h:outputText value="#{model.datatype.label}" />
 		</p:column>
 		<p:column headerText="Usage" style="width:7%; text-align: center;">
 			<h:outputText value="#{model.node.usage}" />
@@ -48,17 +59,17 @@
 				value="#{model.node.maxLength}]" />
 		</p:column>
 		<p:column headerText="Value Set" style="width:10%; text-align: center;">
-			<h:outputText value="#{model.node.table.mappingId}" />
+			<h:outputText value="#{model.table.mappingId}" />
 		</p:column>
 		
 		<p:column headerText="Test Data" style="width:7%; text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
-			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.node.table == null}"  style="width:90%;" value="#{model.data}">
+			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  style="width:90%;" value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:inputText>
-			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.node.table != null}">
+			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItems value="#{model.node.table.codes}" var="code" itemLabel="#{code.code}" itemValue="#{code.code}" />
+				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.code}" itemValue="#{code.code}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 				<p:ajax event="change" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:selectOneMenu>
@@ -73,6 +84,8 @@
 				<f:selectItem itemLabel="System Generated" itemValue="SystemGenerated" />
 				<f:selectItem itemLabel="Test Case Proper" itemValue="TestCaseProper" />
 				<f:selectItem itemLabel="Not-Valued" itemValue="NotValued" />
+				<f:selectItem itemLabel="Profile Fixed" itemValue="ProfileFixed" />
+				<f:selectItem itemLabel="Profile Fixed List" itemValue="ProfileFixedList" />
 				<f:selectItem itemLabel="Test Case Fixed" itemValue="TestCaseFixed" />
 				<f:selectItem itemLabel="Test Case Fixed - List" itemValue="TestCaseFixedList" />
 				<f:selectItem itemLabel="Test Case Fixed - Length" itemValue="TestCaseFixedLength" />

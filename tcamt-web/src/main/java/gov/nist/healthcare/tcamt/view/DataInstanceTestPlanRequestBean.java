@@ -1,6 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.core.hl7.v2.parser.ParserException;
 import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
@@ -75,21 +74,28 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestCase selectedTestCase = null;
 	private DataInstanceTestStep selectedTestStep = null;
 	private DataInstanceTestCaseGroup selectedTestCaseGroup = null;
-	private DataInstanceTestStep newTestStep = new DataInstanceTestStep();
 	private Long messageId = null;
-	private Long shareTo;
+	private Long shareTo = null;
 	private int activeIndexOfMessageInstancePanel = 0;
 	
-	private TreeNode testplanRoot;
-    private TreeNode selectedNode;
+	private TreeNode testplanRoot = new DefaultTreeNode("root", null);
+    private TreeNode selectedNode = null;
     
-    private TreeNode segmentTreeRoot;
-	private TreeNode messageTreeRoot;
-	private TreeNode constraintTreeRoot;
+    private TreeNode segmentTreeRoot = new DefaultTreeNode("root", null);
+	private TreeNode messageTreeRoot = new DefaultTreeNode("root", null);
+	private TreeNode constraintTreeRoot = new DefaultTreeNode("root", null);
     
     private InstanceSegment selectedInstanceSegment= null;
-	private List<InstanceSegment> instanceSegments;
-	private ManageInstance manageInstanceService;
+	private List<InstanceSegment> instanceSegments = new ArrayList<InstanceSegment>();
+	
+	
+	private String usageViewOption = "partial";
+	private String usageViewOption2 = "partial";
+	private List<InstanceSegment> filteredInstanceSegments =  new ArrayList<InstanceSegment>();
+	private TreeNode filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+	
+	
+	private ManageInstance manageInstanceService = new ManageInstance();
 	
 	private transient StreamedContent zipResourceBundleFile;
 	
@@ -106,6 +112,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedTestCaseGroup = null;
 		this.messageId = null;
 		this.shareTo = null;
+		this.selectedNode = null;
 		
 		this.selectedInstanceSegment = null;
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
@@ -115,6 +122,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.manageInstanceService = new ManageInstance();
 		this.sessionBeanTCAMT.setDitActiveIndex(0);
 		this.setActiveIndexOfMessageInstancePanel(2);
+		
+		this.usageViewOption = "partial";
+		this.usageViewOption2 = "partial";
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+		
 	}
 	
 	public void shareInit(ActionEvent event){
@@ -190,11 +203,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			TreeNode groupNode = new DefaultTreeNode("group", ditcg, testplanNode);
 			groupNode.setExpanded(true);
 			for(DataInstanceTestCase ditc:ditcg.getTestcases()){
-				new DefaultTreeNode("case", ditc, groupNode);
+				TreeNode caseNode = new DefaultTreeNode("case", ditc, groupNode);
+				caseNode.setExpanded(true);
+				for(DataInstanceTestStep dits:ditc.getTeststeps()){
+					new DefaultTreeNode("step", dits, caseNode);
+				}
 			}
 		}
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
-			new DefaultTreeNode("case", ditc, testplanNode);
+			TreeNode caseNode = new DefaultTreeNode("case", ditc, testplanNode);
+			caseNode.setExpanded(true);
+			for(DataInstanceTestStep dits:ditc.getTeststeps()){
+				new DefaultTreeNode("step", dits, caseNode);
+			}
 		}
 	}
 
@@ -261,18 +282,32 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}else if(event.getTreeNode().getData() instanceof DataInstanceTestCase){
 			this.selectedTestCase = (DataInstanceTestCase)event.getTreeNode().getData();
 			this.selectedTestCaseGroup = null;
-			this.selectedTestStep = null;
-			
-			this.messageTreeRoot = new DefaultTreeNode("root", null);
-			this.segmentTreeRoot = new DefaultTreeNode("root", null);
-			this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
-			
+			this.selectedTestStep = null;	
 		}else if(event.getTreeNode().getData() instanceof DataInstanceTestCaseGroup){
 			this.selectedTestCase = null;
 			this.selectedTestStep = null;
 			this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getData();
+		}else if(event.getTreeNode().getData() instanceof DataInstanceTestStep){
+			this.selectedTestStep = (DataInstanceTestStep)event.getTreeNode().getData();
+			this.selectedTestCase = null;
+			this.selectedTestCaseGroup = null;
+
+			this.selectTestStep();
+			
+			this.activeIndexOfMessageInstancePanel = 0;
 		}
+		
+		this.clearSelectNode(this.testplanRoot);
+		event.getTreeNode().setSelected(true);
     }
+	
+	private void clearSelectNode(TreeNode node){
+		node.setSelected(false);
+		
+		for(TreeNode child:node.getChildren()){
+			clearSelectNode(child);
+		}
+	}
 	
 	public void deleteTestCase(ActionEvent event) {
 		if(this.selectedNode != null){
@@ -294,6 +329,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}else if(parentNode.getData() instanceof DataInstanceTestCaseGroup){
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)parentNode.getData();
+				this.selectedTestCaseGroup.getTestcases().remove(this.selectedNode.getData());
 				this.selectedTestStep = null;
 			}
 			this.selectedNode = parentNode;
@@ -313,8 +349,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestStep = null;
 			
 			for(DataInstanceTestCase testcase:group.getTestcases()){
-				testcase.setName("Copyed_" + testcase.getName());
-				new DefaultTreeNode("case", testcase, this.selectedNode);
+				TreeNode caseNode = new DefaultTreeNode("case", testcase, this.selectedNode);
+				caseNode.setExpanded(true);
+				for(DataInstanceTestStep step:testcase.getTeststeps()){
+					new DefaultTreeNode("step", step, caseNode);
+				}
 			}
 			
 			this.selectedNode.setExpanded(true);
@@ -329,6 +368,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			testcase.setName("Copyed_" + testcase.getName());
 			this.selectedNode.setSelected(false);
 			this.selectedNode = new DefaultTreeNode("case", testcase, this.selectedNode.getParent());
+			this.selectedNode.setExpanded(true);
+			for(DataInstanceTestStep step:testcase.getTeststeps()){
+				new DefaultTreeNode("step", step, this.selectedNode);
+			}
+			
 			
 			this.selectedTestCase = testcase;
 			this.selectedTestCaseGroup = null;
@@ -378,30 +422,41 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments);
 			this.selectedInstanceSegment = null;
 		}
-		this.activeIndexOfMessageInstancePanel = 3;
+		this.activeIndexOfMessageInstancePanel = 4;
+		this.updateFilteredInstanceSegments();
 	}
 	
 	public void onInstanceSegmentSelect(SelectEvent event){
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.selectedTestStep.getMessage());
-		this.activeIndexOfMessageInstancePanel = 4;
+		this.activeIndexOfMessageInstancePanel = 5;
+		this.updateFilteredSegmentTree();
 	}
 	
 	public void genrateHL7Message() throws CloneNotSupportedException, IOException{
-		this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot));
+		this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot,  this.selectedTestStep.getMessage()));
 		this.readHL7Message();
 	}
 	
-	public void createTestStep() {
-		this.setNewTestStep(new DataInstanceTestStep());
-		this.setMessageId(null);
-	}
-	
-	public void addTestStep() throws CloneNotSupportedException{
-		Message m = this.sessionBeanTCAMT.getDbManager().getMessageById(this.messageId).clone();
-		m.setAuthor(null);
-		this.newTestStep.setMessage(m);
-		this.selectedTestCase.addTestStep(this.newTestStep);
+	public void addTestStep(ActionEvent event) throws CloneNotSupportedException, IOException{
+		if(this.selectedNode != null){
+			this.selectedTestCase = (DataInstanceTestCase)this.selectedNode.getData();
+			DataInstanceTestStep newTestStep = new DataInstanceTestStep();
+			newTestStep.setName("New Test Step");
+			this.selectedTestCase.addTestStep(newTestStep);
+		
+			this.selectedNode.setSelected(false);
+			this.selectedNode.setExpanded(true);
+			this.selectedNode = new DefaultTreeNode("step", newTestStep, this.selectedNode);
+			this.selectedNode.setSelected(true);
+			this.selectedTestCase = null;
+			this.selectedTestCaseGroup = null;
+			this.selectedTestStep = newTestStep;
+			
+			this.selectTestStep();
+			this.activeIndexOfMessageInstancePanel = 0;
+		}
+		
 	}
 	
 	public void deleteTestStep(ActionEvent event) {
@@ -409,8 +464,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedTestStep = null;
 	}
 	
-	public void selectTestStep(ActionEvent event) throws CloneNotSupportedException, IOException, ParserException {
-		this.selectedTestStep = (DataInstanceTestStep)event.getComponent().getAttributes().get("teststep");
+	private void selectTestStep() throws CloneNotSupportedException, IOException {
 		this.selectedTestCaseGroup = null;
 		
 		this.selectedInstanceSegment = new InstanceSegment();
@@ -418,6 +472,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
+		this.filteredInstanceSegments =  new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
 		
 		if(this.selectedTestStep.getMessage() != null){
@@ -432,7 +487,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.selectedTestStep.getMessage());
 		this.readHL7Message();
 		this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
-		this.activeIndexOfMessageInstancePanel = 4;
+		this.activeIndexOfMessageInstancePanel = 5;
 	}
 	
 	public void addNode(){
@@ -445,7 +500,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
 		TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
 		
-		this.manageInstanceService.populateTreeNode(newNode);
+		this.manageInstanceService.populateTreeNode(newNode,  this.selectedTestStep.getMessage());
 		
 		parent.getChildren().add(position + 1, newNode);
 	}
@@ -721,6 +776,41 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
 	}
 	
+	public void updateFilteredInstanceSegments() {
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		
+		if(this.usageViewOption.equals("all")){
+			this.filteredInstanceSegments = this.instanceSegments;
+		}else{
+			for(InstanceSegment is:this.instanceSegments){
+				String[] usageList = is.getUsageList().split("-");
+				boolean usageCheck = true;
+				
+	        	for(String u:usageList){
+	        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+	        			usageCheck = false;
+	        		}
+	        	}
+	        	
+	        	if(usageCheck) this.filteredInstanceSegments.add(is);
+			}
+		}     
+    }
+	
+	public void updateFilteredSegmentTree(){	
+		if(this.usageViewOption2.equals("all")){
+			this.filtedSegmentTreeRoot = this.segmentTreeRoot;
+		}else {
+			this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+		}
+		
+	}
+	
+	public void addRepeatedField(FieldModel fieldModel){
+		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
+		this.updateFilteredSegmentTree();
+	}
+	
 
 	public List<DataInstanceTestPlan> getTestPlans() {
 		return this.sessionBeanTCAMT.getDataInstanceTestPlans();
@@ -901,17 +991,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedTestStep = selectedTestStep;
 	}
 
-
-	public DataInstanceTestStep getNewTestStep() {
-		return newTestStep;
-	}
-
-
-	public void setNewTestStep(DataInstanceTestStep newTestStep) {
-		this.newTestStep = newTestStep;
-	}
-
-
 	public Long getShareTo() {
 		return shareTo;
 	}
@@ -927,6 +1006,38 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setConstraintTreeRoot(TreeNode constraintTreeRoot) {
 		this.constraintTreeRoot = constraintTreeRoot;
+	}
+
+	public List<InstanceSegment> getFilteredInstanceSegments() {
+		return filteredInstanceSegments;
+	}
+
+	public void setFilteredInstanceSegments(List<InstanceSegment> filteredInstanceSegments) {
+		this.filteredInstanceSegments = filteredInstanceSegments;
+	}
+
+	public String getUsageViewOption() {
+		return usageViewOption;
+	}
+
+	public void setUsageViewOption(String usageViewOption) {
+		this.usageViewOption = usageViewOption;
+	}
+
+	public String getUsageViewOption2() {
+		return usageViewOption2;
+	}
+
+	public void setUsageViewOption2(String usageViewOption2) {
+		this.usageViewOption2 = usageViewOption2;
+	}
+
+	public TreeNode getFiltedSegmentTreeRoot() {
+		return filtedSegmentTreeRoot;
+	}
+
+	public void setFiltedSegmentTreeRoot(TreeNode filtedSegmentTreeRoot) {
+		this.filtedSegmentTreeRoot = filtedSegmentTreeRoot;
 	}
 	
 	

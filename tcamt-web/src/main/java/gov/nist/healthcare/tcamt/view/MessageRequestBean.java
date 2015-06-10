@@ -12,9 +12,12 @@ import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -47,7 +50,6 @@ public class MessageRequestBean implements Serializable {
 	private TreeNode selectedSegmentTreeRoot;
 	
 	private Message editMessage;
-//	private Message existMessage;
 	private InstanceSegment selectedInstanceSegment;
 	private TreeNode segmentTreeRoot;
 	private TreeNode messageTreeRoot;
@@ -55,6 +57,11 @@ public class MessageRequestBean implements Serializable {
 	private List<InstanceSegment> instanceSegments;
 	private ManageInstance manageInstanceService;
 	private Long shareTo;
+	
+	private String usageViewOption;
+	private String usageViewOption2;
+	private List<InstanceSegment> filteredInstanceSegments;
+	private TreeNode filtedSegmentTreeRoot;
 	
 	private TreeNode selectedNode;
 	
@@ -83,6 +90,11 @@ public class MessageRequestBean implements Serializable {
 		this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
+		this.usageViewOption = "partial";
+		this.usageViewOption2 = "partial";
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+		
 	}
 	
 	public void delMessage(ActionEvent event) {
@@ -207,18 +219,17 @@ public class MessageRequestBean implements Serializable {
 		this.readProfile(this.editMessage);
 	}
 	
-	private void travelSegment(Segment s, String path, TreeNode parentNode) {
+	private void travelSegment(Profile p, Segment s, String path, TreeNode parentNode) {
 		List<Field> fields = s.getFields();
 		for (Field f : fields) {
-			travelField(f, path, parentNode);
+			travelField(p, f, path, parentNode);
 		}
 	}
 	
-	private void travelField(Field f, String path, TreeNode parentNode) {
+	private void travelField(Profile p, Field f, String path, TreeNode parentNode) {
 		path = path + "." + f.getPosition();
 		String segmentRootName = path.split("\\.")[0];
-		
-		Datatype dt = f.getDatatype();	
+		Datatype dt = p.getDatatypes().findOne(f.getDatatype());	
 		List<Component> components = dt.getComponents();
 		boolean isLeafNode = false;
 		
@@ -231,10 +242,10 @@ public class MessageRequestBean implements Serializable {
 		TreeNode treeNode = new DefaultTreeNode(segmentTreeModel,  parentNode);
 
 	
-		travelDT(dt, path, treeNode);
+		travelDT(p, dt, path, treeNode);
 	}
 
-	private void travelDT(Datatype dt, String path, TreeNode parentNode) {
+	private void travelDT(Profile p, Datatype dt, String path, TreeNode parentNode) {
 		List<Component> components = dt.getComponents();
 		if (components == null) {
 		} else {
@@ -242,7 +253,7 @@ public class MessageRequestBean implements Serializable {
 				String newPath = path + "." + c.getPosition();
 				String segmentRootName = newPath.split("\\.")[0];
 				
-				Datatype childdt = c.getDatatype();	
+				Datatype childdt = p.getDatatypes().findOne(c.getDatatype());	
 				List<Component> childComponents = childdt.getComponents();
 				boolean isLeafNode = false;
 				
@@ -253,7 +264,7 @@ public class MessageRequestBean implements Serializable {
 				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, c.getName(), c, newPath, newPath, null, null, null, isLeafNode, 1);
 				TreeNode treeNode = (TreeNode) new DefaultTreeNode(segmentTreeModel, (org.primefaces.model.TreeNode) parentNode);
 
-				travelDT(c.getDatatype(), newPath, treeNode);
+				travelDT(p, childdt, newPath, treeNode);
 			}
 		}
 
@@ -262,18 +273,25 @@ public class MessageRequestBean implements Serializable {
 	public void onNodeSelect(NodeSelectEvent event) {
 		SegmentRefOrGroup segmentRefOrGroup = (SegmentRefOrGroup)((MessageTreeModel) event.getTreeNode().getData()).getNode();
 
+		ProfileSerialization ps = new ProfileSerializationImpl();
+		Profile p = ps.deserializeXMLToProfile(this.editMessage.getProfile(), this.editMessage.getValueSet(), this.editMessage.getConstraints());
+		
 		if (segmentRefOrGroup != null) {
 			this.selectedSegmentTreeRoot = (TreeNode) new DefaultTreeNode("root", null);
 			
 			if(segmentRefOrGroup instanceof SegmentRef){
 				SegmentRef segmentRef = (SegmentRef)segmentRefOrGroup;
-				this.travelSegment(segmentRef.getRef(), segmentRef.getRef().getName(), selectedSegmentTreeRoot);	
+				
+				
+				this.travelSegment(p, p.getSegments().findOne(segmentRef.getRef()), p.getSegments().findOne(segmentRef.getRef()).getName(), selectedSegmentTreeRoot);	
 			}
 		}
 	}
 
 	public void delInstanceSegment(ActionEvent event) throws CloneNotSupportedException, IOException {
-		int rowIndex = (Integer)event.getComponent().getAttributes().get("rowIndex");
+		InstanceSegment toBeDeletedInstanceSegment = (InstanceSegment)event.getComponent().getAttributes().get("instanceSegment");
+		
+		int rowIndex = this.instanceSegments.indexOf(toBeDeletedInstanceSegment);
 		String[] lines = this.editMessage.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		String editedHl7EndcodedMessage = "";
 		for(int i=0; i<lines.length;i++){
@@ -371,6 +389,9 @@ public class MessageRequestBean implements Serializable {
 	public void onInstanceSegmentSelect(SelectEvent event){
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.editMessage);
+		
+		this.updateFilteredSegmentTree();
+		
 		this.activeIndexOfMessageInstancePanel = 3;
 	}
 	
@@ -381,10 +402,12 @@ public class MessageRequestBean implements Serializable {
 			this.selectedInstanceSegment = null;
 		}
 		this.activeIndexOfMessageInstancePanel = 2;
+		this.updateFilteredInstanceSegments();
 	}
 	
 	public void addRepeatedField(FieldModel fieldModel){
-		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot);
+		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.editMessage);
+		this.updateFilteredSegmentTree();
 	}
 	
 	public void addNode(){
@@ -397,15 +420,46 @@ public class MessageRequestBean implements Serializable {
 		MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
 		TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
 		
-		this.manageInstanceService.populateTreeNode(newNode);
+		this.manageInstanceService.populateTreeNode(newNode, this.editMessage);
 		
 		parent.getChildren().add(position + 1, newNode);
 	}
 
 	public void genrateHL7Message() throws CloneNotSupportedException, IOException{
-		this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot));
+		this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot, this.editMessage));
 		this.readHL7Message();
 	}
+	
+	public void updateFilteredInstanceSegments() {
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		
+		if(this.usageViewOption.equals("all")){
+			this.filteredInstanceSegments = this.instanceSegments;
+		}else{
+			for(InstanceSegment is:this.instanceSegments){
+				String[] usageList = is.getUsageList().split("-");
+				boolean usageCheck = true;
+				
+	        	for(String u:usageList){
+	        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+	        			usageCheck = false;
+	        		}
+	        	}
+	        	
+	        	if(usageCheck) this.filteredInstanceSegments.add(is);
+			}
+		}     
+    }
+	
+	public void updateFilteredSegmentTree(){	
+		if(this.usageViewOption2.equals("all")){
+			this.filtedSegmentTreeRoot = this.segmentTreeRoot;
+		}else {
+			this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+		}
+		
+	}
+	
 	/**
 	 * 
 	 */
@@ -518,6 +572,38 @@ public class MessageRequestBean implements Serializable {
 
 	public void setConstraintTreeRoot(TreeNode constraintTreeRoot) {
 		this.constraintTreeRoot = constraintTreeRoot;
+	}
+
+	public String getUsageViewOption() {
+		return usageViewOption;
+	}
+
+	public void setUsageViewOption(String usageViewOption) {
+		this.usageViewOption = usageViewOption;
+	}
+
+	public List<InstanceSegment> getFilteredInstanceSegments() {
+		return filteredInstanceSegments;
+	}
+
+	public void setFilteredInstanceSegments(List<InstanceSegment> filteredInstanceSegments) {
+		this.filteredInstanceSegments = filteredInstanceSegments;
+	}
+
+	public String getUsageViewOption2() {
+		return usageViewOption2;
+	}
+
+	public void setUsageViewOption2(String usageViewOption2) {
+		this.usageViewOption2 = usageViewOption2;
+	}
+
+	public TreeNode getFiltedSegmentTreeRoot() {
+		return filtedSegmentTreeRoot;
+	}
+
+	public void setFiltedSegmentTreeRoot(TreeNode filtedSegmentTreeRoot) {
+		this.filtedSegmentTreeRoot = filtedSegmentTreeRoot;
 	}
 	
 	

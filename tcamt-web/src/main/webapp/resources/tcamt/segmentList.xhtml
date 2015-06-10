@@ -15,20 +15,36 @@
 </composite:interface>
 
 <composite:implementation>
-	<p:dataTable var="instanceSegment" value="#{cc.attrs.bean.instanceSegments}"
+    <table width="100%">
+		<tr>
+			<td align="right">
+				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption}">
+					<p:ajax listener="#{cc.attrs.bean.updateFilteredInstanceSegments}" update="#{cc.attrs.panelId}" />
+            		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
+            		<f:selectItem itemLabel="All" itemValue="all" />
+        		</p:selectOneButton>
+			</td>
+		</tr>
+	</table>
+	<p:dataTable
+		var="instanceSegment"
+		widgetVar="instanceSegmentTable"
+		value="#{cc.attrs.bean.filteredInstanceSegments}"
 		rowIndexVar="rowIndex"
 		selection="#{cc.attrs.bean.selectedInstanceSegment}"
-		selectionMode="single" rowKey="#{instanceSegment.ipath}">
+		selectionMode="single" rowKey="#{instanceSegment.ipath}"
+		emptyMessage="No segment found">
+		
 		<p:ajax event="rowSelect" listener="#{cc.attrs.bean.onInstanceSegmentSelect}" update="#{cc.attrs.panelId}" />
 		<p:column headerText="Path">
 			<h:outputText value="#{instanceSegment.ipath}" />
 		</p:column>
-		<p:column headerText="Usage">
+		<p:column headerText="Usage" filterFunction="#{cc.attrs.bean.filterByUsageList}">
 			<h:outputText value="#{instanceSegment.usageList}" />
 		</p:column>
 		<p:column headerText="Action">
 			<p:commandButton value="Del Segment" actionListener="#{cc.attrs.bean.delInstanceSegment}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Del">
-				<f:attribute name="rowIndex" value="#{rowIndex}" />
+				<f:attribute name="instanceSegment" value="#{instanceSegment}" />
 			</p:commandButton>
 		</p:column>
 	</p:dataTable>

@@ -72,6 +72,18 @@ public class Message implements Cloneable, Serializable{
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj;
 	
 	@JsonIgnore
+	@Transient
+	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments segments;
+	
+	@JsonIgnore
+	@Transient
+	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes datatypes;
+	
+	@JsonIgnore
+	@Transient
+	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables;
+	
+	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name="author_id")
 	private User author;	
@@ -230,5 +242,34 @@ public class Message implements Cloneable, Serializable{
 	public void setLastUpdateDate(String lastUpdateDate) {
 		this.lastUpdateDate = lastUpdateDate;
 	}
+
+	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments getSegments() {
+		return segments;
+	}
+
+	public void setSegments(
+			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments segments) {
+		this.segments = segments;
+	}
+
+	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes getDatatypes() {
+		return datatypes;
+	}
+
+	public void setDatatypes(
+			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes datatypes) {
+		this.datatypes = datatypes;
+	}
+
+	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables getTables() {
+		return tables;
+	}
+
+	public void setTables(
+			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables) {
+		this.tables = tables;
+	}
+	
+	
 
 }

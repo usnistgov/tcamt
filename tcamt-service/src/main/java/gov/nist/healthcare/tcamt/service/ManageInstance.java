@@ -9,12 +9,14 @@ import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
@@ -53,6 +55,9 @@ public class ManageInstance  implements Serializable{
 		
 		if(mp != null){
 			m.setMessageObj(mp);
+			m.setSegments(p.getSegments());
+			m.setDatatypes(p.getDatatypes());
+			m.setTables(p.getTables());
 			List<SegmentRefOrGroup> segmentRefOrGroups = mp.getChildren();
 			String path = m.getName();
 			if (path == null || path.equals("")) {
@@ -81,11 +86,12 @@ public class ManageInstance  implements Serializable{
 		
 		if(sg instanceof SegmentRef){
 			SegmentRef segment = (SegmentRef)sg;
-			path = path + "." + segment.getRef().getName();
+			String segmentName = m.getSegments().findOne(segment.getRef()).getName();
+			path = path + "." + segmentName;
 			String messageId = path.split("\\.")[0];
 			String messagePath = path.replace(messageId + ".", "");
 			
-			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId, segment.getRef().getName(), sg, messagePath, sg.getMin());
+			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId, segmentName, sg, messagePath, sg.getMin());
 			new DefaultTreeNode(sg.getMax(), messageTreeModel, parentTreeNode);		
 		}else if(sg instanceof Group){
 			Group group = (Group)sg;
@@ -102,17 +108,18 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 	
-	private void generateMessageStructure(SegmentRefOrGroup srog, Group parentGroup, String messageStructID, Map<String,SegmentRef> messageStrucutreMap, Map<String,String> usageMap, String usageList, Map<String,String> positionPathMap, String postionPath){
+	private void generateMessageStructure(Message m, SegmentRefOrGroup srog, Group parentGroup, String messageStructID, Map<String,SegmentRef> messageStrucutreMap, Map<String,String> usageMap, String usageList, Map<String,String> positionPathMap, String postionPath){
 		if(srog instanceof SegmentRef){
 			SegmentRef sr = (SegmentRef)srog;
+			String segmentName = m.getSegments().findOne(sr.getRef()).getName();
 			if(parentGroup == null){
-				messageStrucutreMap.put(sr.getRef().getName(), sr);
-				usageMap.put(sr.getRef().getName(), sr.getUsage().name());
-				positionPathMap.put(sr.getRef().getName(), "" + sr.getPosition());
+				messageStrucutreMap.put(segmentName, sr);
+				usageMap.put(segmentName, sr.getUsage().name());
+				positionPathMap.put(segmentName, "" + sr.getPosition());
 			}else{
-				messageStrucutreMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), sr);
-				usageMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), usageList + "-" + sr.getUsage().name());
-				positionPathMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + sr.getRef().getName(), postionPath + "." + sr.getPosition());
+				messageStrucutreMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + segmentName, sr);
+				usageMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + segmentName, usageList + "-" + sr.getUsage().name());
+				positionPathMap.put(parentGroup.getName().replace(messageStructID + ".", "") + "." + segmentName, postionPath + "." + sr.getPosition());
 			}
 		}else if(srog instanceof Group){
 			Group gr = (Group)srog;			
@@ -126,13 +133,13 @@ public class ManageInstance  implements Serializable{
 					childUsageList = usageList + "-" + gr.getUsage().name();
 					childPositionPath = postionPath + "." + gr.getPosition();
 				}
-				this.generateMessageStructure(child, gr, messageStructID, messageStrucutreMap, usageMap, childUsageList, positionPathMap, childPositionPath);
+				this.generateMessageStructure(m, child, gr, messageStructID, messageStrucutreMap, usageMap, childUsageList, positionPathMap, childPositionPath);
 			}
 		}
 		
 	}
 
-	public void loadMessageInstance(Message m, List<InstanceSegment> instanceSegments) {
+	public void loadMessageInstance(Message m, List<InstanceSegment> instanceSegments) {		
 		List<String> ipathList = new ArrayList<String>();
 		List<String> pathList = new ArrayList<String>();
 		List<String> iPositionPathList = new ArrayList<String>();
@@ -140,7 +147,7 @@ public class ManageInstance  implements Serializable{
 		Map<String,String> usageMap = new LinkedHashMap<String,String>();
 		Map<String,String> positionPathMap = new LinkedHashMap<String,String>();
 		for(SegmentRefOrGroup srog:m.getMessageObj().getChildren()){
-			this.generateMessageStructure(srog, null, m.getMessageObj().getStructID(), messageStrucutreMap, usageMap, "", positionPathMap, "");
+			this.generateMessageStructure(m, srog, null, m.getMessageObj().getStructID(), messageStrucutreMap, usageMap, "", positionPathMap, "");
 		}
 		String[] lines = m.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
 		List<String> adjustedMessage = new ArrayList<String>();
@@ -241,7 +248,7 @@ public class ManageInstance  implements Serializable{
 
 	public void genSegmentTree(TreeNode segmentTreeRoot,InstanceSegment selectedInstanceSegment, Message m) {
 		String segmentStr = selectedInstanceSegment.getLineStr();
-		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = selectedInstanceSegment.getSegmentRef().getRef();
+		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = m.getSegments().findOne(selectedInstanceSegment.getSegmentRef().getRef());
 		
 		
 		
@@ -266,67 +273,80 @@ public class ManageInstance  implements Serializable{
 					String iPositionPath = selectedInstanceSegment.getiPositionPath() + "." + (i+1) + "[" + (j+1) + "]";
 					String usageList = selectedInstanceSegment.getUsageList() + "-" + segment.getFields().get(i).getUsage().name();
 					
-					if(segment.getFields().get(i).getDatatype().getComponents().size() > 0){
-						FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false);
+					Field field = segment.getFields().get(i);
+					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
+					Table fieldTable = m.getTables().findOne(field.getTable());
+					
+					if(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().size() > 0){
+						FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, field, fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false, fieldDT, fieldTable);
 						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						
 						String[] componentStr = fieldStr[j].split("\\^");
 						
-						for(int k=0;k<segment.getFields().get(i).getDatatype().getComponents().size();k++){
+						for(int k=0;k<m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().size();k++){
 							String componentPath = path + "." + (k + 1);
 							String componentIPath = iPath + "." + (k+1) + "[1]";
 							String componentIPositionPath = iPositionPath + "." + (k+1) + "[1]";
-							String componentUsageList = usageList + "-" + segment.getFields().get(i).getDatatype().getComponents().get(k).getUsage().name();
+							String componentUsageList = usageList + "-" + m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getUsage().name();
+							
+							Component component = m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k);
+							Datatype componentDT = m.getDatatypes().findOne(component.getDatatype());
+							Table componentTable = m.getTables().findOne(component.getTable());
+							
 							TreeNode componentTreeNode;
 							String[] subComponentStr;
 							if(k >= componentStr.length){
-								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), false);
+								if(m.getDatatypes().findOne(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getDatatype()).getComponents().size() > 0){
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, component , "", m.findTCAMTConstraintByIPath(componentIPath), false, componentDT, componentTable);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};	
 								}else{
-									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), "", m.findTCAMTConstraintByIPath(componentIPath), true);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, component, "", m.findTCAMTConstraintByIPath(componentIPath), true, componentDT, componentTable);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[]{""};
 								}
 								
 								
 							}else{
-								if(segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size() > 0){
-									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), false);
+								if(m.getDatatypes().findOne(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getDatatype()).getComponents().size() > 0){
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, component, componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), false, componentDT, componentTable);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");
 								}else{
-									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k), componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), true);
+									ComponentModel componentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, component, componentStr[k], m.findTCAMTConstraintByIPath(componentIPath), true, componentDT, componentTable);
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k].split("\\&");	
 								}
 								
 							}
 							
-							for(int l=0;l<segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().size();l++){
+							for(int l=0;l<m.getDatatypes().findOne(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getDatatype()).getComponents().size();l++){
 								String subComponentPath = componentPath + "." + (l + 1);
 								String subComponentIPath = componentIPath + "." + (l+1) + "[1]";
-								String subComponentUsageList = componentUsageList + "-" + segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l).getUsage().name();
+								String subComponentUsageList = componentUsageList + "-" + m.getDatatypes().findOne(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getDatatype()).getComponents().get(l).getUsage().name();
 								String subComponentIPositionPath = componentIPositionPath + "." + (l+1) + "[1]";
+								
+								Component subComponent = m.getDatatypes().findOne(m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()).getComponents().get(k).getDatatype()).getComponents().get(l);
+								Datatype subComponentDT = m.getDatatypes().findOne(subComponent.getDatatype());
+								Table subComponentTable = m.getTables().findOne(subComponent.getTable());
 								if(l >= subComponentStr.length){
-									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), "", m.findTCAMTConstraintByIPath(subComponentIPath), true);
+									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, subComponent, "", m.findTCAMTConstraintByIPath(subComponentIPath), true, subComponentDT, subComponentTable);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}else{
-									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, segment.getFields().get(i).getDatatype().getComponents().get(k).getDatatype().getComponents().get(l), subComponentStr[l], m.findTCAMTConstraintByIPath(subComponentIPath), true);
+									ComponentModel subComponentModel = new ComponentModel(selectedInstanceSegment.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, subComponent, subComponentStr[l], m.findTCAMTConstraintByIPath(subComponentIPath), true, subComponentDT, subComponentTable);
 									new DefaultTreeNode(subComponentModel, componentTreeNode);
 								}
 							}
 						}
 					}else{
 						if(path.equals("MSH.1")){
-							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "|", m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "|", m.findTCAMTConstraintByIPath(iPath), true, fieldDT, fieldTable);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else if(path.equals("MSH.2")){
-							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "^" + "~" + "\\" + "&", m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), "^" + "~" + "\\" + "&", m.findTCAMTConstraintByIPath(iPath), true, fieldDT, fieldTable);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}else {
-							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), true);
+							FieldModel fieldModel = new FieldModel(selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, segment.getFields().get(i), fieldStr[j], m.findTCAMTConstraintByIPath(iPath), true, fieldDT, fieldTable);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);	
 						}
 					}
@@ -408,7 +428,7 @@ public class ManageInstance  implements Serializable{
 		
 	}
 	
-	public void addRepeatedField(FieldModel fieldModel, TreeNode segmentTreeRoot){
+	public void addRepeatedField(FieldModel fieldModel, TreeNode segmentTreeRoot, Message m){
 		String path = fieldModel.getPath();
 		int count = 0;
 		int position = 0;
@@ -424,33 +444,37 @@ public class ManageInstance  implements Serializable{
 		String iPositionPath = fieldModel.getiPositionPath().substring(0,fieldModel.getiPositionPath().length()-3) + "[" + (count + 1) + "]";
 		
 		
-		FieldModel repeatedFieldModel = new FieldModel(fieldModel.getMessageName(), path, iPath, iPositionPath, fieldModel.getUsageList(), fieldModel.getNode(), "", null, fieldModel.isLeafNode());
+		FieldModel repeatedFieldModel = new FieldModel(fieldModel.getMessageName(), path, iPath, iPositionPath, fieldModel.getUsageList(), fieldModel.getNode(), "", null, fieldModel.isLeafNode(), fieldModel.getDatatype(), fieldModel.getTable());
 		TreeNode addedField = new DefaultTreeNode(repeatedFieldModel, segmentTreeRoot);
 		
 		if(!fieldModel.isLeafNode()){
-			for(int i=0;i<fieldModel.getNode().getDatatype().getComponents().size();i++){
-				gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component c = fieldModel.getNode().getDatatype().getComponents().get(i);
+			for(int i=0;i<m.getDatatypes().findOne(fieldModel.getNode().getDatatype()).getComponents().size();i++){
+				Component c = m.getDatatypes().findOne(fieldModel.getNode().getDatatype()).getComponents().get(i);
+				Datatype cDT = m.getDatatypes().findOne(c.getDatatype());
+				Table cTable = m.getTables().findOne(c.getTable());
 				String componentPath = path + "." + (i+1);
 				String componentIPath = iPath + "." + (i+1) + "[1]";
 				String componentIPositionPath = iPositionPath + "." + (i+1) + "[1]";
 				String componentUsageList = fieldModel.getUsageList() + "-" + c.getUsage().name();
 				
-				if(c.getDatatype().getComponents().size() > 0){
-					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList ,c, "", null, false);	
+				if(m.getDatatypes().findOne(c.getDatatype()).getComponents().size() > 0){
+					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList ,c, "", null, false, cDT, cTable);	
 					TreeNode addedComponent = new DefaultTreeNode(repatedComponentModel, addedField);
 					
-					for(int j=0;j<repatedComponentModel.getNode().getDatatype().getComponents().size();j++){
-						gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component sc = repatedComponentModel.getNode().getDatatype().getComponents().get(j);
+					for(int j=0;j<m.getDatatypes().findOne(repatedComponentModel.getNode().getDatatype()).getComponents().size();j++){
+						Component sc = m.getDatatypes().findOne(repatedComponentModel.getNode().getDatatype()).getComponents().get(j);
+						Datatype scDT = m.getDatatypes().findOne(sc.getDatatype());
+						Table scTable = m.getTables().findOne(sc.getTable());
 						String subComponentPath = componentPath + "." + (j+1);
 						String subComponentIPath = componentIPath + "." + (j+1) + "[1]";
 						String subComponentIPositionPath = componentIPositionPath + "." + (j+1) + "[1]";
 						String subComponentUsageList = componentUsageList + "-" + sc.getUsage().name();
 						
-						ComponentModel repatedSubComponentModel = new ComponentModel(fieldModel.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, sc, "", null, true);
+						ComponentModel repatedSubComponentModel = new ComponentModel(fieldModel.getMessageName(), subComponentPath, subComponentIPath, subComponentIPositionPath, subComponentUsageList, sc, "", null, true, scDT, scTable);
 						new DefaultTreeNode(repatedSubComponentModel, addedComponent);
 					}
 				}else {
-					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, c, "", null, true);
+					ComponentModel repatedComponentModel = new ComponentModel(fieldModel.getMessageName(), componentPath, componentIPath, componentIPositionPath, componentUsageList, c, "", null, true, cDT, cTable);	
 					new DefaultTreeNode(repatedComponentModel, addedField);
 				}
 				
@@ -489,7 +513,7 @@ public class ManageInstance  implements Serializable{
 		return result;
 	}
 
-	public void populateTreeNode(TreeNode parent) {
+	public void populateTreeNode(TreeNode parent, Message m) {
 		MessageTreeModel model = (MessageTreeModel)parent.getData();
 		Object n = model.getNode();
 		
@@ -501,9 +525,10 @@ public class ManageInstance  implements Serializable{
 			for(SegmentRefOrGroup child:g.getChildren()){
 				if(child instanceof SegmentRef){
 					SegmentRef segmentRef = (SegmentRef)child;
-					String path = model.getPath() + "." + segmentRef.getRef().getName();
+					String segmentName = m.getSegments().findOne(segmentRef.getRef()).getName();
+					String path = model.getPath() + "." + m.getSegments().findOne(segmentRef.getRef()).getName();
 					
-					MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(), segmentRef.getRef().getName(), segmentRef, path, 0);	
+					MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(), segmentName, segmentRef, path, 0);	
 					
 					new DefaultTreeNode(segmentRef.getMax(), newModel, parent);
 				}else{
@@ -513,35 +538,35 @@ public class ManageInstance  implements Serializable{
 					String messagePath = path.replace(messageId + ".", "");
 					MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(), group.getName(), group, messagePath, 0);	
 					TreeNode childNode = new DefaultTreeNode(group.getMax(), newModel, parent);
-					this.populateTreeNode(childNode);
+					this.populateTreeNode(childNode, m);
 				}
 			}
 		}
 		
 	}
 
-	public String generateHL7Message(TreeNode messageTreeRoot) {
-		
+	public String generateHL7Message(TreeNode messageTreeRoot, Message m) {		
 		String message = "MSH|" + "^" + "~" + "\\" + "&" + "|" + System.getProperty("line.separator");
 		for(TreeNode child:messageTreeRoot.getChildren()){
-			message = this.travel(child, message);
+			message = this.travel(m, child, message);
 		}
 		
 		return message;
 	}
 
-	private String travel(TreeNode node, String message) {
+	private String travel(Message m, TreeNode node, String message) {
 		MessageTreeModel model = (MessageTreeModel)node.getData();
 		
 		if(model.getNode() instanceof SegmentRef){
 			SegmentRef segmentRef = (SegmentRef)model.getNode();
-			if(!segmentRef.getRef().getName().equals("MSH")){
-				if(!segmentRef.getMax().equals("0")) message =  message + segmentRef.getRef().getName() + "|" + System.getProperty("line.separator");
+			String segmentName = m.getSegments().findOne(segmentRef.getRef()).getName();
+			if(!segmentName.equals("MSH")){
+				if(!segmentRef.getMax().equals("0")) message =  message + segmentName + "|" + System.getProperty("line.separator");
 			}
 			return message;
 		}else{
 			for(TreeNode child:node.getChildren()){
-				message = this.travel(child, message);	
+				message = this.travel(m, child, message);	
 			}
 		}
 
@@ -593,8 +618,9 @@ public class ManageInstance  implements Serializable{
 		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 		
 		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", "Test Case");
 		elmReference.setAttribute("GeneratedBy", "TCAMT");
-		elmReference.setAttribute("Path", iPath);
+		elmReference.setAttribute("ReferencePath", iPath);
 		elmReference.setAttribute("TestDataCategorization", tdc);
 		elmConstraint.appendChild(elmReference);
 		
@@ -617,8 +643,9 @@ public class ManageInstance  implements Serializable{
 		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 		
 		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", "Test Case");
 		elmReference.setAttribute("GeneratedBy", "TCAMT");
-		elmReference.setAttribute("Path", iPath);
+		elmReference.setAttribute("ReferencePath", iPath);
 		elmReference.setAttribute("TestDataCategorization", tdc);
 		elmConstraint.appendChild(elmReference);
 		
@@ -653,8 +680,9 @@ public class ManageInstance  implements Serializable{
 				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 				
 				Element elmReference = parent.getOwnerDocument().createElement("Reference");
+				elmReference.setAttribute("Source", "Test Case");
 				elmReference.setAttribute("GeneratedBy", "TCAMT");
-				elmReference.setAttribute("Path", iPath);
+				elmReference.setAttribute("ReferencePath", iPath);
 				elmReference.setAttribute("TestDataCategorization", tdc);
 				elmConstraint.appendChild(elmReference);
 				
@@ -673,9 +701,9 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 
-	private void generateXMLFromMesageInstance(Message message, List<InstanceSegment> instanceSegments, boolean isSTD) {
-		try {
-			String messageName = message.getMessageObj().getStructID();
+	private void generateXMLFromMesageInstance(Message m, List<InstanceSegment> instanceSegments, boolean isSTD) {
+		try {			
+			String messageName = m.getMessageObj().getStructID();
 			org.w3c.dom.Document xmlHL7MessageInstanceDom = XMLManager.stringToDom("<" + messageName + "/>");
 			Element rootElm = (Element)xmlHL7MessageInstanceDom.getElementsByTagName(messageName).item(0);
 			
@@ -688,7 +716,7 @@ public class ManageInstance  implements Serializable{
 				String[] iPathList = instanceSegment.getIpath().split("\\.");
 				if(iPathList.length == 1){
 					Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPathList[0].substring(0, iPathList[0].lastIndexOf("[")));
-					if(isSTD) this.generateSegment(segmentElm, instanceSegment);
+					if(isSTD) this.generateSegment(m, segmentElm, instanceSegment);
 					else this.generateNISTSegment(segmentElm, instanceSegment);
 					rootElm.appendChild(segmentElm);
 				}else {
@@ -698,7 +726,7 @@ public class ManageInstance  implements Serializable{
 						String iPath = iPathList[i];
 						if(i==iPathList.length - 1){
 							Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPath.substring(0, iPath.lastIndexOf("[")));
-							if(isSTD) this.generateSegment(segmentElm, instanceSegment);
+							if(isSTD) this.generateSegment(m, segmentElm, instanceSegment);
 							else this.generateNISTSegment(segmentElm, instanceSegment);
 							parentElm.appendChild(segmentElm);
 						}else {
@@ -720,8 +748,8 @@ public class ManageInstance  implements Serializable{
 				
 			}
 			
-			if(isSTD) message.setXmlEncodedSTDMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
-			else message.setXmlEncodedNISTMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
+			if(isSTD) m.setXmlEncodedSTDMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
+			else m.setXmlEncodedNISTMessage(XMLManager.docToString(xmlHL7MessageInstanceDom));
 		} catch (SAXException e) {
 			e.printStackTrace();
 		} catch (ParserConfigurationException e) {
@@ -795,10 +823,10 @@ public class ManageInstance  implements Serializable{
 		}
 	}
 
-	private void generateSegment(Element segmentElm, InstanceSegment instanceSegment) {
+	private void generateSegment(Message m, Element segmentElm, InstanceSegment instanceSegment) {
 		String lineStr = instanceSegment.getLineStr();
 		String segmentName = lineStr.substring(0,3);
-		Segment segment = instanceSegment.getSegmentRef().getRef();
+		Segment segment = m.getSegments().findOne(instanceSegment.getSegmentRef().getRef());
 		
 		String variesDT = "";
 		
@@ -828,7 +856,7 @@ public class ManageInstance  implements Serializable{
 						if(i<segment.getFields().size()){
 							Field field = segment.getFields().get(i);
 							Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + field.getPosition());
-							if(field.getDatatype().getComponents() == null || field.getDatatype().getComponents().size() == 0 ){
+							if(m.getDatatypes().findOne(field.getDatatype()).getComponents() == null || m.getDatatypes().findOne(field.getDatatype()).getComponents().size() == 0 ){
 								if(lineStr.startsWith("OBX")){
 									if(field.getPosition().equals(2)){
 										variesDT = fieldStr;
@@ -852,19 +880,19 @@ public class ManageInstance  implements Serializable{
 								}
 							}else{
 								String[] componentStrs = fieldStr.split("\\^");
-								String componentDataTypeName = field.getDatatype().getName();
+								String componentDataTypeName = m.getDatatypes().findOne(field.getDatatype()).getName();
 								for(int j=0; j < componentStrs.length; j++){
-									if(j < field.getDatatype().getComponents().size()){
-										Component component = field.getDatatype().getComponents().get(j);
+									if(j < m.getDatatypes().findOne(field.getDatatype()).getComponents().size()){
+										Component component = m.getDatatypes().findOne(field.getDatatype()).getComponents().get(j);
 										String componentStr = componentStrs[j];
 										if(componentStr!=null && !componentStr.equals("")){
 											Element componentElm = segmentElm.getOwnerDocument().createElement(componentDataTypeName + "." + (j+1));
-											if(component.getDatatype().getComponents() == null || component.getDatatype().getComponents().size() == 0 ){
+											if(m.getDatatypes().findOne(component.getDatatype()).getComponents() == null || m.getDatatypes().findOne(component.getDatatype()).getComponents().size() == 0 ){
 												Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
 												componentElm.appendChild(value);
 											}else{
 												String[] subComponentStrs = componentStr.split("\\&");
-												String subComponentDataTypeName = component.getDatatype().getName();
+												String subComponentDataTypeName = m.getDatatypes().findOne(component.getDatatype()).getName();
 												
 												for(int k=0; k < subComponentStrs.length; k++){
 													String subComponentStr = subComponentStrs[k];
@@ -970,6 +998,44 @@ public class ManageInstance  implements Serializable{
 				new DefaultTreeNode(c, parent);
 			}
 		}
+		
+	}
+
+	public TreeNode genRestrictedTree(TreeNode segmentTreeRoot) {
+		TreeNode result = new DefaultTreeNode("root", null);
+		
+		for(TreeNode fieldTN:segmentTreeRoot.getChildren()){
+			FieldModel fm = (FieldModel)fieldTN.getData();
+			
+			String[] usageList = fm.getUsageList().split("-");
+			boolean usageCheck = true;
+			
+        	for(String u:usageList){
+        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+        			usageCheck = false;
+        		}
+        	}
+        	
+        	if(usageCheck) {
+        		TreeNode fieldNode = new DefaultTreeNode(fm, result);
+        		
+        		for(TreeNode componentTN:fieldTN.getChildren()){
+        			ComponentModel cm = (ComponentModel)componentTN.getData();
+        			if(cm.getNode().getUsage().value().equals("R") || cm.getNode().getUsage().value().equals("RE") || cm.getNode().getUsage().value().equals("C")){
+        				TreeNode compomnentNode = new DefaultTreeNode(cm, fieldNode);
+        				for(TreeNode subComponentTN:componentTN.getChildren()){
+        					ComponentModel scm = (ComponentModel)subComponentTN.getData();
+        					if(scm.getNode().getUsage().value().equals("R") || scm.getNode().getUsage().value().equals("RE") || scm.getNode().getUsage().value().equals("C")){
+        						new DefaultTreeNode(scm, compomnentNode);
+        					}
+        				}
+        				
+        			}
+        		}
+        	}
+		}
+		
+		return result;
 		
 	}
 }

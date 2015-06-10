@@ -77,16 +77,16 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	private int activeIndexOfMessageInstancePanel = 0;
 	
 	
-	private TreeNode testplanRoot;
-    private TreeNode selectedNode;
+	private TreeNode testplanRoot = new DefaultTreeNode("root", null);
+    private TreeNode selectedNode = null;
   
-    private TreeNode segmentTreeRoot;
-	private TreeNode messageTreeRoot;
-	private TreeNode constraintTreeRoot;
+    private TreeNode segmentTreeRoot = new DefaultTreeNode("root", null);
+	private TreeNode messageTreeRoot = new DefaultTreeNode("root", null);
+	private TreeNode constraintTreeRoot = new DefaultTreeNode("root", null);
     
     private InstanceSegment selectedInstanceSegment= null;
-	private List<InstanceSegment> instanceSegments;
-	private ManageInstance manageInstanceService;
+	private List<InstanceSegment> instanceSegments = new ArrayList<InstanceSegment>();
+	private ManageInstance manageInstanceService  = new ManageInstance();
 	
 	private transient StreamedContent zipResourceBundleFile;
 	
@@ -94,10 +94,15 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 	private Long sActorId = null;
 	private Long rActorId = null;
 	private Long messageId = null;
-	private Long shareTo;
+	private Long shareTo = null;
 	
 	private TestStoryConverter testStoryConverter;
 	private IsolatedTestPlanConverter tpConverter;
+	
+	private String usageViewOption ="partial";
+	private String usageViewOption2 ="partial";
+	private List<InstanceSegment> filteredInstanceSegments = new ArrayList<InstanceSegment>();
+	private TreeNode filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
 	
 	
 	private void init(){
@@ -120,11 +125,21 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		setrActorId(null);
 		setMessageId(null);
 		this.shareTo = null;
+		this.selectedNode = null;
+		
 		
 		this.sessionBeanTCAMT.setItActiveIndex(0);
 		this.setActiveIndexOfMessageInstancePanel(2);
+		
+		this.usageViewOption = "partial";
+		this.usageViewOption2 = "partial";
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+		
 	}
 	
+
+
 	public void shareInit(ActionEvent event){
 		this.shareTo = null;
 		this.selectedTestPlan = (IsolatedTestPlan) event.getComponent().getAttributes().get("testplan");
@@ -388,16 +403,18 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 			this.selectedInstanceSegment = null;
 		}
 		this.activeIndexOfMessageInstancePanel = 3;
+		this.updateFilteredInstanceSegments();
 	}
 	
 	public void onInstanceSegmentSelect(SelectEvent event){
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.selectedTestStep.getMessage());
 		this.activeIndexOfMessageInstancePanel = 4;
+		this.updateFilteredSegmentTree();
 	}
 	
 	public void genrateHL7Message() throws CloneNotSupportedException, IOException{
-		this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot));
+		this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot,  this.selectedTestStep.getMessage()));
 		this.readHL7Message();
 	}
 	
@@ -460,7 +477,7 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
 		TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
 		
-		this.manageInstanceService.populateTreeNode(newNode);
+		this.manageInstanceService.populateTreeNode(newNode,  this.selectedTestStep.getMessage());
 		
 		parent.getChildren().add(position + 1, newNode);
 	}
@@ -736,6 +753,41 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 		this.selectedInstanceSegment = null;
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
 	}
+	
+	public void updateFilteredInstanceSegments() {
+		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+		
+		if(this.usageViewOption.equals("all")){
+			this.filteredInstanceSegments = this.instanceSegments;
+		}else{
+			for(InstanceSegment is:this.instanceSegments){
+				String[] usageList = is.getUsageList().split("-");
+				boolean usageCheck = true;
+				
+	        	for(String u:usageList){
+	        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+	        			usageCheck = false;
+	        		}
+	        	}
+	        	
+	        	if(usageCheck) this.filteredInstanceSegments.add(is);
+			}
+		}     
+    }
+	
+	public void updateFilteredSegmentTree(){	
+		if(this.usageViewOption2.equals("all")){
+			this.filtedSegmentTreeRoot = this.segmentTreeRoot;
+		}else {
+			this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+		}
+		
+	}
+	
+	public void addRepeatedField(FieldModel fieldModel){
+		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
+		this.updateFilteredSegmentTree();
+	}
 
 	public List<IsolatedTestPlan> getTestPlans() {
 		return this.sessionBeanTCAMT.getIsolatedTestPlans();
@@ -956,6 +1008,38 @@ public class IsolatedTestPlanRequestBean implements Serializable {
 
 	public void setConstraintTreeRoot(TreeNode constraintTreeRoot) {
 		this.constraintTreeRoot = constraintTreeRoot;
+	}
+
+	public List<InstanceSegment> getFilteredInstanceSegments() {
+		return filteredInstanceSegments;
+	}
+
+	public void setFilteredInstanceSegments(List<InstanceSegment> filteredInstanceSegments) {
+		this.filteredInstanceSegments = filteredInstanceSegments;
+	}
+
+	public String getUsageViewOption() {
+		return usageViewOption;
+	}
+
+	public void setUsageViewOption(String usageViewOption) {
+		this.usageViewOption = usageViewOption;
+	}
+
+	public String getUsageViewOption2() {
+		return usageViewOption2;
+	}
+
+	public void setUsageViewOption2(String usageViewOption2) {
+		this.usageViewOption2 = usageViewOption2;
+	}
+
+	public TreeNode getFiltedSegmentTreeRoot() {
+		return filtedSegmentTreeRoot;
+	}
+
+	public void setFiltedSegmentTreeRoot(TreeNode filtedSegmentTreeRoot) {
+		this.filtedSegmentTreeRoot = filtedSegmentTreeRoot;
 	}
 	
 	

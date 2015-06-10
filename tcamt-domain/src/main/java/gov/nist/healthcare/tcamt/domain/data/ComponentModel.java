@@ -1,6 +1,8 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
 
 import java.io.Serializable;
 
@@ -16,13 +18,15 @@ public class ComponentModel implements Serializable{
 	private String usageList;
 	private Component node;
 	private String data;
+	private Datatype datatype;
+	private Table table;
 	private TestDataCategorization tdc;
 	private boolean isLeafNode;
 	
 	
 	
 	public ComponentModel(String messageName, String path, String ipath, String iPositionPath, String usageList, Component node, String data,
-			TestDataCategorization tdc, boolean isLeafNode) {
+			TestDataCategorization tdc, boolean isLeafNode, Datatype datatype, Table table) {
 		super();
 		this.messageName = messageName;
 		this.path = path;
@@ -33,6 +37,8 @@ public class ComponentModel implements Serializable{
 		this.data = data;
 		this.tdc = tdc;
 		this.isLeafNode = isLeafNode;
+		this.table = table;
+		this.datatype = datatype;
 	}
 	
 	
@@ -119,6 +125,26 @@ public class ComponentModel implements Serializable{
 
 	public void setMessageName(String messageName) {
 		this.messageName = messageName;
+	}
+
+
+	public Datatype getDatatype() {
+		return datatype;
+	}
+
+
+	public void setDatatype(Datatype datatype) {
+		this.datatype = datatype;
+	}
+
+
+	public Table getTable() {
+		return table;
+	}
+
+
+	public void setTable(Table table) {
+		this.table = table;
 	}
 	
 }

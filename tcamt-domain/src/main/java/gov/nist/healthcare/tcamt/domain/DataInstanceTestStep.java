@@ -46,7 +46,6 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 
 	public DataInstanceTestStep() {
 		super();
-		this.message = new Message();
 	}
 
 	public long getId() {
@@ -106,8 +105,12 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 	public DataInstanceTestStep clone() throws CloneNotSupportedException {
 		DataInstanceTestStep cloned = (DataInstanceTestStep)super.clone();
 		cloned.setId(0);
-		Message cMessage = this.message.clone();
-		cloned.setMessage(cMessage);
+		if(this.message == null){
+			cloned.setMessage(null);
+		}else{
+			Message cMessage = this.message.clone();
+			cloned.setMessage(cMessage);
+		}
 		cloned.setTestStepStory((TestStory)testStepStory.clone());
 		
 		return cloned;
