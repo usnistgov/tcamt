@@ -39,7 +39,10 @@ public class Message implements Cloneable, Serializable{
     @GeneratedValue
 	private long id;
 	private String name;
-	private String description;
+	
+	
+	@Column(columnDefinition="longtext")
+	private String longDescription;
 	private String lastUpdateDate;
 	private Integer version;
 
@@ -56,16 +59,9 @@ public class Message implements Cloneable, Serializable{
 	private String xmlEncodedNISTMessage;
 	
 	@JsonIgnore
-	@Column(columnDefinition="longtext")
-	private String profile;
-	
-	@JsonIgnore
-	@Column(columnDefinition="longtext")
-	private String constraints;
-	
-	@JsonIgnore 
-	@Column(columnDefinition="longtext")
-	private String valueSet;
+	@ManyToOne
+    @JoinColumn(name="conformance_profile_id")
+	private ConformanceProfile conformanceProfile;
 	
 	@JsonIgnore
 	@Transient
@@ -113,14 +109,16 @@ public class Message implements Cloneable, Serializable{
 		this.name = name;
 	}
 
-	public String getDescription() {
-		return description;
+	
+	
+	public String getLongDescription() {
+		return longDescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
-	
+
 	public Integer getVersion() {
 		return version;
 	}
@@ -155,30 +153,6 @@ public class Message implements Cloneable, Serializable{
 
 	public void setAuthor(User author) {
 		this.author = author;
-	}
-
-	public String getProfile() {
-		return profile;
-	}
-
-	public void setProfile(String profile) {
-		this.profile = profile;
-	}
-
-	public String getConstraints() {
-		return constraints;
-	}
-
-	public void setConstraints(String constraints) {
-		this.constraints = constraints;
-	}
-
-	public String getValueSet() {
-		return valueSet;
-	}
-
-	public void setValueSet(String valueSet) {
-		this.valueSet = valueSet;
 	}
 
 	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message getMessageObj() {
@@ -269,7 +243,13 @@ public class Message implements Cloneable, Serializable{
 			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables) {
 		this.tables = tables;
 	}
-	
-	
 
+	public ConformanceProfile getConformanceProfile() {
+		return conformanceProfile;
+	}
+
+	public void setConformanceProfile(ConformanceProfile conformanceProfile) {
+		this.conformanceProfile = conformanceProfile;
+	}
+	
 }

@@ -1,10 +1,12 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -16,7 +18,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class DataInstanceTestCaseGroup implements Cloneable, Serializable {
+public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Comparable<DataInstanceTestCaseGroup> {
 
 	/**
 	 * 
@@ -27,8 +29,10 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable {
 	@GeneratedValue
 	private long id;
 	private String name;
-	private String description;
+	@Column(columnDefinition="longtext")
+	private String longDescription;
 	private Integer version;
+	private int position;
 
 	// @OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
@@ -51,15 +55,15 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable {
 		this.name = name;
 	}
 
-	public String getDescription() {
-		if(description == null || description.equals("")){
-			this.description = "No Description";
+	public String getLongDescription() {
+		if(longDescription == null || longDescription.equals("")){
+			this.longDescription = "No Description";
 		}
-		return description;
+		return longDescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
 
 	public Integer getVersion() {
@@ -96,4 +100,22 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable {
 		return cloned;
 	}
 
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public int compareTo(DataInstanceTestCaseGroup comparingTestCaseGroup) {
+		int comparePosition = comparingTestCaseGroup.getPosition(); 
+		return this.position - comparePosition;
+	}
+	
+	public static Comparator<DataInstanceTestCaseGroup> testCaseGroupPositionComparator = new Comparator<DataInstanceTestCaseGroup>() {
+		public int compare(DataInstanceTestCaseGroup tg1, DataInstanceTestCaseGroup tg2) {
+			return tg1.compareTo(tg2);
+		}
+	};
 }

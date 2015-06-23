@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.service;
 
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
@@ -17,6 +18,7 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
@@ -45,12 +47,18 @@ public class ManageInstance  implements Serializable{
 	
 	public TreeNode loadMessage(Message m) throws CloneNotSupportedException {
 		TreeNode treeNode = new DefaultTreeNode("root", null);
-		
-		ProfileSerialization ps = new ProfileSerializationImpl();
-		Profile p = ps.deserializeXMLToProfile(m.getProfile(), m.getValueSet(), m.getConstraints());
 		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message mp = null;
-		for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message m1:p.getMessages().getChildren()){
-			mp = m1;
+		Profile p = null;
+		
+		if(m.getConformanceProfile() != null){
+			IntegratedProfile ip = m.getConformanceProfile().getIntegratedProfile();
+			ProfileSerialization ps = new ProfileSerializationImpl();
+			p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(), ip.getConstraints());
+			for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message:p.getMessages().getChildren()){
+				if(message.getIdentifier().equals(m.getConformanceProfile().getConformanceProfileId())){
+					mp = message;
+				}
+			}	
 		}
 		
 		if(mp != null){
@@ -700,24 +708,211 @@ public class ManageInstance  implements Serializable{
 			}
 		}
 	}
+	
+	private String getFieldStrFromSegment(String segmentName, InstanceSegment is, int position){
+		String segmentStr = is.getLineStr();
+		if(segmentName.equals("MSH")){
+			segmentStr = "MSH|FieldSeperator|Encoding|" + segmentStr.substring(9);
+		}
+		String[] wholeFieldStr = segmentStr.split("\\|");
+		
+		if(position>wholeFieldStr.length -1 ) return "";
+		else return wholeFieldStr[position];
+	}
+	
+	private String getComponentStrFromField(String fieldStr, int position){
+		String[] componentStr = fieldStr.split("\\^");
+		
+		if(position>componentStr.length) return "";
+		else return componentStr[position-1];
+		
+	}
+	
+	private String getSubComponentStrFromField(String componentStr, int position){
+		String[] subComponentStr = componentStr.split("\\&");
+		
+		if(position>subComponentStr.length) return "";
+		else return subComponentStr[position-1];
+		
+	}
+	
+	public String generateMessageContentHTML(Message m, List<InstanceSegment> instanceSegments){	
+		String header = "<html><head><style>thead {color:black;} tbody {color:black;} tfoot {color:black;} table {width: 100%; border-collapse: collapse;} table, th, td {border: 1px solid black;} </style> </head><body>";
+		
+		String body = "";
+		
+		for(InstanceSegment instanceSegment:instanceSegments){	
+			Segment segment = m.getSegments().findOne(instanceSegment.getSegmentRef().getRef());
+			String segName = segment.getName();
+			String segDesc = segment.getDescription();
+			
+			String segmentiPath = instanceSegment.getIpath();
+			
+			String fieldHTML = "<table>"
+								+ "<thead>"
+									+ "<tr>"
+										+ "<th width=\"25%\" bgcolor=\"#436BEC\">Location</th>"
+										+ "<th width=\"25%\" bgcolor=\"#436BEC\">Data Elemenmt</th>"
+										+ "<th width=\"30%\" bgcolor=\"#436BEC\">Data</th>"
+										+ "<th width=\"20%\" bgcolor=\"#436BEC\">Categrization</th>"
+									+ "</tr>"
+								+ "</thead>"
+								+ "<tbody>";
 
+			String obx5DTStr = "";
+			
+			for(Field field:segment.getFields()){
+				if(field.getUsage().equals(Usage.R) || field.getUsage().equals(Usage.RE)  || field.getUsage().equals(Usage.C)){
+					
+					String wholeFieldStr = this.getFieldStrFromSegment(segName, instanceSegment, field.getPosition());
+					int fieldRepeatIndex = 0;
+					
+
+					
+					for(String fieldStr:wholeFieldStr.split("\\~")){
+						Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
+						if(segName.equals("OBX") && field.getPosition() == 2){
+							obx5DTStr = fieldStr;
+						}
+
+						if(segName.equals("OBX") && field.getPosition() == 5){
+							//TODO OBX Dynamic mapping needed
+							fieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
+						}
+						
+						
+						fieldRepeatIndex = fieldRepeatIndex + 1;
+						String fieldiPath = "." + field.getPosition() + "[" +  fieldRepeatIndex + "]";
+						if(fieldDT == null || fieldDT.getComponents() == null || fieldDT.getComponents().size() == 0 ){
+							String dataTD = "";
+							if(fieldStr == null || fieldStr.equals("")){
+								dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">" + fieldStr +"</td>";
+							}else{
+								dataTD = "<td width=\"30%\">" + fieldStr +"</td>";
+							}
+							
+							String testDataCategorizationTD = this.findTestDataCategorization(m, segmentiPath + fieldiPath);
+							if(testDataCategorizationTD == null || testDataCategorizationTD.equals("")){
+								testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">" + testDataCategorizationTD +"</td>";
+							}else{
+								testDataCategorizationTD = "<td width=\"20%\">" + testDataCategorizationTD +"</td>";
+							}
+							
+							fieldHTML = fieldHTML 
+									+ "<tr>" 
+										+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>" + segName + "." + field.getPosition() + "</b></td>"
+										+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>" + field.getName() + "</b></td>"
+										+ dataTD
+										+ testDataCategorizationTD
+									+ "</tr>";
+						}else {
+							fieldHTML = fieldHTML 
+									+ "<tr>" 
+										+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>" + segName + "." + field.getPosition() + "</b></td>"
+										+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>" + field.getName() + "</b></td>"
+										+ "<td width=\"30%\" bgcolor=\"#C6DEFF\"></td>"
+										+ "<td width=\"20%\" bgcolor=\"#C6DEFF\"></td>"
+									+ "</tr>";
+							
+							for(Component c: fieldDT.getComponents() ){
+								String componentiPath = "." + c.getPosition() + "[1]";
+								if(c.getUsage().equals(Usage.R) || c.getUsage().equals(Usage.RE)  || c.getUsage().equals(Usage.C)){
+									String componentStr = this.getComponentStrFromField(fieldStr, c.getPosition());
+									if(m.getDatatypes().findOne(c.getDatatype()).getComponents() == null || m.getDatatypes().findOne(c.getDatatype()).getComponents().size() == 0 ){
+										String dataTD = "";
+										if(componentStr == null || componentStr.equals("")){
+											dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">" + componentStr +"</td>";
+										}else{
+											dataTD = "<td width=\"30%\">" + componentStr +"</td>";
+										}
+										
+										String testDataCategorizationTD = this.findTestDataCategorization(m, segmentiPath + fieldiPath + componentiPath);
+										if(testDataCategorizationTD == null || testDataCategorizationTD.equals("")){
+											testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">" + testDataCategorizationTD +"</td>";
+										}else{
+											testDataCategorizationTD = "<td width=\"20%\">" + testDataCategorizationTD +"</td>";
+										}
+										fieldHTML = fieldHTML 
+												+ "<tr>" 
+													+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;" + segName + "." + field.getPosition() + "." + c.getPosition() + "</td>"
+													+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;" + c.getName() + "</td>"
+													+ dataTD
+													+ testDataCategorizationTD
+												+ "</tr>";	
+									}else {
+										fieldHTML = fieldHTML 
+												+ "<tr>" 
+													+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;" + segName + "." + field.getPosition() + "." + c.getPosition() + "</td>"
+													+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;" + c.getName() + "</td>"
+													+ "<td width=\"30%\"></td>"
+													+ "<td width=\"20%\"></td>"
+												+ "</tr>";
+										
+										for(Component sc: m.getDatatypes().findOne(c.getDatatype()).getComponents() ){
+											String subcomponentiPath = "." + sc.getPosition() + "[1]";
+											
+											String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
+											
+											String dataTD = "";
+											if(subcomponentStr == null || subcomponentStr.equals("")){
+												dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">" + subcomponentStr +"</td>";
+											}else{
+												dataTD = "<td width=\"30%\">" + subcomponentStr +"</td>";
+											}
+											
+											String testDataCategorizationTD = this.findTestDataCategorization(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath);
+											if(testDataCategorizationTD == null || testDataCategorizationTD.equals("")){
+												testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">" + testDataCategorizationTD +"</td>";
+											}else{
+												testDataCategorizationTD = "<td width=\"20%\">" + testDataCategorizationTD +"</td>";
+											}
+											
+											
+											if(sc.getUsage().equals(Usage.R) || sc.getUsage().equals(Usage.RE)  || sc.getUsage().equals(Usage.C)){
+												fieldHTML = fieldHTML 
+														+ "<tr>" 
+															+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + segName + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition() + "</td>"
+															+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + sc.getName() + "</td>"
+															+ dataTD
+															+ testDataCategorizationTD
+														+ "</tr>";
+											}
+										}
+									}
+								}
+							}
+							
+							
+						}
+					}
+				}
+			}
+			
+			fieldHTML = fieldHTML + "</tbody>" + "</table>";
+			
+			String segmentHTML = 	"<fieldset>"+ 
+									"<legend>" + segName + " : " + segDesc + "</legend>" + fieldHTML +
+								"</fieldset> <br/>";
+			
+			body = body + segmentHTML;
+		}
+		
+		String footer = "</body></html>";	
+		return header + body + footer;
+	}
+	
 	private void generateXMLFromMesageInstance(Message m, List<InstanceSegment> instanceSegments, boolean isSTD) {
 		try {			
 			String messageName = m.getMessageObj().getStructID();
 			org.w3c.dom.Document xmlHL7MessageInstanceDom = XMLManager.stringToDom("<" + messageName + "/>");
 			Element rootElm = (Element)xmlHL7MessageInstanceDom.getElementsByTagName(messageName).item(0);
 			
-			rootElm.setAttribute("xmlns", "urn:hl7-org:v2xml");
-			rootElm.setAttribute("xmlns:xsi", "urn:hl7-org:v2xml");
-			rootElm.setAttribute("xsi:schemaLocation", "urn:hl7-org:v2xml " + messageName + ".xsd");
-
-			
 			for(InstanceSegment instanceSegment:instanceSegments){
 				String[] iPathList = instanceSegment.getIpath().split("\\.");
 				if(iPathList.length == 1){
 					Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPathList[0].substring(0, iPathList[0].lastIndexOf("[")));
 					if(isSTD) this.generateSegment(m, segmentElm, instanceSegment);
-					else this.generateNISTSegment(segmentElm, instanceSegment);
+					else this.generateNISTSegment(m, segmentElm, instanceSegment);
 					rootElm.appendChild(segmentElm);
 				}else {
 					Element parentElm = rootElm;
@@ -727,7 +922,7 @@ public class ManageInstance  implements Serializable{
 						if(i==iPathList.length - 1){
 							Element segmentElm = xmlHL7MessageInstanceDom.createElement(iPath.substring(0, iPath.lastIndexOf("[")));
 							if(isSTD) this.generateSegment(m, segmentElm, instanceSegment);
-							else this.generateNISTSegment(segmentElm, instanceSegment);
+							else this.generateNISTSegment(m, segmentElm, instanceSegment);
 							parentElm.appendChild(segmentElm);
 						}else {
 							String groupName = iPath.substring(0,iPath.lastIndexOf("["));
@@ -761,14 +956,16 @@ public class ManageInstance  implements Serializable{
 		}
 			
 	}
-
-	private void generateNISTSegment(Element segmentElm, InstanceSegment instanceSegment) {
+	
+	private void generateNISTSegment(Message m, Element segmentElm, InstanceSegment instanceSegment) {
 		String lineStr = instanceSegment.getLineStr();
-		String segmentName = lineStr.substring(0,3);		
+		String segmentName = lineStr.substring(0,3);
+		Segment segment = m.getSegments().findOne(instanceSegment.getSegmentRef().getRef());
 		
 		if(lineStr.startsWith("MSH")){
 			lineStr = "MSH|%SEGMENTDVIDER%|%ENCODINGDVIDER%"+ lineStr.substring(8);
 		}
+		
 		
 		String[] fieldStrs = lineStr.substring(4).split("\\|");
 		
@@ -787,36 +984,62 @@ public class ManageInstance  implements Serializable{
 					segmentElm.appendChild(fieldElm);
 				}else {
 					if(fieldStr != null && !fieldStr.equals("")){
-						Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1));
-						String[] componentStrs = fieldStr.split("\\^");
-						
-						if(componentStrs.length == 1){
-							Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
-							fieldElm.appendChild(value);
-						}else{
-							for(int j=0; j<componentStrs.length;j++){
-								String componentStr = componentStrs[j];
-								if(componentStr != null && !componentStr.equals("")){
-									Element componentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1));
-									String[] subComponentStrs = componentStr.split("\\&");
-									if(subComponentStrs.length == 1){
-										Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
-										componentElm.appendChild(value);
-									}else{
-										for(int k=0; k<subComponentStrs.length;k++){
-											Element subComponentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1) + "." + (k+1));
-											Text value = segmentElm.getOwnerDocument().createTextNode(subComponentStrs[k]);
-											subComponentElm.appendChild(value);
-											componentElm.appendChild(subComponentElm);
+						if(i<segment.getFields().size()){
+							Field field = segment.getFields().get(i);
+							Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + field.getPosition());
+							if(m.getDatatypes().findOne(field.getDatatype()).getComponents() == null || m.getDatatypes().findOne(field.getDatatype()).getComponents().size() == 0 ){
+								if(lineStr.startsWith("OBX")){
+									if(field.getPosition().equals(2)){
+										Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+										fieldElm.appendChild(value);
+									}else if (field.getPosition().equals(5)){
+										String[] componentStrs = fieldStr.split("\\^");
+										
+										for(int index = 0 ; index <componentStrs.length; index++){
+											String componentStr = componentStrs[index];
+											Element componentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + field.getPosition() + "." + (index+1));
+											Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
+											componentElm.appendChild(value);
+											fieldElm.appendChild(componentElm);
+											
 										}
 									}
-									
-									fieldElm.appendChild(componentElm);
+								}else{
+									Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+									fieldElm.appendChild(value);
+								}
+							}else{
+								String[] componentStrs = fieldStr.split("\\^");
+								for(int j=0; j < componentStrs.length; j++){
+									if(j < m.getDatatypes().findOne(field.getDatatype()).getComponents().size()){
+										Component component = m.getDatatypes().findOne(field.getDatatype()).getComponents().get(j);
+										String componentStr = componentStrs[j];
+										if(componentStr!=null && !componentStr.equals("")){
+											Element componentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1));
+											if(m.getDatatypes().findOne(component.getDatatype()).getComponents() == null || m.getDatatypes().findOne(component.getDatatype()).getComponents().size() == 0 ){
+												Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
+												componentElm.appendChild(value);
+											}else{
+												String[] subComponentStrs = componentStr.split("\\&");
+												for(int k=0; k < subComponentStrs.length; k++){
+													String subComponentStr = subComponentStrs[k];
+													if(subComponentStr!=null && !subComponentStr.equals("")){
+														Element subComponentElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + (i+1) + "." + (j+1) + "." + (k+1));
+														Text value = segmentElm.getOwnerDocument().createTextNode(subComponentStr);
+														subComponentElm.appendChild(value);
+														componentElm.appendChild(subComponentElm);
+													}
+												}
+												
+											}
+											fieldElm.appendChild(componentElm);
+										}
+									}
 								}
 								
 							}
+							segmentElm.appendChild(fieldElm);
 						}
-						segmentElm.appendChild(fieldElm);
 					}
 				}
 			}
@@ -917,8 +1140,14 @@ public class ManageInstance  implements Serializable{
 				}
 			}
 		}
-			
+	}
+	
+	private String findTestDataCategorization(Message m, String iPath){
+		for(TCAMTConstraint c:m.getTcamtConstraints()){
+			if(c.getIpath().equals(iPath)) return c.getCategorization().getValue();
+		}
 		
+		return "";
 	}
 
 	public TreeNode generateConstraintTree(Message m) {

@@ -21,6 +21,8 @@
 		<property name="show_sql">false</property>
 		<property name="hbm2ddl.auto">update</property>
 
+		<mapping class="gov.nist.healthcare.tcamt.domain.ConformanceProfile"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.IntegratedProfile"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.Actor"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.User"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.Message"></mapping>
@@ -28,10 +30,6 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCase"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestStep"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup"></mapping>
-		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestPlan"></mapping>
-		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestCase"></mapping>
-		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestStep"></mapping>
-		<mapping class="gov.nist.healthcare.tcamt.domain.IsolatedTestCaseGroup"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TCAMTConstraint"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TestStory"></mapping>
 	</session-factory>

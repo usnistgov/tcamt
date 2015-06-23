@@ -20,7 +20,7 @@
         		<p>Hello </p> <h:outputText value="#{sessionBeanTCAMT.loggedUser.userId}" />
         		<!-- <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.logoutAction}"/>
         		 -->
-        		 <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')} :#{p:component('IsolatedTestForm')}" actionListener="#{userControl.logoutAction}"/>
+        		 <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" actionListener="#{userControl.logoutAction}"/>
         	</h:panelGrid>
         	
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedUser == null}" columns="2" cellpadding="5">
@@ -30,7 +30,7 @@
         		<p:password value="#{userControl.user.password}" />
         		<!-- <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.loginAction}"/>
         		 -->
-        		 <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')} :#{p:component('IsolatedTestForm')}" actionListener="#{userControl.loginAction}"/>
+        		 <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" actionListener="#{userControl.loginAction}"/>
         	</h:panelGrid>
     	</p:outputPanel>
 	</h:form>

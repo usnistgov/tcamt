@@ -1,8 +1,9 @@
 package gov.nist.healthcare.tcamt.db;
 
 import gov.nist.healthcare.tcamt.domain.Actor;
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestPlan;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -113,6 +114,79 @@ public class DBImpl implements DBInterface, Serializable {
 		this.openCurrentSession();
 		this.currentSession.delete(user);
 		this.closeCurrentSession();
+	}
+	
+	public void integratedProfileInsert(IntegratedProfile ip) {
+		this.openCurrentSession();
+		this.currentSession.save(ip);
+		this.closeCurrentSession();
+	}
+
+	public void integratedProfileUpdate(IntegratedProfile ip) {
+		this.openCurrentSession();
+		this.currentSession.update(ip);
+		this.closeCurrentSession();
+	}
+
+	public void integratedProfileDelete(IntegratedProfile ip) {
+		this.openCurrentSession();
+		this.currentSession.delete(ip);
+		this.closeCurrentSession();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<IntegratedProfile> getAllIntegratedProfiles() {
+		this.openCurrentSession();
+		Criteria criteria = this.currentSession.createCriteria(IntegratedProfile.class);
+		List<IntegratedProfile> results = criteria.list();
+		this.closeCurrentSession();
+		return results;
+	}
+
+	public IntegratedProfile getIntegratedProfileById(long id) {
+		this.openCurrentSession();
+		IntegratedProfile ip = (IntegratedProfile)this.currentSession.get(IntegratedProfile.class, id);
+		this.closeCurrentSession();
+		return ip;
+	}
+	
+	public void conformanceProfileInsert(ConformanceProfile cp) {
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		cp.setLastUpdateDate(dateFormat.format(date));
+		this.currentSession.save(cp);
+		this.closeCurrentSession();
+	}
+
+	public void conformanceProfileUpdate(ConformanceProfile cp) {
+		this.openCurrentSession();
+		this.currentSession.update(cp);
+		this.closeCurrentSession();
+	}
+
+	public void conformanceProfileDelete(ConformanceProfile cp) {
+		this.openCurrentSession();
+		this.currentSession.delete(cp);
+		this.closeCurrentSession();
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ConformanceProfile> getAllConformanceProfiles() {
+		this.openCurrentSession();
+		Criteria criteria = this.currentSession.createCriteria(ConformanceProfile.class);
+		List<ConformanceProfile> results = criteria.list();
+		this.closeCurrentSession();
+		return results;
+	}
+
+	public ConformanceProfile getConformanceProfileById(long id) {
+		this.openCurrentSession();
+		ConformanceProfile cp = (ConformanceProfile)this.currentSession.get(ConformanceProfile.class, id);
+		this.closeCurrentSession();
+		return cp;
 	}
 
 	public void actorInsert(Actor a) {
@@ -246,48 +320,5 @@ public class DBImpl implements DBInterface, Serializable {
 		}else {
 			return results.get(0);
 		}
-	}
-
-	public void isolatedTestPlanInsert(IsolatedTestPlan itp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		itp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.save(itp);
-		this.closeCurrentSession();
-	}
-
-	public void isolatedTestPlanUpdate(IsolatedTestPlan itp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		itp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(itp);
-		this.closeCurrentSession();
-	}
-
-	public void isolatedTestPlanDelete(IsolatedTestPlan itp) {
-		this.openCurrentSession();
-		this.currentSession.delete(itp);
-		this.closeCurrentSession();
-	}
-
-	public List<IsolatedTestPlan> getAllIsolatedTestPlans(User author) {
-		if (author == null) return null;
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(IsolatedTestPlan.class);
-		criteria.add(Restrictions.eq("author", author));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		@SuppressWarnings("unchecked")
-		List<IsolatedTestPlan> results = (List<IsolatedTestPlan>) criteria.list();
-		this.closeCurrentSession();
-		return results;
-	}
-
-	public IsolatedTestPlan getIsolatedTestPlanById(long id) {
-		this.openCurrentSession();
-		IsolatedTestPlan plan = (IsolatedTestPlan)this.currentSession.get(IsolatedTestPlan.class, id);
-		this.closeCurrentSession();
-		return plan;
 	}
 }

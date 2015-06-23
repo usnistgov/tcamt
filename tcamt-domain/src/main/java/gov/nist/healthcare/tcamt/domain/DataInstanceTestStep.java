@@ -1,8 +1,10 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class DataInstanceTestStep implements Cloneable, Serializable{
+public class DataInstanceTestStep implements Cloneable, Serializable, Comparable<DataInstanceTestStep>{
 	
 	/**
 	 * 
@@ -26,26 +28,29 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
     @GeneratedValue
 	private long id;
 	private String name;
-	private String description;
+	@Column(columnDefinition="longtext")
+	private String longDescription;
 	
 	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="message_id")
 	private Message message;
 	private Integer version;
+	private int position;
 	
 	@Embedded
 	private TestStory testStepStory = new TestStory();
 	
-	public DataInstanceTestStep(long id, String name, String description, Integer version) {
+	public DataInstanceTestStep(long id, String name, String longDescription, Integer version) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.description = description;
+		this.longDescription = longDescription;
 		this.setVersion(version);
 	}
 
 	public DataInstanceTestStep() {
 		super();
+		this.message = new Message();
 	}
 
 	public long getId() {
@@ -64,15 +69,15 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 		this.name = name;
 	}
 
-	public String getDescription() {
-		if(description == null || description.equals("")){
-			this.description = "No Description";
+	public String getLongDescription() {
+		if(longDescription == null || longDescription.equals("")){
+			this.longDescription = "No Description";
 		}
-		return description;
+		return longDescription;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
 
 	public Integer getVersion() {
@@ -115,4 +120,23 @@ public class DataInstanceTestStep implements Cloneable, Serializable{
 		
 		return cloned;
 	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+	
+	public int compareTo(DataInstanceTestStep comparingTestStep) {
+		int comparePosition = comparingTestStep.getPosition(); 
+		return this.position - comparePosition;
+	}
+	
+	public static Comparator<DataInstanceTestStep> testCasePositionComparator = new Comparator<DataInstanceTestStep>() {
+		public int compare(DataInstanceTestStep ts1, DataInstanceTestStep ts2) {
+			return ts1.compareTo(ts2);
+		}
+	};
 }

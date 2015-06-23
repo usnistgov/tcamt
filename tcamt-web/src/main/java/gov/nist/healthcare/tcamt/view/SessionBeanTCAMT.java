@@ -2,8 +2,8 @@ package gov.nist.healthcare.tcamt.view;
 
 import gov.nist.healthcare.tcamt.db.DBImpl;
 import gov.nist.healthcare.tcamt.domain.Actor;
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestPlan;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -26,10 +26,10 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	private DBImpl dbManager = new DBImpl();
 	
+	private List<ConformanceProfile> conformanceProfiles;
 	private List<Actor> actors;
 	private List<Message> messages;
 	private List<DataInstanceTestPlan> dataInstanceTestPlans;
-	private List<IsolatedTestPlan> isolatedTestPlans;
 	
 	private int mActiveIndex = 0;
 	private int ditActiveIndex = 0;
@@ -43,28 +43,31 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	public void onTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
-		if(tabTitle.equals("Actor")){
+		if(tabTitle.equals("Profile")){
+			this.updateConformanceProfiles();
+		}else if(tabTitle.equals("Actor")){
 			this.updateActors();
 		}else if(tabTitle.equals("Message")){
 			mActiveIndex = 0;
 			this.updateMessages();
-		}else if(tabTitle.equals("Data Instance Test")){
+		}else if(tabTitle.equals("Test Plan")){
 			this.updateDataInstanceTestPlans();
 			ditActiveIndex = 0;
-		}else if(tabTitle.equals("Isolated Test")){
-			this.updateIsolatedTestPlans();
-			itActiveIndex = 0;
 		}
     }
 	
 	public SessionBeanTCAMT() {
 		super();
+		this.updateConformanceProfiles();
 		this.updateActors();
 		this.updateMessages();
 		this.updateDataInstanceTestPlans();
-		this.updateIsolatedTestPlans();
 	}
 
+	public void updateConformanceProfiles(){
+		this.conformanceProfiles = this.dbManager.getAllConformanceProfiles();
+	}
+	
 	public void updateActors(){
 		this.actors = this.dbManager.getAllActors(this.loggedUser);
 	}
@@ -75,10 +78,6 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	public void updateDataInstanceTestPlans(){
 		this.dataInstanceTestPlans = this.dbManager.getAllDataInstanceTestPlans(this.loggedUser);
-	}
-	
-	public void updateIsolatedTestPlans(){
-		this.isolatedTestPlans = this.dbManager.getAllIsolatedTestPlans(this.loggedUser);
 	}
 	
 	public boolean isLatestActor(Actor actor){
@@ -105,10 +104,10 @@ public class SessionBeanTCAMT implements Serializable {
 	}
 	
 	public void retriveAllData() {
+		this.updateConformanceProfiles();
 		this.updateActors();
 		this.updateMessages();
 		this.updateDataInstanceTestPlans();
-		this.updateIsolatedTestPlans();
 	}
 
 	public List<Actor> getActors() {
@@ -142,14 +141,6 @@ public class SessionBeanTCAMT implements Serializable {
 	public void setDataInstanceTestPlans(List<DataInstanceTestPlan> dataInstanceTestPlans) {
 		this.dataInstanceTestPlans = dataInstanceTestPlans;
 	}
-
-	public List<IsolatedTestPlan> getIsolatedTestPlans() {
-		return isolatedTestPlans;
-	}
-
-	public void setIsolatedTestPlans(List<IsolatedTestPlan> isolatedTestPlans) {
-		this.isolatedTestPlans = isolatedTestPlans;
-	}
 	
 	public DBImpl getDbManager() {
 		return dbManager;
@@ -181,6 +172,14 @@ public class SessionBeanTCAMT implements Serializable {
 
 	public void setmActiveIndex(int mActiveIndex) {
 		this.mActiveIndex = mActiveIndex;
+	}
+
+	public List<ConformanceProfile> getConformanceProfiles() {
+		return conformanceProfiles;
+	}
+
+	public void setConformanceProfiles(List<ConformanceProfile> conformanceProfiles) {
+		this.conformanceProfiles = conformanceProfiles;
 	}
 	
 }

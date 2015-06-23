@@ -34,7 +34,7 @@
 					</p:column>
 
 					<p:column headerText="Description">
-						<h:outputText value="#{message.description}" />
+						<h:outputText value="#{message.longDescription}" />
 					</p:column>
 					
 					<p:column headerText="Last Updated">
@@ -77,155 +77,11 @@
 					</p:column>
 				</p:dataTable>
 			</p:tab>
-			<p:tab title="Selected Message Definition">
-				<p:fieldset legend="Message Definition" toggleable="true">
-					<p:scrollPanel style="width:100%;height:200px" mode="native">
-						<p:treeTable id="messageProfileTreeTable"
-							value="#{messageRequestBean.messageTreeRoot}"
-							var="model" resizableColumns="true"
-							selection="#{messageRequestBean.selectedNode}"
-							selectionMode="single">
-							<p:ajax event="select"
-								listener="#{messageRequestBean.onNodeSelect}"
-								update=":#{p:component('segmentTreeTable')}" />
-							<p:column headerText="Location">
-								<h:outputText value="#{model.path}" style="width:50%;" />
-							</p:column>
-							<p:column headerText="Name" style="width:20%;">
-								<h:outputText value="#{model.name}" />
-							</p:column>
-							<p:column headerText="Usage"
-								style="width:10%; text-align: center;">
-								<h:outputText value="#{model.node.usage}" />
-							</p:column>
-							<p:column headerText="Cardinality"
-								style="width:20%; text-align: center;">
-								<h:outputText value="[#{model.node.min} ~ " />
-								<h:outputText value="#{model.node.max}]" />
-							</p:column>
-						</p:treeTable>
-					</p:scrollPanel>
-				</p:fieldset>
-				<p:fieldset legend="Segment Definition (Selected)" toggleable="true">
-					<p:scrollPanel style="width:100%;height:400px" mode="native">
-						<p:treeTable id="segmentTreeTable"
-							value="#{messageRequestBean.selectedSegmentTreeRoot}"
-							var="model" resizableColumns="true">
-							<p:column headerText="Location">
-								<h:outputText value="#{model.path}" style="width:15%;" />
-							</p:column>
-							<p:column headerText="Name" style="width:20%;">
-								<h:outputText value="#{model.name}" />
-							</p:column>
-							<p:column headerText="DT" style="width:8%; text-align: center;">
-								<h:outputText value="#{model.node.datatype.name}" />
-							</p:column>
-							<p:column headerText="Cardinality"
-								style="width:8%; text-align: center;">
-								<h:outputText
-									rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
-									value="[#{model.node.min} ~ " />
-								<h:outputText
-									rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
-									value="#{model.node.max}]" />
-							</p:column>
-
-							<p:column headerText="Usage"
-								style="width:8%; text-align: center;">
-								<h:outputText value="#{model.node.usage}" />
-							</p:column>
-
-							<p:column headerText="Length"
-								style="width:8%; text-align: center;">
-								<h:outputText rendered="#{model.isLeafNode()}"
-									value="[#{model.node.minLength} ~ " />
-								<h:outputText rendered="#{model.isLeafNode()}"
-									value="#{model.node.maxLength}]" />
-							</p:column>
-
-<!-- 							<p:column headerText="Data" style="width:7%; text-align: center;">
-								<h:outputText rendered="#{model.isLeafNode()}"
-									value="#{model.data}" />
-							</p:column>
-							<p:column headerText="Conf Statement"
-								style="width:8%; text-align: center;">
-								<p:commandButton icon="ui-icon-circle-zoomin" process="@this"
-									immediate="true"
-									rendered="#{!empty model.node.conformanceStatementList}"
-									value="#{model.node.conformanceStatementList.size()}">
-								</p:commandButton>
-							</p:column>
-
-							<p:column headerText="Predicate"
-								style="width:8%; text-align: center;">
-								<p:commandButton rendered="#{model.node.predicate != null}"
-									icon="ui-icon-circle-zoomin" process="@this" immediate="true">
-								</p:commandButton>
-							</p:column>
-
-							<p:column headerText="Value Set"
-								style="width:10%; text-align: center;">
-								<p:commandButton icon="ui-icon-circle-zoomin" process="@this"
-									immediate="true" rendered="#{model.node.codeTable != null}"
-									value="#{model.node.codeTable.name}">
-								</p:commandButton>
-							</p:column> -->
-
-						</p:treeTable>
-					</p:scrollPanel>
-				</p:fieldset>
-<!-- 				<p:fieldset legend="Conformance Statements" toggleable="true"
-					collapsed="false">
-					<p:scrollPanel style="width:100%;height:222px" mode="native">
-						<p:dataTable id="messageProfileConformanceStatement" var="cs"
-							value="#{messageRequestBean.editMessage.listCSs}"
-							paginator="true" rows="5"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15,100">
-							<p:column headerText="Name">
-								<h:outputText value="#{cs.name}" />
-							</p:column>
-							<p:column headerText="Path">
-								<h:outputText value="#{cs.statementDetails.path}" />
-							</p:column>
-							<p:column headerText="Description">
-								<h:outputText value="#{cs.description}" />
-							</p:column>
-						</p:dataTable>
-					</p:scrollPanel>
-				</p:fieldset>
-				<p:fieldset legend="Conditional Predicates" toggleable="true"
-					collapsed="false">
-					<p:scrollPanel style="width:100%;height:222px" mode="native">
-						<p:dataTable id="messageProfileConditionalPredicate" var="cp"
-							value="#{messageRequestBean.editMessage.listCPs}"
-							paginator="true" rows="5"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15,100">
-							<p:column headerText="Path">
-								<h:outputText value="#{cp.predicateDetails.path}" />
-							</p:column>
-							<p:column headerText="Condition">
-								<h:outputText value="#{cp.description}" />
-							</p:column>
-							<p:column headerText="True Usage">
-								<h:outputText value="#{cp.trueUsage}" />
-							</p:column>
-							<p:column headerText="False Usage">
-								<h:outputText value="#{cp.falseUsage}" />
-							</p:column>
-						</p:dataTable>
-					</p:scrollPanel>
-				</p:fieldset> -->
-			</p:tab>
+			
 			<p:tab title="Selected Message Data">
 				<table width="100%">
 					<tr>
 						<td align="right">
-							<p:commandButton value="Reload Profile" icon="ui-icon-pencil"
-								update=":#{p:component('editMessageForm')}"
-								oncomplete="PF('editMessage').show();">
-							</p:commandButton>
 							<p:commandButton value="Save Message"
 								icon="ui-icon-disk"
 								update=":#{p:component('messageForm')}"
@@ -237,7 +93,12 @@
 					<h:outputText value="Name: " />
 					<p:inputText value="#{messageRequestBean.editMessage.name}" />
 					<h:outputText value="Description: " />
-					<p:inputText value="#{messageRequestBean.editMessage.description}" />
+					<p:inputText value="#{messageRequestBean.editMessage.longDescription}" />
+					<h:outputText value="Conformance Profile: " />
+					<p:selectOneMenu value="#{messageRequestBean.conformanceProfileId}" effect="fade">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{conformanceProfileRequestBean.conformanceProfiles}" var="profile" itemLabel="#{profile.name}" itemValue="#{profile.id}" />
+					</p:selectOneMenu>
 				</h:panelGrid>
 				<p:accordionPanel id="mInstancePanel" widgetVar="MessageInstancePanel" activeIndex="#{messageRequestBean.activeIndexOfMessageInstancePanel}">
 					<p:tab title="HL7 Message Tree">
@@ -252,14 +113,14 @@
 					<p:tab title="TestData of Selected Segment">
 						<tcamt:testDataOfSegment bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:tab>
+					<p:tab title="List Contraints">
+						<tcamt:constraintsTable bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}" />
+					</p:tab>
 					<p:tab title="STD XML Encoded Message">
 						<tcamt:hl7XMLMessage xmlEncodedMessage="#{messageRequestBean.editMessage.xmlEncodedSTDMessage}"/>
 					</p:tab>
 					<p:tab title="NIST XML Encoded Message">
 						<tcamt:hl7XMLMessage xmlEncodedMessage="#{messageRequestBean.editMessage.xmlEncodedNISTMessage}"/>
-					</p:tab>
-					<p:tab title="List Contraints">
-						<tcamt:constraintsTable bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}" />
 					</p:tab>
 				</p:accordionPanel>
 			</p:tab>
@@ -273,43 +134,14 @@
 				<h:outputText value="Name: " />
 				<p:inputText value="#{messageRequestBean.newMessage.name}"/>
 				<h:outputText value="Description: " />
-				<p:inputText value="#{messageRequestBean.newMessage.description}"/>
-				<h:outputText value="Message Profile: " />
-				<h:panelGrid id="createMessagePanel2" columns="1" cellpadding="0">
-					<p:fileUpload
-						rendered="#{messageRequestBean.newMessage.profile == null}"
-						fileUploadListener="#{messageRequestBean.uploadProfile}"
-						update=":#{p:component('createMessagePanel2')}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-					<h:outputText
-						rendered="#{messageRequestBean.newMessage.profile != null}"
-						value="Message Profile Uploaded" />
-				</h:panelGrid>
-				<h:outputText value="Constraints: " />
-				<h:panelGrid id="createMessagePanel3" columns="1" cellpadding="0">
-					<p:fileUpload
-						rendered="#{messageRequestBean.newMessage.constraints == null}"
-						fileUploadListener="#{messageRequestBean.uploadConstraints}"
-						update=":#{p:component('createMessagePanel3')}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-					<h:outputText
-						rendered="#{messageRequestBean.newMessage.constraints != null}"
-						value="Constraints Uploaded" />
-				</h:panelGrid>
-				<h:outputText value="ValueSet Lib: " />
-				<h:panelGrid id="createMessagePanel4" columns="1" cellpadding="0">
-					<p:fileUpload
-						rendered="#{messageRequestBean.newMessage.valueSet == null}"
-						fileUploadListener="#{messageRequestBean.uploadValueSet}"
-						update=":#{p:component('createMessagePanel4')}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-					<h:outputText
-						rendered="#{messageRequestBean.newMessage.valueSet != null}"
-						value="ValueSet Library Uploaded" />
-				</h:panelGrid>
+				<p:inputText value="#{messageRequestBean.newMessage.longDescription}"/>
+				<h:outputText value="Conformance Profile: " />
+				<p:selectOneMenu
+					value="#{messageRequestBean.conformanceProfileId}"
+					effect="fade">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{conformanceProfileRequestBean.conformanceProfiles}" var="profile" itemLabel="#{profile.name}" itemValue="#{profile.id}" />
+				</p:selectOneMenu>
 			</h:panelGrid>
 			<table width="100%">
 				<tr>
@@ -345,45 +177,6 @@
 							actionListener="#{messageRequestBean.shareMessage}"
 							onclick="PF('shareMessage').hide();" />
 					</td>
-				</tr>
-			</table>
-		</p:dialog>
-	</h:form>
-	
-	<h:form id="editMessageForm">
-		<p:dialog id="editMessageDialog" header="Update Profile"
-			widgetVar="editMessage">
-			<h:panelGrid id="editMessagePanel" columns="2" cellpadding="5">
-				<h:outputText value="Name: " />
-				<h:outputText value="#{messageRequestBean.editMessage.name}" />
-				<h:outputText value="Description: " />
-				<h:outputText value="#{messageRequestBean.editMessage.description}" />
-
-				<h:outputText value="Update Profile: " />
-				<p:fileUpload
-						fileUploadListener="#{messageRequestBean.updateProfile}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-						
-				<h:outputText value="Update Constraints: " />
-				<p:fileUpload
-						fileUploadListener="#{messageRequestBean.updateConstraints}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-				
-				<h:outputText value="Update ValueSet: " />
-				<p:fileUpload
-						fileUploadListener="#{messageRequestBean.updateValueSet}"
-						mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
-			</h:panelGrid>
-
-			<table width="100%">
-				<tr>
-					<td align="right"><p:commandButton value="Apply"
-							icon="ui-icon-pencil" update=":#{p:component('messageForm')}"
-							actionListener="#{messageRequestBean.profileUpdateMessage()}"
-							onclick="PF('editMessage').hide();" /></td>
 				</tr>
 			</table>
 		</p:dialog>

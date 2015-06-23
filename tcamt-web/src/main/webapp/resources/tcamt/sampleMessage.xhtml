@@ -15,9 +15,15 @@
 </composite:interface>
 
 <composite:implementation>
-     <p:inputTextarea autoResize="false" value="#{cc.attrs.hl7EndcodedMessage}" rows="20" cols="3000" 
-        	style="overflow:scroll;overflow-y:scroll;overflow-x:scroll;overflow:-moz-scrollbars-vertical;">
-			<p:ajax event="blur" listener="#{cc.attrs.bean.readHL7Message}" update="#{cc.attrs.panelId}"/>
+
+	<table width="100%">
+		<tr>
+			<td align="right">
+				<p:commandButton value="Update er7 Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.readHL7Message}"/>
+			</td>
+		</tr>
+	</table>
+     <p:inputTextarea autoResize="false" value="#{cc.attrs.hl7EndcodedMessage}" rows="20" cols="3000" style="overflow:scroll;overflow-y:scroll;overflow-x:scroll;overflow:-moz-scrollbars-vertical;">
 	 </p:inputTextarea>	
 </composite:implementation>
 

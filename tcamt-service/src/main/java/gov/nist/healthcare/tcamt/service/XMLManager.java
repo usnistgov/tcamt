@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.CharBuffer;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,6 +27,7 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+
 import org.dom4j.DocumentHelper;
 import org.dom4j.io.XMLWriter;
 import org.w3c.dom.Document;
@@ -85,6 +87,8 @@ public class XMLManager {
 		return doc;
 
 	}
+	
+	
 
 	public static Document parseXmlFile(String inFilename, String xslFilename) {
 		try {
@@ -152,6 +156,28 @@ public class XMLManager {
 		} catch (TransformerException e) {
 			// An error occurred while applying the XSL file
 		}
+		return null;
+	}
+	
+	public static String parseXmlByXSLT(String sourceStr, String xsltStr) {
+		System.setProperty("javax.xml.transform.TransformerFactory", "net.sf.saxon.TransformerFactoryImpl");
+		TransformerFactory tFactory = TransformerFactory.newInstance();
+	    
+	    
+        try {
+            Transformer transformer = tFactory.newTransformer(new StreamSource(new java.io.StringReader(xsltStr)));
+            StringWriter outWriter = new StringWriter();
+            StreamResult result = new StreamResult(outWriter);
+            
+            transformer.transform(new StreamSource(new java.io.StringReader(sourceStr)), result);
+            StringBuffer sb = outWriter.getBuffer(); 
+            String finalstring = sb.toString();
+            
+            return finalstring;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		return null;
 	}
 

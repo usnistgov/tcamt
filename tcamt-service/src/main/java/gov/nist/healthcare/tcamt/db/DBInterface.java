@@ -1,8 +1,9 @@
 package gov.nist.healthcare.tcamt.db;
 
 import gov.nist.healthcare.tcamt.domain.Actor;
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.IsolatedTestPlan;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -15,6 +16,18 @@ public interface DBInterface {
 	public void addUser(User user);
 	public void updateUser(User user);
 	public void deleteUser(User user);
+	
+	public void integratedProfileInsert(IntegratedProfile ip);
+	public void integratedProfileUpdate(IntegratedProfile ip);
+	public void integratedProfileDelete(IntegratedProfile ip);
+	public List<IntegratedProfile> getAllIntegratedProfiles();
+	public IntegratedProfile getIntegratedProfileById(long id);
+	
+	public void conformanceProfileInsert(ConformanceProfile cp);
+	public void conformanceProfileUpdate(ConformanceProfile cp);
+	public void conformanceProfileDelete(ConformanceProfile cp);
+	public List<ConformanceProfile> getAllConformanceProfiles();
+	public ConformanceProfile getConformanceProfileById(long id);
 	
 	public void actorInsert(Actor a);
 	public void actorUpdate(Actor a);
@@ -33,10 +46,4 @@ public interface DBInterface {
 	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp);
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author);
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id);
-	
-	public void isolatedTestPlanInsert(IsolatedTestPlan itp);
-	public void isolatedTestPlanUpdate(IsolatedTestPlan itp);
-	public void isolatedTestPlanDelete(IsolatedTestPlan itp);
-	public List<IsolatedTestPlan> getAllIsolatedTestPlans(User author);
-	public IsolatedTestPlan getIsolatedTestPlanById(long id);
 }

@@ -1,10 +1,12 @@
 package gov.nist.healthcare.tcamt.domain;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,7 +19,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class DataInstanceTestCase implements Cloneable, Serializable{
+public class DataInstanceTestCase implements Cloneable, Serializable, Comparable<DataInstanceTestCase>{
 	/**
 	 * 
 	 */
@@ -27,8 +29,11 @@ public class DataInstanceTestCase implements Cloneable, Serializable{
     @GeneratedValue
 	private long id;
 	private String name;
-	private String description;
+	
+	@Column(columnDefinition="longtext")
+	private String longDescription;
 	private Integer version;
+	private int position;
 	
 //	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
@@ -51,14 +56,14 @@ public class DataInstanceTestCase implements Cloneable, Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDescription() {
-		if(description == null || description.equals("")){
-			this.description = "No Description";
+	public String getLongDescription() {
+		if(longDescription == null || longDescription.equals("")){
+			this.longDescription = "No Description";
 		}
-		return description;
+		return longDescription;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
 	public Integer getVersion() {
 		return version;
@@ -99,4 +104,23 @@ public class DataInstanceTestCase implements Cloneable, Serializable{
 		
 		return cloned;
 	}
+	
+	public int getPosition() {
+		return position;
+	}
+	
+	public void setPosition(int position) {
+		this.position = position;
+	}
+	
+	public int compareTo(DataInstanceTestCase comparingTestCase) {
+		int comparePosition = comparingTestCase.getPosition(); 
+		return this.position - comparePosition;
+	}
+	
+	public static Comparator<DataInstanceTestCase> testCasePositionComparator = new Comparator<DataInstanceTestCase>() {
+		public int compare(DataInstanceTestCase tc1, DataInstanceTestCase tc2) {
+			return tc1.compareTo(tc2);
+		}
+	};
 }

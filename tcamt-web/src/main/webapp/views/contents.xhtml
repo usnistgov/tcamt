@@ -13,10 +13,14 @@
 
 <h:body>
 	<p:tabView>  
-		<p:ajax event="tabChange" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')} :#{p:component('IsolatedTestForm')}" listener="#{sessionBeanTCAMT.onTabChange}"/>
+		<p:ajax event="tabChange" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('profileForm')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" listener="#{sessionBeanTCAMT.onTabChange}"/>
 
-  		<p:tab id="tab1" title="Home">  
+  		<p:tab id="tab0" title="Home">  
 			<tcamt:home />
+    	</p:tab>
+    	
+  		<p:tab id="tab1" title="Profile">  
+			<tcamt:profile />
     	</p:tab>
     	
     	<p:tab id="tab2" title="Actor">  
@@ -27,12 +31,8 @@
     		<tcamt:message />
     	</p:tab>
     	
-    	<p:tab id="tab4" title="Data Instance Test">  
+    	<p:tab id="tab4" title="Test Plan">  
 			<tcamt:dataInstanceTest />
-    	</p:tab> 
-    	
-    	<p:tab id="tab5" title="Isolated Test">
-    		<tcamt:isolatedTest />
     	</p:tab> 
 	</p:tabView> 
 </h:body>

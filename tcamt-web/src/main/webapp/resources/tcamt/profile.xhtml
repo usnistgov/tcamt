@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:composite="http://java.sun.com/jsf/composite">
+
+<composite:interface>
+</composite:interface>
+
+<composite:implementation>
+	<h:form id="profileForm" onkeypress="if (event.keyCode == 13) { return false; }">
+		<p:accordionPanel widgetVar="ProfileLibPanel">
+			<p:tab title="Profile DashBoard" >
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton value="Register Integrated Profile"
+								icon="ui-icon-plus"
+								update=":#{p:component('createIntegratedProfileForm')}"
+								actionListener="#{conformanceProfileRequestBean.initNewIntegratedProfile}"
+								oncomplete="PF('registerIntegratedProfile').show();" />
+						</td>
+					</tr>
+				</table>
+
+				<p:dataTable id="profileList" var="profile" value="#{conformanceProfileRequestBean.conformanceProfiles}">
+					<p:column headerText="Name">
+						<h:outputText value="#{profile.name}" />
+					</p:column>
+
+					<p:column headerText="ConformanceProfileId">
+						<h:outputText value="#{profile.conformanceProfileId}" />
+					</p:column>
+					
+					<p:column headerText="Test Data Specification XSLT">
+						<h:outputText rendered="#{profile.testDataSpecificationXSLT != null}" value="Uploaded" />
+						<h:outputText rendered="#{profile.testDataSpecificationXSLT == null}" value="NULL" />
+					</p:column>
+					
+					<p:column headerText="Juror Document XSLT">
+						<h:outputText rendered="#{profile.jurorDocumentXSLT != null}" value="Uploaded" />
+						<h:outputText rendered="#{profile.jurorDocumentXSLT == null}" value="NULL" />
+					</p:column>
+
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{profile.lastUpdateDate}" />
+					</p:column>
+					
+					<p:column headerText="Action">
+						<p:commandButton
+							value="Edit" icon="ui-icon-pencil"
+							update=":#{p:component('editProfileForm')}"
+							actionListener="#{conformanceProfileRequestBean.selectProfile}"
+							oncomplete="PF('editProfile').show();" >
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+						<p:commandButton value="Del"
+							actionListener="#{conformanceProfileRequestBean.delProfile}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			
+		</p:accordionPanel>
+	</h:form>
+	
+	<h:form id="editProfileForm">
+		<p:dialog header="Edit Profile" widgetVar="editProfile">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<h:outputText value="#{conformanceProfileRequestBean.selectedProfile.name}"/>
+				<h:outputText value="Conformance Profile Id: " />
+				<h:outputText value="#{conformanceProfileRequestBean.selectedProfile.conformanceProfileId}"/>
+				
+				<h:outputText value="Test Data Specification XSLT: " />
+				<h:panelGrid id="testDataSpecificationXSLTPanel" columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadTestDataSpecificationXSLT}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+				
+				<h:outputText value="Juror Document XSLT: " />
+				<h:panelGrid columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentXSLT}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right"><p:commandButton value="Update"
+							icon="ui-icon-plus" update=":#{p:component('profileForm')}"
+							actionListener="#{conformanceProfileRequestBean.updateProfile}"
+							onclick="PF('editProfile').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="createIntegratedProfileForm">
+		<p:dialog id="createIntegratedProfileDialog" header="Register Integrated Profile" widgetVar="registerIntegratedProfile">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newIntegratedProfile.name}"/>
+				<h:outputText value="Description: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newIntegratedProfile.longDescription}"/>
+				<h:outputText value="Profile: " />
+				<h:panelGrid id="profilePanel" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.profile == null}"
+						fileUploadListener="#{conformanceProfileRequestBean.uploadProfile}"
+						update=":#{p:component('profilePanel')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+					<h:outputText
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.profile != null}"
+						value="Profile Uploaded" />
+				</h:panelGrid>
+				<h:outputText value="Constraints: " />
+				<h:panelGrid id="constraintsPanel" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.constraints == null}"
+						fileUploadListener="#{conformanceProfileRequestBean.uploadConstraints}"
+						update=":#{p:component('constraintsPanel')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+					<h:outputText
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.constraints != null}"
+						value="Constraints Uploaded" />
+				</h:panelGrid>
+				<h:outputText value="ValueSets: " />
+				<h:panelGrid id="valueSetsPanel" columns="1" cellpadding="0">
+					<p:fileUpload
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.valueSet == null}"
+						fileUploadListener="#{conformanceProfileRequestBean.uploadValueSet}"
+						update=":#{p:component('valueSetsPanel')}"
+						mode="advanced"
+						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+					<h:outputText
+						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.valueSet != null}"
+						value="ValueSet Library Uploaded" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Add"
+							icon="ui-icon-plus" update=":#{p:component('profileForm')}"
+							actionListener="#{conformanceProfileRequestBean.addProfile}"
+							onclick="PF('registerIntegratedProfile').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+</composite:implementation>
+
+</html>

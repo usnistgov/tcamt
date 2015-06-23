@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -28,7 +29,8 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
     @GeneratedValue
 	private long id;
 	private String name;
-	private String description;
+	@Column(columnDefinition="longtext")
+	private String longDescription;
 	private String lastUpdateDate;
 	private Integer version;
 	
@@ -56,14 +58,14 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getDescription() {
-		if(description == null || description.equals("")){
-			this.description = "No Description";
+	public String getLongDescription() {
+		if(longDescription == null || longDescription.equals("")){
+			this.longDescription = "No Description";
 		}
-		return description;
+		return longDescription;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setLongDescription(String longDescription) {
+		this.longDescription = longDescription;
 	}
 	public Integer getVersion() {
 		return version;
