@@ -29,11 +29,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
@@ -583,43 +587,64 @@ public class ManageInstance  implements Serializable{
 		return message;
 	}
 
-	public void createConstraintDocument(org.w3c.dom.Document constraintDom, Message m) {
-		
-		Element elmConstraints = (Element)constraintDom.getElementsByTagName("Constraints").item(0);
-		Element elmGroup = (Element)elmConstraints.getElementsByTagName("Group").item(0);
-		
-		Element elmByName = constraintDom.createElement("ByName");
-		String messageName=null;
-		for(TCAMTConstraint c: m.getTcamtConstraints()){
-			messageName = c.getMessageName();
-			String usageList = c.getUsageList();
-			String iPositionPath = c.getiPosition();
-			String iPath = c.getIpath();
-			String tdc = c.getCategorization().getValue();
+	public String generateConstraintDocument(Message m) {
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder;
+			docBuilder = docFactory.newDocumentBuilder();
 			
+			// root elements
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("ConformanceContext");
 			
-			if(c.getCategorization().equals(TestDataCategorization.Indifferent)){
-			}else if(c.getCategorization().equals(TestDataCategorization.ContentIndifferent)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-			}else if(c.getCategorization().equals(TestDataCategorization.Configurable)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-			}else if(c.getCategorization().equals(TestDataCategorization.SystemGenerated)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseProper)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-			}else if(c.getCategorization().equals(TestDataCategorization.NotValued)){
-			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixed)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-				this.createPlainTextCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
-			}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixedList)){
-				this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
-				this.createStringListCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
+			rootElement.setAttribute("UUID", UUID.randomUUID().toString());
+			doc.appendChild(rootElement);
+			
+			Element constraintsElement = doc.createElement("Constraints");
+			Element groupElement = doc.createElement("Group");
+			constraintsElement.appendChild(groupElement);
+			
+			Element elmByName = doc.createElement("ByName");
+			String messageName=null;
+			for(TCAMTConstraint c: m.getTcamtConstraints()){
+				messageName = c.getMessageName();
+				String usageList = c.getUsageList();
+				String iPositionPath = c.getiPosition();
+				String iPath = c.getIpath();
+				String tdc = c.getCategorization().getValue();
+				
+				
+				if(c.getCategorization().equals(TestDataCategorization.Indifferent)){
+				}else if(c.getCategorization().equals(TestDataCategorization.ContentIndifferent)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				}else if(c.getCategorization().equals(TestDataCategorization.Configurable)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				}else if(c.getCategorization().equals(TestDataCategorization.SystemGenerated)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				}else if(c.getCategorization().equals(TestDataCategorization.TestCaseProper)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+				}else if(c.getCategorization().equals(TestDataCategorization.NotValued)){
+				}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixed)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+					this.createPlainTextCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
+				}else if(c.getCategorization().equals(TestDataCategorization.TestCaseFixedList)){
+					this.createPresenceCheck(usageList, iPositionPath,iPath, tdc,  elmByName);
+					this.createStringListCheck(c.getData(), iPositionPath,iPath, tdc,  elmByName);
+				}
 			}
+			if(messageName != null){
+				elmByName.setAttribute("Name", messageName);
+				rootElement.appendChild(constraintsElement);
+			}
+			groupElement.appendChild(elmByName);
+			
+			return XMLManager.docToString(doc);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		if(messageName != null){
-			elmByName.setAttribute("Name", messageName);	
-		}
-		elmGroup.appendChild(elmByName);
+		
+		return null;
 	}
 	
 	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent){
@@ -710,7 +735,8 @@ public class ManageInstance  implements Serializable{
 	}
 	
 	private String getFieldStrFromSegment(String segmentName, InstanceSegment is, int position){
-		String segmentStr = is.getLineStr();
+		// &lt; (<), &amp; (&), &gt; (>), &quot; ("), and &apos; (').
+		String segmentStr = is.getLineStr().replace("<", "&lt;").replace(">", "&gt;").replace("\"", "&quot;").replace("'", "&apos;");
 		if(segmentName.equals("MSH")){
 			segmentStr = "MSH|FieldSeperator|Encoding|" + segmentStr.substring(9);
 		}
@@ -733,6 +759,110 @@ public class ManageInstance  implements Serializable{
 		
 		if(position>subComponentStr.length) return "";
 		else return subComponentStr[position-1];
+		
+	}
+	
+	public String generateMessageContentJSON(Message m, List<InstanceSegment> instanceSegments){
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder;
+			docBuilder = docFactory.newDocumentBuilder();
+			
+			// root elements
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("MessageContent");
+			doc.appendChild(rootElement);
+			
+			
+			for(InstanceSegment instanceSegment:instanceSegments){	
+				Segment segment = m.getSegments().findOne(instanceSegment.getSegmentRef().getRef());
+				String segName = segment.getName();
+				String segDesc = segment.getDescription();
+				String segmentiPath = instanceSegment.getIpath();
+				String obx5DTStr = "";
+				
+				
+				Element segmentElement = doc.createElement("Segment");
+				segmentElement.setAttribute("Name", segName);
+				segmentElement.setAttribute("Description", segDesc);
+				rootElement.appendChild(segmentElement);
+				
+				for(Field field:segment.getFields()){
+					if(field.getUsage().equals(Usage.R) || field.getUsage().equals(Usage.RE)  || field.getUsage().equals(Usage.C)){
+						String wholeFieldStr = this.getFieldStrFromSegment(segName, instanceSegment, field.getPosition());
+						int fieldRepeatIndex = 0;
+
+						for(String fieldStr:wholeFieldStr.split("\\~")){
+							Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
+							if(segName.equals("OBX") && field.getPosition() == 2){
+								obx5DTStr = fieldStr;
+							}
+
+							if(segName.equals("OBX") && field.getPosition() == 5){
+								//TODO OBX Dynamic mapping needed
+								fieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
+							}
+							
+							fieldRepeatIndex = fieldRepeatIndex + 1;
+							String fieldiPath = "." + field.getPosition() + "[" +  fieldRepeatIndex + "]";
+							if(fieldDT == null || fieldDT.getComponents() == null || fieldDT.getComponents().size() == 0 ){
+								Element fieldElement = doc.createElement("Field");
+								fieldElement.setAttribute("Location", segName + "." + field.getPosition());
+								fieldElement.setAttribute("DataElement", field.getName());
+								fieldElement.setAttribute("Data", fieldStr);
+								fieldElement.setAttribute("Categrization", this.findTestDataCategorization(m, segmentiPath + fieldiPath));
+								segmentElement.appendChild(fieldElement);
+							}else {
+								Element fieldElement = doc.createElement("Field");
+								fieldElement.setAttribute("Location", segName + "." + field.getPosition());
+								fieldElement.setAttribute("DataElement", field.getName());
+								segmentElement.appendChild(fieldElement);
+								
+								for(Component c: fieldDT.getComponents() ){
+									String componentiPath = "." + c.getPosition() + "[1]";
+									if(c.getUsage().equals(Usage.R) || c.getUsage().equals(Usage.RE)  || c.getUsage().equals(Usage.C)){
+										String componentStr = this.getComponentStrFromField(fieldStr, c.getPosition());
+										if(m.getDatatypes().findOne(c.getDatatype()).getComponents() == null || m.getDatatypes().findOne(c.getDatatype()).getComponents().size() == 0 ){
+											Element componentElement = doc.createElement("Component");
+											componentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition());
+											componentElement.setAttribute("DataElement", c.getName());
+											componentElement.setAttribute("Data", componentStr);
+											componentElement.setAttribute("Categrization", this.findTestDataCategorization(m, segmentiPath + fieldiPath + componentiPath));
+											fieldElement.appendChild(componentElement);
+										}else {
+											Element componentElement = doc.createElement("Component");
+											componentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition());
+											componentElement.setAttribute("DataElement", c.getName());
+											fieldElement.appendChild(componentElement);
+											
+											for(Component sc: m.getDatatypes().findOne(c.getDatatype()).getComponents() ){
+												String subcomponentiPath = "." + sc.getPosition() + "[1]";
+												String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
+												
+												Element subComponentElement = doc.createElement("SubComponent");
+												subComponentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition());
+												subComponentElement.setAttribute("DataElement", sc.getName());
+												subComponentElement.setAttribute("Data", subcomponentStr);
+												subComponentElement.setAttribute("Categrization", this.findTestDataCategorization(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath));
+												componentElement.appendChild(subComponentElement);
+											}
+										}
+									}
+								}
+								
+								
+							}
+						}
+					}
+				}
+			}
+			
+			return XMLManager.docToString(doc);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 		
 	}
 	

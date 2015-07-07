@@ -61,6 +61,12 @@
 			<artifactId>xmlworker</artifactId>
 			<version>5.5.3</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20141113</version>
+		</dependency>
 
 		<dependency>
 			<groupId>gov.nist.healthcare.hl7tools</groupId>

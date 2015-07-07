@@ -22,7 +22,9 @@ public class IntegratedProfile implements Serializable{
 	@Id
     @GeneratedValue
 	private long id;
+	private String profileIdentifier;
 	private String name;
+	private String lastUpdateDate;
 	
 	@Column(columnDefinition="longtext")
 	private String longDescription;
@@ -85,6 +87,22 @@ public class IntegratedProfile implements Serializable{
 
 	public void setValueSet(String valueSet) {
 		this.valueSet = valueSet;
+	}
+
+	public String getLastUpdateDate() {
+		return lastUpdateDate;
+	}
+
+	public void setLastUpdateDate(String lastUpdateDate) {
+		this.lastUpdateDate = lastUpdateDate;
+	}
+
+	public String getProfileIdentifier() {
+		return profileIdentifier;
+	}
+
+	public void setProfileIdentifier(String profileIdentifier) {
+		this.profileIdentifier = profileIdentifier;
 	}
 	
 	

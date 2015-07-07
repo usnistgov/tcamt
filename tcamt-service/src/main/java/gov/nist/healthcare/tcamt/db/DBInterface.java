@@ -2,6 +2,7 @@ package gov.nist.healthcare.tcamt.db;
 
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
@@ -28,6 +29,12 @@ public interface DBInterface {
 	public void conformanceProfileDelete(ConformanceProfile cp);
 	public List<ConformanceProfile> getAllConformanceProfiles();
 	public ConformanceProfile getConformanceProfileById(long id);
+	
+	public void contextFreeTestPlanInsert(ContextFreeTestPlan cftp);
+	public void contextFreeTestPlanUpdate(ContextFreeTestPlan cftp);
+	public void contextFreeTestPlanDelete(ContextFreeTestPlan cftp);
+	public List<ContextFreeTestPlan> getAllContextFreeTestPlans();
+	public ContextFreeTestPlan getContextFreeTestPlanById(long id);
 	
 	public void actorInsert(Actor a);
 	public void actorUpdate(Actor a);

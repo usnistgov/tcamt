@@ -27,6 +27,9 @@ public class ConformanceProfile implements Serializable{
 	private String name;
 	
 	private String conformanceProfileId;
+	private String valueSetLibraryId;
+	private String constraintId;
+	
 	private String lastUpdateDate;
 	
 	@ManyToOne
@@ -40,6 +43,14 @@ public class ConformanceProfile implements Serializable{
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String jurorDocumentXSLT;
+	
+	@JsonIgnore
+	@Column(columnDefinition="longtext")
+	private String testDataSpecificationJSONXSLT;
+	
+	@JsonIgnore
+	@Column(columnDefinition="longtext")
+	private String jurorDocumentJSONXSLT;
 
 	public long getId() {
 		return id;
@@ -95,6 +106,39 @@ public class ConformanceProfile implements Serializable{
 
 	public void setJurorDocumentXSLT(String jurorDocumentXSLT) {
 		this.jurorDocumentXSLT = jurorDocumentXSLT;
+	}
+
+	public String getTestDataSpecificationJSONXSLT() {
+		return testDataSpecificationJSONXSLT;
+	}
+
+	public void setTestDataSpecificationJSONXSLT(
+			String testDataSpecificationJSONXSLT) {
+		this.testDataSpecificationJSONXSLT = testDataSpecificationJSONXSLT;
+	}
+
+	public String getJurorDocumentJSONXSLT() {
+		return jurorDocumentJSONXSLT;
+	}
+
+	public void setJurorDocumentJSONXSLT(String jurorDocumentJSONXSLT) {
+		this.jurorDocumentJSONXSLT = jurorDocumentJSONXSLT;
+	}
+
+	public String getValueSetLibraryId() {
+		return valueSetLibraryId;
+	}
+
+	public void setValueSetLibraryId(String valueSetLibraryId) {
+		this.valueSetLibraryId = valueSetLibraryId;
+	}
+
+	public String getConstraintId() {
+		return constraintId;
+	}
+
+	public void setConstraintId(String constraintId) {
+		this.constraintId = constraintId;
 	}
 	
 	

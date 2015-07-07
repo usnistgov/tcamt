@@ -59,7 +59,7 @@
 				value="#{model.node.maxLength}]" />
 		</p:column>
 		<p:column headerText="Value Set" style="width:10%; text-align: center;">
-			<h:outputText value="#{model.table.mappingId}" />
+			<h:outputText value="#{model.table.bindingIdentifier}" />
 		</p:column>
 		
 		<p:column headerText="Test Data" style="width:7%; text-align: center;">
@@ -69,7 +69,7 @@
 			</p:inputText>
 			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.code}" itemValue="#{code.code}" />
+				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.value}" itemValue="#{code.value}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 				<p:ajax event="change" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:selectOneMenu>

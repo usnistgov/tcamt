@@ -3,7 +3,9 @@ package gov.nist.healthcare.tcamt.view;
 import gov.nist.healthcare.tcamt.db.DBImpl;
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -26,7 +28,9 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	private DBImpl dbManager = new DBImpl();
 	
+	private List<IntegratedProfile> integratedProfiles;
 	private List<ConformanceProfile> conformanceProfiles;
+	private List<ContextFreeTestPlan> contextFreeTestPlans;
 	private List<Actor> actors;
 	private List<Message> messages;
 	private List<DataInstanceTestPlan> dataInstanceTestPlans;
@@ -44,7 +48,9 @@ public class SessionBeanTCAMT implements Serializable {
 	public void onTabChange(TabChangeEvent event) {
 		String tabTitle = event.getTab().getTitle();
 		if(tabTitle.equals("Profile")){
+			this.updateIntegratedProfiles();
 			this.updateConformanceProfiles();
+			this.updateContextFreeTestPlans();
 		}else if(tabTitle.equals("Actor")){
 			this.updateActors();
 		}else if(tabTitle.equals("Message")){
@@ -64,6 +70,14 @@ public class SessionBeanTCAMT implements Serializable {
 		this.updateDataInstanceTestPlans();
 	}
 
+	public void updateContextFreeTestPlans(){
+		this.contextFreeTestPlans = this.dbManager.getAllContextFreeTestPlans();
+	}
+	
+	public void updateIntegratedProfiles(){
+		this.integratedProfiles = this.dbManager.getAllIntegratedProfiles();
+	}
+	
 	public void updateConformanceProfiles(){
 		this.conformanceProfiles = this.dbManager.getAllConformanceProfiles();
 	}
@@ -80,31 +94,10 @@ public class SessionBeanTCAMT implements Serializable {
 		this.dataInstanceTestPlans = this.dbManager.getAllDataInstanceTestPlans(this.loggedUser);
 	}
 	
-	public boolean isLatestActor(Actor actor){
-		if(actor != null){
-			for(Actor a:this.actors){
-				if(a.getId() == actor.getId()){
-					if(a.getVersion().intValue() == actor.getVersion().intValue()) return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	public boolean isLatestMessage(Message message){
-		if(message != null){
-			for(Message m:this.messages){
-				if(m.getId() == message.getId()){
-					if(m.getVersion().intValue() == message.getVersion().intValue()) return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 	public void retriveAllData() {
+		this.updateIntegratedProfiles();
 		this.updateConformanceProfiles();
+		this.updateContextFreeTestPlans();
 		this.updateActors();
 		this.updateMessages();
 		this.updateDataInstanceTestPlans();
@@ -180,6 +173,22 @@ public class SessionBeanTCAMT implements Serializable {
 
 	public void setConformanceProfiles(List<ConformanceProfile> conformanceProfiles) {
 		this.conformanceProfiles = conformanceProfiles;
+	}
+
+	public List<IntegratedProfile> getIntegratedProfiles() {
+		return integratedProfiles;
+	}
+
+	public void setIntegratedProfiles(List<IntegratedProfile> integratedProfiles) {
+		this.integratedProfiles = integratedProfiles;
+	}
+
+	public List<ContextFreeTestPlan> getContextFreeTestPlans() {
+		return contextFreeTestPlans;
+	}
+
+	public void setContextFreeTestPlans(List<ContextFreeTestPlan> contextFreeTestPlans) {
+		this.contextFreeTestPlans = contextFreeTestPlans;
 	}
 	
 }

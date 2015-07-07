@@ -16,6 +16,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table
 public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Comparable<DataInstanceTestCaseGroup> {
@@ -25,16 +28,25 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 	 */
 	private static final long serialVersionUID = 2555650104975908781L;
 
+	@JsonIgnore
 	@Id
 	@GeneratedValue
 	private long id;
+	
 	private String name;
+	
+	@JsonProperty("description")
 	@Column(columnDefinition="longtext")
 	private String longDescription;
+	
+	
+	@JsonIgnore
 	private Integer version;
+	
+	@JsonIgnore
 	private int position;
 
-	// @OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinTable(name = "ditcg_ditc", joinColumns = { @JoinColumn(name = "testcasegroup_id") }, inverseJoinColumns = { @JoinColumn(name = "testcase_id") })
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();

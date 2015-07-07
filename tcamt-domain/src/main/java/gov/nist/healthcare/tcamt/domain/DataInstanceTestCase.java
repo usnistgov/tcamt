@@ -17,6 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table
 public class DataInstanceTestCase implements Cloneable, Serializable, Comparable<DataInstanceTestCase>{
@@ -25,25 +28,33 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	 */
 	private static final long serialVersionUID = 8805967508478985159L;
 	
+	@JsonIgnore
 	@Id
     @GeneratedValue
 	private long id;
+	
 	private String name;
 	
+	@JsonProperty("description")
 	@Column(columnDefinition="longtext")
 	private String longDescription;
+	
+	@JsonIgnore
 	private Integer version;
+	
+	@JsonIgnore
 	private int position;
 	
-//	@OneToMany(fetch=FetchType.EAGER, cascade = {CascadeType.ALL})
+	@JsonIgnore
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditc_dits", joinColumns = {@JoinColumn(name="testcase_id")}, inverseJoinColumns = {@JoinColumn(name="teststep_id")} )
 	private Set<DataInstanceTestStep> teststeps = new HashSet<DataInstanceTestStep>();
 	
 	
-	
+	@JsonIgnore
 	@Embedded
 	private TestStory testCaseStory = new TestStory();
+	
 	public long getId() {
 		return id;
 	}
@@ -117,7 +128,7 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 		int comparePosition = comparingTestCase.getPosition(); 
 		return this.position - comparePosition;
 	}
-	
+
 	public static Comparator<DataInstanceTestCase> testCasePositionComparator = new Comparator<DataInstanceTestCase>() {
 		public int compare(DataInstanceTestCase tc1, DataInstanceTestCase tc2) {
 			return tc1.compareTo(tc2);

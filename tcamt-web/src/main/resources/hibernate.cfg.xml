@@ -32,5 +32,8 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TCAMTConstraint"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TestStory"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.Metadata"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.TestObject"></mapping>
 	</session-factory>
 </hibernate-configuration>

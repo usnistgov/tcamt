@@ -37,13 +37,16 @@
 		
 		<p:ajax event="rowSelect" listener="#{cc.attrs.bean.onInstanceSegmentSelect}" update="#{cc.attrs.panelId}" />
 		<p:column headerText="Path">
-			<h:outputText value="#{instanceSegment.ipath}" />
+			<h:outputText value="#{instanceSegment.ipath}" width="40%"/>
 		</p:column>
-		<p:column headerText="Usage" filterFunction="#{cc.attrs.bean.filterByUsageList}">
+		<p:column headerText="Line">
+			<h:outputText value="#{instanceSegment.lineStr}" width="45%"/>
+		</p:column>
+		<p:column headerText="Usage" filterFunction="#{cc.attrs.bean.filterByUsageList}" width="10%">
 			<h:outputText value="#{instanceSegment.usageList}" />
 		</p:column>
-		<p:column headerText="Action">
-			<p:commandButton value="Del Segment" actionListener="#{cc.attrs.bean.delInstanceSegment}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Del">
+		<p:column headerText="Action" width="5%">
+			<p:commandButton value="Del" actionListener="#{cc.attrs.bean.delInstanceSegment}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Del">
 				<f:attribute name="instanceSegment" value="#{instanceSegment}" />
 			</p:commandButton>
 		</p:column>

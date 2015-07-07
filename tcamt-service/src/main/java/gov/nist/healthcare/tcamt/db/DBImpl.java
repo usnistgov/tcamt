@@ -2,6 +2,7 @@ package gov.nist.healthcare.tcamt.db;
 
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.Message;
@@ -93,6 +94,7 @@ public class DBImpl implements DBInterface, Serializable {
 	public List<User> getAllUsers() {
 		this.openCurrentSession();
 		Criteria criteria = this.currentSession.createCriteria(User.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List<User> results = criteria.list();
 		this.closeCurrentSession();
 		return results;
@@ -118,12 +120,18 @@ public class DBImpl implements DBInterface, Serializable {
 	
 	public void integratedProfileInsert(IntegratedProfile ip) {
 		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		ip.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.save(ip);
 		this.closeCurrentSession();
 	}
 
 	public void integratedProfileUpdate(IntegratedProfile ip) {
 		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		ip.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.update(ip);
 		this.closeCurrentSession();
 	}
@@ -139,6 +147,7 @@ public class DBImpl implements DBInterface, Serializable {
 	public List<IntegratedProfile> getAllIntegratedProfiles() {
 		this.openCurrentSession();
 		Criteria criteria = this.currentSession.createCriteria(IntegratedProfile.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List<IntegratedProfile> results = criteria.list();
 		this.closeCurrentSession();
 		return results;
@@ -162,6 +171,9 @@ public class DBImpl implements DBInterface, Serializable {
 
 	public void conformanceProfileUpdate(ConformanceProfile cp) {
 		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		cp.setLastUpdateDate(dateFormat.format(date));
 		this.currentSession.update(cp);
 		this.closeCurrentSession();
 	}
@@ -177,6 +189,7 @@ public class DBImpl implements DBInterface, Serializable {
 	public List<ConformanceProfile> getAllConformanceProfiles() {
 		this.openCurrentSession();
 		Criteria criteria = this.currentSession.createCriteria(ConformanceProfile.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List<ConformanceProfile> results = criteria.list();
 		this.closeCurrentSession();
 		return results;
@@ -214,6 +227,7 @@ public class DBImpl implements DBInterface, Serializable {
 		this.openCurrentSession();
 		Criteria criteria = this.currentSession.createCriteria(Actor.class);
 		criteria.add(Restrictions.eq("author", author));
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		List<Actor> results = (List<Actor>) criteria.list();
 		this.closeCurrentSession();
 		return results;
@@ -320,5 +334,49 @@ public class DBImpl implements DBInterface, Serializable {
 		}else {
 			return results.get(0);
 		}
+	}
+
+	public void contextFreeTestPlanInsert(ContextFreeTestPlan cftp) {
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		cftp.setLastUpdateDate(dateFormat.format(date));
+		this.currentSession.save(cftp);
+		this.closeCurrentSession();
+		
+	}
+
+	public void contextFreeTestPlanUpdate(ContextFreeTestPlan cftp) {
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		cftp.setLastUpdateDate(dateFormat.format(date));
+		this.currentSession.update(cftp);
+		this.closeCurrentSession();
+		
+	}
+
+	public void contextFreeTestPlanDelete(ContextFreeTestPlan cftp) {
+		this.openCurrentSession();
+		this.currentSession.delete(cftp);
+		this.closeCurrentSession();
+		
+	}
+
+	public List<ContextFreeTestPlan> getAllContextFreeTestPlans() {
+		this.openCurrentSession();
+		Criteria criteria = this.currentSession.createCriteria(ContextFreeTestPlan.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		@SuppressWarnings("unchecked")
+		List<ContextFreeTestPlan> results = criteria.list();
+		this.closeCurrentSession();
+		return results;
+	}
+
+	public ContextFreeTestPlan getContextFreeTestPlanById(long id) {
+		this.openCurrentSession();
+		ContextFreeTestPlan cftp = (ContextFreeTestPlan)this.currentSession.get(ContextFreeTestPlan.class, id);
+		this.closeCurrentSession();
+		return cftp;
 	}
 }
