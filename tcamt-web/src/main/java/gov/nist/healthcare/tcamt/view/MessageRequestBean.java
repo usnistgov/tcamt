@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.view;
 
+import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
@@ -10,8 +11,9 @@ import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
-import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,313 +89,359 @@ public class MessageRequestBean implements Serializable {
 	}
 	
 	public void delMessage(ActionEvent event) {
-		String deletedMessageName = ((Message) event.getComponent().getAttributes().get("message")).getName();
-		this.sessionBeanTCAMT.getDbManager().messageDelete((Message) event.getComponent().getAttributes().get("message"));
-		this.sessionBeanTCAMT.updateMessages();
-		
-		FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Message Deleted.",  "Message: " + deletedMessageName + " has been created.") );
-		
-		this.init();
+		try{
+			String deletedMessageName = ((Message) event.getComponent().getAttributes().get("message")).getName();
+			this.sessionBeanTCAMT.getDbManager().messageDelete((Message) event.getComponent().getAttributes().get("message"));
+			this.sessionBeanTCAMT.updateMessages();
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Message Deleted.",  "Message: " + deletedMessageName + " has been created.") );
+			
+			this.init();
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
-	public void cloneMessage(ActionEvent event) throws CloneNotSupportedException, IOException {	
-		Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
-		m.setName("Copy_" + m.getName());
-		m.setVersion(1);
-		this.sessionBeanTCAMT.getDbManager().messageInsert(m);
-		this.sessionBeanTCAMT.updateMessages();
-		
-		
-		this.editMessage = m;
-		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		this.readHL7Message();
-		this.shareTo = null;
-		
-		this.setActiveIndexOfMessageInstancePanel(2);
-		this.sessionBeanTCAMT.setmActiveIndex(1);
-		FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Message Cloned.",  "Message: " + this.editMessage.getName() + " has been created.") );
+	public void cloneMessage(ActionEvent event) {
+		try{
+			Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
+			m.setName("Copy_" + m.getName());
+			m.setVersion(1);
+			this.sessionBeanTCAMT.getDbManager().messageInsert(m);
+			this.sessionBeanTCAMT.updateMessages();
+			
+			
+			this.editMessage = m;
+			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			this.readHL7Message();
+			this.shareTo = null;
+			
+			this.setActiveIndexOfMessageInstancePanel(2);
+			this.sessionBeanTCAMT.setmActiveIndex(1);
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Message Cloned.",  "Message: " + this.editMessage.getName() + " has been created.") );	
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
 	public void createMessage() {
-		this.newMessage = new Message();
-		this.conformanceProfileId = null;
+		try{
+			this.newMessage = new Message();
+			this.conformanceProfileId = null;	
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
-	public void addMessage() throws CloneNotSupportedException, IOException {
-		this.newMessage.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
-		this.newMessage.setConformanceProfile(this.sessionBeanTCAMT.getDbManager().getConformanceProfileById(this.conformanceProfileId));
-		this.newMessage.setVersion(1);
-		this.sessionBeanTCAMT.getDbManager().messageInsert(this.newMessage);
-		this.sessionBeanTCAMT.updateMessages();
-		
-		this.editMessage = newMessage;
-		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		this.readHL7Message();
-		this.shareTo = null;
-		
-		this.setActiveIndexOfMessageInstancePanel(2);
-		this.sessionBeanTCAMT.setmActiveIndex(1);
-		FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Message Created.",  "Message: " + this.editMessage.getName() + " has been created.") );
-        
-        
+	public void addMessage() {
+		try{
+			this.newMessage.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+			this.newMessage.setConformanceProfile(this.sessionBeanTCAMT.getDbManager().getConformanceProfileById(this.conformanceProfileId));
+			this.newMessage.setVersion(1);
+			this.sessionBeanTCAMT.getDbManager().messageInsert(this.newMessage);
+			this.sessionBeanTCAMT.updateMessages();
+			
+			this.editMessage = newMessage;
+			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			this.readHL7Message();
+			this.shareTo = null;
+			
+			this.setActiveIndexOfMessageInstancePanel(2);
+			this.sessionBeanTCAMT.setmActiveIndex(1);
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Message Created.",  "Message: " + this.editMessage.getName() + " has been created.") );			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
-	public void profileUpdateMessage() throws CloneNotSupportedException, IOException{
-		this.setActiveIndexOfMessageInstancePanel(1);
-		this.sessionBeanTCAMT.setmActiveIndex(1);
-		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		this.readHL7Message();
-		
+	public void profileUpdateMessage() {
+		try{
+			this.setActiveIndexOfMessageInstancePanel(1);
+			this.sessionBeanTCAMT.setmActiveIndex(1);
+			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			this.readHL7Message();			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 
-	public void selectEditMessage(ActionEvent event) throws CloneNotSupportedException, IOException {
-		this.init();
-		this.editMessage = (Message) event.getComponent().getAttributes().get("message");
-		this.editMessage = this.sessionBeanTCAMT.getDbManager().getMessageById(this.editMessage.getId());
-		if(this.editMessage.getConformanceProfile() == null) this.conformanceProfileId = null;
-		else this.conformanceProfileId = this.editMessage.getConformanceProfile().getId();
-		
-		this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		this.readHL7Message();
-		this.shareTo = null;
-		
-		this.setActiveIndexOfMessageInstancePanel(2);
-		this.sessionBeanTCAMT.setmActiveIndex(1);
+	public void selectEditMessage(ActionEvent event) {
+		try{
+			this.init();
+			this.editMessage = (Message) event.getComponent().getAttributes().get("message");
+			this.editMessage = this.sessionBeanTCAMT.getDbManager().getMessageById(this.editMessage.getId());
+			if(this.editMessage.getConformanceProfile() == null) this.conformanceProfileId = null;
+			else this.conformanceProfileId = this.editMessage.getConformanceProfile().getId();
+			
+			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			this.readHL7Message();
+			this.shareTo = null;
+			
+			this.setActiveIndexOfMessageInstancePanel(2);
+			this.sessionBeanTCAMT.setmActiveIndex(1);			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
-//	private void travelSegment(Profile p, Segment s, String path, TreeNode parentNode) {
-//		List<Field> fields = s.getFields();
-//		for (Field f : fields) {
-//			travelField(p, f, path, parentNode);
-//		}
-//	}
-//	
-//	private void travelField(Profile p, Field f, String path, TreeNode parentNode) {
-//		path = path + "." + f.getPosition();
-//		String segmentRootName = path.split("\\.")[0];
-//		Datatype dt = p.getDatatypes().findOne(f.getDatatype());	
-//		List<Component> components = dt.getComponents();
-//		boolean isLeafNode = false;
-//		
-//		if(components == null || components.size() == 0){
-//			isLeafNode = true;
-//		}
-//		
-//
-//		SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, f.getName(), f, path, path, null, null, null, isLeafNode, f.getMin());
-//		TreeNode treeNode = new DefaultTreeNode(segmentTreeModel,  parentNode);
-//
-//	
-//		travelDT(p, dt, path, treeNode);
-//	}
-//
-//	private void travelDT(Profile p, Datatype dt, String path, TreeNode parentNode) {
-//		List<Component> components = dt.getComponents();
-//		if (components == null) {
-//		} else {
-//			for (Component c : components) {
-//				String newPath = path + "." + c.getPosition();
-//				String segmentRootName = newPath.split("\\.")[0];
-//				
-//				Datatype childdt = p.getDatatypes().findOne(c.getDatatype());	
-//				List<Component> childComponents = childdt.getComponents();
-//				boolean isLeafNode = false;
-//				
-//				if(childComponents == null || childComponents.size() == 0){
-//					isLeafNode = true;
-//				}
-//
-//				SegmentTreeModel segmentTreeModel = new SegmentTreeModel(segmentRootName, c.getName(), c, newPath, newPath, null, null, null, isLeafNode, 1);
-//				TreeNode treeNode = (TreeNode) new DefaultTreeNode(segmentTreeModel, (org.primefaces.model.TreeNode) parentNode);
-//
-//				travelDT(p, childdt, newPath, treeNode);
-//			}
-//		}
-//
-//	}
-	
-	public void delInstanceSegment(ActionEvent event) throws CloneNotSupportedException, IOException {
-		InstanceSegment toBeDeletedInstanceSegment = (InstanceSegment)event.getComponent().getAttributes().get("instanceSegment");
-		
-		int rowIndex = this.instanceSegments.indexOf(toBeDeletedInstanceSegment);
-		String[] lines = this.editMessage.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
-		String editedHl7EndcodedMessage = "";
-		for(int i=0; i<lines.length;i++){
-			if(i != rowIndex){
-				editedHl7EndcodedMessage = editedHl7EndcodedMessage + lines[i] + System.getProperty("line.separator");
+	public void delInstanceSegment(ActionEvent event) {
+		try{
+			InstanceSegment toBeDeletedInstanceSegment = (InstanceSegment)event.getComponent().getAttributes().get("instanceSegment");
+			
+			int rowIndex = this.instanceSegments.indexOf(toBeDeletedInstanceSegment);
+			String[] lines = this.editMessage.getHl7EndcodedMessage().split(System.getProperty("line.separator"));
+			String editedHl7EndcodedMessage = "";
+			for(int i=0; i<lines.length;i++){
+				if(i != rowIndex){
+					editedHl7EndcodedMessage = editedHl7EndcodedMessage + lines[i] + System.getProperty("line.separator");
+				}
 			}
+			this.editMessage.setHl7EndcodedMessage(editedHl7EndcodedMessage);
+			this.readHL7Message();			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
-		this.editMessage.setHl7EndcodedMessage(editedHl7EndcodedMessage);
-		this.readHL7Message();
 	}
 
 	public void createTCAMTConstraint(Object model) {
-		String ipath = null;
-		String data = null;
-		String level = "Message";
-		String iPosition = null;
-		String messageName = null;
-		String usageList = null;
-		TestDataCategorization tdc = null;
-		
-		if(model instanceof FieldModel){
-			FieldModel fModel = (FieldModel)model;
-			ipath = fModel.getIpath();
-			data = fModel.getData();
-			tdc = fModel.getTdc();
-			iPosition = fModel.getiPositionPath();
-			messageName = fModel.getMessageName();
-			usageList = fModel.getUsageList();
-		}else if(model instanceof ComponentModel){
-			ComponentModel cModel = (ComponentModel)model;
-			ipath = cModel.getIpath();
-			data = cModel.getData();
-			tdc = cModel.getTdc();
-			iPosition = cModel.getiPositionPath();
-			messageName = cModel.getMessageName();
-			usageList = cModel.getUsageList();
+		try{
+			String ipath = null;
+			String data = null;
+			String level = "Message";
+			String iPosition = null;
+			String messageName = null;
+			String usageList = null;
+			TestDataCategorization tdc = null;
+			
+			if(model instanceof FieldModel){
+				FieldModel fModel = (FieldModel)model;
+				ipath = fModel.getIpath();
+				data = fModel.getData();
+				tdc = fModel.getTdc();
+				iPosition = fModel.getiPositionPath();
+				messageName = fModel.getMessageName();
+				usageList = fModel.getUsageList();
+			}else if(model instanceof ComponentModel){
+				ComponentModel cModel = (ComponentModel)model;
+				ipath = cModel.getIpath();
+				data = cModel.getData();
+				tdc = cModel.getTdc();
+				iPosition = cModel.getiPositionPath();
+				messageName = cModel.getMessageName();
+				usageList = cModel.getUsageList();
+			}
+			this.editMessage.deleteTCAMTConstraintByIPath(ipath);
+			if(tdc != null && !tdc.getValue().equals("")){
+				TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
+				tcamtConstraint.setCategorization(tdc);
+				tcamtConstraint.setData(data);
+				tcamtConstraint.setIpath(ipath);
+				tcamtConstraint.setLevel(level);
+				tcamtConstraint.setiPosition(iPosition);
+				tcamtConstraint.setMessageName(messageName);
+				tcamtConstraint.setUsageList(usageList);
+				this.editMessage.addTCAMTConstraint(tcamtConstraint);
+			}
+			
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);	
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
-		this.editMessage.deleteTCAMTConstraintByIPath(ipath);
-		if(tdc != null && !tdc.getValue().equals("")){
-			TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
-			tcamtConstraint.setCategorization(tdc);
-			tcamtConstraint.setData(data);
-			tcamtConstraint.setIpath(ipath);
-			tcamtConstraint.setLevel(level);
-			tcamtConstraint.setiPosition(iPosition);
-			tcamtConstraint.setMessageName(messageName);
-			tcamtConstraint.setUsageList(usageList);
-			this.editMessage.addTCAMTConstraint(tcamtConstraint);
-		}
-		
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
 	}
 	
 	public void deleteConstraint(String ipath){
-		this.editMessage.deleteTCAMTConstraintByIPath(ipath);
-		this.selectedInstanceSegment = null;
-		this.segmentTreeRoot = new DefaultTreeNode("root", null);
-		
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+		try{
+			this.editMessage.deleteTCAMTConstraintByIPath(ipath);
+			this.selectedInstanceSegment = null;
+			this.segmentTreeRoot = new DefaultTreeNode("root", null);
+			
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 
-	public void shareMessage() throws CloneNotSupportedException {
-		this.editMessage = this.editMessage.clone();
-		this.editMessage.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
-		this.editMessage.setVersion(1);
-		this.sessionBeanTCAMT.getDbManager().messageInsert(this.editMessage);
-		this.sessionBeanTCAMT.updateMessages();
-		
-		FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage("Message sharing.",  "Message: " + this.editMessage.getName() + " has been sented to " + this.editMessage.getAuthor().getUserId()) );
-        
-        this.init();
-        
-        this.sessionBeanTCAMT.setmActiveIndex(0);
+	public void shareMessage() {
+		try{
+			this.editMessage = this.editMessage.clone();
+			this.editMessage.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
+			this.editMessage.setVersion(1);
+			this.sessionBeanTCAMT.getDbManager().messageInsert(this.editMessage);
+			this.sessionBeanTCAMT.updateMessages();
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Message sharing.",  "Message: " + this.editMessage.getName() + " has been sented to " + this.editMessage.getAuthor().getUserId()) );
+	        
+	        this.init();
+	        
+	        this.sessionBeanTCAMT.setmActiveIndex(0);			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 
 	public void saveMessage() {
-		if(this.editMessage != null && this.editMessage.getVersion() != null){
-			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("Message Saved.",  "Message: " + this.editMessage.getName() + " has been saved.") );
-			this.editMessage.setVersion(this.editMessage.getVersion() + 1);
-			this.editMessage.setConformanceProfile(this.sessionBeanTCAMT.getDbManager().getConformanceProfileById(this.conformanceProfileId));
-			this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);
-			this.sessionBeanTCAMT.updateMessages();	
+		try{
+			if(this.editMessage != null && this.editMessage.getVersion() != null){
+				FacesContext context = FacesContext.getCurrentInstance();
+		        context.addMessage(null, new FacesMessage("Message Saved.",  "Message: " + this.editMessage.getName() + " has been saved.") );
+				this.editMessage.setVersion(this.editMessage.getVersion() + 1);
+				this.editMessage.setConformanceProfile(this.sessionBeanTCAMT.getDbManager().getConformanceProfileById(this.conformanceProfileId));
+				this.sessionBeanTCAMT.getDbManager().messageUpdate(this.editMessage);
+				this.sessionBeanTCAMT.updateMessages();	
+			}			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
 
-	public void updateInstanceData(Object model) throws CloneNotSupportedException, IOException {
-		int lineNum = this.instanceSegments.indexOf(this.selectedInstanceSegment);
-		this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.editMessage);
-		this.readHL7Message();
-		this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
-		this.activeIndexOfMessageInstancePanel = 3;
+	public void updateInstanceData(Object model) {
+		try{
+			int lineNum = this.instanceSegments.indexOf(this.selectedInstanceSegment);
+			this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.editMessage);
+			this.readHL7Message();
+			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
+			this.activeIndexOfMessageInstancePanel = 3;			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
 	public void onInstanceSegmentSelect(SelectEvent event){
-		this.segmentTreeRoot = new DefaultTreeNode("root", null);
-		this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.editMessage);
-		
-		this.updateFilteredSegmentTree();
-		
-		this.activeIndexOfMessageInstancePanel = 3;
+		try{
+			this.segmentTreeRoot = new DefaultTreeNode("root", null);
+			this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.editMessage);
+			
+			this.updateFilteredSegmentTree();
+			
+			this.activeIndexOfMessageInstancePanel = 3;			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
-	public void readHL7Message() throws CloneNotSupportedException, IOException{
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		if(this.editMessage.getHl7EndcodedMessage() != null &&  this.editMessage.getConformanceProfile() != null && !this.editMessage.getHl7EndcodedMessage().equals("")){
-			this.manageInstanceService.loadMessageInstance(this.editMessage, this.instanceSegments);
-			this.selectedInstanceSegment = null;
+	public void readHL7Message() throws Exception{
+		try{
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.editMessage.getHl7EndcodedMessage() != null &&  this.editMessage.getConformanceProfile() != null && !this.editMessage.getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.editMessage, this.instanceSegments);
+				this.selectedInstanceSegment = null;
+			}
+			this.activeIndexOfMessageInstancePanel = 2;
+			this.updateFilteredInstanceSegments();	
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
-		this.activeIndexOfMessageInstancePanel = 2;
-		this.updateFilteredInstanceSegments();
 	}
 	
 	public void addRepeatedField(FieldModel fieldModel){
-		this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.editMessage);
-		this.updateFilteredSegmentTree();
+		try{
+			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.editMessage);
+			this.updateFilteredSegmentTree();	
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
 	public void addNode(){
-		
-		TreeNode parent = this.selectedNode.getParent();
-		
-		int position = parent.getChildren().indexOf(this.selectedNode);
-		
-		MessageTreeModel model = (MessageTreeModel)this.selectedNode.getData();
-		MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
-		TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
-		
-		this.manageInstanceService.populateTreeNode(newNode, this.editMessage);
-		
-		parent.getChildren().add(position + 1, newNode);
+		try{
+			TreeNode parent = this.selectedNode.getParent();
+			
+			int position = parent.getChildren().indexOf(this.selectedNode);
+			
+			MessageTreeModel model = (MessageTreeModel)this.selectedNode.getData();
+			MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
+			TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
+			
+			this.manageInstanceService.populateTreeNode(newNode, this.editMessage);
+			
+			parent.getChildren().add(position + 1, newNode);			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 
-	public void genrateHL7Message() throws CloneNotSupportedException, IOException{
-		this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot, this.editMessage));
-		this.readHL7Message();
+	public void genrateHL7Message(){
+		try{
+			this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot, this.editMessage));
+			this.readHL7Message();			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
 	}
 	
 	public void updateFilteredInstanceSegments() {
-		this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
-		
-		if(this.usageViewOption.equals("all")){
-			this.filteredInstanceSegments = this.instanceSegments;
-		}else{
-			for(InstanceSegment is:this.instanceSegments){
-				String[] usageList = is.getUsageList().split("-");
-				boolean usageCheck = true;
-				
-	        	for(String u:usageList){
-	        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
-	        			usageCheck = false;
-	        		}
-	        	}
-	        	
-	        	if(usageCheck) this.filteredInstanceSegments.add(is);
-			}
-		}     
+		try{
+			this.filteredInstanceSegments = new ArrayList<InstanceSegment>();
+			
+			if(this.usageViewOption.equals("all")){
+				this.filteredInstanceSegments = this.instanceSegments;
+			}else{
+				for(InstanceSegment is:this.instanceSegments){
+					String[] usageList = is.getUsageList().split("-");
+					boolean usageCheck = true;
+					
+		        	for(String u:usageList){
+		        		if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+		        			usageCheck = false;
+		        		}
+		        	}
+		        	
+		        	if(usageCheck) this.filteredInstanceSegments.add(is);
+				}
+			}			
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
     }
 	
-	public void updateFilteredSegmentTree(){	
-		if(this.usageViewOption2.equals("all")){
-			this.filtedSegmentTreeRoot = this.segmentTreeRoot;
-		}else {
-			this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+	public void updateFilteredSegmentTree(){
+		try{
+			if(this.usageViewOption2.equals("all")){
+				this.filtedSegmentTreeRoot = this.segmentTreeRoot;
+			}else {
+				this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+			}
+		}catch(Exception e){
+			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
-		
+	}
+	
+	private String getStackTrace(final Throwable throwable) {
+	     final StringWriter sw = new StringWriter();
+	     final PrintWriter pw = new PrintWriter(sw, true);
+	     throwable.printStackTrace(pw);
+	     return sw.getBuffer().toString();
 	}
 	
 	/**

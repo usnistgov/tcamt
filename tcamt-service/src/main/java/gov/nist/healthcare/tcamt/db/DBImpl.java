@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -30,8 +31,6 @@ public class DBImpl implements DBInterface, Serializable {
 	private SessionFactory sessionFactory;
 	private Session currentSession;
 	private Transaction currentTransaction;
-
-	
 	
 	public DBImpl() {
 		super();
@@ -58,14 +57,8 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("deprecation")
 	private static SessionFactory getSessionFactory() {
-		try {
-			Configuration configuration = new Configuration().configure();
-			return configuration.buildSessionFactory();
-		} catch (Throwable ex) {
-			// Make sure you log the exception, as it might be swallowed
-			System.err.println("Initial SessionFactory creation failed." + ex);
-			throw new ExceptionInInitializerError(ex);
-		}
+		Configuration configuration = new Configuration().configure();
+		return configuration.buildSessionFactory();
 	}
 
 	public User isValidUser(User user) {
@@ -378,5 +371,39 @@ public class DBImpl implements DBInterface, Serializable {
 		ContextFreeTestPlan cftp = (ContextFreeTestPlan)this.currentSession.get(ContextFreeTestPlan.class, id);
 		this.closeCurrentSession();
 		return cftp;
+	}
+
+	public void logInsert(Log l) {
+		this.openCurrentSession();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		l.setLastUpdateDate(dateFormat.format(date));
+		this.currentSession.save(l);
+		this.closeCurrentSession();
+	}
+
+	public void allLogsDelete() {
+		this.openCurrentSession();
+		Criteria criteria = this.currentSession.createCriteria(Log.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		@SuppressWarnings("unchecked")
+		List<Log> results = criteria.list();
+		
+		for(Log l:results){
+			this.currentSession.delete(l);
+		}
+		
+		this.closeCurrentSession();
+
+	}
+
+	public List<Log> getAllLogs() {
+		this.openCurrentSession();
+		Criteria criteria = this.currentSession.createCriteria(Log.class);
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		@SuppressWarnings("unchecked")
+		List<Log> results = criteria.list();
+		this.closeCurrentSession();
+		return results;
 	}
 }

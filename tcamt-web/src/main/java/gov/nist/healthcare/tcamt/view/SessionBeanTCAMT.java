@@ -6,6 +6,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -189,6 +190,14 @@ public class SessionBeanTCAMT implements Serializable {
 
 	public void setContextFreeTestPlans(List<ContextFreeTestPlan> contextFreeTestPlans) {
 		this.contextFreeTestPlans = contextFreeTestPlans;
+	}
+	
+	public List<Log> getAllLogs(){
+		return this.dbManager.getAllLogs();
+	}
+	
+	public void deleteAllLogs() {
+		this.dbManager.allLogsDelete();
 	}
 	
 }

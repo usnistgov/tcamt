@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:vsm="http://java.sun.com/jsf/composite/vsm">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="resources/css/main.css" />
+	<link type="text/css" rel="stylesheet" href="resources/css/primeface.custom.css" />
+</h:head>
+
+<h:body>
+	<h:body id="tcamtbody">
+		<ui:include src="/views/header.xhtml" />
+		
+		<h:form id="logForm">
+		<p:accordionPanel widgetVar="LogPanel">
+			<p:tab title="Logs DashBoard" >
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton
+									value="Delete All Logs" icon="ui-icon-minus"
+									update=":#{p:component('logForm')}"
+									actionListener="#{sessionBeanTCAMT.deleteAllLogs}" />
+						</td>
+					</tr>
+				</table>
+				
+				<p:dataTable var="log" value="#{sessionBeanTCAMT.allLogs}">
+					<p:column headerText="Name">
+						<h:outputText value="#{log.name}" />
+					</p:column>
+					<p:column headerText="Type">
+						<h:outputText value="#{log.type}" />
+					</p:column>
+					<p:column headerText="Description">
+						<p:inputTextarea rows="6" cols="33" value="#{log.description}" />
+					</p:column>
+					<p:column headerText="Time">
+						<h:outputText value="#{log.lastUpdateDate}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			
+		</p:accordionPanel>
+	</h:form>
+	
+
+		
+		
+		<ui:include src="/views/footer.xhtml" />
+	</h:body>
+</h:body>
+</html>

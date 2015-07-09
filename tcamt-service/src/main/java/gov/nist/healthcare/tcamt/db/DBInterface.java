@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -53,4 +54,8 @@ public interface DBInterface {
 	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp);
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author);
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id);
+	
+	public void logInsert(Log l);
+	public void allLogsDelete();
+	public List<Log> getAllLogs();
 }

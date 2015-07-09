@@ -25,6 +25,7 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.IntegratedProfile"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.Actor"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.User"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.Log"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.Message"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.DataInstanceTestCase"></mapping>
