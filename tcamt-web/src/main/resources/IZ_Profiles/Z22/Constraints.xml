@@ -376,11 +376,11 @@
 					</Assertion>
 				</Constraint>
 			</ByID>
-			<ByID ID="CE_For_CQ_IZ">
-				<Constraint ID="IZ-2" Target="1[1]">
-					<Description>The value of CE.1 (Identifier) SHALL be 'RD'.</Description>
+			<ByID ID="CQ_IZ">
+				<Constraint ID="IZ-2" Target="2[1].1[1]">
+					<Description>The value of CQ.2.1 (Identifier) SHALL be 'RD'.</Description>
 					<Assertion>
-						<PlainText Path="1[1]" Text="RD" IgnoreCase="false"/>
+						<PlainText Path="2[1].1[1]" Text="RD" IgnoreCase="false"/>
 					</Assertion>
 				</Constraint>
 			</ByID>
@@ -429,7 +429,7 @@
 						<PlainText Path="15[1]" Text="ER" IgnoreCase="false"/>
 					</Assertion>
 				</Constraint>
-				<Constraint ID="IZ-16" Target="16[1]">
+				<Constraint ID="IZ-41" Target="16[1]">
 					<Description>The value of MSH.16 (Application Acknowledgment Type) SHALL be 'AL'.</Description>
 					<Assertion>
 						<PlainText Path="16[1]" Text="AL" IgnoreCase="false"/>

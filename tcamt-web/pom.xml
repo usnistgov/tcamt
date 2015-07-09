@@ -54,12 +54,12 @@
 		<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itextpdf</artifactId>
-			<version>5.5.3</version>
+			<version>5.5.5</version>
 		</dependency>
 		<dependency>
 			<groupId>com.itextpdf.tool</groupId>
 			<artifactId>xmlworker</artifactId>
-			<version>5.5.3</version>
+			<version>5.5.5</version>
 		</dependency>
 		
 		<dependency>
@@ -104,6 +104,10 @@
 				<exclusion>
 					<artifactId>primefaces</artifactId>
 					<groupId>org.primefaces</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>itext</artifactId>
+					<groupId>com.lowagie</groupId>
 				</exclusion>
 			</exclusions>
 		</dependency>
@@ -227,10 +231,11 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.12</version>
 		</dependency>
+		
 		<dependency>
 			<groupId>org.primefaces.extensions</groupId>
 			<artifactId>primefaces-extensions</artifactId>
-			<version>1.1.0</version>
+			<version>3.2.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.primefaces</groupId>
@@ -241,8 +246,9 @@
 		<dependency>
 			<groupId>org.primefaces.extensions</groupId>
 			<artifactId>resources-ckeditor</artifactId>
-			<version>1.1.0</version>
+			<version>3.2.0</version>
 		</dependency>
+		
 	</dependencies>
 	
 	<repositories>
@@ -315,6 +321,8 @@
 					<configuration>
 						<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 						<packagingExcludes>WEB-INF/lib/primefaces-4.0.jar</packagingExcludes>
+						<packagingExcludes>WEB-INF/lib/primefaces-extensions-1.1.0.jar</packagingExcludes>
+						<packagingExcludes>WEB-INF/lib/resources-ckeditor-1.1.0.jar</packagingExcludes>
 					</configuration>
 				</plugin>
 			</plugins>

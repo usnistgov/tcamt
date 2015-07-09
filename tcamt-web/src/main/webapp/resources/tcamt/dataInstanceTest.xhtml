@@ -6,6 +6,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt"
 	xmlns:composite="http://java.sun.com/jsf/composite">
 <composite:interface>
@@ -253,70 +254,49 @@
 											</tr>
 									</table>
 								</p:tab>
-								<p:tab title="TestStep Story">
-									<h:panelGrid columns="2" cellpadding="10">
+								<p:tab title="Test Step Story">
+									<h:panelGrid columns="2" cellpadding="10" style="width:100%;">
 										<h:outputText value="Test Story Desc: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryDescWidget"
-												emptyLabel="No Description"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+			 								<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Comments: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryCommentsWidget"
-												emptyLabel="No Comments"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+											<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Pre-Condition: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryPreConditionWidget"
-												emptyLabel="No Pre-Condition"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+											<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Post-Condition: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryPostConditionWidget"
-												emptyLabel="No Post-Condition"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Test Objectives: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryTestObjectivesWidget"
-												emptyLabel="No Test Objective"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+											<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Evaluation Criteria: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryEvaluationCriteriaWidget"
-												emptyLabel="No Evaluation Criteria"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+											<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Notes: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStepStoryNotesWidget"
-												emptyLabel="No Note"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}"
-												style="width:100%;" />
-											<p:ajax event="save"/>
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+											<p:ajax event="save" />
+										</pe:ckEditor>
 									</h:panelGrid>
 								</p:tab>
 								<p:tab title="HL7 Message Tree"
@@ -417,69 +397,48 @@
 									</h:panelGrid>
 								</p:tab>
 								<p:tab title="Test Case Story">
-									<h:panelGrid columns="2" cellpadding="10">
+									<h:panelGrid columns="2" cellpadding="10" style="width:100%;">
 										<h:outputText value="Test Story Desc: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryDescWidget"
-												emptyLabel="No Description"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}"
-												style="width:100%;" />
-											<p:ajax event="save" />
-										</p:inplace>
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+			 								<p:ajax event="save" />
+										</pe:ckEditor>
 
 										<h:outputText value="Comments: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryCommentsWidget"
-												emptyLabel="No Comment"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Pre-Condition: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryPreConditionWidget"
-												emptyLabel="No Pre-Condition"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Post-Condition: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryPostConditionWidget"
-												emptyLabel="No Post-Condition"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Test Objectives: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryTestObjectivesWidget"
-												emptyLabel="No Test Objective"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Evaluation Criteria: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryEvaluationCriteriaWidget"
-												emptyLabel="No Evaluation Criteria"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 
 										<h:outputText value="Notes: " />
-										<p:inplace editor="true">
-											<p:editor widgetVar="testStoryNotesWidget"
-												emptyLabel="No Notes"
-												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}"
-												style="width:100%;" />
+										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
+											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 											<p:ajax event="save" />
-										</p:inplace>
+										</pe:ckEditor>
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>

@@ -55,6 +55,6 @@
         </dependent-module>
         <property name="context-root" value="tcamt"/>
         <property name="java-output-path" value="/tcamt-web/target/classes"/>
-        <property name="component.exclusion.patterns" value="WEB-INF/lib/primefaces-4.0.jar"/>
+        <property name="component.exclusion.patterns" value="WEB-INF/lib/resources-ckeditor-1.1.0.jar"/>
     </wb-module>
 </project-modules>

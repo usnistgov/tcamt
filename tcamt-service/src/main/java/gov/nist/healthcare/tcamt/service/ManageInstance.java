@@ -158,6 +158,7 @@ public class ManageInstance  implements Serializable{
 		Map<String,SegmentRef> messageStrucutreMap = new LinkedHashMap<String,SegmentRef>();
 		Map<String,String> usageMap = new LinkedHashMap<String,String>();
 		Map<String,String> positionPathMap = new LinkedHashMap<String,String>();
+		
 		for(SegmentRefOrGroup srog:m.getMessageObj().getChildren()){
 			this.generateMessageStructure(m, srog, null, m.getMessageObj().getStructID(), messageStrucutreMap, usageMap, "", positionPathMap, "");
 		}
@@ -867,7 +868,7 @@ public class ManageInstance  implements Serializable{
 	}
 	
 	public String generateMessageContentHTML(Message m, List<InstanceSegment> instanceSegments){	
-		String header = "<html><head><style>thead {color:black;} tbody {color:black;} tfoot {color:black;} table {width: 100%; border-collapse: collapse;} table, th, td {border: 1px solid black;} </style> </head><body>";
+		String header = "<html><head><style type=\"text/css\" media=\"print,screen\">thead {color:black;} tbody {color:black;} tfoot {color:black;} table {width: 100%; border-collapse: collapse;} table, th, td {border: 1px solid black;} </style> </head><body>";
 		
 		String body = "";
 		

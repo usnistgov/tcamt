@@ -337,6 +337,15 @@
                 </Constraint>
             </ByID>
         </Segment>
-        <Group/>
+        <Group>
+            <ByID ID="RSP_K11.PATIENT">
+                <Constraint ID="IZ-72" Target="1[1].1[1]">
+                    <Description>PID-1 (Set ID-PID) SHALL be valued sequentially starting with the value "1".</Description>
+                    <Assertion>
+                        <SetID Path="1[1].1[1]"/>
+                    </Assertion>
+                </Constraint>
+            </ByID>
+        </Group>
     </Constraints>
 </ConformanceContext>

@@ -342,14 +342,6 @@
                     </Assertion>
                 </Constraint>
             </ByID>
-            <ByID ID="CQ_IZ">
-                <Constraint ID="IZ-2" Target="2[1]">
-                    <Description>The value of CQ.2 (Units) SHALL be 'RD'.</Description>
-                    <Assertion>
-                        <PlainText Path="2[1]" Text="RD" IgnoreCase="false"/>
-                    </Assertion>
-                </Constraint>
-            </ByID>
         </Datatype>
         <Segment>
             <ByID ID="MSH_IZ32">

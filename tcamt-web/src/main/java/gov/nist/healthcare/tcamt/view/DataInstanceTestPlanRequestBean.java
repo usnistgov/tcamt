@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.ManualTestStep;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.Metadata;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
@@ -24,26 +25,30 @@ import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConve
 import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
+import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -54,6 +59,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
@@ -64,11 +70,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
-
-import com.itextpdf.text.Document;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
 
 @ManagedBean
 @SessionScoped
@@ -112,6 +113,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private TestStoryConverter testStoryConverter;
 	private MetadataConverter metadataConverter;
+	private ManualTestStepConverter mtsConverter;
 	private DataInstanceTestStepConverter tsConverter;
 	private DataInstanceTestCaseConverter tcConverter;
 	private DataInstanceTestGroupConverter tgConverter;
@@ -544,8 +546,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.setTgConverter(new JsonDataInstanceTestGroupConverter());
 		this.setTcConverter(new JsonDataInstanceTestCaseConverter());
 		this.setTsConverter(new JsonDataInstanceTestStepConverter());
+		this.setMtsConverter(new JsonManualTestStepConverter());
 		this.setMetadataConverter(new JsonMetadataConverter());
-		
 		
 		String outFilename = "TestPlan_" + tp.getName() + ".zip";
 		ByteArrayOutputStream outputStream = null;
@@ -675,7 +677,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				dits.setValueSetLibraryId(dits.getMessage().getConformanceProfile().getValueSetLibraryId());
 			}
 			
-			InputStream inTP = IOUtils.toInputStream(this.tsConverter.toString(dits));
+			InputStream inTP = null;
+			
+			if(dits.getType() != null && !dits.getType().contains("MANUAL")){
+				inTP = IOUtils.toInputStream(this.tsConverter.toString(dits));
+			}else {
+				ManualTestStep mts = new ManualTestStep();
+				mts.setDescription(dits.getLongDescription());
+				mts.setName(dits.getName());
+				mts.setType(dits.getType());
+				
+				inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
+			}
 			int lenTP;
 	        while ((lenTP = inTP.read(buf)) > 0) {
 	            out.write(buf, 0, lenTP);
@@ -776,33 +789,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        
 		        out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.pdf"));
 		        
-		        Document document = new Document(PageSize.LETTER);
-		        ByteArrayOutputStream outputStream = null;
-				byte[] bytes;
-				outputStream = new ByteArrayOutputStream();
-				
-		        PdfWriter pdfWriter = PdfWriter.getInstance(document, outputStream);
-		        document.open();
-		        document.addAuthor("SSD ITL NIST");
-		        document.addCreator("TCAMT");
-		        document.addSubject("Juror Document");
-		        document.addCreationDate();
-		        document.addTitle("Juror Document");
-		        
-		        
-		        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-		        
-		        worker.parseXHtml(pdfWriter, document, new StringReader(jurorDocumentHTMLStr));
-		        document.close();
-		        
-		        bytes = outputStream.toByteArray();
-				ByteArrayInputStream inTestStoryPDF = new ByteArrayInputStream(bytes);
-		        int lenTestStoryPDF;
-		        while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
-		            out.write(buf, 0, lenTestStoryPDF);
+		        String tempFileName = this.htmlStringToPDF(jurorDocumentHTMLStr);
+		        File zipFile = new File(tempFileName + ".pdf");	        
+		        FileInputStream inJurorDocumentPDF = new FileInputStream(zipFile);
+
+		        int lenJurorDocumentPDF;
+		        while ((lenJurorDocumentPDF = inJurorDocumentPDF.read(buf)) > 0) {
+		            out.write(buf, 0, lenJurorDocumentPDF);
 		        }
-		        inTestStoryPDF.close();
+		        inJurorDocumentPDF.close();
 		        out.closeEntry();
+		        
+		        this.fileDelete(tempFileName + ".html");
+		        this.fileDelete(tempFileName + ".pdf");
 		        
 				
 			} catch (Exception e) {
@@ -864,33 +863,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        
 		        out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.pdf"));
 		        
-		        Document document = new Document(PageSize.LETTER);
-		        ByteArrayOutputStream outputStream = null;
-				byte[] bytes;
-				outputStream = new ByteArrayOutputStream();
-				
-		        PdfWriter pdfWriter = PdfWriter.getInstance(document, outputStream);
-		        document.open();
-		        document.addAuthor("SSD ITL NIST");
-		        document.addCreator("TCAMT");
-		        document.addSubject("Test Data Specification");
-		        document.addCreationDate();
-		        document.addTitle("Test Data Specification");
+		        String tempFileName = this.htmlStringToPDF(testDataSpecificationHTMLStr);
+		        File zipFile = new File(tempFileName + ".pdf");	        
+		        FileInputStream inTestDataSpecificationPDF = new FileInputStream(zipFile);
 		        
-		        
-		        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-		        
-		        worker.parseXHtml(pdfWriter, document, new StringReader(testDataSpecificationHTMLStr));
-		        document.close();
-		        
-		        bytes = outputStream.toByteArray();
-				ByteArrayInputStream inTestStoryPDF = new ByteArrayInputStream(bytes);
-		        int lenTestStoryPDF;
-		        while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
-		            out.write(buf, 0, lenTestStoryPDF);
+		        int lenTestDataSpecificationPDF;
+		        while ((lenTestDataSpecificationPDF = inTestDataSpecificationPDF.read(buf)) > 0) {
+		            out.write(buf, 0, lenTestDataSpecificationPDF);
 		        }
-		        inTestStoryPDF.close();
+		        inTestDataSpecificationPDF.close();
 		        out.closeEntry();
+		        
+		        this.fileDelete(tempFileName + ".html");
+		        this.fileDelete(tempFileName + ".pdf");
 		        
 				
 			} catch (Exception e) {
@@ -932,34 +917,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        out.closeEntry();
 	        
 	        out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.pdf"));
+	        String tempFileName = this.htmlStringToPDF(messageContentHTMLStr);
+	        File zipFile = new File(tempFileName + ".pdf");	        
+	        FileInputStream inMessageContentPDF = new FileInputStream(zipFile);
 	        
-	        Document document = new Document(PageSize.LETTER);
-	        ByteArrayOutputStream outputStream = null;
-			byte[] bytes;
-			outputStream = new ByteArrayOutputStream();
-			
-	        PdfWriter pdfWriter = PdfWriter.getInstance(document, outputStream);
-	        document.open();
-	        document.addAuthor("SSD ITL NIST");
-	        document.addCreator("TCAMT");
-	        document.addSubject("Message Content");
-	        document.addCreationDate();
-	        document.addTitle("Message Content");
-	        
-	        
-	        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-	        
-	        worker.parseXHtml(pdfWriter, document, new StringReader(messageContentHTMLStr));
-	        document.close();
-	        
-	        bytes = outputStream.toByteArray();
-			ByteArrayInputStream inTestStoryPDF = new ByteArrayInputStream(bytes);
-	        int lenTestStoryPDF;
-	        while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
-	            out.write(buf, 0, lenTestStoryPDF);
+	        int lenMessageContentPDF;
+	        while ((lenMessageContentPDF = inMessageContentPDF.read(buf)) > 0) {
+	            out.write(buf, 0, lenMessageContentPDF);
 	        }
-	        inTestStoryPDF.close();
+	        inMessageContentPDF.close();
 	        out.closeEntry();
+	        this.fileDelete(tempFileName + ".html");
+	        this.fileDelete(tempFileName + ".pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1106,6 +1075,36 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	private String htmlStringToPDF(String htmlStr){
+		try {
+			String fileName = UUID.randomUUID().toString();
+			FileUtils.writeStringToFile(new File(fileName + ".html"), htmlStr);
+            ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/wkhtmltopdf" , fileName + ".html" , fileName + ".pdf");
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+           
+            String line = inStreamReader.readLine();
+           
+            while(line != null)
+            {
+                line = inStreamReader.readLine();
+            }
+            
+            return fileName;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	private void fileDelete(String fileName){
+		File file = new File(fileName); 
+		file.delete();
+	}
+	
 	private void generateTestStoryRB(ZipOutputStream out, TestStory testStory, String path){
 		try {
 			byte[] buf = new byte[1024];
@@ -1131,34 +1130,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        out.closeEntry();
 	        
 	        out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.pdf"));
-	        
-	        Document document = new Document(PageSize.LETTER);
-	        ByteArrayOutputStream outputStream = null;
-			byte[] bytes;
-			outputStream = new ByteArrayOutputStream();
-			
-	        PdfWriter pdfWriter = PdfWriter.getInstance(document, outputStream);
-	        document.open();
-	        document.addAuthor("SSD ITL NIST");
-	        document.addCreator("TCAMT");
-	        document.addSubject("Test Story");
-	        document.addCreationDate();
-	        document.addTitle("Test Story");
-	        
-	        
-	        XMLWorkerHelper worker = XMLWorkerHelper.getInstance();
-	        
-	        worker.parseXHtml(pdfWriter, document, new StringReader(testCaseStoryStr));
-	        document.close();
-	        
-	        bytes = outputStream.toByteArray();
-			ByteArrayInputStream inTestStoryPDF = new ByteArrayInputStream(bytes);
+	        String tempFileName = this.htmlStringToPDF(testCaseStoryStr);
+	        File zipFile = new File(tempFileName + ".pdf");	        
+	        FileInputStream inTestStoryPDF = new FileInputStream(zipFile);
 	        int lenTestStoryPDF;
 	        while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
 	            out.write(buf, 0, lenTestStoryPDF);
 	        }
 	        inTestStoryPDF.close();
 	        out.closeEntry();
+	        
+	        this.fileDelete(tempFileName + ".html");
+	        this.fileDelete(tempFileName + ".pdf");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1767,6 +1750,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setTsConverter(DataInstanceTestStepConverter tsConverter) {
 		this.tsConverter = tsConverter;
+	}
+
+	public ManualTestStepConverter getMtsConverter() {
+		return mtsConverter;
+	}
+
+	public void setMtsConverter(ManualTestStepConverter mtsConverter) {
+		this.mtsConverter = mtsConverter;
 	}
 	
 	
