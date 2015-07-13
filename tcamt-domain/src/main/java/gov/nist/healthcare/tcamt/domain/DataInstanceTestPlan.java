@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -62,6 +63,13 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	private User author;
 	
 	private String type;
+	
+	@JsonIgnore
+	private boolean expanded;
+	
+	@JsonIgnore
+	@Transient
+	private boolean selected;
 	
 	@JsonIgnore
 	@Embedded
@@ -166,5 +174,19 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
+	public boolean isExpanded() {
+		return expanded;
+	}
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	
+	
 	
 }

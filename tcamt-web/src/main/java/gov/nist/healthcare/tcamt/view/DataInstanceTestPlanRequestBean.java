@@ -15,7 +15,6 @@ import gov.nist.healthcare.tcamt.domain.TestStory;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
 import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tcamt.service.XMLManager;
@@ -33,7 +32,6 @@ import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
 import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -68,6 +66,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TreeDragDropEvent;
@@ -128,14 +128,20 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private String testDataSpecificationHTML;
 	private String jurorDocumentHTML;
+	private String jurorDocumentPDFFileName;
+	
 	private String messageContentHTML;
+	
 	
 	public void shareInit(ActionEvent event){
 		try{
 			this.shareTo = null;
 			this.selectedTestPlan = (DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan");
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -144,25 +150,17 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			init();
 			this.selectedTestPlan.setName("New TestPlan");
+			this.selectedTestPlan.setSelected(true);
 			this.createTestPlanTree(this.selectedTestPlan);
-			this.setActiveIndexOfMessageInstancePanel(2);
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void deleteTestPlan(ActionEvent event) {
-		try{
-			String deletedTestPlanName = ((DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan")).getName();
-			this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete((DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan"));
-			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
-		
+			
 			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("TestPlan Deleted.",  "TestPlan: " + deletedTestPlanName + " has been created.") );
+	        context.addMessage(null, new FacesMessage("New TestPlan",  "New TestPlan has been created.") );
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -174,36 +172,22 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(testplan);
 			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			
-			this.selectedTestPlan = testplan;
 			this.selectedTestCase = null;
 			this.selectedTestCaseGroup = null;
 			this.selectedTestStep = null;
+			
+			this.selectedTestPlan = testplan;
+			this.selectedTestPlan.setSelected(true);
 			this.createTestPlanTree(this.selectedTestPlan);
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("Message Cloned.",  "TestPlan: " + this.selectedTestPlan.getName() + " has been created.") );
+	        context.addMessage(null, new FacesMessage("Clone TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been clonned.") );
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void shareTestPlan() {
-		try{
-			this.selectedTestPlan.setName("Copyed_" + selectedTestPlan.getName());
-			this.selectedTestPlan.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
-			this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(selectedTestPlan.clone());
-			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
-			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("TestPlan sharing.",  "TestPlan: " + this.selectedTestPlan.getName() + " has been sented to " + this.selectedTestPlan.getAuthor().getUserId()) );
-	        
-	        this.init();
-	        
-	        this.sessionBeanTCAMT.setDitActiveIndex(0);
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -217,10 +201,57 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestCase = null;
 			this.selectedTestCaseGroup = null;
 			this.selectedTestStep = null;
+			
+			this.selectedTestPlan.setSelected(true);
 			this.createTestPlanTree(this.selectedTestPlan);
-			this.sessionBeanTCAMT.setDitActiveIndex(1);			
+			this.sessionBeanTCAMT.setDitActiveIndex(1);
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Select TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been selected."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void deleteTestPlan(ActionEvent event) {
+		try{
+			String deletedTestPlanName = ((DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan")).getName();
+			this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete((DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan"));
+			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
+		
+			FacesContext context = FacesContext.getCurrentInstance();
+			context.addMessage(null, new FacesMessage("Delete TestPlan",  "TestPlan: " + deletedTestPlanName + " has been created.") );
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void shareTestPlan() {
+		try{
+			this.selectedTestPlan.setName("Copyed_" + selectedTestPlan.getName());
+			this.selectedTestPlan.setAuthor(this.sessionBeanTCAMT.getDbManager().getUserById(this.shareTo));
+			this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(selectedTestPlan.clone());
+			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
+			
+			FacesContext context = FacesContext.getCurrentInstance();
+	        context.addMessage(null, new FacesMessage("Share TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been sented to " + this.selectedTestPlan.getAuthor().getUserId()) );
+	        
+	        this.init();
+	        
+	        this.sessionBeanTCAMT.setDitActiveIndex(0);
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -232,19 +263,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(this.selectedTestPlan);
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			}else{
+				DataInstanceTestPlan testplan = this.selectedTestPlan.clone();
+				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(testplan);
+				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete(this.selectedTestPlan);
-				
-				int currentVersion = this.selectedTestPlan.getVersion();
-				this.selectedTestPlan = this.selectedTestPlan.clone();
-				this.selectedTestPlan.setVersion(currentVersion + 1);
-				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(this.selectedTestPlan);
+				this.selectedTestPlan = this.sessionBeanTCAMT.getDbManager().getDataInstanceTestPlanById(testplan.getId());
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			}
+			this.selectedTestPlan.setSelected(true);
+			this.createTestPlanTree(this.selectedTestPlan);
+			
+			this.selectedTestCase = null;
+			this.selectedTestStep = null;
+			this.selectedTestCaseGroup = null;
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("TestPlan Saved.",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
+	        context.addMessage(null, new FacesMessage("Save TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -256,17 +295,85 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				newDataInstacneTestCaseGroup.setVersion(1);
 				newDataInstacneTestCaseGroup.setName("New TestCaseGroup");
 				newDataInstacneTestCaseGroup.setPosition(this.selectedTestPlan.getTestcasegroups().size() + 1);
+				newDataInstacneTestCaseGroup.setSelected(true);
 				this.selectedTestPlan.addTestCaseGroup(newDataInstacneTestCaseGroup);
+				this.selectedTestPlan.setExpanded(true);
 				this.createTestPlanTree(this.selectedTestPlan);
 				
 				this.selectedTestCase = null;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = newDataInstacneTestCaseGroup;
-			}	
+				
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("New TestCaseGroup",  "New TestCaseGroup has been created."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
+	}
+	
+	public void cloneTestCaseGroup(ActionEvent event) throws CloneNotSupportedException {
+		try{
+			if(this.selectedNode != null){
+				DataInstanceTestCaseGroup clonedGroup = ((DataInstanceTestCaseGroup)this.selectedNode.getData()).clone();
+				clonedGroup.setName("Copyed_" + clonedGroup.getName());
+				clonedGroup.setPosition(this.selectedTestPlan.getTestcasegroups().size()+1);
+				clonedGroup.setSelected(true);
+				this.selectedTestPlan.addTestCaseGroup(clonedGroup);
+				this.createTestPlanTree(this.selectedTestPlan);
+				
+				this.selectedTestCase = null;
+				this.selectedTestCaseGroup = clonedGroup;
+				this.selectedTestStep = null;
+				
+//		        FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Clone TestCaseGroup",  "TestCaseGroup: " + this.selectedTestCaseGroup.getName() + " has been clonned.") );
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void deleteTestCaseGroup(ActionEvent event) {
+		try{
+			if(this.selectedNode != null){
+				this.selectedTestPlan.getTestcasegroups().remove(this.selectedNode.getData());
+				this.selectedTestCase = null;
+				this.selectedTestCaseGroup = null;
+				this.selectedTestStep = null;
+				
+				this.selectedTestPlan.setSelected(true);
+				
+				this.createTestPlanTree(this.selectedTestPlan);
+				this.updatePositionForPlanAndTree();
+				
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Delete TestCaseGroup",  "TestCaseGroup has been deleted.") );
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}		
 	}
 	
 	public void addTestCase() {
@@ -278,9 +385,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				
 				if(this.selectedNode.getData() instanceof  DataInstanceTestPlan){
 					newDataInstacneTestCase.setPosition(this.selectedTestPlan.getTestcases().size() + 1);
+					newDataInstacneTestCase.setSelected(true);
+					this.selectedTestPlan.setExpanded(true);
 					((DataInstanceTestPlan)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);	
 				}else if(this.selectedNode.getData() instanceof  DataInstanceTestCaseGroup){
 					newDataInstacneTestCase.setPosition(((DataInstanceTestCaseGroup)this.selectedNode.getData()).getTestcases().size() + 1);
+					newDataInstacneTestCase.setSelected(true);
+					((DataInstanceTestCaseGroup)this.selectedNode.getData()).setExpanded(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
 				}
 				
@@ -289,9 +400,183 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = newDataInstacneTestCase;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = null;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("New TestCase",  "New TestCase has been created."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void cloneTestCase(ActionEvent event) {
+		try{
+			if(this.selectedNode != null){
+				DataInstanceTestCase clonedTestcase = ((DataInstanceTestCase)this.selectedNode.getData()).clone();
+				clonedTestcase.setName("Copyed_" + clonedTestcase.getName());
+				clonedTestcase.setSelected(true);
+				
+				if(this.selectedNode.getParent().getData() instanceof DataInstanceTestCaseGroup){
+					DataInstanceTestCaseGroup group = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
+					group.setExpanded(true);
+					clonedTestcase.setPosition(group.getTestcases().size()+1);
+					group.addTestCase(clonedTestcase);
+				}else if(this.selectedNode.getParent().getData() instanceof DataInstanceTestPlan){
+					DataInstanceTestPlan plan = (DataInstanceTestPlan)this.selectedNode.getParent().getData();
+					plan.setExpanded(true);
+					clonedTestcase.setPosition(plan.getTestcases().size()+1);
+					plan.addTestCase(clonedTestcase);
+				}
+				
+				this.createTestPlanTree(this.selectedTestPlan);
+				
+				this.selectedTestCase = clonedTestcase;
+				this.selectedTestCaseGroup = null;
+				this.selectedTestStep = null;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Clone TestCase",  "TestCase: " + this.selectedTestCase.getName() + " has been clonned.") );
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}		
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void deleteTestCase(ActionEvent event) {
+		try{
+			if(this.selectedNode != null){
+				this.selectedTestCase = null;
+				this.selectedTestCaseGroup = null;
+				this.selectedTestStep = null;
+				
+				TreeNode parentNode = this.selectedNode.getParent();
+				if(parentNode.getData() instanceof DataInstanceTestCaseGroup){
+					this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)parentNode.getData();
+					this.selectedTestCaseGroup.getTestcases().remove(this.selectedNode.getData());
+					this.selectedTestCaseGroup.setSelected(true);
+				}else if(parentNode.getData() instanceof DataInstanceTestPlan){
+					this.selectedTestPlan.getTestcases().remove(this.selectedNode.getData());
+					this.selectedTestPlan.setSelected(true);
+				}
+				
+				this.createTestPlanTree(this.selectedTestPlan);
+				this.updatePositionForPlanAndTree();
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Delete TestCase",  "TestCase has been deleted."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}		
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void addTestStep(ActionEvent event) {
+		try{
+			if(this.selectedNode != null){
+				this.selectedTestCase = (DataInstanceTestCase)this.selectedNode.getData();
+				DataInstanceTestStep newTestStep = new DataInstanceTestStep();
+				newTestStep.setName("New Test Step");
+				newTestStep.setPosition(this.selectedTestCase.getTeststeps().size() + 1);
+				newTestStep.setSelected(true);
+				this.selectedTestCase.addTestStep(newTestStep);
+				this.selectedTestCase.setExpanded(true);
+				
+				this.createTestPlanTree(this.selectedTestPlan);
+				this.selectedTestCaseGroup = null;
+				this.selectedTestCase = null;
+				this.selectedTestStep = newTestStep;
+				
+				this.selectTestStep();
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("New TestStep",  "New TestStep has been created."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void cloneTestStep() {
+		try{
+			if(this.selectedNode != null){
+				DataInstanceTestCase testcase = (DataInstanceTestCase)this.selectedNode.getParent().getData();
+				DataInstanceTestStep clonedStep = ((DataInstanceTestStep)this.selectedNode.getData()).clone();
+				clonedStep.setName("Copyed_" + clonedStep.getName());
+				clonedStep.setPosition(testcase.getTeststeps().size()+1);
+				clonedStep.setSelected(true);
+				testcase.addTestStep(clonedStep);
+				testcase.setExpanded(true);
+				this.createTestPlanTree(this.selectedTestPlan);
+				
+				this.selectedTestCaseGroup = null;
+				this.selectedTestCase = null;
+				this.selectedTestStep = clonedStep;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Clone TestStep",  "TestStep has been cloned."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}		
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void deleteTestStep(ActionEvent event) {
+		try{
+			if(this.selectedNode != null){
+				TreeNode parentNode = this.selectedNode.getParent();
+				if(parentNode.getData() instanceof DataInstanceTestCase){
+					this.selectedTestCase = (DataInstanceTestCase)parentNode.getData();
+					this.selectedTestCase.getTeststeps().remove(this.selectedNode.getData());
+					this.selectedTestCase.setExpanded(true);
+					this.selectedTestCase.setSelected(true);
+				}
+				
+				this.createTestPlanTree(this.selectedTestPlan);
+				this.updatePositionForPlanAndTree();
+				
+				this.selectedTestCaseGroup = null;
+				this.selectedTestStep = null;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Delete TestStep",  "TestStep has been deleted."));
+			}else{
+				FacesContext context = FacesContext.getCurrentInstance();
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+			}			
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -302,116 +587,79 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Select TestPlan",  "TestPlan has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCase){
 				this.selectedTestCase = (DataInstanceTestCase)event.getTreeNode().getData();
 				this.selectedTestCaseGroup = null;
-				this.selectedTestStep = null;	
+				this.selectedTestStep = null;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Select TestCase",  "TestCase has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCaseGroup){
 				this.selectedTestCase = null;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getData();
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Select TestCaseGroup",  "TestCaseGroup has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestStep){
 				this.selectedTestStep = (DataInstanceTestStep)event.getTreeNode().getData();
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = null;
 				this.selectTestStep();
 				this.activeIndexOfMessageInstancePanel = 0;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Select TestStep",  "TestStep has been selected."));
 			}
 			this.clearSelectNode(this.testplanRoot);
 			event.getTreeNode().setSelected(true);			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
     }
 	
-	public void deleteTestCase(ActionEvent event) {
-		try{
-			if(this.selectedNode != null){
-				TreeNode parentNode = this.selectedNode.getParent();
-				if(parentNode.getData() instanceof DataInstanceTestCaseGroup){
-					this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)parentNode.getData();
-					this.selectedTestCaseGroup.getTestcases().remove(this.selectedNode.getData());
-				}else if(parentNode.getData() instanceof DataInstanceTestPlan){
-					this.selectedTestPlan.getTestcases().remove(this.selectedNode.getData());				
-				}
-				
-				this.createTestPlanTree(this.selectedTestPlan);
-				this.updatePositionForPlanAndTree();
-			}			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void cloneTestCaseGroup(ActionEvent event) throws CloneNotSupportedException {
-		try{
-			if(this.selectedNode != null){
-				DataInstanceTestCaseGroup group = ((DataInstanceTestCaseGroup)this.selectedNode.getData()).clone();
-				group.setName("Copyed_" + group.getName());
-				group.setPosition(this.selectedTestPlan.getTestcasegroups().size()+1);
-				this.selectedTestPlan.addTestCaseGroup(group);
-				this.createTestPlanTree(this.selectedTestPlan);
-			}
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void cloneTestStep() {
-		try{
-			if(this.selectedNode != null){
-				DataInstanceTestCase testcase = (DataInstanceTestCase)this.selectedNode.getParent().getData();
-				DataInstanceTestStep step = ((DataInstanceTestStep)this.selectedNode.getData()).clone();
-				step.setName("Copyed_" + step.getName());
-				step.setPosition(testcase.getTeststeps().size()+1);
-				testcase.addTestStep(step);
-				this.createTestPlanTree(this.selectedTestPlan);
-			}			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void cloneTestCase(ActionEvent event) {
-		try{
-			if(this.selectedNode != null){
-				DataInstanceTestCase testcase = ((DataInstanceTestCase)this.selectedNode.getData()).clone();
-				testcase.setName("Copyed_" + testcase.getName());
-				
-				if(this.selectedNode.getParent().getData() instanceof DataInstanceTestCaseGroup){
-					DataInstanceTestCaseGroup group = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
-					testcase.setPosition(group.getTestcases().size()+1);
-					group.addTestCase(testcase);
-				}else if(this.selectedNode.getParent().getData() instanceof DataInstanceTestPlan){
-					DataInstanceTestPlan plan = (DataInstanceTestPlan)this.selectedNode.getParent().getData();
-					testcase.setPosition(plan.getTestcases().size()+1);
-					plan.addTestCase(testcase);
-				}
-				
-				this.createTestPlanTree(this.selectedTestPlan);
-			}			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void deleteTestCaseGroup(ActionEvent event) {
-		try{
-			if(this.selectedNode != null){
-				this.selectedTestPlan.getTestcasegroups().remove(this.selectedNode.getData());
-				this.createTestPlanTree(this.selectedTestPlan);
-				this.updatePositionForPlanAndTree();
+	public void onNodeExpand(NodeExpandEvent event) {
+        try{
+			if(event.getTreeNode().getData() instanceof DataInstanceTestPlan){
+				this.selectedTestPlan.setExpanded(true);
+			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCase){
+				DataInstanceTestCase dataInstanceTestCase = (DataInstanceTestCase)event.getTreeNode().getData();
+				dataInstanceTestCase.setExpanded(true);
+			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCaseGroup){
+				DataInstanceTestCaseGroup dataInstanceTestCaseGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getData();
+				dataInstanceTestCaseGroup.setExpanded(true);
 			}	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}		
-	}
+		}
+    }
+	
+	public void onNodeCollapse(NodeCollapseEvent event) {
+        try{
+			if(event.getTreeNode().getData() instanceof DataInstanceTestPlan){
+				this.selectedTestPlan.setExpanded(false);
+			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCase){
+				DataInstanceTestCase dataInstanceTestCase = (DataInstanceTestCase)event.getTreeNode().getData();
+				dataInstanceTestCase.setExpanded(false);
+			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCaseGroup){
+				DataInstanceTestCaseGroup dataInstanceTestCaseGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getData();
+				dataInstanceTestCaseGroup.setExpanded(false);
+			}	
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+    }
 	
 	public void readHL7Message() {
 		try{
@@ -424,10 +672,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateJurorDocumentHTML();
 				this.generateMessageContentHTML();
 			}
-			this.activeIndexOfMessageInstancePanel = 4;
-			this.updateFilteredInstanceSegments();				
+			this.updateFilteredInstanceSegments();
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("TestStep Loaded",  "HL7Message of TestStep has been readed."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void loadHL7Message(){
+		try{
+			this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.selectedTestStep.getMessage().getConformanceProfile().getSampleER7Message());
+			this.readHL7Message();
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -436,10 +701,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.segmentTreeRoot = new DefaultTreeNode("root", null);
 			this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, this.selectedInstanceSegment, this.selectedTestStep.getMessage());
-			this.activeIndexOfMessageInstancePanel = 5;
+			this.activeIndexOfMessageInstancePanel = 4;
 			this.updateFilteredSegmentTree();
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Select Segment",  "Instance Segement has been selected."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -447,47 +717,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	public void genrateHL7Message() {
 		try{
 			this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot,  this.selectedTestStep.getMessage()));
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Generate Message",  "HL7 Message of TestStep has been generated."));
+	        
 			this.readHL7Message();			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void addTestStep(ActionEvent event) {
-		try{
-			if(this.selectedNode != null){
-				this.selectedTestCase = (DataInstanceTestCase)this.selectedNode.getData();
-				DataInstanceTestStep newTestStep = new DataInstanceTestStep();
-				newTestStep.setName("New Test Step");
-				newTestStep.setPosition(this.selectedTestCase.getTeststeps().size() + 1);
-				this.selectedTestCase.addTestStep(newTestStep);
-				
-				this.createTestPlanTree(this.selectedTestPlan);
-				this.selectedTestCaseGroup = null;
-				this.selectedTestCase = null;
-				this.selectedTestStep = newTestStep;
-			}
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void deleteTestStep(ActionEvent event) {
-		try{
-			if(this.selectedNode != null){
-				TreeNode parentNode = this.selectedNode.getParent();
-				if(parentNode.getData() instanceof DataInstanceTestCase){
-					this.selectedTestCase = (DataInstanceTestCase)parentNode.getData();
-					this.selectedTestCase.getTeststeps().remove(this.selectedNode.getData());
-				}
-				
-				this.createTestPlanTree(this.selectedTestPlan);
-				this.updatePositionForPlanAndTree();
-			}			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -498,28 +737,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.selectedTestStep.getMessage());
 			this.readHL7Message();
 			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
-			this.activeIndexOfMessageInstancePanel = 5;			
+			this.activeIndexOfMessageInstancePanel = 4;
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Update TestData",  "TestData has been updated."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void addNode(){
-		try{
-			TreeNode parent = this.selectedNode.getParent();
-			
-			int position = parent.getChildren().indexOf(this.selectedNode);
-			
-			MessageTreeModel model = (MessageTreeModel)this.selectedNode.getData();
-			MessageTreeModel newModel = new MessageTreeModel(model.getMessageId(),model.getName(), model.getNode(), model.getPath(), model.getOccurrence());	
-			TreeNode newNode = new DefaultTreeNode(((SegmentRefOrGroup)newModel.getNode()).getMax(), newModel, parent);
-			
-			this.manageInstanceService.populateTreeNode(newNode,  this.selectedTestStep.getMessage());
-			
-			parent.getChildren().add(position + 1, newNode);			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -553,9 +778,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			out.close();
 			bytes = outputStream.toByteArray();
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-			this.setZipResourceBundleFile(new DefaultStreamedContent(inputStream, "application/zip", outFilename));	
+			this.setZipResourceBundleFile(new DefaultStreamedContent(inputStream, "application/zip", outFilename));
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Resource Bundle",  "Resource bundel has been populated."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -600,37 +831,21 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				tcamtConstraint.setUsageList(usageList);
 				this.selectedTestStep.getMessage().addTCAMTConstraint(tcamtConstraint);
 			}
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());	
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
+			this.generateMessageContentHTML();	
+			
+			this.activeIndexOfMessageInstancePanel = 4;
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Update Constraints",  "Constraints has been updated."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 		
-	}
-	
-	public void profileUpdateMessage() {
-		try{
-			this.setActiveIndexOfMessageInstancePanel(1);
-			this.sessionBeanTCAMT.setmActiveIndex(2);
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
-			this.instanceSegments = new ArrayList<InstanceSegment>();
-			this.readHL7Message();			
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
-	public void deleteConstraint(String ipath){
-		try{
-			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(ipath);
-			this.selectedInstanceSegment = null;
-			this.segmentTreeRoot = new DefaultTreeNode("root", null);
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
-		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
 	}
 	
 	public void updateFilteredInstanceSegments() {
@@ -639,6 +854,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			if(this.usageViewOption.equals("all")){
 				this.filteredInstanceSegments = this.instanceSegments;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "All of Instacne Segments are shown."));
 			}else{
 				for(InstanceSegment is:this.instanceSegments){
 					String[] usageList = is.getUsageList().split("-");
@@ -652,9 +869,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        	
 		        	if(usageCheck) this.filteredInstanceSegments.add(is);
 				}
-			}    			
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "R/RE/C of Instacne Segments are shown."));
+			}  
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
     }
@@ -663,11 +885,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			if(this.usageViewOption2.equals("all")){
 				this.filtedSegmentTreeRoot = this.segmentTreeRoot;
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "All of node are shown in the Segment Tree."));
 			}else {
 				this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
+//				FacesContext context = FacesContext.getCurrentInstance();
+//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "R/RE/C of node are shown in the Segment Tree."));
 			}
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -676,8 +905,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
 			this.updateFilteredSegmentTree();
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Repeat Field",  "Repeatable Field has been added."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -690,9 +924,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestStep.setMessage(m);
 			this.messageId = null;
 			
-			selectTestStep();			
+			selectTestStep();
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Update Message",  "Message of Test Step has been updated."));
+	        
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -706,70 +947,81 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        if(dragNode.getData() instanceof DataInstanceTestPlan){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Plan cannot have another Test Plan. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have another Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Group cannot have Test Plan. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Case cannot have Test Plan. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Step cannot have Test Plan. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestCaseGroup){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
+//	        		FacesContext context = FacesContext.getCurrentInstance();
+//	    	        context.addMessage(null, new FacesMessage("Drop TestCaseGroup",  "TestCaseGroup has been droped in TestPlan."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Group cannot have another Test Group. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have another Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Case cannot have Test Group. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Step cannot have Test Group. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestCase){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
+//	        		FacesContext context = FacesContext.getCurrentInstance();
+//	    	        context.addMessage(null, new FacesMessage("Drop TestCase",  "TestCase has been droped in TestPlan."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
+//	        		FacesContext context = FacesContext.getCurrentInstance();
+//	    	        context.addMessage(null, new FacesMessage("Drop TestCase",  "TestCase has been droped in TestCaseGroup."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Case cannot have another Test Case. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have another Test Case. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Step cannot have Test Case. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Case. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestStep){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Plan cannot have Test Step. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Group cannot have Test Step. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
+//	        		FacesContext context = FacesContext.getCurrentInstance();
+//	    	        context.addMessage(null, new FacesMessage("Drop TestStep",  "TestStep has been droped in TestCase."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage("Invalid", "Test Step cannot have another Test Step. Have been reverted."));
+	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have another Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
     }
@@ -778,13 +1030,32 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.selectedTestStep.setMessage(new Message());
 			this.jurorDocumentHTML = null;
+			this.jurorDocumentPDFFileName = null;
 			this.messageContentHTML = null;
-			this.testDataSpecificationHTML = null;			
+			this.testDataSpecificationHTML = null;		
+			
+//			FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage("Reset Message",  "Message of Test Step has been reset."));
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+
 	
 	private void init(){
 		this.selectedTestPlan = new DataInstanceTestPlan();
@@ -813,6 +1084,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		this.testDataSpecificationHTML = null;
 		this.jurorDocumentHTML = null;
+		this.jurorDocumentPDFFileName = null;
 		this.setMessageContentHTML(null);
 		
 	}
@@ -820,21 +1092,33 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private void createTestPlanTree(DataInstanceTestPlan tp) {
 		this.testplanRoot = new DefaultTreeNode("", null);
 		TreeNode testplanNode = new DefaultTreeNode("plan", tp, this.testplanRoot);
-		testplanNode.setExpanded(true);
+		
+		testplanNode.setSelected(tp.isSelected());
+		tp.setSelected(false);
+		testplanNode.setExpanded(tp.isExpanded());
+		
 		List<DataInstanceTestCaseGroup> sortedDataInstanceTestCaseGroups = new ArrayList<DataInstanceTestCaseGroup>(tp.getTestcasegroups());
 		Collections.sort(sortedDataInstanceTestCaseGroups);
 		for(DataInstanceTestCaseGroup ditcg:sortedDataInstanceTestCaseGroups){
 			TreeNode groupNode = new DefaultTreeNode("group", ditcg, testplanNode);
-			groupNode.setExpanded(true);
+			
+			groupNode.setExpanded(ditcg.isExpanded());
+			groupNode.setSelected(ditcg.isSelected());
+			ditcg.setSelected(false);
+			
 			List<DataInstanceTestCase> sortedDataInstanceTestCases = new ArrayList<DataInstanceTestCase>(ditcg.getTestcases());
 			Collections.sort(sortedDataInstanceTestCases);
 			for(DataInstanceTestCase ditc:sortedDataInstanceTestCases){
 				TreeNode caseNode = new DefaultTreeNode("case", ditc, groupNode);
-				caseNode.setExpanded(true);
+				caseNode.setExpanded(ditc.isExpanded());
+				caseNode.setSelected(ditc.isSelected());
+				ditc.setSelected(false);
 				List<DataInstanceTestStep> sortedDataInstanceTestStep = new ArrayList<DataInstanceTestStep>(ditc.getTeststeps());
 				Collections.sort(sortedDataInstanceTestStep);
 				for(DataInstanceTestStep dits:sortedDataInstanceTestStep){
-					new DefaultTreeNode("step", dits, caseNode);
+					TreeNode stepNode = new DefaultTreeNode("step", dits, caseNode);
+					stepNode.setSelected(dits.isSelected());
+					dits.setSelected(false);
 				}
 			}
 		}
@@ -842,11 +1126,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		Collections.sort(sortedDataInstanceTestCases);
 		for(DataInstanceTestCase ditc:sortedDataInstanceTestCases){
 			TreeNode caseNode = new DefaultTreeNode("case", ditc, testplanNode);
-			caseNode.setExpanded(true);
+			caseNode.setExpanded(ditc.isExpanded());
+			caseNode.setSelected(ditc.isSelected());
+			ditc.setSelected(false);
 			List<DataInstanceTestStep> sortedDataInstanceTestStep = new ArrayList<DataInstanceTestStep>(ditc.getTeststeps());
 			Collections.sort(sortedDataInstanceTestStep);
 			for(DataInstanceTestStep dits:sortedDataInstanceTestStep){
-				new DefaultTreeNode("step", dits, caseNode);
+				TreeNode stepNode = new DefaultTreeNode("step", dits, caseNode);
+				stepNode.setSelected(dits.isSelected());
+				dits.setSelected(false);
 			}
 		}
 	}
@@ -870,6 +1158,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedTestCaseGroup = null;
 		this.testDataSpecificationHTML = null;
 		this.jurorDocumentHTML = null;
+		this.jurorDocumentPDFFileName = null;
 		this.setMessageContentHTML(null);
 		
 		this.selectedInstanceSegment = new InstanceSegment();
@@ -899,11 +1188,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
-			try {
-				this.jurorDocumentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}		
+			
+			this.jurorDocumentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			this.jurorDocumentPDFFileName = this.htmlStringToPDF2(this.jurorDocumentHTML) + ".pdf";
 		}	
 	}
 	
@@ -915,11 +1202,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
-			try {
-				this.testDataSpecificationHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}		
+			this.testDataSpecificationHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);	
 		}			
 	}
 	
@@ -1078,19 +1361,23 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
-			byte[] buf = new byte[1024];
-			out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.json"));
-	        String jurorDocumentJSONStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-	        JSONObject xmlJSONObj = XML.toJSONObject(jurorDocumentJSONStr);
-	        InputStream inJurorDocument = IOUtils.toInputStream(xmlJSONObj.toString(), "UTF-8");
-	        int lenJurorDocument;
-	        while ((lenJurorDocument = inJurorDocument.read(buf)) > 0) {
-	            out.write(buf, 0, lenJurorDocument);
-	        }
-	        inJurorDocument.close();
-	        out.closeEntry();
+			String jurorDocumentJSONStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			if(jurorDocumentJSONStr != null && !jurorDocumentJSONStr.equals("")){
+				byte[] buf = new byte[1024];
+				out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.json"));
+		        JSONObject xmlJSONObj = XML.toJSONObject(jurorDocumentJSONStr);
+		        InputStream inJurorDocument = IOUtils.toInputStream(xmlJSONObj.toString(), "UTF-8");
+		        int lenJurorDocument;
+		        while ((lenJurorDocument = inJurorDocument.read(buf)) > 0) {
+		            out.write(buf, 0, lenJurorDocument);
+		        }
+		        inJurorDocument.close();
+		        out.closeEntry();
+			}
+			
 		}
 	}
 
@@ -1103,35 +1390,38 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
+			String jurorDocumentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 			
-			byte[] buf = new byte[1024];
-			
-			out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.html"));
-			
-	        String jurorDocumentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-	        InputStream inJurorDocument = IOUtils.toInputStream(jurorDocumentHTMLStr, "UTF-8");
-	        int lenJurorDocument;
-	        while ((lenJurorDocument = inJurorDocument.read(buf)) > 0) {
-	            out.write(buf, 0, lenJurorDocument);
-	        }
-	        inJurorDocument.close();
-	        out.closeEntry();
-	        
-	        out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.pdf"));
-	        
-	        String tempFileName = this.htmlStringToPDF(jurorDocumentHTMLStr);
-	        File zipFile = new File(tempFileName + ".pdf");	        
-	        FileInputStream inJurorDocumentPDF = new FileInputStream(zipFile);
+			if(jurorDocumentHTMLStr != null && !jurorDocumentHTMLStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.html"));
+				
+		        
+		        InputStream inJurorDocument = IOUtils.toInputStream(jurorDocumentHTMLStr, "UTF-8");
+		        int lenJurorDocument;
+		        while ((lenJurorDocument = inJurorDocument.read(buf)) > 0) {
+		            out.write(buf, 0, lenJurorDocument);
+		        }
+		        inJurorDocument.close();
+		        out.closeEntry();
+		        
+		        out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.pdf"));
+		        
+		        String tempFileName = this.htmlStringToPDF(jurorDocumentHTMLStr);
+		        File zipFile = new File(tempFileName + ".pdf");	        
+		        FileInputStream inJurorDocumentPDF = new FileInputStream(zipFile);
 
-	        int lenJurorDocumentPDF;
-	        while ((lenJurorDocumentPDF = inJurorDocumentPDF.read(buf)) > 0) {
-	            out.write(buf, 0, lenJurorDocumentPDF);
-	        }
-	        inJurorDocumentPDF.close();
-	        out.closeEntry();
-	        
-	        this.fileDelete(tempFileName + ".html");
-	        this.fileDelete(tempFileName + ".pdf");
+		        int lenJurorDocumentPDF;
+		        while ((lenJurorDocumentPDF = inJurorDocumentPDF.read(buf)) > 0) {
+		            out.write(buf, 0, lenJurorDocumentPDF);
+		        }
+		        inJurorDocumentPDF.close();
+		        out.closeEntry();
+		        
+		        this.fileDelete(tempFileName + ".html");
+		        this.fileDelete(tempFileName + ".pdf");
+			}
 		}
 	}
 	
@@ -1144,18 +1434,22 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
 			
-			byte[] buf = new byte[1024];
+			String testDataSpecificationJSONStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 			
-			out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.json"));
+			if(testDataSpecificationJSONStr != null && !testDataSpecificationJSONStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.json"));
+				
+		        InputStream inTestDataSpecification = IOUtils.toInputStream(testDataSpecificationJSONStr, "UTF-8");
+		        int lenTestDataSpecification;
+		        while ((lenTestDataSpecification = inTestDataSpecification.read(buf)) > 0) {
+		            out.write(buf, 0, lenTestDataSpecification);
+		        }
+		        inTestDataSpecification.close();
+		        out.closeEntry();
+			}
 			
-	        String testDataSpecificationJSONStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-	        InputStream inTestDataSpecification = IOUtils.toInputStream(testDataSpecificationJSONStr, "UTF-8");
-	        int lenTestDataSpecification;
-	        while ((lenTestDataSpecification = inTestDataSpecification.read(buf)) > 0) {
-	            out.write(buf, 0, lenTestDataSpecification);
-	        }
-	        inTestDataSpecification.close();
-	        out.closeEntry();
 		}
 	}
 	
@@ -1168,34 +1462,38 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
 			
-			byte[] buf = new byte[1024];
+			String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 			
-			out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.html"));
+			if(testDataSpecificationHTMLStr != null && !testDataSpecificationHTMLStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.html"));
+				
+		        InputStream inTestDataSpecification = IOUtils.toInputStream(testDataSpecificationHTMLStr, "UTF-8");
+		        int lenTestDataSpecification;
+		        while ((lenTestDataSpecification = inTestDataSpecification.read(buf)) > 0) {
+		            out.write(buf, 0, lenTestDataSpecification);
+		        }
+		        inTestDataSpecification.close();
+		        out.closeEntry();
+		        
+		        out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.pdf"));
+		        
+		        String tempFileName = this.htmlStringToPDF(testDataSpecificationHTMLStr);
+		        File zipFile = new File(tempFileName + ".pdf");	        
+		        FileInputStream inTestDataSpecificationPDF = new FileInputStream(zipFile);
+		        
+		        int lenTestDataSpecificationPDF;
+		        while ((lenTestDataSpecificationPDF = inTestDataSpecificationPDF.read(buf)) > 0) {
+		            out.write(buf, 0, lenTestDataSpecificationPDF);
+		        }
+		        inTestDataSpecificationPDF.close();
+		        out.closeEntry();
+		        
+		        this.fileDelete(tempFileName + ".html");
+		        this.fileDelete(tempFileName + ".pdf");
+			}
 			
-	        String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
-	        InputStream inTestDataSpecification = IOUtils.toInputStream(testDataSpecificationHTMLStr, "UTF-8");
-	        int lenTestDataSpecification;
-	        while ((lenTestDataSpecification = inTestDataSpecification.read(buf)) > 0) {
-	            out.write(buf, 0, lenTestDataSpecification);
-	        }
-	        inTestDataSpecification.close();
-	        out.closeEntry();
-	        
-	        out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.pdf"));
-	        
-	        String tempFileName = this.htmlStringToPDF(testDataSpecificationHTMLStr);
-	        File zipFile = new File(tempFileName + ".pdf");	        
-	        FileInputStream inTestDataSpecificationPDF = new FileInputStream(zipFile);
-	        
-	        int lenTestDataSpecificationPDF;
-	        while ((lenTestDataSpecificationPDF = inTestDataSpecificationPDF.read(buf)) > 0) {
-	            out.write(buf, 0, lenTestDataSpecificationPDF);
-	        }
-	        inTestDataSpecificationPDF.close();
-	        out.closeEntry();
-	        
-	        this.fileDelete(tempFileName + ".html");
-	        this.fileDelete(tempFileName + ".pdf");
 		}
 	}
 	
@@ -1373,17 +1671,34 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         Process process = pb.start();
         BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
        
-        String logMessage = htmlStr;
         String line = inStreamReader.readLine();
        
         while(line != null)
         {
-        	logMessage = logMessage +  System.getProperty("line.separator") + line;
             line = inStreamReader.readLine();
         }
-        
-        Log log = new Log("PDFTOOLLog", "DEBUG", logMessage);
-		this.sessionBeanTCAMT.getDbManager().logInsert(log);
+        return fileName;
+	}
+	
+	private String htmlStringToPDF2(String htmlStr) throws IOException{
+		ClassLoader classLoader = this.getClass().getClassLoader();
+		File file = new File(classLoader.getResource("TestStory.html").getFile());
+		File parentFile = new File(file.getParent());
+		File grandParentFile = new File(parentFile.getParent());
+		String fileName = UUID.randomUUID().toString();
+		String fileFullName =grandParentFile.getParent() + File.separator + "temp" + File.separator + fileName;
+		FileUtils.writeStringToFile(new File(fileFullName + ".html"), htmlStr);
+        ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/wkhtmltopdf" , fileFullName + ".html" , fileFullName + ".pdf");
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+       
+        String line = inStreamReader.readLine();
+       
+        while(line != null)
+        {
+            line = inStreamReader.readLine();
+        }
         
         return fileName;
 	}
@@ -1565,6 +1880,23 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.updatePositionForPlanAndTree();
 		
 	}
+	
+	
+	
+	
+	/*
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
+	
+	
+	
+	
 	
 	public List<DataInstanceTestPlan> getTestPlans() {
 		return this.sessionBeanTCAMT.getDataInstanceTestPlans();
@@ -1818,4 +2150,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.mtsConverter = mtsConverter;
 	}
 
+	public String getJurorDocumentPDFFileName() {
+		return jurorDocumentPDFFileName;
+	}
+
+	public void setJurorDocumentPDFFileName(String jurorDocumentPDFFileName) {
+		this.jurorDocumentPDFFileName = jurorDocumentPDFFileName;
+	}
+	
 }

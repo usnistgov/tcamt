@@ -56,6 +56,7 @@ public interface DBInterface {
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id);
 	
 	public void logInsert(Log l);
+	public void logDelete(Log l);
 	public void allLogsDelete();
 	public List<Log> getAllLogs();
 }

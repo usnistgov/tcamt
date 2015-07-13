@@ -14,7 +14,7 @@
 
 <composite:implementation>
 	<h:form id="DataInstanceTestForm">
-		<p:growl id="growl_DataInstanceTest" showDetail="true" sticky="true" />
+		<p:growl id="growl_DataInstanceTest" />
 		<p:accordionPanel widgetVar="DataInstanceTestPanel"
 			activeIndex="#{sessionBeanTCAMT.ditActiveIndex}">
 			<p:tab id="DataInstanceTestPanel_List"
@@ -29,7 +29,7 @@
 					</tr>
 				</table>
 
-				<p:dataTable var="testplan"
+				<p:dataTable id="testplanTable" var="testplan"
 					value="#{dataInstanceTestPlanRequestBean.testPlans}">
 					<p:column headerText="Name">
 						<h:outputText value="#{testplan.name}" />
@@ -45,10 +45,6 @@
 
 					<p:column headerText="Last Updated">
 						<h:outputText value="#{testplan.lastUpdateDate}" />
-					</p:column>
-
-					<p:column headerText="Version">
-						<h:outputText value="#{testplan.metadata.testSuiteVersion}" />
 					</p:column>
 
 					<p:column headerText="Action">
@@ -72,7 +68,7 @@
 						</p:commandButton>
 						<p:commandButton value="Export" ajax="false"
 							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan)}"
-							icon="ui-icon-print">
+							icon="ui-icon-print" update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
 						</p:commandButton>
@@ -92,7 +88,7 @@
 							<tr>
 								<td align="right"><p:commandButton value="Save Test Plan"
 										actionListener="#{dataInstanceTestPlanRequestBean.saveTestPlan}"
-										update=":#{p:component('DataInstanceTestForm')}"
+										update=":#{p:component('testplanTable')} :#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 										icon="ui-icon-disk" title="Save Test Plan" /></td>
 							</tr>
 						</table>
@@ -106,84 +102,80 @@
 							selectionMode="single"
 							selection="#{dataInstanceTestPlanRequestBean.selectedNode}"
 							dynamic="true" style="border-width:0;">
-							<p:ajax event="select"
-								listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}"
-								update=":#{p:component('dashboard')}" />
-							<p:ajax event="dragdrop"
-								listener="#{dataInstanceTestPlanRequestBean.onDragDrop}"
-								update=":#{p:component('DataInstanceTestForm')}" />
+							<p:ajax event="expand" listener="#{dataInstanceTestPlanRequestBean.onNodeExpand}" update=":#{p:component('growl_DataInstanceTest')}"/>
+        					<p:ajax event="collapse" listener="#{dataInstanceTestPlanRequestBean.onNodeCollapse}" update=":#{p:component('growl_DataInstanceTest')}"/>
+							<p:ajax event="select" listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
+							<p:ajax event="dragdrop" listener="#{dataInstanceTestPlanRequestBean.onDragDrop}" update=":#{p:component('testplanTree')} :#{p:component('growl_DataInstanceTest')}" />
 
 							<p:treeNode expandedIcon="ui-icon-folder-open"
 								collapsedIcon="ui-icon-folder-collapsed">
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
-							<p:treeNode type="plan" icon="ui-icon-image">
+							<p:treeNode type="plan" icon="ui-icon-home">
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
-							<p:treeNode type="group" icon="ui-icon-image">
+							<p:treeNode type="group" icon="ui-icon-cart">
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
-							<p:treeNode type="case" icon="ui-icon-image">
+							<p:treeNode type="case" icon="ui-icon-note">
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
-							<p:treeNode type="step" icon="ui-icon-image">
+							<p:treeNode type="step" icon="ui-icon-document">
 								<h:outputText value="[#{node.position}]#{node.name}" />
 							</p:treeNode>
 						</p:tree>
 						<p:contextMenu for="testplanTree" nodeType="plan">
 							<p:menuitem value="Add new TestCaseGroup"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.addTestCaseGroup}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Add new TestCase"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}"
 								icon="ui-icon-plus" />
 						</p:contextMenu>
 						<p:contextMenu for="testplanTree" nodeType="group">
 							<p:menuitem value="Add new TestCase"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.addTestCase}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Clone TestCaseGroup"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.cloneTestCaseGroup}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Delete TestCaseGroup"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCaseGroup}"
 								icon="ui-icon-minus" />
 						</p:contextMenu>
 						<p:contextMenu for="testplanTree" nodeType="case">
 							<p:menuitem value="Add new TestStep"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.addTestStep}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Clone TestCase"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.cloneTestCase}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Delete TestCase"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.deleteTestCase}"
 								icon="ui-icon-minus" />
 						</p:contextMenu>
 						<p:contextMenu for="testplanTree" nodeType="step">
 							<p:menuitem value="Clone TestStep"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.cloneTestStep}"
 								icon="ui-icon-plus" />
 							<p:menuitem value="Delete TestStep"
-								update=":#{p:component('DataInstanceTestForm')}"
+								update=":#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 								actionListener="#{dataInstanceTestPlanRequestBean.deleteTestStep}"
 								icon="ui-icon-minus" />
 						</p:contextMenu>
 					</p:layoutUnit>
 					<p:layoutUnit position="center" style="border: 0;">
 						<p:outputPanel id="dashboard">
-							<p:tabView
-								activeIndex="#{dataInstanceTestPlanRequestBean.activeIndexOfMessageInstancePanel}"
-								rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep != null}">
+							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep != null}" activeIndex="#{dataInstanceTestPlanRequestBean.activeIndexOfMessageInstancePanel}">
 								<p:tab title="Test Step MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
@@ -220,7 +212,7 @@
 											effect="fade"
 											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name == null}">
 											<p:ajax event="change"
-												update=":#{p:component('DataInstanceTestForm')}"
+												update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 												listener="#{dataInstanceTestPlanRequestBean.updateMessageTestStep}" />
 											<f:selectItem itemLabel="Select One" itemValue="" />
 											<f:selectItems value="#{messageRequestBean.messages}"
@@ -238,10 +230,6 @@
 										<h:outputText
 											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
 											value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.conformanceProfile.name}" />
-										
-										<h:outputText value="Last Updated: " />
-										<h:outputText style="width:500px;"
-											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
 									</h:panelGrid>
 									
 									<table width="100%">
@@ -249,7 +237,7 @@
 											<td align="right"><p:commandButton value="Reset Message"
 												rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
 												actionListener="#{dataInstanceTestPlanRequestBean.resetMessage}"
-												update=":#{p:component('DataInstanceTestForm')}"
+												update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
 												icon="ui-icon-close" title="Reset Message" /></td>
 											</tr>
 									</table>
@@ -299,81 +287,55 @@
 										</pe:ckEditor>
 									</h:panelGrid>
 								</p:tab>
-								<p:tab title="HL7 Message Tree"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:messageConstructor
-											bean="#{dataInstanceTestPlanRequestBean}"
-											panelId=":#{p:component('DataInstanceTestForm')}" />
-									</p:scrollPanel>
-								</p:tab>
 
-								<p:tab title="HL7 Encoded Message"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="HL7 Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
 										<tcamt:sampleMessage
 											hl7EndcodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.hl7EndcodedMessage}"
 											bean="#{dataInstanceTestPlanRequestBean}"
-											panelId=":#{p:component('DataInstanceTestForm')}" />
+											panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="Segments List"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="Segments List" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:segmentList bean="#{dataInstanceTestPlanRequestBean}"
-											panelId=":#{p:component('DataInstanceTestForm')}" />
+										<tcamt:segmentList bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="TestData of Selected Segment"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:testDataOfSegment
-											bean="#{dataInstanceTestPlanRequestBean}"
-											panelId=":#{p:component('DataInstanceTestForm')}" />
+										<tcamt:testDataOfSegment bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="List Contraints"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="List Contraints" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:constraintsTable
-											bean="#{dataInstanceTestPlanRequestBean}"
-											panelId=":#{p:component('DataInstanceTestForm')}" />
+										<tcamt:constraintsTable bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
 									</p:scrollPanel>
 								</p:tab>
-								<p:tab title="STD XML Encoded Message"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<tcamt:hl7XMLMessage
-										xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedSTDMessage}" />
+								
+								<p:tab title="STD XML Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedSTDMessage}" />
 								</p:tab>
-								<p:tab title="NIST XML Encoded Message"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<tcamt:hl7XMLMessage
-										xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
+								
+								<p:tab title="NIST XML Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
 								</p:tab>
 
-								<p:tab title="Test Data Specification"
-									rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
-									<tcamt:htmlViewer
-										htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
+								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
+									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
 								</p:tab>
 
-								<p:tab title="Juror Document"
-									rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentHTML != null}">
-									<tcamt:htmlViewer
-										htmlCode="#{dataInstanceTestPlanRequestBean.jurorDocumentHTML}" />
+								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName != null}">
+									<tcamt:pdfViewer fileName="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName}" />
 								</p:tab>
 
-								<p:tab title="Message Contents"
-									rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
-									<tcamt:htmlViewer
-										htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
+								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
+									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
 								</p:tab>
 							</p:tabView>
-							<p:tabView
-								rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">
+							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">
 								<p:tab title="Test Case MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
@@ -388,12 +350,6 @@
 												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" />
 											<p:ajax event="save" />
 										</p:inplace>
-										<h:outputText value="Last Updated: " />
-										<h:outputText style="width:500px;"
-											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
-										<h:outputText value="Version: " />
-										<h:outputText style="width:500px;"
-											value="#{dataInstanceTestPlanRequestBean.selectedTestCase.version}" />
 									</h:panelGrid>
 								</p:tab>
 								<p:tab title="Test Case Story">
@@ -442,8 +398,7 @@
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>
-							<p:tabView
-								rendered="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup != null}">
+							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup != null}">
 								<p:tab title="Test Case Group MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
@@ -459,12 +414,6 @@
 												value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" />
 											<p:ajax event="save" />
 										</p:inplace>
-										<h:outputText value="Last Updated: " />
-										<h:outputText style="width:500px;"
-											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
-										<h:outputText value="Version: " />
-										<h:outputText style="width:500px;"
-											value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.version}" />
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>
@@ -548,12 +497,9 @@
 
 
 	<h:form id="shareDataInstanceTestPlanForm">
-		<p:dialog id="shareDataInstanceTestPlanDialog" header="Share TestPlan"
-			widgetVar="shareDataInstanceTestPlan">
-			<h:panelGrid id="shareDataInstanceTestPlanPanel" columns="2"
-				cellpadding="5">
+		<p:dialog id="shareDataInstanceTestPlanDialog" header="Share TestPlan" widgetVar="shareDataInstanceTestPlan">
+			<h:panelGrid id="shareDataInstanceTestPlanPanel" columns="2" cellpadding="5">
 				<h:outputText value="To: " />
-
 				<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.shareTo}"
 					effect="fade">
 					<f:selectItem itemLabel="Select One" itemValue="" />

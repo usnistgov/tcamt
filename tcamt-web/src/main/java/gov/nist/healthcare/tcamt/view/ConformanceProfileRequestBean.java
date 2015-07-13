@@ -73,6 +73,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void selectProfile(ActionEvent event) throws CloneNotSupportedException, IOException {
 		this.selectedProfile = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		this.selectedProfile = this.sessionBeanTCAMT.getDbManager().getConformanceProfileById(this.selectedProfile.getId());
+		this.conformanceProfileId = this.selectedProfile.getConformanceProfileId();
 	}
 	
 	public void selectPlan(ActionEvent event) throws CloneNotSupportedException, IOException {
@@ -263,6 +264,13 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateConformanceProfiles();
 	}
 	
+	public void delSampleER7Message(ActionEvent event) {
+		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
+		cp.setSampleER7Message(null);
+		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
+		this.sessionBeanTCAMT.updateConformanceProfiles();
+	}
+	
 	public void delProfile(ActionEvent event) {
 		this.sessionBeanTCAMT.getDbManager().conformanceProfileDelete((ConformanceProfile) event.getComponent().getAttributes().get("profile"));
 		this.sessionBeanTCAMT.updateConformanceProfiles();
@@ -383,9 +391,9 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	private void generateProfilesConstraintsValueSetsRB(ZipOutputStream out, ContextFreeTestPlan tp){		
 		for(TestObject to:tp.getTestObjects()){
-			this.generateProfileRB(out, to.getConformanceProfile().getIntegratedProfile().getProfile() , to.getName() + "_Profile.xml");
-			this.generateValueSetRB(out, to.getConformanceProfile().getIntegratedProfile().getValueSet(), to.getName() + "_ValueSetLibrary.xml");
-			this.generateConstraintRB(out, to.getConformanceProfile().getIntegratedProfile().getConstraints(), to.getName() + "_Constraints.xml");	
+			this.generateProfileRB(out, to.getConformanceProfile().getIntegratedProfile().getProfile() , to.getConformanceProfile().getIntegratedProfile().getName() + "_Profile.xml");
+			this.generateValueSetRB(out, to.getConformanceProfile().getIntegratedProfile().getValueSet(), to.getConformanceProfile().getIntegratedProfile().getName() + "_ValueSetLibrary.xml");
+			this.generateConstraintRB(out, to.getConformanceProfile().getIntegratedProfile().getConstraints(), to.getConformanceProfile().getIntegratedProfile().getName() + "_Constraints.xml");	
 		}
 	}
 	

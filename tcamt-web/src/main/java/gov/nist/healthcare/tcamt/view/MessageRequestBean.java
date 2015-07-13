@@ -99,7 +99,10 @@ public class MessageRequestBean implements Serializable {
 			
 			this.init();
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -125,7 +128,10 @@ public class MessageRequestBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 	        context.addMessage(null, new FacesMessage("Message Cloned.",  "Message: " + this.editMessage.getName() + " has been created.") );	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -135,7 +141,10 @@ public class MessageRequestBean implements Serializable {
 			this.newMessage = new Message();
 			this.conformanceProfileId = null;	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -160,7 +169,10 @@ public class MessageRequestBean implements Serializable {
 			FacesContext context = FacesContext.getCurrentInstance();
 	        context.addMessage(null, new FacesMessage("Message Created.",  "Message: " + this.editMessage.getName() + " has been created.") );			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -174,7 +186,10 @@ public class MessageRequestBean implements Serializable {
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			this.readHL7Message();			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -196,7 +211,10 @@ public class MessageRequestBean implements Serializable {
 			this.setActiveIndexOfMessageInstancePanel(2);
 			this.sessionBeanTCAMT.setmActiveIndex(1);			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -216,7 +234,10 @@ public class MessageRequestBean implements Serializable {
 			this.editMessage.setHl7EndcodedMessage(editedHl7EndcodedMessage);
 			this.readHL7Message();			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -263,7 +284,10 @@ public class MessageRequestBean implements Serializable {
 			
 			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -276,7 +300,10 @@ public class MessageRequestBean implements Serializable {
 			
 			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -296,7 +323,10 @@ public class MessageRequestBean implements Serializable {
 	        
 	        this.sessionBeanTCAMT.setmActiveIndex(0);			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -312,7 +342,10 @@ public class MessageRequestBean implements Serializable {
 				this.sessionBeanTCAMT.updateMessages();	
 			}			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -325,7 +358,10 @@ public class MessageRequestBean implements Serializable {
 			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
 			this.activeIndexOfMessageInstancePanel = 3;			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -339,7 +375,10 @@ public class MessageRequestBean implements Serializable {
 			
 			this.activeIndexOfMessageInstancePanel = 3;			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -354,7 +393,10 @@ public class MessageRequestBean implements Serializable {
 			this.activeIndexOfMessageInstancePanel = 2;
 			this.updateFilteredInstanceSegments();	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -364,7 +406,10 @@ public class MessageRequestBean implements Serializable {
 			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.editMessage);
 			this.updateFilteredSegmentTree();	
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -383,7 +428,10 @@ public class MessageRequestBean implements Serializable {
 			
 			parent.getChildren().add(position + 1, newNode);			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -393,7 +441,10 @@ public class MessageRequestBean implements Serializable {
 			this.editMessage.setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot, this.editMessage));
 			this.readHL7Message();			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
@@ -419,7 +470,10 @@ public class MessageRequestBean implements Serializable {
 				}
 			}			
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
     }
@@ -432,7 +486,23 @@ public class MessageRequestBean implements Serializable {
 				this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
 			}
 		}catch(Exception e){
-			Log log = new Log(e.getMessage(), "Error", this.getStackTrace(e));
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void loadHL7Message(){
+		try{
+			this.editMessage.setHl7EndcodedMessage(this.editMessage.getConformanceProfile().getSampleER7Message());
+			this.readHL7Message();
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}

@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:composite="http://java.sun.com/jsf/composite">
 
@@ -19,12 +20,12 @@
 	<table width="100%">
 		<tr>
 			<td align="right">
+				<p:commandButton value="Load Sample Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.loadHL7Message}"/>
 				<p:commandButton value="Update er7 Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.readHL7Message}"/>
 			</td>
 		</tr>
 	</table>
-     <p:inputTextarea autoResize="false" value="#{cc.attrs.hl7EndcodedMessage}" rows="20" cols="3000" style="overflow:scroll;overflow-y:scroll;overflow-x:scroll;overflow:-moz-scrollbars-vertical;">
-	 </p:inputTextarea>	
+	<pe:codeMirror mode="xml" theme="neat" value="#{cc.attrs.hl7EndcodedMessage}" lineNumbers="true" /> 
 </composite:implementation>
 
 </html>

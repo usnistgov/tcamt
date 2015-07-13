@@ -34,12 +34,6 @@
 			<h:outputText value="-" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}"/>
 			<h:outputText value="#{c.data}" rendered="#{c['class'].simpleName == 'Constraint'}"/>
 		</p:column>
-		<p:column headerText="Action" style="width:5%;">
-				<p:commandButton
-					actionListener="#{cc.attrs.bean.deleteConstraint(c.ipath)}"
-					update="#{cc.attrs.panelId}" icon="ui-icon-close"
-					title="Delete Constraint" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}" />
-		</p:column>
 	</p:treeTable>
 </composite:implementation>
 

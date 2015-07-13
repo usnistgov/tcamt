@@ -3,7 +3,7 @@
 "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
-	<session-factory>
+	<session-factory name="tcamt-session-factory">
 		<property name="connection.url">jdbc:mysql://localhost:3306/tcamt</property>
 		<property name="connection.username">tcamt-admin</property>
 		<property name="connection.password">tc1q2w3eamt!</property>
@@ -12,8 +12,6 @@
 
 		<property name="connection.pool_size">10</property>
 		<property name="dbcp.maxIdle">1</property>
-		
-		
 		
 		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="current_session_context_class">thread</property>

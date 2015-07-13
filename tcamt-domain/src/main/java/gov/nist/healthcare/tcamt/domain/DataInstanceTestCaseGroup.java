@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -50,6 +51,14 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinTable(name = "ditcg_ditc", joinColumns = { @JoinColumn(name = "testcasegroup_id") }, inverseJoinColumns = { @JoinColumn(name = "testcase_id") })
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
+	
+	
+	@JsonIgnore
+	private boolean expanded;
+	
+	@JsonIgnore
+	@Transient
+	private boolean selected;
 
 	public long getId() {
 		return id;
@@ -125,6 +134,26 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 		return this.position - comparePosition;
 	}
 	
+	public boolean isExpanded() {
+		return expanded;
+	}
+
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
+	
+	
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+
+
 	public static Comparator<DataInstanceTestCaseGroup> testCaseGroupPositionComparator = new Comparator<DataInstanceTestCaseGroup>() {
 		public int compare(DataInstanceTestCaseGroup tg1, DataInstanceTestCaseGroup tg2) {
 			return tg1.compareTo(tg2);

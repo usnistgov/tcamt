@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:composite="http://java.sun.com/jsf/composite">
 
@@ -18,7 +19,7 @@
 			<p:tab title="Integrated Profile List">
 				<table width="100%">
 					<tr>
-						<td align="right"><p:commandButton
+						<td align="right"><p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 								value="Register Integrated Profile" icon="ui-icon-plus"
 								update=":#{p:component('createIntegratedProfileForm')}"
 								actionListener="#{conformanceProfileRequestBean.initNewIntegratedProfile}"
@@ -44,7 +45,7 @@
 						<h:outputText value="#{profile.lastUpdateDate}" />
 					</p:column>
 
-					<p:column headerText="Action">
+					<p:column headerText="Action" rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}">
 						<p:commandButton value="Edit" icon="ui-icon-pencil"
 							update=":#{p:component('editIntegratedProfileForm')}"
 							actionListener="#{conformanceProfileRequestBean.selectIntegratedProfile}"
@@ -92,7 +93,7 @@
 							rendered="#{profile.testDataSpecificationXSLT == null}"
 							value="NULL" />
 						<p:commandButton
-							rendered="#{profile.testDataSpecificationXSLT != null}"
+							rendered="#{profile.testDataSpecificationXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 							actionListener="#{conformanceProfileRequestBean.delTDSHTMLXSLT}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
 							title="Del">
@@ -108,7 +109,7 @@
 							rendered="#{profile.testDataSpecificationJSONXSLT == null}"
 							value="NULL" />
 						<p:commandButton
-							rendered="#{profile.testDataSpecificationJSONXSLT != null}"
+							rendered="#{profile.testDataSpecificationJSONXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 							actionListener="#{conformanceProfileRequestBean.delTDSJSONXSLT}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
 							title="Del">
@@ -121,7 +122,7 @@
 							value="Uploaded" />
 						<h:outputText rendered="#{profile.jurorDocumentXSLT == null}"
 							value="NULL" />
-						<p:commandButton rendered="#{profile.jurorDocumentXSLT != null}"
+						<p:commandButton rendered="#{profile.jurorDocumentXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 							actionListener="#{conformanceProfileRequestBean.delJurorHTMLXSLT}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
 							title="Del">
@@ -135,8 +136,20 @@
 						<h:outputText rendered="#{profile.jurorDocumentJSONXSLT == null}"
 							value="NULL" />
 						<p:commandButton
-							rendered="#{profile.jurorDocumentJSONXSLT != null}"
+							rendered="#{profile.jurorDocumentJSONXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 							actionListener="#{conformanceProfileRequestBean.delJurorJSONXSLT}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+					
+					<p:column headerText="Sample Message">
+						<h:outputText rendered="#{profile.sampleER7Message != null}" value="Uploaded" />
+						<h:outputText rendered="#{profile.sampleER7Message == null}" value="NULL" />
+						<p:commandButton
+							rendered="#{profile.sampleER7Message != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+							actionListener="#{conformanceProfileRequestBean.delSampleER7Message}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
 							title="Del">
 							<f:attribute name="profile" value="#{profile}" />
@@ -147,7 +160,7 @@
 						<h:outputText value="#{profile.lastUpdateDate}" />
 					</p:column>
 
-					<p:column headerText="Action">
+					<p:column headerText="Action" rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}">
 						<p:commandButton value="Edit" icon="ui-icon-pencil"
 							update=":#{p:component('editProfileForm')}"
 							actionListener="#{conformanceProfileRequestBean.selectProfile}"
@@ -167,7 +180,7 @@
 			<p:tab title="Context Free Test Plan List">
 				<table width="100%">
 					<tr>
-						<td align="right"><p:commandButton
+						<td align="right"><p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 								value="Add ContextFreeTestPlan" icon="ui-icon-plus"
 								update=":#{p:component('createContextFreeTestPlanForm')}"
 								actionListener="#{conformanceProfileRequestBean.initNewContextFreeTestPlan}"
@@ -188,7 +201,7 @@
 						<h:outputText value="#{plan.lastUpdateDate}" />
 					</p:column>
 
-					<p:column headerText="Action">
+					<p:column headerText="Action" rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}">
 						<p:commandButton value="Edit" icon="ui-icon-pencil"
 							update=":#{p:component('createContextFreeTestPlanForm')}"
 							actionListener="#{conformanceProfileRequestBean.selectPlan}"
@@ -381,8 +394,8 @@
 	</h:form>
 
 	<h:form id="editProfileForm">
-		<p:dialog header="Edit Profile" widgetVar="editProfile">
-			<h:panelGrid columns="2" cellpadding="5">
+		<p:dialog header="Edit Profile" widgetVar="editProfile" width="80%" height="80%">
+			<h:panelGrid columns="4" cellpadding="5">
 				<h:outputText value="Name: " />
 				<h:outputText
 					value="#{conformanceProfileRequestBean.selectedProfile.name}" />
@@ -450,7 +463,10 @@
 						mode="advanced" auto="true" sizeLimit="10000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
-
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellpadding="5">
+				<h:outputText value="Sample Message: " />
+				<pe:codeMirror mode="xml" theme="neat" value="#{conformanceProfileRequestBean.selectedProfile.sampleER7Message}" lineNumbers="true" />
 
 			</h:panelGrid>
 			<table width="100%">

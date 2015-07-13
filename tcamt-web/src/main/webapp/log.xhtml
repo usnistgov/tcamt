@@ -44,6 +44,14 @@
 					<p:column headerText="Time">
 						<h:outputText value="#{log.lastUpdateDate}" />
 					</p:column>
+					<p:column headerText="Action">
+						<p:commandButton value="Del"
+							actionListener="#{sessionBeanTCAMT.delLog}"
+							update=":#{p:component('logForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="log" value="#{log}" />
+						</p:commandButton>
+					</p:column>
 				</p:dataTable>
 			</p:tab>
 			

@@ -9,7 +9,9 @@ import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,15 +36,18 @@ public class DBImpl implements DBInterface, Serializable {
 	
 	public DBImpl() {
 		super();
-		System.out.println("DBImpl Object Created!");
 		sessionFactory = DBImpl.getSessionFactory();
 		this.currentSession = sessionFactory.openSession();
 	}
 	
+	private void init(){
+		sessionFactory = DBImpl.getSessionFactory();
+		if(!currentSession.isOpen()) this.currentSession = sessionFactory.openSession();
+	}
+	
 	public void finalize() {
-		System.out.println("DBImpl Object Closed!");
-		currentSession.close();
-		this.sessionFactory.close();
+		if(currentSession.isOpen()) this.currentSession.close();
+		if(!this.sessionFactory.isClosed()) this.sessionFactory.close();		
 	}
 
 	public Session openCurrentSession() {
@@ -62,318 +67,545 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public User isValidUser(User user) {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(User.class);
-		criteria.add(Restrictions.eq("userId", user.getUserId()));
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(User.class);
+			criteria.add(Restrictions.eq("userId", user.getUserId()));
 
-		@SuppressWarnings("unchecked")
-		List<User> users = criteria.list();
-		this.closeCurrentSession();
-		if (users == null || users.size() == 0)
-			return null;
-		if (users.get(0).getPassword().equals(user.getPassword()))
-			return users.get(0);
+			@SuppressWarnings("unchecked")
+			List<User> users = criteria.list();
+			this.closeCurrentSession();
+			if (users == null || users.size() == 0)
+				return null;
+			if (users.get(0).getPassword().equals(user.getPassword()))
+				return users.get(0);
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 		return null;
 	}
 
 	public User getUserById(long id) {
-		this.openCurrentSession();
-		User u = (User)this.currentSession.get(User.class, id);
-		this.closeCurrentSession();
-		return u;
+		try{
+			this.openCurrentSession();
+			User u = (User)this.currentSession.get(User.class, id);
+			this.closeCurrentSession();
+			return u;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers() {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(User.class);
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<User> results = criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(User.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<User> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public void addUser(User user) {
-		this.openCurrentSession();
-		this.currentSession.save(user);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.save(user);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void updateUser(User user) {
-		this.openCurrentSession();
-		this.currentSession.update(user);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.update(user);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void deleteUser(User user) {
-		this.openCurrentSession();
-		this.currentSession.delete(user);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(user);
+			this.closeCurrentSession();	
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 	
 	public void integratedProfileInsert(IntegratedProfile ip) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		ip.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.save(ip);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			ip.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.save(ip);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void integratedProfileUpdate(IntegratedProfile ip) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		ip.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(ip);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			ip.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(ip);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void integratedProfileDelete(IntegratedProfile ip) {
-		this.openCurrentSession();
-		this.currentSession.delete(ip);
-		this.closeCurrentSession();
-
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(ip);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<IntegratedProfile> getAllIntegratedProfiles() {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(IntegratedProfile.class);
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<IntegratedProfile> results = criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(IntegratedProfile.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<IntegratedProfile> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public IntegratedProfile getIntegratedProfileById(long id) {
-		this.openCurrentSession();
-		IntegratedProfile ip = (IntegratedProfile)this.currentSession.get(IntegratedProfile.class, id);
-		this.closeCurrentSession();
-		return ip;
+		try{
+			this.openCurrentSession();
+			IntegratedProfile ip = (IntegratedProfile)this.currentSession.get(IntegratedProfile.class, id);
+			this.closeCurrentSession();
+			return ip;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 	
 	public void conformanceProfileInsert(ConformanceProfile cp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		cp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.save(cp);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			cp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.save(cp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void conformanceProfileUpdate(ConformanceProfile cp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		cp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(cp);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			cp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(cp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void conformanceProfileDelete(ConformanceProfile cp) {
-		this.openCurrentSession();
-		this.currentSession.delete(cp);
-		this.closeCurrentSession();
-
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(cp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<ConformanceProfile> getAllConformanceProfiles() {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(ConformanceProfile.class);
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<ConformanceProfile> results = criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(ConformanceProfile.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<ConformanceProfile> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public ConformanceProfile getConformanceProfileById(long id) {
-		this.openCurrentSession();
-		ConformanceProfile cp = (ConformanceProfile)this.currentSession.get(ConformanceProfile.class, id);
-		this.closeCurrentSession();
-		return cp;
+		try{
+			this.openCurrentSession();
+			ConformanceProfile cp = (ConformanceProfile)this.currentSession.get(ConformanceProfile.class, id);
+			this.closeCurrentSession();
+			return cp;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public void actorInsert(Actor a) {
-		this.openCurrentSession();
-		this.currentSession.save(a);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.save(a);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void actorUpdate(Actor a) {
-		this.openCurrentSession();
-		this.currentSession.update(a);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.update(a);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void actorDelete(Actor a) {
-		this.openCurrentSession();
-		this.currentSession.delete(a);
-		this.closeCurrentSession();
-
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(a);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Actor> getAllActors(User author) {
-		if (author == null) return null;
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(Actor.class);
-		criteria.add(Restrictions.eq("author", author));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<Actor> results = (List<Actor>) criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			if (author == null) return null;
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(Actor.class);
+			criteria.add(Restrictions.eq("author", author));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<Actor> results = (List<Actor>) criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public Actor getActorById(long id) {
-		this.openCurrentSession();
-		Actor a = (Actor)this.currentSession.get(Actor.class, id);
-		this.closeCurrentSession();
-		return a;
+		try{
+			this.openCurrentSession();
+			Actor a = (Actor)this.currentSession.get(Actor.class, id);
+			this.closeCurrentSession();
+			return a;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public void messageInsert(Message m) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		m.setLastUpdateDate(dateFormat.format(date));
-		
-		this.currentSession.save(m);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			m.setLastUpdateDate(dateFormat.format(date));
+			
+			this.currentSession.save(m);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void messageUpdate(Message m) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		m.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(m);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			m.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(m);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void messageDelete(Message m) {
-		this.openCurrentSession();
-		this.currentSession.delete(m);
-		this.closeCurrentSession();
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(m);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessages(User author) {
-		if (author == null) return null;
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(Message.class);
-		criteria.add(Restrictions.eq("author", author));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		List<Message> results = (List<Message>) criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			if (author == null) return null;
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(Message.class);
+			criteria.add(Restrictions.eq("author", author));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<Message> results = (List<Message>) criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public Message getMessageById(long id) {
-		this.openCurrentSession();
-		Message m = (Message)this.currentSession.get(Message.class, id);
-		this.closeCurrentSession();
-		return m;
+		try{
+			this.openCurrentSession();
+			Message m = (Message)this.currentSession.get(Message.class, id);
+			this.closeCurrentSession();
+			return m;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public void dataInstanceTestPlanInsert(DataInstanceTestPlan ditp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		ditp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.save(ditp);
-		this.closeCurrentSession();
-	}
-
-	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		ditp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(ditp);
-		this.closeCurrentSession();
-	}
-
-	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp) {
-		this.openCurrentSession();
-		this.currentSession.delete(ditp);
-		this.closeCurrentSession();
-	}
-
-	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author) {
-		if (author == null) return null;
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
-		criteria.add(Restrictions.eq("author", author));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		@SuppressWarnings("unchecked")
-		List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
-		this.closeCurrentSession();
-		return results;
-	}
-
-	public DataInstanceTestPlan getDataInstanceTestPlanById(long id) {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
-		criteria.add(Restrictions.eq("id", id));
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		@SuppressWarnings("unchecked")
-		List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
-		this.closeCurrentSession();
-		
-		if(results == null || results.size() == 0){
-			return null;
-		}else {
-			return results.get(0);
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			ditp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.save(ditp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
 		}
 	}
 
+	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp) {
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			ditp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(ditp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+
+	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(ditp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+
+	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author) {
+		try{
+			if (author == null) return null;
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			criteria.add(Restrictions.eq("author", author));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
+	public DataInstanceTestPlan getDataInstanceTestPlanById(long id) {
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			criteria.add(Restrictions.eq("id", id));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
+			this.closeCurrentSession();
+			
+			if(results == null || results.size() == 0){
+				return null;
+			}else {
+				return results.get(0);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
 	public void contextFreeTestPlanInsert(ContextFreeTestPlan cftp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		cftp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.save(cftp);
-		this.closeCurrentSession();
-		
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			cftp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.save(cftp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void contextFreeTestPlanUpdate(ContextFreeTestPlan cftp) {
-		this.openCurrentSession();
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date = new Date();
-		cftp.setLastUpdateDate(dateFormat.format(date));
-		this.currentSession.update(cftp);
-		this.closeCurrentSession();
-		
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			cftp.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(cftp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public void contextFreeTestPlanDelete(ContextFreeTestPlan cftp) {
-		this.openCurrentSession();
-		this.currentSession.delete(cftp);
-		this.closeCurrentSession();
-		
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(cftp);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
 	}
 
 	public List<ContextFreeTestPlan> getAllContextFreeTestPlans() {
-		this.openCurrentSession();
-		Criteria criteria = this.currentSession.createCriteria(ContextFreeTestPlan.class);
-		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-		@SuppressWarnings("unchecked")
-		List<ContextFreeTestPlan> results = criteria.list();
-		this.closeCurrentSession();
-		return results;
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(ContextFreeTestPlan.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<ContextFreeTestPlan> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public ContextFreeTestPlan getContextFreeTestPlanById(long id) {
-		this.openCurrentSession();
-		ContextFreeTestPlan cftp = (ContextFreeTestPlan)this.currentSession.get(ContextFreeTestPlan.class, id);
-		this.closeCurrentSession();
-		return cftp;
+		try{
+			this.openCurrentSession();
+			ContextFreeTestPlan cftp = (ContextFreeTestPlan)this.currentSession.get(ContextFreeTestPlan.class, id);
+			this.closeCurrentSession();
+			return cftp;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 
 	public void logInsert(Log l) {
+		this.finalize();
+		this.init();
+		
 		this.openCurrentSession();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
@@ -406,4 +638,24 @@ public class DBImpl implements DBInterface, Serializable {
 		this.closeCurrentSession();
 		return results;
 	}
+	
+	private String getStackTrace(final Throwable throwable) {
+	     final StringWriter sw = new StringWriter();
+	     final PrintWriter pw = new PrintWriter(sw, true);
+	     throwable.printStackTrace(pw);
+	     return sw.getBuffer().toString();
+	}
+
+	public void logDelete(Log l) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(l);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+	
 }

@@ -68,7 +68,9 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 	
 	private String type;
 	
-	
+	@JsonIgnore
+	@Transient
+	private boolean selected;
 	
 	public DataInstanceTestStep(long id, String name, String longDescription, Integer version) {
 		super();
@@ -194,6 +196,14 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 	public static Comparator<DataInstanceTestStep> testCasePositionComparator = new Comparator<DataInstanceTestStep>() {

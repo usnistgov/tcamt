@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -54,6 +55,13 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	@JsonIgnore
 	@Embedded
 	private TestStory testCaseStory = new TestStory();
+	
+	@JsonIgnore
+	private boolean expanded;
+	
+	@JsonIgnore
+	@Transient
+	private boolean selected;
 	
 	public long getId() {
 		return id;
@@ -127,6 +135,20 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	public int compareTo(DataInstanceTestCase comparingTestCase) {
 		int comparePosition = comparingTestCase.getPosition(); 
 		return this.position - comparePosition;
+	}
+
+	public boolean isExpanded() {
+		return expanded;
+	}
+	public void setExpanded(boolean expanded) {
+		this.expanded = expanded;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 
 	public static Comparator<DataInstanceTestCase> testCasePositionComparator = new Comparator<DataInstanceTestCase>() {

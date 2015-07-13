@@ -19,6 +19,8 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
@@ -337,87 +339,58 @@ public class ManageInstance implements Serializable {
 				}
 
 				for (int j = 0; j < fieldStr.length; j++) {
-					String path = selectedInstanceSegment.getPath() + "."
-							+ (i + 1);
-					String iPath = selectedInstanceSegment.getIpath() + "."
-							+ (i + 1) + "[" + (j + 1) + "]";
-					String iPositionPath = selectedInstanceSegment
-							.getiPositionPath()
-							+ "."
-							+ (i + 1)
-							+ "["
-							+ (j + 1)
-							+ "]";
-					String usageList = selectedInstanceSegment.getUsageList()
-							+ "-"
-							+ segment.getFields().get(i).getUsage().name();
+					String path = selectedInstanceSegment.getPath() + "." + (i + 1);
+					String iPath = selectedInstanceSegment.getIpath() + "." + (i + 1) + "[" + (j + 1) + "]";
+					String iPositionPath = selectedInstanceSegment.getiPositionPath() + "." + (i + 1) + "[" + (j + 1) + "]";
+					String usageList = selectedInstanceSegment.getUsageList() + "-" + segment.getFields().get(i).getUsage().name();
 
 					Field field = segment.getFields().get(i);
-					Datatype fieldDT = m.getDatatypes().findOne(
-							field.getDatatype());
+					
+					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
 					Table fieldTable = m.getTables().findOne(field.getTable());
+					Predicate fieldPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]");
+					List<ConformanceStatement> fieldConformanceStatements = this.findConformanceStatements(segment.getConformanceStatements(), (i+1) + "[1]");
+					
+					
+					String fieldUsage = field.getUsage().name();
+					
+					if(fieldPredicate != null && fieldUsage.equals("C")){
+						fieldUsage = fieldUsage + "(" + fieldPredicate.getTrueUsage().name() + "/" + fieldPredicate.getFalseUsage().name() +")";
+					}
 
-					if (m.getDatatypes()
-							.findOne(segment.getFields().get(i).getDatatype())
-							.getComponents().size() > 0) {
+					if (m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()) .getComponents().size() > 0) {
 						FieldModel fieldModel = new FieldModel(
 								selectedInstanceSegment.getMessageName(), path,
 								iPath, iPositionPath, usageList, field,
 								fieldStr[j],
 								m.findTCAMTConstraintByIPath(iPath), false,
-								fieldDT, fieldTable);
-						TreeNode fieldTreeNode = new DefaultTreeNode(
-								fieldModel, segmentTreeRoot);
+								fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 
 						String[] componentStr = fieldStr[j].split("\\^");
 
-						for (int k = 0; k < m
-								.getDatatypes()
-								.findOne(
-										segment.getFields().get(i)
-												.getDatatype()).getComponents()
-								.size(); k++) {
+						for (int k = 0; k < fieldDT.getComponents().size(); k++) {
 							String componentPath = path + "." + (k + 1);
-							String componentIPath = iPath + "." + (k + 1)
-									+ "[1]";
-							String componentIPositionPath = iPositionPath + "."
-									+ (k + 1) + "[1]";
-							String componentUsageList = usageList
-									+ "-"
-									+ m.getDatatypes()
-											.findOne(
-													segment.getFields().get(i)
-															.getDatatype())
-											.getComponents().get(k).getUsage()
-											.name();
+							String componentIPath = iPath + "." + (k + 1) + "[1]";
+							String componentIPositionPath = iPositionPath + "." + (k + 1) + "[1]";
+							String componentUsageList = usageList + "-" + fieldDT.getComponents().get(k).getUsage().name();
+							String componentUsage = fieldDT.getComponents().get(k).getUsage().name();
 
-							Component component = m
-									.getDatatypes()
-									.findOne(
-											segment.getFields().get(i)
-													.getDatatype())
-									.getComponents().get(k);
-							Datatype componentDT = m.getDatatypes().findOne(
-									component.getDatatype());
-							Table componentTable = m.getTables().findOne(
-									component.getTable());
+							Component component = fieldDT.getComponents().get(k);
+							Datatype componentDT = m.getDatatypes().findOne(component.getDatatype());
+							Table componentTable = m.getTables().findOne(component.getTable());
+							Predicate componentPredicate = this.findPreficate(fieldDT.getPredicates(), (k+1) + "[1]");
+							List<ConformanceStatement> componentConformanceStatements = this.findConformanceStatements(fieldDT.getConformanceStatements(), (k+1) + "[1]");
+							if(componentPredicate != null && componentUsage.equals("C")){
+								componentUsage = componentUsage + "(" + componentPredicate.getTrueUsage().name() + "/" + componentPredicate.getFalseUsage().name() +")";
+							}
 
 							TreeNode componentTreeNode;
 							String[] subComponentStr;
 							if (k >= componentStr.length) {
-								if (m.getDatatypes()
-										.findOne(
-												m.getDatatypes()
-														.findOne(
-																segment.getFields()
-																		.get(i)
-																		.getDatatype())
-														.getComponents().get(k)
-														.getDatatype())
-										.getComponents().size() > 0) {
+								if (componentDT.getComponents().size() > 0) {
 									ComponentModel componentModel = new ComponentModel(
-											selectedInstanceSegment
-													.getMessageName(),
+											selectedInstanceSegment.getMessageName(),
 											componentPath,
 											componentIPath,
 											componentIPositionPath,
@@ -425,14 +398,13 @@ public class ManageInstance implements Serializable {
 											component,
 											"",
 											m.findTCAMTConstraintByIPath(componentIPath),
-											false, componentDT, componentTable);
+											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = new String[] { "" };
 								} else {
 									ComponentModel componentModel = new ComponentModel(
-											selectedInstanceSegment
-													.getMessageName(),
+											selectedInstanceSegment.getMessageName(),
 											componentPath,
 											componentIPath,
 											componentIPositionPath,
@@ -440,23 +412,14 @@ public class ManageInstance implements Serializable {
 											component,
 											"",
 											m.findTCAMTConstraintByIPath(componentIPath),
-											true, componentDT, componentTable);
+											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = new String[] { "" };
 								}
 
 							} else {
-								if (m.getDatatypes()
-										.findOne(
-												m.getDatatypes()
-														.findOne(
-																segment.getFields()
-																		.get(i)
-																		.getDatatype())
-														.getComponents().get(k)
-														.getDatatype())
-										.getComponents().size() > 0) {
+								if (componentDT.getComponents().size() > 0) {
 									ComponentModel componentModel = new ComponentModel(
 											selectedInstanceSegment
 													.getMessageName(),
@@ -467,7 +430,7 @@ public class ManageInstance implements Serializable {
 											component,
 											componentStr[k],
 											m.findTCAMTConstraintByIPath(componentIPath),
-											false, componentDT, componentTable);
+											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k]
@@ -483,7 +446,7 @@ public class ManageInstance implements Serializable {
 											component,
 											componentStr[k],
 											m.findTCAMTConstraintByIPath(componentIPath),
-											true, componentDT, componentTable);
+											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k]
@@ -492,53 +455,26 @@ public class ManageInstance implements Serializable {
 
 							}
 
-							for (int l = 0; l < m
-									.getDatatypes()
-									.findOne(
-											m.getDatatypes()
-													.findOne(
-															segment.getFields()
-																	.get(i)
-																	.getDatatype())
-													.getComponents().get(k)
-													.getDatatype())
-									.getComponents().size(); l++) {
-								String subComponentPath = componentPath + "."
-										+ (l + 1);
-								String subComponentIPath = componentIPath + "."
-										+ (l + 1) + "[1]";
-								String subComponentUsageList = componentUsageList
-										+ "-"
-										+ m.getDatatypes()
-												.findOne(
-														m.getDatatypes()
-																.findOne(
-																		segment.getFields()
-																				.get(i)
-																				.getDatatype())
-																.getComponents()
-																.get(k)
-																.getDatatype())
-												.getComponents().get(l)
-												.getUsage().name();
-								String subComponentIPositionPath = componentIPositionPath
-										+ "." + (l + 1) + "[1]";
+							for (int l = 0; l < componentDT.getComponents().size(); l++) {
+								String subComponentPath = componentPath + "." + (l + 1);
+								String subComponentIPath = componentIPath + "." + (l + 1) + "[1]";
+								String subComponentIPositionPath = componentIPositionPath + "." + (l + 1) + "[1]";
 
-								Component subComponent = m
-										.getDatatypes()
-										.findOne(
-												m.getDatatypes()
-														.findOne(
-																segment.getFields()
-																		.get(i)
-																		.getDatatype())
-														.getComponents().get(k)
-														.getDatatype())
-										.getComponents().get(l);
-								Datatype subComponentDT = m.getDatatypes()
-										.findOne(subComponent.getDatatype());
-								Table subComponentTable = m.getTables()
-										.findOne(subComponent.getTable());
+								Component subComponent = componentDT.getComponents().get(l);
+								
+								String subComponentUsageList = componentUsageList + "-" + subComponent.getUsage().name();
+								String subComponentUsage = subComponent.getUsage().name();
+										
+								Datatype subComponentDT = m.getDatatypes().findOne(subComponent.getDatatype());
+								Table subComponentTable = m.getTables().findOne(subComponent.getTable());
+								Predicate subComponentPredicate = this.findPreficate(componentDT.getPredicates(), (l+1) + "[1]");
+								List<ConformanceStatement> subComponentConformanceStatements = this.findConformanceStatements(componentDT.getConformanceStatements(), (l+1) + "[1]");
+								
+								if(subComponentPredicate != null && subComponentUsage.equals("C")){
+									subComponentUsage = subComponentUsage + "(" + subComponentPredicate.getTrueUsage().name() + "/" + subComponentPredicate.getFalseUsage().name() +")";
+								}
+								
+								
 								if (l >= subComponentStr.length) {
 									ComponentModel subComponentModel = new ComponentModel(
 											selectedInstanceSegment
@@ -551,7 +487,7 @@ public class ManageInstance implements Serializable {
 											"",
 											m.findTCAMTConstraintByIPath(subComponentIPath),
 											true, subComponentDT,
-											subComponentTable);
+											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage);
 									new DefaultTreeNode(subComponentModel,
 											componentTreeNode);
 								} else {
@@ -566,7 +502,7 @@ public class ManageInstance implements Serializable {
 											subComponentStr[l],
 											m.findTCAMTConstraintByIPath(subComponentIPath),
 											true, subComponentDT,
-											subComponentTable);
+											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage);
 									new DefaultTreeNode(subComponentModel,
 											componentTreeNode);
 								}
@@ -579,7 +515,7 @@ public class ManageInstance implements Serializable {
 									path, iPath, iPositionPath, usageList,
 									segment.getFields().get(i), "|",
 									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable);
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						} else if (path.equals("MSH.2")) {
 							FieldModel fieldModel = new FieldModel(
@@ -588,7 +524,7 @@ public class ManageInstance implements Serializable {
 									segment.getFields().get(i), "^" + "~"
 											+ "\\" + "&",
 									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable);
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						} else {
 							FieldModel fieldModel = new FieldModel(
@@ -596,7 +532,7 @@ public class ManageInstance implements Serializable {
 									path, iPath, iPositionPath, usageList,
 									segment.getFields().get(i), fieldStr[j],
 									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable);
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}
 					}
@@ -693,90 +629,75 @@ public class ManageInstance implements Serializable {
 		int count = 0;
 		int position = 0;
 		for (int i = 0; i < segmentTreeRoot.getChildren().size(); i++) {
-			FieldModel fm = (FieldModel) segmentTreeRoot.getChildren().get(i)
-					.getData();
+			FieldModel fm = (FieldModel) segmentTreeRoot.getChildren().get(i).getData();
 			if (fm.getPath().equals(path)) {
 				count = count + 1;
 				position = i;
 			}
 		}
 
-		String iPath = fieldModel.getIpath().substring(0,
-				fieldModel.getIpath().length() - 3)
-				+ "[" + (count + 1) + "]";
-		String iPositionPath = fieldModel.getiPositionPath().substring(0,
-				fieldModel.getiPositionPath().length() - 3)
-				+ "[" + (count + 1) + "]";
+		String iPath = fieldModel.getIpath().substring(0,fieldModel.getIpath().length() - 3) + "[" + (count + 1) + "]";
+		String iPositionPath = fieldModel.getiPositionPath().substring(0, fieldModel.getiPositionPath().length() - 3) + "[" + (count + 1) + "]";
 
 		FieldModel repeatedFieldModel = new FieldModel(
 				fieldModel.getMessageName(), path, iPath, iPositionPath,
 				fieldModel.getUsageList(), fieldModel.getNode(), "", null,
 				fieldModel.isLeafNode(), fieldModel.getDatatype(),
-				fieldModel.getTable());
-		TreeNode addedField = new DefaultTreeNode(repeatedFieldModel,
-				segmentTreeRoot);
+				fieldModel.getTable(), fieldModel.getPredicate(), fieldModel.getConformanceStatements(), fieldModel.getUsage());
+		TreeNode addedField = new DefaultTreeNode(repeatedFieldModel, segmentTreeRoot);
 
 		if (!fieldModel.isLeafNode()) {
-			for (int i = 0; i < m.getDatatypes()
-					.findOne(fieldModel.getNode().getDatatype())
-					.getComponents().size(); i++) {
-				Component c = m.getDatatypes()
-						.findOne(fieldModel.getNode().getDatatype())
-						.getComponents().get(i);
+			for (int i = 0; i < fieldModel.getDatatype().getComponents().size(); i++) {
+				Component c = fieldModel.getDatatype().getComponents().get(i);
 				Datatype cDT = m.getDatatypes().findOne(c.getDatatype());
 				Table cTable = m.getTables().findOne(c.getTable());
+				Predicate cPredicate = this.findPreficate(fieldModel.getDatatype().getPredicates(), (i+1) + "[1]");
+				List<ConformanceStatement> cConformanceStatements = this.findConformanceStatements(fieldModel.getDatatype().getConformanceStatements(), (i+1) + "[1]");
 				String componentPath = path + "." + (i + 1);
 				String componentIPath = iPath + "." + (i + 1) + "[1]";
-				String componentIPositionPath = iPositionPath + "." + (i + 1)
-						+ "[1]";
-				String componentUsageList = fieldModel.getUsageList() + "-"
-						+ c.getUsage().name();
+				String componentIPositionPath = iPositionPath + "." + (i + 1) + "[1]";
+				String componentUsageList = fieldModel.getUsageList() + "-" + c.getUsage().name();
+				String componentUsage = c.getUsage().name();
+				
+				if(cPredicate != null && componentUsage.equals("C")){
+					componentUsage = componentUsage + "(" + cPredicate.getTrueUsage().name() + "/" + cPredicate.getFalseUsage().name() +")";
+				}
 
-				if (m.getDatatypes().findOne(c.getDatatype()).getComponents()
-						.size() > 0) {
+				if (cDT.getComponents().size() > 0) {
 					ComponentModel repatedComponentModel = new ComponentModel(
 							fieldModel.getMessageName(), componentPath,
 							componentIPath, componentIPositionPath,
-							componentUsageList, c, "", null, false, cDT, cTable);
-					TreeNode addedComponent = new DefaultTreeNode(
-							repatedComponentModel, addedField);
+							componentUsageList, c, "", null, false, cDT, cTable, cPredicate, cConformanceStatements, componentUsage);
+					TreeNode addedComponent = new DefaultTreeNode(repatedComponentModel, addedField);
 
-					for (int j = 0; j < m
-							.getDatatypes()
-							.findOne(
-									repatedComponentModel.getNode()
-											.getDatatype()).getComponents()
-							.size(); j++) {
-						Component sc = m
-								.getDatatypes()
-								.findOne(
-										repatedComponentModel.getNode()
-												.getDatatype()).getComponents()
-								.get(j);
-						Datatype scDT = m.getDatatypes().findOne(
-								sc.getDatatype());
+					for (int j = 0; j < cDT.getComponents().size(); j++) {
+						Component sc = cDT.getComponents().get(j);
+						Datatype scDT = m.getDatatypes().findOne(sc.getDatatype());
 						Table scTable = m.getTables().findOne(sc.getTable());
+						Predicate scPredicate = this.findPreficate(cDT.getPredicates(), (j+1) + "[1]");
+						List<ConformanceStatement> scConformanceStatements = this.findConformanceStatements(cDT.getConformanceStatements(), (j+1) + "[1]");
 						String subComponentPath = componentPath + "." + (j + 1);
-						String subComponentIPath = componentIPath + "."
-								+ (j + 1) + "[1]";
-						String subComponentIPositionPath = componentIPositionPath
-								+ "." + (j + 1) + "[1]";
-						String subComponentUsageList = componentUsageList + "-"
-								+ sc.getUsage().name();
+						String subComponentIPath = componentIPath + "." + (j + 1) + "[1]";
+						String subComponentIPositionPath = componentIPositionPath + "." + (j + 1) + "[1]";
+						String subComponentUsageList = componentUsageList + "-" + sc.getUsage().name();
+						String subComponentUsage = sc.getUsage().name();
+						
+						if(scPredicate != null && subComponentUsage.equals("C")){
+							subComponentUsage = subComponentUsage + "(" + scPredicate.getTrueUsage().name() + "/" + scPredicate.getFalseUsage().name() +")";
+						}
 
 						ComponentModel repatedSubComponentModel = new ComponentModel(
 								fieldModel.getMessageName(), subComponentPath,
 								subComponentIPath, subComponentIPositionPath,
 								subComponentUsageList, sc, "", null, true,
-								scDT, scTable);
-						new DefaultTreeNode(repatedSubComponentModel,
-								addedComponent);
+								scDT, scTable, scPredicate, scConformanceStatements, subComponentUsage);
+						new DefaultTreeNode(repatedSubComponentModel, addedComponent);
 					}
 				} else {
 					ComponentModel repatedComponentModel = new ComponentModel(
 							fieldModel.getMessageName(), componentPath,
 							componentIPath, componentIPositionPath,
-							componentUsageList, c, "", null, true, cDT, cTable);
+							componentUsageList, c, "", null, true, cDT, cTable, cPredicate, cConformanceStatements, componentUsage);
 					new DefaultTreeNode(repatedComponentModel, addedField);
 				}
 
@@ -2085,5 +2006,21 @@ public class ManageInstance implements Serializable {
 
 		return result;
 
+	}
+	
+	private Predicate findPreficate(List<Predicate> predicates, String path){
+		for(Predicate p:predicates){
+			if(p.getConstraintTarget().equals(path)) return p;
+		}
+		return null;
+	}
+	
+	private List<ConformanceStatement> findConformanceStatements(List<ConformanceStatement> conformanceStatements, String path) {
+		List<ConformanceStatement> results = new ArrayList<ConformanceStatement>();
+		for(ConformanceStatement c:conformanceStatements){
+			if(c.getConstraintTarget().equals(path)) results.add(c);
+		}
+		if(results.size() == 0) return null;
+		else return results;
 	}
 }

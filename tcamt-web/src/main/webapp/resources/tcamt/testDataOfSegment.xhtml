@@ -28,10 +28,7 @@
 	</table>
 	<p:treeTable value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true"
 		rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
-	
-			<!-- rowStyleClass="#{model.occurrence lt 0 or model.occurrence == 0? 'zeroOccurRow' : (model.node.usage == 'X' ? 'xUsageRow' : 
-		(model.node.usage == 'O' ? 'oUsageRow' : (model.node.usage == 'RE' ? 'reUsageRow' : (model.node.usage == 'R' ? 'rUsageRow' : 'normalRow' ) ) ) )}" -->
-		<p:column headerText="Path" style="width:15%;">
+		<p:column headerText="Path" style="width:20%;">
 			<h:outputText value="#{model.ipath}" />
 		</p:column>
 		<p:column headerText="Name" style="width:20%;">
@@ -40,29 +37,44 @@
 		<p:column headerText="DT" style="width:8%; text-align: center;">
 			<h:outputText value="#{model.datatype.label}" />
 		</p:column>
-		<p:column headerText="Usage" style="width:7%; text-align: center;">
-			<h:outputText value="#{model.node.usage}" />
+		<p:column headerText="Usage" style="width:5%; text-align: center;">
+			<h:outputText value="#{model.usage}" />
 		</p:column>
-		<p:column headerText="Cardinality"
-			style="width:8%; text-align: center;">
+		<p:column headerText="Cardi." style="width:5%; text-align: center;">
 			<h:outputText
 				rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
-				value="[#{model.node.min} ~ " />
-			<h:outputText
-				rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
-				value="#{model.node.max}]" />
+				value="[#{model.node.min},#{model.node.max}]" />
 		</p:column>
-		<p:column headerText="Length" style="width:8%; text-align: center;">
+		<p:column headerText="Length" style="width:5%; text-align: center;">
 			<h:outputText rendered="#{model.leafNode}"
-				value="[#{model.node.minLength} ~ " />
-			<h:outputText rendered="#{model.leafNode}"
-				value="#{model.node.maxLength}]" />
+				value="[#{model.node.minLength},#{model.node.maxLength}]" />
 		</p:column>
-		<p:column headerText="Value Set" style="width:10%; text-align: center;">
+		<p:column headerText="Value Set" style="width:8%; text-align: center;">
 			<h:outputText value="#{model.table.bindingIdentifier}" />
 		</p:column>
+		<p:column headerText="Predicate" style="width:5%; text-align: center;">
+			<p:graphicImage id="predicate" name="/images/message-icon.png" rendered="#{model.predicate != null}" style="cursor:pointer" title="Predicate" />
+			<p:overlayPanel for="predicate" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown" dismissable="true" showCloseIcon="true">
+        		<h:outputText value="#{model.predicate.description}" />
+    		</p:overlayPanel>
+		</p:column>
 		
-		<p:column headerText="Test Data" style="width:7%; text-align: center;">
+		<p:column headerText="Conf.Statements" style="width:6%; text-align: center;">
+			<p:graphicImage id="conformanceStatements" name="/images/list.png" rendered="#{model.conformanceStatements != null}" style="cursor:pointer" title="Conformance Statements" />
+			<p:overlayPanel for="conformanceStatements" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
+        		<p:dataTable var="cs" value="#{model.conformanceStatements}" rows="5" paginator="true" >
+            		<p:column headerText="ID" style="width:20%;">
+                		<h:outputText value="#{cs.constraintId}" />
+            		</p:column>
+            		<p:column headerText="Description" style="width:80%;">
+                		<h:outputText value="#{cs.description}" />
+            		</p:column>
+        		</p:dataTable>
+        		
+    		</p:overlayPanel>
+		</p:column>
+		
+		<p:column headerText="Test Data" style="width:8%; text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
 			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  style="width:90%;" value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
@@ -93,7 +105,7 @@
 			</p:selectOneMenu>
 		</p:column>
 		
-		<p:column headerText="Action" style="width:3%; text-align: center;">
+		<p:column headerText="Action" style="width:2%; text-align: center;">
 			<p:commandButton icon="ui-icon-plus" rendered="#{model.node.getClass().getSimpleName() == 'Field' and model.node.max == '*'}" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.addRepeatedField(model)}" />
 		</p:column>
 	</p:treeTable>

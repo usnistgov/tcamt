@@ -30,6 +30,9 @@ public class ConformanceProfile implements Serializable{
 	private String valueSetLibraryId;
 	private String constraintId;
 	
+	@Column(columnDefinition="longtext")
+	private String sampleER7Message;
+	
 	private String lastUpdateDate;
 	
 	@ManyToOne
@@ -139,6 +142,14 @@ public class ConformanceProfile implements Serializable{
 
 	public void setConstraintId(String constraintId) {
 		this.constraintId = constraintId;
+	}
+
+	public String getSampleER7Message() {
+		return sampleER7Message;
+	}
+
+	public void setSampleER7Message(String sampleER7Message) {
+		this.sampleER7Message = sampleER7Message;
 	}
 	
 	

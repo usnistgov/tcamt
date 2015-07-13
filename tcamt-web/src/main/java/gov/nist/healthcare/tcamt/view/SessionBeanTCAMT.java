@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.TabChangeEvent;
 
@@ -198,6 +199,10 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	public void deleteAllLogs() {
 		this.dbManager.allLogsDelete();
+	}
+	
+	public void delLog(ActionEvent event) {
+		this.dbManager.logDelete((Log) event.getComponent().getAttributes().get("log"));
 	}
 	
 }
