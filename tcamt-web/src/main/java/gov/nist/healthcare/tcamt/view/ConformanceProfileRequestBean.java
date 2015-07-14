@@ -345,10 +345,12 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	private void generateContextFreeRB(ZipOutputStream out, ContextFreeTestPlan tp) throws Exception {
 		this.generateTestPlanJsonRB(out, tp);
-		
+		int position = 1;
 		for(TestObject to:tp.getTestObjects()){
 			String testcasePath = "Contextfree" + File.separator + to.getName();
+			to.setPosition(position);
 			this.generateTestObjectJsonRB(out, to, testcasePath);
+			position = position + 1;
 		}
 	}
 	

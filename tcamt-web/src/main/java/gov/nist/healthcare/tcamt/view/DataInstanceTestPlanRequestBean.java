@@ -901,6 +901,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	public void updateTestDataFromCS(){
+		try{
+			this.manageInstanceService.updateTestDataFromCS(this.filtedSegmentTreeRoot);
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
 	public void addRepeatedField(FieldModel fieldModel){
 		try{
 			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
@@ -1318,6 +1330,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			mts.setDescription(dits.getLongDescription());
 			mts.setName(dits.getName());
 			mts.setType(dits.getType());
+			mts.setPosition(dits.getPosition());
 			inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
 		}else {
 			inTP = IOUtils.toInputStream(this.tsConverter.toString(dits));

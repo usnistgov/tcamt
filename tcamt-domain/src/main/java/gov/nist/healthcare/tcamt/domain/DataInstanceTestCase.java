@@ -43,7 +43,6 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	@JsonIgnore
 	private Integer version;
 	
-	@JsonIgnore
 	private int position;
 	
 	@JsonIgnore

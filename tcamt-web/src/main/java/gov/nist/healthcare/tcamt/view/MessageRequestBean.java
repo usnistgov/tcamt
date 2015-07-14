@@ -507,6 +507,18 @@ public class MessageRequestBean implements Serializable {
 		}
 	}
 	
+	public void updateTestDataFromCS(){
+		try{
+			this.manageInstanceService.updateTestDataFromCS(this.filtedSegmentTreeRoot);
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
 	private String getStackTrace(final Throwable throwable) {
 	     final StringWriter sw = new StringWriter();
 	     final PrintWriter pw = new PrintWriter(sw, true);

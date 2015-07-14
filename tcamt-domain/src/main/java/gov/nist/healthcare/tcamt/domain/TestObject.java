@@ -37,6 +37,8 @@ public class TestObject implements Cloneable, Serializable {
 	@Column(columnDefinition="longtext")
 	private String longDescription;
 	
+	private int position;
+	
 	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name="conformance_profile_id")
@@ -110,6 +112,14 @@ public class TestObject implements Cloneable, Serializable {
 
 	public void setValueSetLibraryId(String valueSetLibraryId) {
 		this.valueSetLibraryId = valueSetLibraryId;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
 	

@@ -24,6 +24,7 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,6 +35,7 @@ import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -41,6 +43,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
 
 public class ManageInstance implements Serializable {
 	/**
@@ -2022,5 +2025,53 @@ public class ManageInstance implements Serializable {
 		}
 		if(results.size() == 0) return null;
 		else return results;
+	}
+
+	public void updateTestDataFromCS(TreeNode treeNode) throws SAXException, ParserConfigurationException, IOException {
+		for(TreeNode childNode:treeNode.getChildren()){
+			if(childNode.getData() instanceof FieldModel){
+				FieldModel fieldModel = (FieldModel)childNode.getData();
+				if(fieldModel.getConformanceStatements() != null){
+					for(ConformanceStatement cs:fieldModel.getConformanceStatements()){
+						System.out.println(fieldModel.getPath());
+						Document assetionDoc = XMLManager.stringToDom(cs.getAssertion());
+						Element assertionElm = (Element)assetionDoc.getFirstChild();
+						if(assertionElm.getNodeName().equals("Assertion")){
+							this.updateTestDataByAssertion(assertionElm);
+						}
+						System.out.println("----------------");
+					}
+				}
+			}else if(childNode.getData() instanceof ComponentModel){
+				ComponentModel componentModel = (ComponentModel)childNode.getData();
+				if(componentModel.getConformanceStatements() != null){
+					for(ConformanceStatement cs:componentModel.getConformanceStatements()){
+						System.out.println(componentModel.getPath());
+						Document assetionDoc = XMLManager.stringToDom(cs.getAssertion());
+						Element assertionElm = (Element)assetionDoc.getFirstChild();
+						if(assertionElm.getNodeName().equals("Assertion")){
+							this.updateTestDataByAssertion(assertionElm);
+						}
+						System.out.println("----------------");
+					}
+				}
+			}
+			updateTestDataFromCS(childNode);
+		}
+		
+	}
+
+	private void updateTestDataByAssertion(Element assertionElm) {
+		NodeList childNodes = assertionElm.getChildNodes();
+		
+		for(int i=0; i<childNodes.getLength(); i++){
+			if(childNodes.item(i).getNodeName().equals("PlainText")){
+				System.out.println(((Element)childNodes.item(i)).getAttribute("Path"));
+				System.out.println(((Element)childNodes.item(i)).getAttribute("Text"));
+			}else if(childNodes.item(i).getNodeName().equals("AND")){
+				this.updateTestDataByAssertion((Element)childNodes.item(i));
+				
+			}
+		}
 	}
 }

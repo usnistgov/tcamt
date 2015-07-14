@@ -18,6 +18,7 @@
 	<table width="100%">
 		<tr>
 			<td align="right">
+				<p:commandButton update="#{cc.attrs.panelId}" value="Update TestData from Conformance Statements" icon="ui-icon-tag" actionListener="#{cc.attrs.bean.updateTestDataFromCS}" />
 				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
 					<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
             		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
@@ -50,18 +51,36 @@
 				value="[#{model.node.minLength},#{model.node.maxLength}]" />
 		</p:column>
 		<p:column headerText="Value Set" style="width:8%; text-align: center;">
-			<h:outputText value="#{model.table.bindingIdentifier}" />
+			<h:outputText id="valueSet" value="#{model.table.bindingIdentifier}" />
+			<p:overlayPanel for="valueSet" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
+        		<p:dataTable var="code" value="#{model.table.codes}" rows="5" paginator="true" >
+            		<p:column headerText="Value" style="width:20%;">
+                		<h:outputText value="#{code.value}" />
+            		</p:column>
+            		<p:column headerText="Display Name" style="width:60%;">
+                		<h:outputText value="#{code.displayName}" />
+            		</p:column>
+            		<p:column headerText="Code System" style="width:10%;">
+                		<h:outputText value="#{code.codeSystem}" />
+            		</p:column>
+            		<p:column headerText="Usage" style="width:10%;">
+                		<h:outputText value="#{code.codeUsage}" />
+            		</p:column>
+        		</p:dataTable>
+        		
+    		</p:overlayPanel>
+			
 		</p:column>
 		<p:column headerText="Predicate" style="width:5%; text-align: center;">
 			<p:graphicImage id="predicate" name="/images/message-icon.png" rendered="#{model.predicate != null}" style="cursor:pointer" title="Predicate" />
-			<p:overlayPanel for="predicate" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown" dismissable="true" showCloseIcon="true">
+			<p:overlayPanel for="predicate" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true">
         		<h:outputText value="#{model.predicate.description}" />
     		</p:overlayPanel>
 		</p:column>
 		
 		<p:column headerText="Conf.Statements" style="width:6%; text-align: center;">
 			<p:graphicImage id="conformanceStatements" name="/images/list.png" rendered="#{model.conformanceStatements != null}" style="cursor:pointer" title="Conformance Statements" />
-			<p:overlayPanel for="conformanceStatements" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
+			<p:overlayPanel for="conformanceStatements" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
         		<p:dataTable var="cs" value="#{model.conformanceStatements}" rows="5" paginator="true" >
             		<p:column headerText="ID" style="width:20%;">
                 		<h:outputText value="#{cs.constraintId}" />

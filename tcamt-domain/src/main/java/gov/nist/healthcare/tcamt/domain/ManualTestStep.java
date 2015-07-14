@@ -6,6 +6,7 @@ public class ManualTestStep {
 	private String name;
 	private String description;
 	private String type;
+	private int position;
 
 	public String getName() {
 		return name;
@@ -29,5 +30,13 @@ public class ManualTestStep {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }
