@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ValueSetLibrary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../ValueSets.xsd" Name="Vocab for T44" ValueSetLibraryIdentifier="T44-ValueSets" ValueSetLibraryVersion="1.0" Description="NIST Created">
+	<ValueSetDefinitions xmlns="">
+		<ValueSetDefinition Name="Administrative Sex" Oid="2.16.840.1.113883.12..3" BindingIdentifier="HL70001_US_IZ.3" Extensibility="Closed" Stability="Static" ContentDefinition="Extensional">
+			<ValueElement Value="A" DisplayName="Ambiguous" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="F" DisplayName="Female" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+			<ValueElement Value="M" DisplayName="Male" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+			<ValueElement Value="N" DisplayName="Not Applicable" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="O" DisplayName="Other" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="U" DisplayName="Unknown" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+		</ValueSetDefinition>
+	</ValueSetDefinitions>
+</ValueSetLibrary>

@@ -34,5 +34,6 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.Metadata"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TestObject"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.JurorDocument"></mapping>
 	</session-factory>
 </hibernate-configuration>

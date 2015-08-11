@@ -18,13 +18,11 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -35,7 +33,6 @@ import java.util.UUID;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -43,7 +40,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
 
 public class ManageInstance implements Serializable {
 	/**
@@ -100,20 +96,15 @@ public class ManageInstance implements Serializable {
 
 	}
 
-	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg,
-			String path, TreeNode parentTreeNode)
-			throws CloneNotSupportedException {
-
+	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg, String path, TreeNode parentTreeNode) throws CloneNotSupportedException {
 		if (sg instanceof SegmentRef) {
 			SegmentRef segment = (SegmentRef) sg;
-			String segmentName = m.getSegments().findOne(segment.getRef())
-					.getName();
+			String segmentName = m.getSegments().findOne(segment.getRef()).getName();
 			path = path + "." + segmentName;
 			String messageId = path.split("\\.")[0];
 			String messagePath = path.replace(messageId + ".", "");
 
-			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId,
-					segmentName, sg, messagePath, sg.getMin());
+			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId, segmentName, sg, messagePath, sg.getMin());
 			new DefaultTreeNode(sg.getMax(), messageTreeModel, parentTreeNode);
 		} else if (sg instanceof Group) {
 			Group group = (Group) sg;
@@ -121,10 +112,8 @@ public class ManageInstance implements Serializable {
 			String messageId = path.split("\\.")[0];
 			String messagePath = path.replace(messageId + ".", "");
 
-			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId,
-					group.getName(), sg, messagePath, sg.getMin());
-			TreeNode treeNode = new DefaultTreeNode(sg.getMax(),
-					messageTreeModel, parentTreeNode);
+			MessageTreeModel messageTreeModel = new MessageTreeModel(messageId, group.getName(), sg, messagePath, sg.getMin());
+			TreeNode treeNode = new DefaultTreeNode(sg.getMax(), messageTreeModel, parentTreeNode);
 			List<SegmentRefOrGroup> segmentRefOrGroups = group.getChildren();
 			for (SegmentRefOrGroup child : segmentRefOrGroups) {
 				loadSegmentRefOrGroup(m, child, path, treeNode);
@@ -331,6 +320,7 @@ public class ManageInstance implements Serializable {
 		}
 
 		String[] wholeFieldStr = segmentStr.split("\\|");
+		String obx5DTStr = "";
 		if (wholeFieldStr.length > 0) {
 			for (int i = 0; i < segment.getFields().size(); i++) {
 				String[] fieldStr;
@@ -340,7 +330,7 @@ public class ManageInstance implements Serializable {
 				} else {
 					fieldStr = wholeFieldStr[i + 1].split("\\~");
 				}
-
+				
 				for (int j = 0; j < fieldStr.length; j++) {
 					String path = selectedInstanceSegment.getPath() + "." + (i + 1);
 					String iPath = selectedInstanceSegment.getIpath() + "." + (i + 1) + "[" + (j + 1) + "]";
@@ -360,14 +350,22 @@ public class ManageInstance implements Serializable {
 					if(fieldPredicate != null && fieldUsage.equals("C")){
 						fieldUsage = fieldUsage + "(" + fieldPredicate.getTrueUsage().name() + "/" + fieldPredicate.getFalseUsage().name() +")";
 					}
+					
+					if (segment.getName().equals("OBX") && field.getPosition() == 2) {
+						obx5DTStr = fieldStr[j];
+					}
 
-					if (m.getDatatypes().findOne(segment.getFields().get(i).getDatatype()) .getComponents().size() > 0) {
-						FieldModel fieldModel = new FieldModel(
-								selectedInstanceSegment.getMessageName(), path,
-								iPath, iPositionPath, usageList, field,
-								fieldStr[j],
-								m.findTCAMTConstraintByIPath(iPath), false,
-								fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
+						// TODO OBX Dynamic mapping needed
+						fieldDT = m.getDatatypes().findOneDatatype(obx5DTStr+"_IZ");
+						if(fieldDT == null){
+							fieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
+						}
+					}
+					
+
+					if (fieldDT.getComponents().size() > 0) {
+						FieldModel fieldModel = new FieldModel( selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, field, fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false, fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
 						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 
 						String[] componentStr = fieldStr[j].split("\\^");
@@ -402,8 +400,7 @@ public class ManageInstance implements Serializable {
 											"",
 											m.findTCAMTConstraintByIPath(componentIPath),
 											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
-									componentTreeNode = new DefaultTreeNode(
-											componentModel, fieldTreeNode);
+									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[] { "" };
 								} else {
 									ComponentModel componentModel = new ComponentModel(
@@ -1032,8 +1029,7 @@ public class ManageInstance implements Serializable {
 
 	}
 
-	public String generateMessageContentJSON(Message m,
-			List<InstanceSegment> instanceSegments) throws Exception {
+	public String generateMessageContentJSON(Message m, List<InstanceSegment> instanceSegments) throws Exception {
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory
 				.newInstance();
 		DocumentBuilder docBuilder;
@@ -1058,9 +1054,9 @@ public class ManageInstance implements Serializable {
 			rootElement.appendChild(segmentElement);
 
 			for (Field field : segment.getFields()) {
-				if (field.getUsage().equals(Usage.R)
-						|| field.getUsage().equals(Usage.RE)
-						|| field.getUsage().equals(Usage.C)) {
+//				if (field.getUsage().equals(Usage.R)
+//						|| field.getUsage().equals(Usage.RE)
+//						|| field.getUsage().equals(Usage.C)) {
 					String wholeFieldStr = this.getFieldStrFromSegment(segName,
 							instanceSegment, field.getPosition());
 					int fieldRepeatIndex = 0;
@@ -1076,6 +1072,14 @@ public class ManageInstance implements Serializable {
 							// TODO OBX Dynamic mapping needed
 							fieldDT = m.getDatatypes().findOneDatatypeByBase(
 									obx5DTStr);
+						}
+						
+						if (segName.equals("MSH") && field.getPosition() == 1) {
+							fieldStr = "|";
+						}
+						
+						if (segName.equals("MSH") && field.getPosition() == 2) {
+							fieldStr = "^~\\&";
 						}
 
 						fieldRepeatIndex = fieldRepeatIndex + 1;
@@ -1104,9 +1108,9 @@ public class ManageInstance implements Serializable {
 							for (Component c : fieldDT.getComponents()) {
 								String componentiPath = "." + c.getPosition()
 										+ "[1]";
-								if (c.getUsage().equals(Usage.R)
-										|| c.getUsage().equals(Usage.RE)
-										|| c.getUsage().equals(Usage.C)) {
+//								if (c.getUsage().equals(Usage.R)
+//										|| c.getUsage().equals(Usage.RE)
+//										|| c.getUsage().equals(Usage.C)) {
 									String componentStr = this
 											.getComponentStrFromField(fieldStr,
 													c.getPosition());
@@ -1197,21 +1201,21 @@ public class ManageInstance implements Serializable {
 													.appendChild(subComponentElement);
 										}
 									}
-								}
+//								}
 							}
 
 						}
 					}
-				}
+//				}
 			}
 		}
 
 		return XMLManager.docToString(doc);
 	}
 
-	public String generateMessageContentHTML(Message m,
-			List<InstanceSegment> instanceSegments) {
-		String header = "<html><head><style type=\"text/css\" media=\"print,screen\">thead {color:black;} tbody {color:black;} tfoot {color:black;} table {width: 100%; border-collapse: collapse;} table, th, td {border: 1px solid black;} </style> </head><body>";
+	public String generateMessageContentHTML(Message m, List<InstanceSegment> instanceSegments) {
+		String header = "<html><head><style type=\"text/css\" media=\"print,screen\">"
+				+ ".messagecontent thead {color:black;} .messagecontent tbody {color:black;} .messagecontent tfoot {color:black;} .messagecontent table {width: 100%; border-collapse: collapse;} .messagecontent table, th, td {border: 1px solid black;} </style> </head><body><div class=\"messagecontent\">";
 
 		String body = "";
 
@@ -1235,9 +1239,9 @@ public class ManageInstance implements Serializable {
 			String obx5DTStr = "";
 
 			for (Field field : segment.getFields()) {
-				if (field.getUsage().equals(Usage.R)
-						|| field.getUsage().equals(Usage.RE)
-						|| field.getUsage().equals(Usage.C)) {
+//				if (field.getUsage().equals(Usage.R)
+//						|| field.getUsage().equals(Usage.RE)
+//						|| field.getUsage().equals(Usage.C)) {
 
 					String wholeFieldStr = this.getFieldStrFromSegment(segName,
 							instanceSegment, field.getPosition());
@@ -1255,6 +1259,14 @@ public class ManageInstance implements Serializable {
 							fieldDT = m.getDatatypes().findOneDatatypeByBase(
 									obx5DTStr);
 						}
+						
+						if (segName.equals("MSH") && field.getPosition() == 1) {
+							fieldStr = "|";
+						}
+						
+						if (segName.equals("MSH") && field.getPosition() == 2) {
+							fieldStr = "^~\\&";
+						}
 
 						fieldRepeatIndex = fieldRepeatIndex + 1;
 						String fieldiPath = "." + field.getPosition() + "["
@@ -1262,31 +1274,24 @@ public class ManageInstance implements Serializable {
 						if (fieldDT == null || fieldDT.getComponents() == null
 								|| fieldDT.getComponents().size() == 0) {
 							String dataTD = "";
-							if (fieldStr == null || fieldStr.equals("")) {
-								dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">"
-										+ fieldStr + "</td>";
+							if (fieldStr == null || fieldStr.replaceAll("\\s","").equals("")) {
+								dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">" + fieldStr + "</td>";
 							} else {
-								dataTD = "<td width=\"30%\">" + fieldStr
-										+ "</td>";
+								dataTD = "<td width=\"30%\">" + fieldStr + "</td>";
 							}
 
-							String testDataCategorizationTD = this
-									.findTestDataCategorization(m, segmentiPath
-											+ fieldiPath);
-							if (testDataCategorizationTD == null
-									|| testDataCategorizationTD.equals("")) {
-								testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">"
-										+ testDataCategorizationTD + "</td>";
+							String testDataCategorizationTD = this.findTestDataCategorization(m, segmentiPath + fieldiPath);
+							if (testDataCategorizationTD == null || testDataCategorizationTD.equals("")) {
+								testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">" + testDataCategorizationTD + "</td>";
 							} else {
-								testDataCategorizationTD = "<td width=\"20%\">"
-										+ testDataCategorizationTD + "</td>";
+								testDataCategorizationTD = "<td width=\"20%\">" + testDataCategorizationTD + "</td>";
 							}
 
 							fieldHTML = fieldHTML
 									+ "<tr>"
 									+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>"
 									+ segName
-									+ "."
+									+ "-"
 									+ field.getPosition()
 									+ "</b></td>"
 									+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>"
@@ -1297,22 +1302,22 @@ public class ManageInstance implements Serializable {
 									+ "<tr>"
 									+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>"
 									+ segName
-									+ "."
+									+ "-"
 									+ field.getPosition()
 									+ "</b></td>"
 									+ "<td width=\"25%\" bgcolor=\"#C6DEFF\"><b>"
 									+ field.getName()
 									+ "</b></td>"
-									+ "<td width=\"30%\" bgcolor=\"#C6DEFF\"></td>"
-									+ "<td width=\"20%\" bgcolor=\"#C6DEFF\"></td>"
+									+ "<td width=\"30%\" bgcolor=\"#B8B8B8\"></td>"
+									+ "<td width=\"20%\" bgcolor=\"#B8B8B8\"></td>"
 									+ "</tr>";
 
 							for (Component c : fieldDT.getComponents()) {
 								String componentiPath = "." + c.getPosition()
 										+ "[1]";
-								if (c.getUsage().equals(Usage.R)
-										|| c.getUsage().equals(Usage.RE)
-										|| c.getUsage().equals(Usage.C)) {
+//								if (c.getUsage().equals(Usage.R)
+//										|| c.getUsage().equals(Usage.RE)
+//										|| c.getUsage().equals(Usage.C)) {
 									String componentStr = this
 											.getComponentStrFromField(fieldStr,
 													c.getPosition());
@@ -1323,8 +1328,7 @@ public class ManageInstance implements Serializable {
 													.findOne(c.getDatatype())
 													.getComponents().size() == 0) {
 										String dataTD = "";
-										if (componentStr == null
-												|| componentStr.equals("")) {
+										if (componentStr == null || componentStr.replaceAll("\\s","").equals("")) {
 											dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">"
 													+ componentStr + "</td>";
 										} else {
@@ -1339,8 +1343,7 @@ public class ManageInstance implements Serializable {
 																+ fieldiPath
 																+ componentiPath);
 										if (testDataCategorizationTD == null
-												|| testDataCategorizationTD
-														.equals("")) {
+												|| testDataCategorizationTD.replaceAll("\\s","").equals("")) {
 											testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">"
 													+ testDataCategorizationTD
 													+ "</td>";
@@ -1353,7 +1356,7 @@ public class ManageInstance implements Serializable {
 												+ "<tr>"
 												+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;"
 												+ segName
-												+ "."
+												+ "-"
 												+ field.getPosition()
 												+ "."
 												+ c.getPosition()
@@ -1368,15 +1371,15 @@ public class ManageInstance implements Serializable {
 												+ "<tr>"
 												+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;"
 												+ segName
-												+ "."
+												+ "-"
 												+ field.getPosition()
 												+ "."
 												+ c.getPosition()
 												+ "</td>"
 												+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;"
 												+ c.getName() + "</td>"
-												+ "<td width=\"30%\"></td>"
-												+ "<td width=\"20%\"></td>"
+												+ "<td width=\"30%\" bgcolor=\"#B8B8B8\"></td>"
+												+ "<td width=\"20%\" bgcolor=\"#B8B8B8\"></td>"
 												+ "</tr>";
 
 										for (Component sc : m.getDatatypes()
@@ -1391,9 +1394,7 @@ public class ManageInstance implements Serializable {
 															sc.getPosition());
 
 											String dataTD = "";
-											if (subcomponentStr == null
-													|| subcomponentStr
-															.equals("")) {
+											if (subcomponentStr == null || subcomponentStr.replaceAll("\\s","").equals("")) {
 												dataTD = "<td width=\"30%\" bgcolor=\"#B8B8B8\">"
 														+ subcomponentStr
 														+ "</td>";
@@ -1403,16 +1404,8 @@ public class ManageInstance implements Serializable {
 														+ "</td>";
 											}
 
-											String testDataCategorizationTD = this
-													.findTestDataCategorization(
-															m,
-															segmentiPath
-																	+ fieldiPath
-																	+ componentiPath
-																	+ subcomponentiPath);
-											if (testDataCategorizationTD == null
-													|| testDataCategorizationTD
-															.equals("")) {
+											String testDataCategorizationTD = this.findTestDataCategorization(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath);
+											if (testDataCategorizationTD == null || testDataCategorizationTD.equals("")) {
 												testDataCategorizationTD = "<td width=\"20%\" bgcolor=\"#B8B8B8\">"
 														+ testDataCategorizationTD
 														+ "</td>";
@@ -1422,16 +1415,16 @@ public class ManageInstance implements Serializable {
 														+ "</td>";
 											}
 
-											if (sc.getUsage().equals(Usage.R)
-													|| sc.getUsage().equals(
-															Usage.RE)
-													|| sc.getUsage().equals(
-															Usage.C)) {
+//											if (sc.getUsage().equals(Usage.R)
+//													|| sc.getUsage().equals(
+//															Usage.RE)
+//													|| sc.getUsage().equals(
+//															Usage.C)) {
 												fieldHTML = fieldHTML
 														+ "<tr>"
 														+ "<td width=\"25%\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 														+ segName
-														+ "."
+														+ "-"
 														+ field.getPosition()
 														+ "."
 														+ c.getPosition()
@@ -1444,14 +1437,14 @@ public class ManageInstance implements Serializable {
 														+ dataTD
 														+ testDataCategorizationTD
 														+ "</tr>";
-											}
+//											}
 										}
 									}
-								}
+//								}
 							}
 
 						}
-					}
+//					}
 				}
 			}
 
@@ -1463,7 +1456,7 @@ public class ManageInstance implements Serializable {
 			body = body + segmentHTML;
 		}
 
-		String footer = "</body></html>";
+		String footer = "</div></body></html>";
 		return header + body + footer;
 	}
 
@@ -2026,52 +2019,6 @@ public class ManageInstance implements Serializable {
 		if(results.size() == 0) return null;
 		else return results;
 	}
-
-	public void updateTestDataFromCS(TreeNode treeNode) throws SAXException, ParserConfigurationException, IOException {
-		for(TreeNode childNode:treeNode.getChildren()){
-			if(childNode.getData() instanceof FieldModel){
-				FieldModel fieldModel = (FieldModel)childNode.getData();
-				if(fieldModel.getConformanceStatements() != null){
-					for(ConformanceStatement cs:fieldModel.getConformanceStatements()){
-						System.out.println(fieldModel.getPath());
-						Document assetionDoc = XMLManager.stringToDom(cs.getAssertion());
-						Element assertionElm = (Element)assetionDoc.getFirstChild();
-						if(assertionElm.getNodeName().equals("Assertion")){
-							this.updateTestDataByAssertion(assertionElm);
-						}
-						System.out.println("----------------");
-					}
-				}
-			}else if(childNode.getData() instanceof ComponentModel){
-				ComponentModel componentModel = (ComponentModel)childNode.getData();
-				if(componentModel.getConformanceStatements() != null){
-					for(ConformanceStatement cs:componentModel.getConformanceStatements()){
-						System.out.println(componentModel.getPath());
-						Document assetionDoc = XMLManager.stringToDom(cs.getAssertion());
-						Element assertionElm = (Element)assetionDoc.getFirstChild();
-						if(assertionElm.getNodeName().equals("Assertion")){
-							this.updateTestDataByAssertion(assertionElm);
-						}
-						System.out.println("----------------");
-					}
-				}
-			}
-			updateTestDataFromCS(childNode);
-		}
-		
-	}
-
-	private void updateTestDataByAssertion(Element assertionElm) {
-		NodeList childNodes = assertionElm.getChildNodes();
-		
-		for(int i=0; i<childNodes.getLength(); i++){
-			if(childNodes.item(i).getNodeName().equals("PlainText")){
-				System.out.println(((Element)childNodes.item(i)).getAttribute("Path"));
-				System.out.println(((Element)childNodes.item(i)).getAttribute("Text"));
-			}else if(childNodes.item(i).getNodeName().equals("AND")){
-				this.updateTestDataByAssertion((Element)childNodes.item(i));
-				
-			}
-		}
-	}
+	
+	
 }

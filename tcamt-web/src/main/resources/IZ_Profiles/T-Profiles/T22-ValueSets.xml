@@ -1,0 +1,698 @@
+<?xml version="1.0"?>
+<ValueSetLibrary xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../ValueSets.xsd" Name="Vocab for T22" ValueSetLibraryIdentifier="T22-ValueSets" ValueSetLibraryVersion="1.0" Description="NIST Created">
+	<ValueSetDefinitions>
+		
+		
+		
+		
+		
+		<ValueSetDefinition Name="Administrative Sex" Oid="2.16.840.1.113883.12..1" BindingIdentifier="HL70001_US_IZ.1" Extensibility="Closed" Stability="Static" ContentDefinition="Extensional">
+			<ValueElement Value="A" DisplayName="Ambiguous" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="F" DisplayName="Female" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+			<ValueElement Value="M" DisplayName="Male" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+			<ValueElement Value="N" DisplayName="Not Applicable" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="O" DisplayName="Other" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="U" DisplayName="Unknown" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+		</ValueSetDefinition>
+		
+		<ValueSetDefinition Name="Identifier Type" Oid="2.16.840.1.113883.12.20.1" BindingIdentifier="HL70203_US_IZ.1" Extensibility="Closed" Stability="Static" ContentDefinition="Extensional">
+			<ValueElement Value="ACSN" DisplayName="Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AM" DisplayName="American Express" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AMA" DisplayName="American Medical Association Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AN" DisplayName="Account number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANON" DisplayName="Anonymous identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANC" DisplayName="Account number Creditor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AND" DisplayName="Account number debitor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANT" DisplayName="Temporary Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="APRN" DisplayName="Advanced Practice Registered Nurse number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ASID" DisplayName="Ancestor Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BA" DisplayName="Bank Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BC" DisplayName="Bank Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BCT" DisplayName="Birth Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="BR" DisplayName="Birth registry number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="BRN" DisplayName="Breed Registry Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BSNR" DisplayName="Primary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CC" DisplayName="Cost Center number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CONM" DisplayName="Change of Name Document" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CZ" DisplayName="Citizenship Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CY" DisplayName="County number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DDS" DisplayName="Dentist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DEA" DisplayName="Drug Enforcement Administration registration number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DI" DisplayName="Diner’s Club card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DFN" DisplayName="Drug Furnishing or prescriptive authority Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DL" DisplayName="Driver’s license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="DN" DisplayName="Doctor number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DO" DisplayName="Osteopathic License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DP" DisplayName="Diplomatic Passport" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DPM" DisplayName="Podiatrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DR" DisplayName="Donor Registration Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DS" DisplayName="Discover Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EI" DisplayName="Employee number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EN" DisplayName="Employer number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ESN" DisplayName="Staff Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="FI" DisplayName="Facility ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GI" DisplayName="Guarantor internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GL" DisplayName="General ledger number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GN" DisplayName="Guarantor external  identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="HC" DisplayName="Health Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="JHN" DisplayName="Jurisdictional health number (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="IND" DisplayName="Indigenous/Aboriginal " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LACSN" DisplayName="Laboratory Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LANR " DisplayName="Lifelong physician number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LI" DisplayName="Labor and industries number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LN" DisplayName="License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LR" DisplayName="Local Registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="MA" DisplayName="Patient Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="MB" DisplayName="Member Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MC" DisplayName="Patient's Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="MCD" DisplayName="Practitioner Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCN" DisplayName="Microchip Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCR" DisplayName="Practitioner Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCT" DisplayName="Marriage Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MD" DisplayName="Medical License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MI" DisplayName="Military ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="MR" DisplayName="Medical record number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+			<ValueElement Value="MRT" DisplayName="Temporary Medical Record Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="MS" DisplayName="MasterCard" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NBSNR" DisplayName="Secondary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NCT" DisplayName="Naturalization Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="NE" DisplayName="National employer identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NH" DisplayName="National Health Plan Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NI" DisplayName="National unique individual identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NII" DisplayName="National Insurance Organization Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NIIP" DisplayName="National Insurance Payor Identifier (Payor)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NNxxx" DisplayName="National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NP" DisplayName="Nurse practitioner number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NPI" DisplayName="National provider identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="OD" DisplayName="Optometrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PA" DisplayName="Physician Assistant number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PC" DisplayName="Parole Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PCN" DisplayName="Penitentiary/correctional institution Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PE" DisplayName="Living Subject Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PEN" DisplayName="Pension Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PI" DisplayName="Patient internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="PN" DisplayName="Person number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="PNT" DisplayName="Temporary Living Subject Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPIN" DisplayName="Medicare/CMS Performing Provider Identification Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPN" DisplayName="Passport number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="PRC" DisplayName="Permanent Resident Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="PRN" DisplayName="Provider number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PT" DisplayName="Patient external identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="QA" DisplayName="QA number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RI" DisplayName="Resource identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RPH" DisplayName="Pharmacist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RN" DisplayName="Registered Nurse Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RR" DisplayName="Railroad Retirement number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RRI" DisplayName="Regional registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="RRP" DisplayName="Railroad Retirement Provider" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SID" DisplayName="Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SL" DisplayName="State license" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SN" DisplayName="Subscriber Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SP" DisplayName="Study Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SR" DisplayName="State registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="SS" DisplayName="Social Security number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="TAX" DisplayName="Tax ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TN" DisplayName="Treaty Number/ (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="TPR" DisplayName="Temporary Permanent Resident (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="U" DisplayName="Unspecified identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="UPIN" DisplayName="Medicare/CMS (formerly HCFA)’s Universal Physician Identification numbers" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="USID" DisplayName="Unique Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VN" DisplayName="Visit number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VP" DisplayName="Visitor Permit " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="VS" DisplayName="VISA" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WC" DisplayName="WIC identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WCN" DisplayName="Workers’ Comp Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WP" DisplayName="Work Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="XX" DisplayName="Organization identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+		</ValueSetDefinition>
+		
+		
+		<ValueSetDefinition Name="Identifier Type" Oid="2.16.840.1.113883.12.20.2" BindingIdentifier="HL70203_US_IZ.2" Extensibility="Closed" Stability="Static" ContentDefinition="Extensional">
+			<ValueElement Value="ACSN" DisplayName="Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AM" DisplayName="American Express" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AMA" DisplayName="American Medical Association Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AN" DisplayName="Account number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANON" DisplayName="Anonymous identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANC" DisplayName="Account number Creditor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AND" DisplayName="Account number debitor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANT" DisplayName="Temporary Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="APRN" DisplayName="Advanced Practice Registered Nurse number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ASID" DisplayName="Ancestor Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BA" DisplayName="Bank Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BC" DisplayName="Bank Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BCT" DisplayName="Birth Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BR" DisplayName="Birth registry number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BRN" DisplayName="Breed Registry Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BSNR" DisplayName="Primary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CC" DisplayName="Cost Center number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CONM" DisplayName="Change of Name Document" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CZ" DisplayName="Citizenship Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CY" DisplayName="County number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DDS" DisplayName="Dentist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DEA" DisplayName="Drug Enforcement Administration registration number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DI" DisplayName="Diner’s Club card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DFN" DisplayName="Drug Furnishing or prescriptive authority Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DL" DisplayName="Driver’s license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DN" DisplayName="Doctor number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DO" DisplayName="Osteopathic License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DP" DisplayName="Diplomatic Passport" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DPM" DisplayName="Podiatrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DR" DisplayName="Donor Registration Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DS" DisplayName="Discover Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EI" DisplayName="Employee number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EN" DisplayName="Employer number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ESN" DisplayName="Staff Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="FI" DisplayName="Facility ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="GI" DisplayName="Guarantor internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GL" DisplayName="General ledger number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GN" DisplayName="Guarantor external  identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="HC" DisplayName="Health Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="JHN" DisplayName="Jurisdictional health number (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="IND" DisplayName="Indigenous/Aboriginal " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LACSN" DisplayName="Laboratory Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LANR " DisplayName="Lifelong physician number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LI" DisplayName="Labor and industries number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LN" DisplayName="License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LR" DisplayName="Local Registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MA" DisplayName="Patient Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MB" DisplayName="Member Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MC" DisplayName="Patient's Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCD" DisplayName="Practitioner Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCN" DisplayName="Microchip Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCR" DisplayName="Practitioner Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCT" DisplayName="Marriage Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MD" DisplayName="Medical License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MI" DisplayName="Military ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MR" DisplayName="Medical record number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MRT" DisplayName="Temporary Medical Record Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MS" DisplayName="MasterCard" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NBSNR" DisplayName="Secondary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NCT" DisplayName="Naturalization Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NE" DisplayName="National employer identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NH" DisplayName="National Health Plan Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NI" DisplayName="National unique individual identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NII" DisplayName="National Insurance Organization Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NIIP" DisplayName="National Insurance Payor Identifier (Payor)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NNxxx" DisplayName="National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NP" DisplayName="Nurse practitioner number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NPI" DisplayName="National provider identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="OD" DisplayName="Optometrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PA" DisplayName="Physician Assistant number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PC" DisplayName="Parole Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PCN" DisplayName="Penitentiary/correctional institution Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PE" DisplayName="Living Subject Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PEN" DisplayName="Pension Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PI" DisplayName="Patient internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PN" DisplayName="Person number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PNT" DisplayName="Temporary Living Subject Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPIN" DisplayName="Medicare/CMS Performing Provider Identification Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPN" DisplayName="Passport number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PRC" DisplayName="Permanent Resident Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PRN" DisplayName="Provider number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PT" DisplayName="Patient external identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="QA" DisplayName="QA number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RI" DisplayName="Resource identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RPH" DisplayName="Pharmacist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RN" DisplayName="Registered Nurse Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RR" DisplayName="Railroad Retirement number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RRI" DisplayName="Regional registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RRP" DisplayName="Railroad Retirement Provider" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SID" DisplayName="Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SL" DisplayName="State license" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SN" DisplayName="Subscriber Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SP" DisplayName="Study Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SR" DisplayName="State registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SS" DisplayName="Social Security number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TAX" DisplayName="Tax ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TN" DisplayName="Treaty Number/ (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TPR" DisplayName="Temporary Permanent Resident (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="U" DisplayName="Unspecified identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="UPIN" DisplayName="Medicare/CMS (formerly HCFA)’s Universal Physician Identification numbers" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="USID" DisplayName="Unique Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VN" DisplayName="Visit number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VP" DisplayName="Visitor Permit " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VS" DisplayName="VISA" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WC" DisplayName="WIC identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WCN" DisplayName="Workers’ Comp Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WP" DisplayName="Work Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="XX" DisplayName="Organization identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+		</ValueSetDefinition>
+		
+		<ValueSetDefinition Name="Identifier Type" Oid="2.16.840.1.113883.12.20.3" BindingIdentifier="HL70203_US_IZ.3" Extensibility="Closed" Stability="Static" ContentDefinition="Extensional">
+			<ValueElement Value="ACSN" DisplayName="Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AM" DisplayName="American Express" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AMA" DisplayName="American Medical Association Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AN" DisplayName="Account number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANON" DisplayName="Anonymous identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANC" DisplayName="Account number Creditor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="AND" DisplayName="Account number debitor" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ANT" DisplayName="Temporary Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="APRN" DisplayName="Advanced Practice Registered Nurse number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ASID" DisplayName="Ancestor Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BA" DisplayName="Bank Account Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BC" DisplayName="Bank Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BCT" DisplayName="Birth Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BR" DisplayName="Birth registry number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BRN" DisplayName="Breed Registry Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="BSNR" DisplayName="Primary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CC" DisplayName="Cost Center number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CONM" DisplayName="Change of Name Document" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CZ" DisplayName="Citizenship Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="CY" DisplayName="County number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DDS" DisplayName="Dentist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DEA" DisplayName="Drug Enforcement Administration registration number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DI" DisplayName="Diner’s Club card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DFN" DisplayName="Drug Furnishing or prescriptive authority Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DL" DisplayName="Driver’s license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DN" DisplayName="Doctor number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DO" DisplayName="Osteopathic License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DP" DisplayName="Diplomatic Passport" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DPM" DisplayName="Podiatrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DR" DisplayName="Donor Registration Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="DS" DisplayName="Discover Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EI" DisplayName="Employee number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="EN" DisplayName="Employer number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="ESN" DisplayName="Staff Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="FI" DisplayName="Facility ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="P"/>
+			<ValueElement Value="GI" DisplayName="Guarantor internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GL" DisplayName="General ledger number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="GN" DisplayName="Guarantor external  identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="HC" DisplayName="Health Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="JHN" DisplayName="Jurisdictional health number (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="IND" DisplayName="Indigenous/Aboriginal " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LACSN" DisplayName="Laboratory Accession ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LANR " DisplayName="Lifelong physician number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LI" DisplayName="Labor and industries number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LN" DisplayName="License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="LR" DisplayName="Local Registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MA" DisplayName="Patient Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MB" DisplayName="Member Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MC" DisplayName="Patient's Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCD" DisplayName="Practitioner Medicaid number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCN" DisplayName="Microchip Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCR" DisplayName="Practitioner Medicare number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MCT" DisplayName="Marriage Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MD" DisplayName="Medical License number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MI" DisplayName="Military ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MR" DisplayName="Medical record number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MRT" DisplayName="Temporary Medical Record Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="MS" DisplayName="MasterCard" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NBSNR" DisplayName="Secondary physician office number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NCT" DisplayName="Naturalization Certificate" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NE" DisplayName="National employer identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NH" DisplayName="National Health Plan Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NI" DisplayName="National unique individual identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NII" DisplayName="National Insurance Organization Identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NIIP" DisplayName="National Insurance Payor Identifier (Payor)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NNxxx" DisplayName="National Person Identifier where the xxx is the ISO table 3166 3-character (alphabetic) country code" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NP" DisplayName="Nurse practitioner number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="NPI" DisplayName="National provider identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="OD" DisplayName="Optometrist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PA" DisplayName="Physician Assistant number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PC" DisplayName="Parole Card" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PCN" DisplayName="Penitentiary/correctional institution Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PE" DisplayName="Living Subject Enterprise Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PEN" DisplayName="Pension Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PI" DisplayName="Patient internal identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PN" DisplayName="Person number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PNT" DisplayName="Temporary Living Subject Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPIN" DisplayName="Medicare/CMS Performing Provider Identification Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PPN" DisplayName="Passport number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PRC" DisplayName="Permanent Resident Card Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PRN" DisplayName="Provider number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="PT" DisplayName="Patient external identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="QA" DisplayName="QA number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RI" DisplayName="Resource identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RPH" DisplayName="Pharmacist license number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RN" DisplayName="Registered Nurse Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RR" DisplayName="Railroad Retirement number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RRI" DisplayName="Regional registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="RRP" DisplayName="Railroad Retirement Provider" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SID" DisplayName="Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SL" DisplayName="State license" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SN" DisplayName="Subscriber Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SP" DisplayName="Study Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SR" DisplayName="State registry ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="SS" DisplayName="Social Security number " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TAX" DisplayName="Tax ID number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TN" DisplayName="Treaty Number/ (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="TPR" DisplayName="Temporary Permanent Resident (Canada)" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="U" DisplayName="Unspecified identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="UPIN" DisplayName="Medicare/CMS (formerly HCFA)’s Universal Physician Identification numbers" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="USID" DisplayName="Unique Specimen ID" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VN" DisplayName="Visit number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VP" DisplayName="Visitor Permit " CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="VS" DisplayName="VISA" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WC" DisplayName="WIC identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WCN" DisplayName="Workers’ Comp Number" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="WP" DisplayName="Work Permit" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="E"/>
+			<ValueElement Value="XX" DisplayName="Organization identifier" CodeSystemVersion="2.5.1" CodeSystem="HL70001" Usage="R"/>
+		</ValueSetDefinition>
+		
+		<ValueSetDefinition Name="Vaccine Code" Oid="2.16.840.1.113883.12.XX.1" BindingIdentifier="CVX_US_IZ.1" Extensibility="Closed" Stability="Dynamic" ContentDefinition="Extensional">
+			<ValueElement Value="998" DisplayName="no vaccine administered" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="99" DisplayName="RESERVED - do not use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="999" DisplayName="unknown vaccine or immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="143" DisplayName="Adenovirus, type 4 and type 7, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="54" DisplayName="adenovirus vaccine, type 4, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="55" DisplayName="adenovirus vaccine, type 7, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="82" DisplayName="adenovirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="24" DisplayName="anthrax vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="801" DisplayName="AS03 Adjuvant" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="19" DisplayName="Bacillus Calmette-Guerin vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="27" DisplayName="botulinum antitoxin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="26" DisplayName="cholera vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="29" DisplayName="cytomegalovirus immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="56" DisplayName="dengue fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="12" DisplayName="diphtheria antitoxin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="28" DisplayName="diphtheria and tetanus toxoids, adsorbed for pediatric use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="20" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="106" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, 5 pertussis antigens" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="107" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="146" DisplayName="Diphtheria and Tetanus Toxoids and Acellular Pertussis Adsorbed, Inactivated Poliovirus, Haemophilus b Conjugate (Meningococcal Outer Membrane Protein Complex), and Hepatitis B (Recombinant) Vaccine." CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="102" DisplayName="DTP- Haemophilus influenzae type b conjugate and hepatitis b vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="110" DisplayName="DTaP-hepatitis B and poliovirus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="50" DisplayName="DTaP-Haemophilus influenzae type b conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="120" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, Haemophilus influenzae type b conjugate, and poliovirus vaccine, inactivated (DTaP-Hib-IPV)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="130" DisplayName="Diphtheria, tetanus toxoids and acellular pertussis vaccine, and poliovirus vaccine, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="132" DisplayName="Historical record of vaccine containing&#x0A;    * diphtheria, tetanus toxoids and acellular pertussis,&#x0A;    * poliovirus, inactivated,&#x0A;    * Haemophilus influenzae type b conjugate,&#x0A;    * Hepatitis B (DTaP-Hib-IPV)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="01" DisplayName="diphtheria, tetanus toxoids and pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="22" DisplayName="DTP-Haemophilus influenzae type b conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="57" DisplayName="hantavirus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="30" DisplayName="hepatitis B immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="52" DisplayName="hepatitis A vaccine, adult dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="154" DisplayName="Hepatitis A immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="83" DisplayName="hepatitis A vaccine, pediatric/adolescent dosage, 2 dose schedule" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="84" DisplayName="hepatitis A vaccine, pediatric/adolescent dosage, 3 dose schedule" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="31" DisplayName="hepatitis A vaccine, pediatric dosage, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="85" DisplayName="hepatitis A vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="104" DisplayName="hepatitis A and hepatitis B vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="08" DisplayName="hepatitis B vaccine, pediatric or pediatric/adolescent dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="42" DisplayName="hepatitis B vaccine, adolescent/high risk infant dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="43" DisplayName="hepatitis B vaccine, adult dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="44" DisplayName="hepatitis B vaccine, dialysis patient dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="45" DisplayName="hepatitis B vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="58" DisplayName="hepatitis C vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="59" DisplayName="hepatitis E vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="60" DisplayName="herpes simplex virus, type 2 vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="47" DisplayName="Haemophilus influenzae type b vaccine, HbOC conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="46" DisplayName="Haemophilus influenzae type b vaccine, PRP-D conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="49" DisplayName="Haemophilus influenzae type b vaccine, PRP-OMP conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="48" DisplayName="Haemophilus influenzae type b vaccine, PRP-T conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="17" DisplayName="Haemophilus influenzae type b vaccine, conjugate unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="51" DisplayName="Haemophilus influenzae type b conjugate and Hepatitis B vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="61" DisplayName="human immunodeficiency virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="118" DisplayName="human papilloma virus vaccine, bivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="62" DisplayName="human papilloma virus vaccine, quadrivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="137" DisplayName="HPV, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="165" DisplayName="Human Papillomavirus 9-valent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="86" DisplayName="immune globulin, intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="14" DisplayName="immune globulin, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="87" DisplayName="immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="160" DisplayName="Influenza A monovalent (H5N1), adjuvanted, National stockpile 2013" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="151" DisplayName="influenza nasal, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="123" DisplayName="influenza virus vaccine, H5N1, A/Vietnam/1203/2004 (national stockpile)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="135" DisplayName="influenza, high dose seasonal, preservative-free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="153" DisplayName="Influenza, injectable, Madin Darby Canine Kidney, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="158" DisplayName="influenza, injectable, quadrivalent, contains preservative" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="150" DisplayName="Influenza, injectable, quadrivalent, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="161" DisplayName="Influenza, injectable,quadrivalent, preservative free, pediatric" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="166" DisplayName="influenza, intradermal, quadrivalent, preservative free, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="111" DisplayName="influenza virus vaccine, live, attenuated, for intranasal use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="149" DisplayName="influenza, live, intranasal, quadrivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="155" DisplayName="Seasonal, trivalent, recombinant, injectable influenza vaccine, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="141" DisplayName="Influenza, seasonal, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="140" DisplayName="Influenza, seasonal, injectable, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="144" DisplayName="seasonal influenza, intradermal, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="15" DisplayName="influenza virus vaccine, split virus (incl. purified surface antigen)-retired CODE" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="88" DisplayName="influenza virus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="16" DisplayName="influenza virus vaccine, whole virus" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="10" DisplayName="poliovirus vaccine, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="134" DisplayName="Japanese Encephalitis vaccine for intramuscular administration" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="39" DisplayName="Japanese Encephalitis Vaccine SC" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="129" DisplayName="Japanese Encephalitis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="63" DisplayName="Junin virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="64" DisplayName="leishmaniasis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="65" DisplayName="leprosy vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="66" DisplayName="Lyme disease vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="04" DisplayName="measles and rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="67" DisplayName="malaria vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="05" DisplayName="measles virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="68" DisplayName="melanoma vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="163" DisplayName="meningococcal B vaccine, recombinant, OMV, adjuvanted" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="162" DisplayName="meningococcal B vaccine, fully recombinant" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="164" DisplayName="meningococcal B, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="103" DisplayName="meningococcal C conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="148" DisplayName="Meningococcal Groups C and Y and Haemophilus b Tetanus Toxoid Conjugate Vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="147" DisplayName="Meningococcal, MCV4, unspecified formulation(groups A, C, Y and W-135)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="136" DisplayName="meningococcal oligosaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4O)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="114" DisplayName="meningococcal polysaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4P)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="32" DisplayName="meningococcal polysaccharide vaccine (MPSV4)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="108" DisplayName="meningococcal vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="03" DisplayName="measles, mumps and rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="94" DisplayName="measles, mumps, rubella, and varicella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="07" DisplayName="mumps virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="127" DisplayName="Novel influenza-H1N1-09, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="128" DisplayName="Novel influenza-H1N1-09, all formulations" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="125" DisplayName="Novel Influenza-H1N1-09, live virus for nasal administration" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="126" DisplayName="Novel influenza-H1N1-09, preservative-free, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="02" DisplayName="poliovirus vaccine, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="69" DisplayName="parainfluenza-3 virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="11" DisplayName="pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="23" DisplayName="plague vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="133" DisplayName="pneumococcal conjugate vaccine, 13 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="100" DisplayName="pneumococcal conjugate vaccine, 7 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="152" DisplayName="Pneumococcal Conjugate, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="33" DisplayName="pneumococcal polysaccharide vaccine, 23 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="109" DisplayName="pneumococcal vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="89" DisplayName="poliovirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="70" DisplayName="Q fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="40" DisplayName="rabies vaccine, for intradermal injection" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="18" DisplayName="rabies vaccine, for intramuscular injection" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="90" DisplayName="rabies vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="72" DisplayName="rheumatic fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="159" DisplayName="Rho(D) Unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="157" DisplayName="Rho(D) Immune globulin - IM" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="156" DisplayName="Rho(D) Immune globulin- IV or IM" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="73" DisplayName="Rift Valley fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="34" DisplayName="rabies immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="119" DisplayName="rotavirus, live, monovalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="116" DisplayName="rotavirus, live, pentavalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="74" DisplayName="rotavirus, live, tetravalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="122" DisplayName="rotavirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="71" DisplayName="respiratory syncytial virus immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="93" DisplayName="respiratory syncytial virus monoclonal antibody (palivizumab), intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="145" DisplayName="respiratory syncytial virus monoclonal antibody (motavizumab), intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="06" DisplayName="rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="38" DisplayName="rubella and mumps virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="76" DisplayName="Staphylococcus bacteriophage lysate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="138" DisplayName="tetanus and diphtheria toxoids, not adsorbed, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="113" DisplayName="tetanus and diphtheria toxoids, adsorbed, preservative free, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="09" DisplayName="tetanus and diphtheria toxoids, adsorbed, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="139" DisplayName="Td(adult) unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="115" DisplayName="tetanus toxoid, reduced diphtheria toxoid, and acellular pertussis vaccine, adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="35" DisplayName="tetanus toxoid, adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="142" DisplayName="tetanus toxoid, not adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="112" DisplayName="tetanus toxoid, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="77" DisplayName="tick-borne encephalitis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="13" DisplayName="tetanus immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="98" DisplayName="tuberculin skin test; unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="95" DisplayName="tuberculin skin test; old tuberculin, multipuncture device" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="96" DisplayName="tuberculin skin test; purified protein derivative solution, intradermal" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="97" DisplayName="tuberculin skin test; purified protein derivative, multipuncture device" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="78" DisplayName="tularemia vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="25" DisplayName="typhoid vaccine, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="41" DisplayName="typhoid vaccine, parenteral, other than acetone-killed, dried" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="53" DisplayName="typhoid vaccine, parenteral, acetone-killed, dried (U.S. military)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="91" DisplayName="typhoid vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="101" DisplayName="typhoid Vi capsular polysaccharide vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="131" DisplayName="Historical record of a typhus vaccination" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="75" DisplayName="vaccinia (smallpox) vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="105" DisplayName="vaccinia (smallpox) vaccine, diluted" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="79" DisplayName="vaccinia immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="21" DisplayName="varicella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="81" DisplayName="Venezuelan equine encephalitis, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="80" DisplayName="Venezuelan equine encephalitis, live, attenuated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="92" DisplayName="Venezuelan equine encephalitis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="36" DisplayName="varicella zoster immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="117" DisplayName="varicella zoster immune globulin (Investigational New Drug)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="37" DisplayName="yellow fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="121" DisplayName="zoster vaccine, live" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+		</ValueSetDefinition>
+		
+		
+		<ValueSetDefinition Name="Vaccine Code" Oid="2.16.840.1.113883.12.XX.2" BindingIdentifier="CVX_US_IZ.2" Extensibility="Closed" Stability="Dynamic" ContentDefinition="Extensional">
+			<ValueElement Value="998" DisplayName="no vaccine administered" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="99" DisplayName="RESERVED - do not use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="999" DisplayName="unknown vaccine or immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="143" DisplayName="Adenovirus, type 4 and type 7, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="54" DisplayName="adenovirus vaccine, type 4, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="55" DisplayName="adenovirus vaccine, type 7, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="82" DisplayName="adenovirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="24" DisplayName="anthrax vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="801" DisplayName="AS03 Adjuvant" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="19" DisplayName="Bacillus Calmette-Guerin vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="27" DisplayName="botulinum antitoxin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="26" DisplayName="cholera vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="29" DisplayName="cytomegalovirus immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="56" DisplayName="dengue fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="12" DisplayName="diphtheria antitoxin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="28" DisplayName="diphtheria and tetanus toxoids, adsorbed for pediatric use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="20" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="106" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, 5 pertussis antigens" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="107" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="146" DisplayName="Diphtheria and Tetanus Toxoids and Acellular Pertussis Adsorbed, Inactivated Poliovirus, Haemophilus b Conjugate (Meningococcal Outer Membrane Protein Complex), and Hepatitis B (Recombinant) Vaccine." CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="102" DisplayName="DTP- Haemophilus influenzae type b conjugate and hepatitis b vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="110" DisplayName="DTaP-hepatitis B and poliovirus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="50" DisplayName="DTaP-Haemophilus influenzae type b conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="120" DisplayName="diphtheria, tetanus toxoids and acellular pertussis vaccine, Haemophilus influenzae type b conjugate, and poliovirus vaccine, inactivated (DTaP-Hib-IPV)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="130" DisplayName="Diphtheria, tetanus toxoids and acellular pertussis vaccine, and poliovirus vaccine, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="132" DisplayName="Historical record of vaccine containing&#x0A;    * diphtheria, tetanus toxoids and acellular pertussis,&#x0A;    * poliovirus, inactivated,&#x0A;    * Haemophilus influenzae type b conjugate,&#x0A;    * Hepatitis B (DTaP-Hib-IPV)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="01" DisplayName="diphtheria, tetanus toxoids and pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="22" DisplayName="DTP-Haemophilus influenzae type b conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="57" DisplayName="hantavirus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="30" DisplayName="hepatitis B immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="52" DisplayName="hepatitis A vaccine, adult dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="154" DisplayName="Hepatitis A immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="83" DisplayName="hepatitis A vaccine, pediatric/adolescent dosage, 2 dose schedule" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="84" DisplayName="hepatitis A vaccine, pediatric/adolescent dosage, 3 dose schedule" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="31" DisplayName="hepatitis A vaccine, pediatric dosage, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="85" DisplayName="hepatitis A vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="104" DisplayName="hepatitis A and hepatitis B vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="08" DisplayName="hepatitis B vaccine, pediatric or pediatric/adolescent dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="42" DisplayName="hepatitis B vaccine, adolescent/high risk infant dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="43" DisplayName="hepatitis B vaccine, adult dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="44" DisplayName="hepatitis B vaccine, dialysis patient dosage" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="45" DisplayName="hepatitis B vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="58" DisplayName="hepatitis C vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="59" DisplayName="hepatitis E vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="60" DisplayName="herpes simplex virus, type 2 vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="47" DisplayName="Haemophilus influenzae type b vaccine, HbOC conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="46" DisplayName="Haemophilus influenzae type b vaccine, PRP-D conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="49" DisplayName="Haemophilus influenzae type b vaccine, PRP-OMP conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="48" DisplayName="Haemophilus influenzae type b vaccine, PRP-T conjugate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="17" DisplayName="Haemophilus influenzae type b vaccine, conjugate unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="51" DisplayName="Haemophilus influenzae type b conjugate and Hepatitis B vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="61" DisplayName="human immunodeficiency virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="118" DisplayName="human papilloma virus vaccine, bivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="62" DisplayName="human papilloma virus vaccine, quadrivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="137" DisplayName="HPV, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="165" DisplayName="Human Papillomavirus 9-valent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="86" DisplayName="immune globulin, intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="14" DisplayName="immune globulin, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="87" DisplayName="immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="160" DisplayName="Influenza A monovalent (H5N1), adjuvanted, National stockpile 2013" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="151" DisplayName="influenza nasal, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="123" DisplayName="influenza virus vaccine, H5N1, A/Vietnam/1203/2004 (national stockpile)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="135" DisplayName="influenza, high dose seasonal, preservative-free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="153" DisplayName="Influenza, injectable, Madin Darby Canine Kidney, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="158" DisplayName="influenza, injectable, quadrivalent, contains preservative" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="150" DisplayName="Influenza, injectable, quadrivalent, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="161" DisplayName="Influenza, injectable,quadrivalent, preservative free, pediatric" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="166" DisplayName="influenza, intradermal, quadrivalent, preservative free, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="111" DisplayName="influenza virus vaccine, live, attenuated, for intranasal use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="149" DisplayName="influenza, live, intranasal, quadrivalent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="155" DisplayName="Seasonal, trivalent, recombinant, injectable influenza vaccine, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="141" DisplayName="Influenza, seasonal, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="140" DisplayName="Influenza, seasonal, injectable, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="144" DisplayName="seasonal influenza, intradermal, preservative free" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="15" DisplayName="influenza virus vaccine, split virus (incl. purified surface antigen)-retired CODE" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="88" DisplayName="influenza virus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="16" DisplayName="influenza virus vaccine, whole virus" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="10" DisplayName="poliovirus vaccine, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="134" DisplayName="Japanese Encephalitis vaccine for intramuscular administration" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="39" DisplayName="Japanese Encephalitis Vaccine SC" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="129" DisplayName="Japanese Encephalitis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="63" DisplayName="Junin virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="64" DisplayName="leishmaniasis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="65" DisplayName="leprosy vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="66" DisplayName="Lyme disease vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="04" DisplayName="measles and rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="67" DisplayName="malaria vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="05" DisplayName="measles virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="68" DisplayName="melanoma vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="163" DisplayName="meningococcal B vaccine, recombinant, OMV, adjuvanted" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="162" DisplayName="meningococcal B vaccine, fully recombinant" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="164" DisplayName="meningococcal B, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="103" DisplayName="meningococcal C conjugate vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="148" DisplayName="Meningococcal Groups C and Y and Haemophilus b Tetanus Toxoid Conjugate Vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="147" DisplayName="Meningococcal, MCV4, unspecified formulation(groups A, C, Y and W-135)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="136" DisplayName="meningococcal oligosaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4O)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="114" DisplayName="meningococcal polysaccharide (groups A, C, Y and W-135) diphtheria toxoid conjugate vaccine (MCV4P)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="32" DisplayName="meningococcal polysaccharide vaccine (MPSV4)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="108" DisplayName="meningococcal vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="03" DisplayName="measles, mumps and rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="94" DisplayName="measles, mumps, rubella, and varicella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="07" DisplayName="mumps virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="127" DisplayName="Novel influenza-H1N1-09, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="128" DisplayName="Novel influenza-H1N1-09, all formulations" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="125" DisplayName="Novel Influenza-H1N1-09, live virus for nasal administration" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="126" DisplayName="Novel influenza-H1N1-09, preservative-free, injectable" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="02" DisplayName="poliovirus vaccine, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="69" DisplayName="parainfluenza-3 virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="11" DisplayName="pertussis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="23" DisplayName="plague vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="133" DisplayName="pneumococcal conjugate vaccine, 13 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="100" DisplayName="pneumococcal conjugate vaccine, 7 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="152" DisplayName="Pneumococcal Conjugate, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="33" DisplayName="pneumococcal polysaccharide vaccine, 23 valent" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="109" DisplayName="pneumococcal vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="89" DisplayName="poliovirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="70" DisplayName="Q fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="40" DisplayName="rabies vaccine, for intradermal injection" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="18" DisplayName="rabies vaccine, for intramuscular injection" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="90" DisplayName="rabies vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="72" DisplayName="rheumatic fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="159" DisplayName="Rho(D) Unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="157" DisplayName="Rho(D) Immune globulin - IM" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="156" DisplayName="Rho(D) Immune globulin- IV or IM" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="73" DisplayName="Rift Valley fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="34" DisplayName="rabies immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="119" DisplayName="rotavirus, live, monovalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="116" DisplayName="rotavirus, live, pentavalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="74" DisplayName="rotavirus, live, tetravalent vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="122" DisplayName="rotavirus vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="71" DisplayName="respiratory syncytial virus immune globulin, intravenous" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="93" DisplayName="respiratory syncytial virus monoclonal antibody (palivizumab), intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="145" DisplayName="respiratory syncytial virus monoclonal antibody (motavizumab), intramuscular" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="06" DisplayName="rubella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="38" DisplayName="rubella and mumps virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="76" DisplayName="Staphylococcus bacteriophage lysate" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="138" DisplayName="tetanus and diphtheria toxoids, not adsorbed, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="113" DisplayName="tetanus and diphtheria toxoids, adsorbed, preservative free, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="09" DisplayName="tetanus and diphtheria toxoids, adsorbed, for adult use" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="139" DisplayName="Td(adult) unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="115" DisplayName="tetanus toxoid, reduced diphtheria toxoid, and acellular pertussis vaccine, adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="35" DisplayName="tetanus toxoid, adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="142" DisplayName="tetanus toxoid, not adsorbed" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="112" DisplayName="tetanus toxoid, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="77" DisplayName="tick-borne encephalitis vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="13" DisplayName="tetanus immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="98" DisplayName="tuberculin skin test; unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="95" DisplayName="tuberculin skin test; old tuberculin, multipuncture device" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="96" DisplayName="tuberculin skin test; purified protein derivative solution, intradermal" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="97" DisplayName="tuberculin skin test; purified protein derivative, multipuncture device" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="78" DisplayName="tularemia vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="25" DisplayName="typhoid vaccine, live, oral" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="41" DisplayName="typhoid vaccine, parenteral, other than acetone-killed, dried" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="53" DisplayName="typhoid vaccine, parenteral, acetone-killed, dried (U.S. military)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="91" DisplayName="typhoid vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="101" DisplayName="typhoid Vi capsular polysaccharide vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="131" DisplayName="Historical record of a typhus vaccination" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="75" DisplayName="vaccinia (smallpox) vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="105" DisplayName="vaccinia (smallpox) vaccine, diluted" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="79" DisplayName="vaccinia immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="21" DisplayName="varicella virus vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="81" DisplayName="Venezuelan equine encephalitis, inactivated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="80" DisplayName="Venezuelan equine encephalitis, live, attenuated" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="P"/>
+			<ValueElement Value="92" DisplayName="Venezuelan equine encephalitis vaccine, unspecified formulation" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="36" DisplayName="varicella zoster immune globulin" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="117" DisplayName="varicella zoster immune globulin (Investigational New Drug)" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="E"/>
+			<ValueElement Value="37" DisplayName="yellow fever vaccine" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+			<ValueElement Value="121" DisplayName="zoster vaccine, live" CodeSystemVersion="X.X" CodeSystem="CVX" Usage="R"/>
+		</ValueSetDefinition>
+		
+		
+		
+	</ValueSetDefinitions>
+</ValueSetLibrary>

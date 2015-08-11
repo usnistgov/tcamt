@@ -18,7 +18,6 @@
 	<table width="100%">
 		<tr>
 			<td align="right">
-				<p:commandButton update="#{cc.attrs.panelId}" value="Update TestData from Conformance Statements" icon="ui-icon-tag" actionListener="#{cc.attrs.bean.updateTestDataFromCS}" />
 				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
 					<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
             		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />

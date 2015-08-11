@@ -66,8 +66,14 @@
 							oncomplete="PF('shareDataInstanceTestPlan').show();">
 							<f:attribute name="testplan" value="#{testplan}" />
 						</p:commandButton>
-						<p:commandButton value="Export" ajax="false"
-							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan)}"
+						<p:commandButton value="Export ResourceBundle" ajax="false"
+							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, false)}"
+							icon="ui-icon-print" update=":#{p:component('growl_DataInstanceTest')}">
+							<p:fileDownload
+								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
+						</p:commandButton>
+						<p:commandButton value="Export ResourceBundle with PDF" ajax="false"
+							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, true)}"
 							icon="ui-icon-print" update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
@@ -115,10 +121,10 @@
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
 							<p:treeNode type="group" icon="ui-icon-cart">
-								<h:outputText value="#{node.name}" />
+								<h:outputText value="[#{node.position}]#{node.name}" />
 							</p:treeNode>
 							<p:treeNode type="case" icon="ui-icon-note">
-								<h:outputText value="#{node.name}" />
+								<h:outputText value="[#{node.position}]#{node.name}" />
 							</p:treeNode>
 							<p:treeNode type="step" icon="ui-icon-document">
 								<h:outputText value="[#{node.position}]#{node.name}" />
@@ -436,6 +442,13 @@
 											</p:selectOneMenu>
 											<p:ajax event="save" />
 										</p:inplace>
+										
+										<h:outputText value="Specific Juror Document: "/>
+										<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.jurorDocumentId}" effect="fade">
+											<p:ajax event="change" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" listener="#{dataInstanceTestPlanRequestBean.updateSpecificJurorDocument}" />
+											<f:selectItem itemLabel="Default One" itemValue="" />
+											<f:selectItems value="#{conformanceProfileRequestBean.jurorDocuments}" var="juror" itemLabel="#{juror.name}" itemValue="#{juror.id}" />
+										</p:selectOneMenu>
 										
 										<h:outputText value="Description: " />
 										<p:inplace editor="true" emptyLabel="No Description">

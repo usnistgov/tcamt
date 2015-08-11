@@ -5,7 +5,7 @@ import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.ManualTestStep;
 import gov.nist.healthcare.tcamt.domain.Message;
@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -60,7 +59,6 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -75,7 +73,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
-import org.xml.sax.SAXException;
 
 @ManagedBean
 @SessionScoped
@@ -93,6 +90,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestStep selectedTestStep = null;
 	private DataInstanceTestCaseGroup selectedTestCaseGroup = null;
 	private Long messageId = null;
+	private Long jurorDocumentId = null;
 	private Long shareTo = null;
 	private int activeIndexOfMessageInstancePanel = 0;
 	
@@ -206,6 +204,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.createTestPlanTree(this.selectedTestPlan);
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
 			
+			if(this.selectedTestPlan.getSpecificJurorDocument() == null){
+				jurorDocumentId = null;
+			}else {
+				jurorDocumentId = this.selectedTestPlan.getSpecificJurorDocument().getId();
+			}
+			
 //			FacesContext context = FacesContext.getCurrentInstance();
 //	        context.addMessage(null, new FacesMessage("Select TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been selected."));
 		}catch(Exception e){
@@ -266,7 +270,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				DataInstanceTestPlan testplan = this.selectedTestPlan.clone();
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(testplan);
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
-				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete(this.selectedTestPlan);
+				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete(this.sessionBeanTCAMT.getDbManager().getDataInstanceTestPlanById(this.selectedTestPlan.getId()));
 				this.selectedTestPlan = this.sessionBeanTCAMT.getDbManager().getDataInstanceTestPlanById(testplan.getId());
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			}
@@ -749,7 +753,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	public void downloadResourceBundleForTestPlan(DataInstanceTestPlan tp) {
+	public void downloadResourceBundleForTestPlan(DataInstanceTestPlan tp, boolean needPDF) {
 		try{
 			this.setTestStoryConverter(new JsonTestStoryConverter());
 			this.setTpConverter(new JsonDataInstanceTestPlanConverter());
@@ -766,15 +770,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			ZipOutputStream out = new ZipOutputStream(outputStream);
 			
 			this.generateMetaDataRB(out, tp.getMetadata());
+			this.generateTestPackage(out, tp, needPDF);
 			
 			if(tp.getType() != null && tp.getType().equals("Isolated")){
-				this.generateIsolatedRB(out, tp);
+				this.generateIsolatedRB(out, tp, needPDF);
 			}else {
-				this.generateContextBasedRB(out, tp);
+				this.generateContextBasedRB(out, tp, needPDF);
 			}
-			this.generateDocumentationRB(out, tp);
-			this.generateProfilesConstraintsValueSetsRB(out, tp);
-			
+//			this.generateDocumentationRB(out, tp);
+//			this.generateProfilesConstraintsValueSetsRB(out, tp);
+
 			out.close();
 			bytes = outputStream.toByteArray();
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
@@ -791,6 +796,245 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	private void generateTestPackage(ZipOutputStream out, DataInstanceTestPlan tp, boolean needPDF) throws Exception {
+		String packageBodyHTML= "";
+		String tocHTML = "<ol>" + System.getProperty("line.separator");
+		
+		packageBodyHTML = packageBodyHTML + tp.getMetadata().getTestSuiteHeader() + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + tp.getMetadata().getTestSuiteHomeTitle() + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<h2>" + tp.getMetadata().getTestSuiteDomain() + "</h2>" + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<h2>" + tp.getMetadata().getTestSuiteVersion() + "<h2>" + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<h2>" + tp.getMetadata().getTestSuiteAdminEmail() + "<h2>" + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<h2>" + tp.getLastUpdateDate() + "<h2>" + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+		packageBodyHTML = packageBodyHTML + tp.getMetadata().getTestSuiteHomeContent() + System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+		packageBodyHTML = packageBodyHTML + "?TOC?"+ System.getProperty("line.separator");
+		packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+		
+		HashMap<Integer, Object>  testPlanMap = new HashMap<Integer, Object>();
+		for(DataInstanceTestCaseGroup tcg:tp.getTestcasegroups()){
+			testPlanMap.put(tcg.getPosition(), tcg);
+		}
+		for(DataInstanceTestCase tc:tp.getTestcases()){
+			testPlanMap.put(tc.getPosition(), tc);
+		}
+		
+		for(int i=0; i< testPlanMap.keySet().size(); i++){
+			Object child = testPlanMap.get(i+1);
+			
+			if(child instanceof DataInstanceTestCaseGroup){
+				DataInstanceTestCaseGroup group = (DataInstanceTestCaseGroup)child;
+				packageBodyHTML = packageBodyHTML + "<A NAME=\"" + (i+1) + "\">" + "<h2>" + (i+1) + ". " + group.getName() + "</h2>" + System.getProperty("line.separator");
+				tocHTML = tocHTML + "<li><a href=\"#"+ (i+1) + "\">"+ (i+1) + ". " + group.getName() +"</a></li>" +  System.getProperty("line.separator");
+				
+				packageBodyHTML = packageBodyHTML + "<span>" + group.getLongDescription() + "</span>" + System.getProperty("line.separator");
+				packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+				
+				HashMap<Integer, DataInstanceTestCase>  testCaseMap = new HashMap<Integer, DataInstanceTestCase>();
+				for(DataInstanceTestCase tc:group.getTestcases()){
+					testCaseMap.put(tc.getPosition(), tc);
+				}
+				tocHTML = tocHTML + "<ol>" + System.getProperty("line.separator");
+				for(int j=0; j<testCaseMap.keySet().size(); j++){
+					DataInstanceTestCase tc = testCaseMap.get(j+1);
+					
+					packageBodyHTML = packageBodyHTML + "<A NAME=\"" + (i+1) + "." + (j+1) + "\">" + "<h2>" + (i+1) + "." + (j+1) + ". " + tc.getName() + "</h2>" + System.getProperty("line.separator");
+					tocHTML = tocHTML + "<li><a href=\"#"+ (i+1) + "." + (j+1) + "\">"+ (i+1) + "." + (j+1) + ". " + tc.getName() +"</a></li>" +  System.getProperty("line.separator");
+					
+					packageBodyHTML = packageBodyHTML + "<span>" + tc.getLongDescription() + "</span>" + System.getProperty("line.separator");
+					packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
+					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory()));
+					packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+					
+					HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
+					for(DataInstanceTestStep ts:tc.getTeststeps()){
+						testStepMap.put(ts.getPosition(), ts);
+					}
+					
+					tocHTML = tocHTML + "<ol>" + System.getProperty("line.separator");
+					for(int k=0; k < testStepMap.keySet().size(); k++){
+						DataInstanceTestStep ts = testStepMap.get(k+1);
+						packageBodyHTML = packageBodyHTML + "<A NAME=\"" + (i+1) + "." + (j+1) + "." + (k+1) + "\">" + "<h2>" + (i+1) + "." + (j+1) + "." + (k+1) + ". " + ts.getName() + "</h2>" + System.getProperty("line.separator");
+						tocHTML = tocHTML + "<li><a href=\"#" + (i+1) + "." + (j+1) + "." + (k+1) + "\">"+ (i+1) + "." + (j+1) + "." + (k+1) + ". " + ts.getName() +"</a></li>" +  System.getProperty("line.separator");
+						
+						if(tp.getType().equals("Isolated")){
+							packageBodyHTML = packageBodyHTML + "<span>Test Step Type: " + ts.getType() + "</span><br/>" + System.getProperty("line.separator");
+						}
+						packageBodyHTML = packageBodyHTML + "<span>" + ts.getLongDescription() + "</span>" + System.getProperty("line.separator");
+						packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
+						packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory()));
+						
+						if(ts != null && ts.getMessage() != null && ts.getMessage().getConformanceProfile() != null){
+							this.instanceSegments = new ArrayList<InstanceSegment>();
+							if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
+								this.manageInstanceService.loadMessage(ts.getMessage());
+								this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments);
+							}
+							String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
+							packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
+							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+							
+							if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
+								InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
+								InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
+								Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+								Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+								String xsltStr = IOUtils.toString(xsltReader);
+								String sourceStr = IOUtils.toString(sourceReader);
+								
+								String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+								packageBodyHTML = packageBodyHTML + "<h3>" + "Test Data Specification" + "</h3>" + System.getProperty("line.separator");
+								packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(testDataSpecificationHTMLStr);
+							}
+							
+							if(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
+								InputStream xsltInputStream = null;
+								if(tp.getSpecificJurorDocument() == null){
+									xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT().getBytes());
+								}else {
+									xsltInputStream = new ByteArrayInputStream(tp.getSpecificJurorDocument().getJurorDocumentHTML().getBytes());
+								}
+								
+								
+								InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
+								
+								Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+								Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+								String xsltStr = IOUtils.toString(xsltReader);
+								String sourceStr = IOUtils.toString(sourceReader);
+								String jurorDocumentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+								packageBodyHTML = packageBodyHTML + "<h3>" + "Juror Document" + "</h3>" + System.getProperty("line.separator");
+								packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(jurorDocumentHTMLStr);
+							}
+							
+							
+						}
+						
+						packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+					}
+					tocHTML = tocHTML + "</ol>" + System.getProperty("line.separator");
+					
+				}
+				tocHTML = tocHTML + "</ol>" + System.getProperty("line.separator");
+				
+			}else if(child instanceof DataInstanceTestCase){
+				DataInstanceTestCase tc = (DataInstanceTestCase)child;
+				packageBodyHTML = packageBodyHTML + "<A NAME=\"" + (i+1) + "\">" + "<h2>" + (i+1) + ". " + tc.getName() + "</h2>" + System.getProperty("line.separator");
+				tocHTML = tocHTML + "<li><a href=\"#" + (i+1) + "\">"+ (i+1) + ". " + tc.getName() +"</a></li>" +  System.getProperty("line.separator");
+				packageBodyHTML = packageBodyHTML + "<span>" + tc.getLongDescription() + "</span>" + System.getProperty("line.separator");
+				packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
+				packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory()));
+				packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+				
+				HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
+				for(DataInstanceTestStep ts:tc.getTeststeps()){
+					testStepMap.put(ts.getPosition(), ts);
+				}
+				
+				tocHTML = tocHTML + "<ol>" + System.getProperty("line.separator");
+				for(int j=0; j<testStepMap.keySet().size(); j++){
+					DataInstanceTestStep ts = testStepMap.get(j+1);
+					packageBodyHTML = packageBodyHTML + "<A NAME=\"" + (i+1) + "." + (j+1) + "\">" + "<h2>" + (i+1) + "." + (j+1) + ". " + ts.getName() + "</h2>" + System.getProperty("line.separator");
+					tocHTML = tocHTML + "<li><a href=\"#" + (i+1) + "." + (j+1) + "\">"+ (i+1) + "." + (j+1) + ". " + ts.getName() +"</a></li>" +  System.getProperty("line.separator");
+					if(tp.getType().equals("Isolated")){
+						packageBodyHTML = packageBodyHTML + "<span>Test Step Type: " + ts.getType() + "</span><br/>" + System.getProperty("line.separator");
+					}
+					packageBodyHTML = packageBodyHTML + "<span>" + ts.getLongDescription() + "</span>" + System.getProperty("line.separator");
+					packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
+					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory()));
+					if(ts != null && ts.getMessage() != null && ts.getMessage().getConformanceProfile() != null){
+						this.instanceSegments = new ArrayList<InstanceSegment>();
+						if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
+							this.manageInstanceService.loadMessage(ts.getMessage());
+							this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments);
+						}
+						String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
+						packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
+						packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+						
+						if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
+							InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
+							InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
+							Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+							Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+							String xsltStr = IOUtils.toString(xsltReader);
+							String sourceStr = IOUtils.toString(sourceReader);
+							
+							String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+							packageBodyHTML = packageBodyHTML + "<h3>" + "Test Data Specification" + "</h3>" + System.getProperty("line.separator");
+							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(testDataSpecificationHTMLStr);
+						}
+						
+						if(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
+							InputStream xsltInputStream = null;
+							if(tp.getSpecificJurorDocument() == null){
+								xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT().getBytes());
+							}else {
+								xsltInputStream = new ByteArrayInputStream(tp.getSpecificJurorDocument().getJurorDocumentHTML().getBytes());
+							}
+							
+							
+							InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
+							
+							Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+							Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+							String xsltStr = IOUtils.toString(xsltReader);
+							String sourceStr = IOUtils.toString(sourceReader);
+							String jurorDocumentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+							packageBodyHTML = packageBodyHTML + "<h3>" + "Juror Document" + "</h3>" + System.getProperty("line.separator");
+							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(jurorDocumentHTMLStr);
+						}
+						
+					}
+					packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
+				}
+				tocHTML = tocHTML + "</ol>" + System.getProperty("line.separator");
+			}
+		}
+		
+		tocHTML = tocHTML + "</ol>" + System.getProperty("line.separator");
+		
+		ClassLoader classLoader = getClass().getClassLoader();
+		String testPackageStr = IOUtils.toString(classLoader.getResourceAsStream("TestPackage.html"));
+		testPackageStr = testPackageStr.replace("?bodyContent?", packageBodyHTML);
+		testPackageStr = testPackageStr.replace("?TOC?", tocHTML);
+		
+		byte[] buf = new byte[1024];
+		out.putNextEntry(new ZipEntry("TestPackage.html"));
+		InputStream inTestPackage = IOUtils.toInputStream(testPackageStr);
+		int lenTestPackage;
+        while ((lenTestPackage = inTestPackage.read(buf)) > 0) {
+            out.write(buf, 0, lenTestPackage);
+        }
+        out.closeEntry();
+        inTestPackage.close();
+        
+        if(needPDF){
+        	out.putNextEntry(new ZipEntry("TestPackage.pdf"));
+            String tempFileName = this.htmlStringToPDF(testPackageStr);
+            File zipFile = new File(tempFileName + ".pdf");	        
+            FileInputStream inTestPackagePDF = new FileInputStream(zipFile);
+            
+            int lenTestPackagePDF;
+            while ((lenTestPackagePDF = inTestPackagePDF.read(buf)) > 0) {
+                out.write(buf, 0, lenTestPackagePDF);
+            }
+            inTestPackagePDF.close();
+            out.closeEntry();
+            this.fileDelete(tempFileName + ".html");
+            this.fileDelete(tempFileName + ".pdf");
+        }
+        
+	}
+
+	private String retrieveBodyContent(String generateTestStory) {
+		int beginIndex = generateTestStory.indexOf("<body>");
+		int endIndex = generateTestStory.indexOf("</body>");
+		
+		return "" + generateTestStory.subSequence(beginIndex + "<body>".length() , endIndex);
+	}
+
 	public void createTCAMTConstraint(Object model) {
 		try{
 			String ipath = null;
@@ -901,18 +1145,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	public void updateTestDataFromCS(){
-		try{
-			this.manageInstanceService.updateTestDataFromCS(this.filtedSegmentTreeRoot);
-		}catch(Exception e){
-			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
-			e.printStackTrace();
-			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
 	public void addRepeatedField(FieldModel fieldModel){
 		try{
 			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
@@ -941,6 +1173,23 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 //			FacesContext context = FacesContext.getCurrentInstance();
 //	        context.addMessage(null, new FacesMessage("Update Message",  "Message of Test Step has been updated."));
 	        
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void updateSpecificJurorDocument(){
+		try{
+			if(this.jurorDocumentId == null){
+				this.selectedTestPlan.setSpecificJurorDocument(null);
+			}else {
+				JurorDocument jd = this.sessionBeanTCAMT.getDbManager().getJurorDocumentById(this.jurorDocumentId);
+				this.selectedTestPlan.setSpecificJurorDocument(jd);
+			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1194,7 +1443,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private void generateJurorDocumentHTML() throws IOException {
 		if(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
-			InputStream xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT().getBytes());
+			InputStream xsltInputStream = null;
+			if(this.selectedTestPlan.getSpecificJurorDocument() == null){
+				xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT().getBytes());
+			}else {
+				xsltInputStream = new ByteArrayInputStream(this.selectedTestPlan.getSpecificJurorDocument().getJurorDocumentHTML().getBytes());
+			}
 			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedNISTMessage().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1218,7 +1472,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}			
 	}
 	
-	private void generateIsolatedRB(ZipOutputStream out, DataInstanceTestPlan tp) throws Exception {
+	private void generateIsolatedRB(ZipOutputStream out, DataInstanceTestPlan tp, boolean needPDF) throws Exception {
 		this.generateTestPlanJsonRB("Isolated" + File.separator + "TestPlan", out, tp);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "Isolated" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
@@ -1226,18 +1480,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
 				this.generateTestCaseJsonRB(out, ditc, testcasePath);
-				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
+				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
-					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
+					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath);
-						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath);
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
-						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath);
-						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
+						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 						this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
 					}
 				}
@@ -1246,26 +1500,26 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
 			String testcasePath = "Isolated" + File.separator + "TestPlan" + File.separator  + "TestCase_" +  ditc.getPosition();
-			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
+			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 			this.generateTestCaseJsonRB(out, ditc, testcasePath);
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
-				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
+				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath);
-					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath);
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
-					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath);
-					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
+					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 					this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
 				}
 			}
 		}
 	}
 	
-	private void generateContextBasedRB(ZipOutputStream out, DataInstanceTestPlan tp) throws Exception {
+	private void generateContextBasedRB(ZipOutputStream out, DataInstanceTestPlan tp, boolean needPDF) throws Exception {
 		this.generateTestPlanJsonRB("Contextbased" + File.separator + "TestPlan", out, tp);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
@@ -1274,18 +1528,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
 				this.generateTestCaseJsonRB(out, ditc, testcasePath);
-				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
+				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
-					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
+					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath);
-						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath);
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
-						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath);
-						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
+						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 						this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
 					}
 				}
@@ -1294,19 +1548,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
 			String testcasePath = "Contextbased" + File.separator + "TestPlan" + File.separator  + "TestCase_" +  ditc.getPosition();
-			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
+			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 			this.generateTestCaseJsonRB(out, ditc, testcasePath);
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
-				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
+				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath);
-					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath);
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
-					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath);
-					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
+					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 					this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
 				}
 			}
@@ -1368,9 +1622,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         inTP.close();
 	}
 
-	private void generateJurorDocumentJSONRB(ZipOutputStream out, Message m, String path) throws IOException{
+	private void generateJurorDocumentJSONRB(ZipOutputStream out, Message m, String path, DataInstanceTestPlan tp) throws IOException{
 		if(m.getConformanceProfile().getJurorDocumentJSONXSLT() != null){
-			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentJSONXSLT().getBytes());
+			InputStream xsltInputStream = null;
+			if(tp.getSpecificJurorDocument() == null){
+				xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentJSONXSLT().getBytes());
+			}else {
+				xsltInputStream = new ByteArrayInputStream(tp.getSpecificJurorDocument().getJurorDocumentJSON().getBytes());
+			}
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1394,9 +1653,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 
-	private void generateJurorDocumentRB(ZipOutputStream out, Message m, String path) throws IOException{
+	private void generateJurorDocumentRB(ZipOutputStream out, Message m, String path, DataInstanceTestPlan tp, boolean needPDF) throws IOException{
 		if(m.getConformanceProfile().getJurorDocumentXSLT() != null){
-			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentXSLT().getBytes());
+			InputStream xsltInputStream = null;
+			if(tp.getSpecificJurorDocument() == null){
+				xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentXSLT().getBytes());
+			}else {
+				xsltInputStream = new ByteArrayInputStream(tp.getSpecificJurorDocument().getJurorDocumentHTML().getBytes());
+			}
+			
+			
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
 			
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
@@ -1419,21 +1685,23 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        inJurorDocument.close();
 		        out.closeEntry();
 		        
-		        out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.pdf"));
-		        
-		        String tempFileName = this.htmlStringToPDF(jurorDocumentHTMLStr);
-		        File zipFile = new File(tempFileName + ".pdf");	        
-		        FileInputStream inJurorDocumentPDF = new FileInputStream(zipFile);
+		        if(needPDF){
+		        	out.putNextEntry(new ZipEntry(path + File.separator + "JurorDocument.pdf"));
+			        
+			        String tempFileName = this.htmlStringToPDF(jurorDocumentHTMLStr);
+			        File zipFile = new File(tempFileName + ".pdf");	        
+			        FileInputStream inJurorDocumentPDF = new FileInputStream(zipFile);
 
-		        int lenJurorDocumentPDF;
-		        while ((lenJurorDocumentPDF = inJurorDocumentPDF.read(buf)) > 0) {
-		            out.write(buf, 0, lenJurorDocumentPDF);
+			        int lenJurorDocumentPDF;
+			        while ((lenJurorDocumentPDF = inJurorDocumentPDF.read(buf)) > 0) {
+			            out.write(buf, 0, lenJurorDocumentPDF);
+			        }
+			        inJurorDocumentPDF.close();
+			        out.closeEntry();
+			        
+			        this.fileDelete(tempFileName + ".html");
+			        this.fileDelete(tempFileName + ".pdf");
 		        }
-		        inJurorDocumentPDF.close();
-		        out.closeEntry();
-		        
-		        this.fileDelete(tempFileName + ".html");
-		        this.fileDelete(tempFileName + ".pdf");
 			}
 		}
 	}
@@ -1466,7 +1734,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateTestDataSpecificationRB(ZipOutputStream out, Message m, String path) throws IOException{
+	private void generateTestDataSpecificationRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws IOException{
 		if(m.getConformanceProfile().getTestDataSpecificationXSLT() != null){
 			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
@@ -1490,27 +1758,28 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        inTestDataSpecification.close();
 		        out.closeEntry();
 		        
-		        out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.pdf"));
-		        
-		        String tempFileName = this.htmlStringToPDF(testDataSpecificationHTMLStr);
-		        File zipFile = new File(tempFileName + ".pdf");	        
-		        FileInputStream inTestDataSpecificationPDF = new FileInputStream(zipFile);
-		        
-		        int lenTestDataSpecificationPDF;
-		        while ((lenTestDataSpecificationPDF = inTestDataSpecificationPDF.read(buf)) > 0) {
-		            out.write(buf, 0, lenTestDataSpecificationPDF);
+		        if(needPDF){
+		        	out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification.pdf"));
+			        
+			        String tempFileName = this.htmlStringToPDF(testDataSpecificationHTMLStr);
+			        File zipFile = new File(tempFileName + ".pdf");	        
+			        FileInputStream inTestDataSpecificationPDF = new FileInputStream(zipFile);
+			        
+			        int lenTestDataSpecificationPDF;
+			        while ((lenTestDataSpecificationPDF = inTestDataSpecificationPDF.read(buf)) > 0) {
+			            out.write(buf, 0, lenTestDataSpecificationPDF);
+			        }
+			        inTestDataSpecificationPDF.close();
+			        out.closeEntry();
+			        
+			        this.fileDelete(tempFileName + ".html");
+			        this.fileDelete(tempFileName + ".pdf");
 		        }
-		        inTestDataSpecificationPDF.close();
-		        out.closeEntry();
-		        
-		        this.fileDelete(tempFileName + ".html");
-		        this.fileDelete(tempFileName + ".pdf");
 			}
-			
 		}
 	}
 	
-	private void generateMessageContentRB(ZipOutputStream out, Message m, String path) throws Exception{		
+	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws Exception{		
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.html"));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
@@ -1541,54 +1810,51 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         inMessageContentJSON.close();
         out.closeEntry();
         
-        out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.pdf"));
-        String tempFileName = this.htmlStringToPDF(messageContentHTMLStr);
-        File zipFile = new File(tempFileName + ".pdf");	        
-        FileInputStream inMessageContentPDF = new FileInputStream(zipFile);
-        
-        int lenMessageContentPDF;
-        while ((lenMessageContentPDF = inMessageContentPDF.read(buf)) > 0) {
-            out.write(buf, 0, lenMessageContentPDF);
+        if(needPDF){
+        	out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.pdf"));
+            String tempFileName = this.htmlStringToPDF(messageContentHTMLStr);
+            File zipFile = new File(tempFileName + ".pdf");	        
+            FileInputStream inMessageContentPDF = new FileInputStream(zipFile);
+            
+            int lenMessageContentPDF;
+            while ((lenMessageContentPDF = inMessageContentPDF.read(buf)) > 0) {
+                out.write(buf, 0, lenMessageContentPDF);
+            }
+            inMessageContentPDF.close();
+            out.closeEntry();
+            this.fileDelete(tempFileName + ".html");
+            this.fileDelete(tempFileName + ".pdf");
         }
-        inMessageContentPDF.close();
-        out.closeEntry();
-        this.fileDelete(tempFileName + ".html");
-        this.fileDelete(tempFileName + ".pdf");
 	}
 	
-	private void generateProfilesConstraintsValueSetsRB(ZipOutputStream out, DataInstanceTestPlan tp) throws SAXException, ParserConfigurationException, Exception{
-		Map<Long, IntegratedProfile> integratedProfiles = new HashMap<Long, IntegratedProfile>();
-		
-		
-		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
-			for(DataInstanceTestCase ditc:ditg.getTestcases()){
-				for(DataInstanceTestStep dits:ditc.getTeststeps()){
-					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
-						integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
-					}
-				}
-			}
-		}
-		
-		for(DataInstanceTestCase ditc:tp.getTestcases()){
-			for(DataInstanceTestStep dits:ditc.getTeststeps()){
-				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
-					integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
-				}
-			}
-		}
-		
-		for(Long id:integratedProfiles.keySet()){
-			this.generateProfileRB(out, integratedProfiles.get(id).getProfile(), integratedProfiles.get(id).getName() + "_Profile.xml");
-			this.generateValueSetRB(out, integratedProfiles.get(id).getValueSet(), integratedProfiles.get(id).getName() + "_ValueSetLibrary.xml");
-			this.generateConstraintRB(out, integratedProfiles.get(id).getConstraints(), integratedProfiles.get(id).getName() + "_Constraints.xml");	
-		}
-	}
-	
-	private void generateDocumentationRB(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException{
-		out.putNextEntry(new ZipEntry("Documentation" + File.separator));
-		out.closeEntry();
-	}
+//	private void generateProfilesConstraintsValueSetsRB(ZipOutputStream out, DataInstanceTestPlan tp) throws SAXException, ParserConfigurationException, Exception{
+//		Map<Long, IntegratedProfile> integratedProfiles = new HashMap<Long, IntegratedProfile>();
+//		
+//		
+//		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
+//			for(DataInstanceTestCase ditc:ditg.getTestcases()){
+//				for(DataInstanceTestStep dits:ditc.getTeststeps()){
+//					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+//						integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
+//					}
+//				}
+//			}
+//		}
+//		
+//		for(DataInstanceTestCase ditc:tp.getTestcases()){
+//			for(DataInstanceTestStep dits:ditc.getTeststeps()){
+//				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+//					integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
+//				}
+//			}
+//		}
+//		
+//		for(Long id:integratedProfiles.keySet()){
+//			this.generateProfileRB(out, integratedProfiles.get(id).getProfile(), integratedProfiles.get(id).getName() + "_Profile.xml");
+//			this.generateValueSetRB(out, integratedProfiles.get(id).getValueSet(), integratedProfiles.get(id).getName() + "_ValueSetLibrary.xml");
+//			this.generateConstraintRB(out, integratedProfiles.get(id).getConstraints(), integratedProfiles.get(id).getName() + "_Constraints.xml");	
+//		}
+//	}
 	
 	private void generateMetaDataRB(ZipOutputStream out, Metadata md) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
@@ -1631,47 +1897,47 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         out.closeEntry();
 	}
 	
-	private void generateProfileRB(ZipOutputStream out, String profileStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
-		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry("Global" + File.separator + "Profiles" + File.separator + fileName));
-		if(profileStr != null){
-			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(profileStr)),"UTF-8");
-			int lenMessage;
-            while ((lenMessage = inMessage.read(buf)) > 0) {
-                out.write(buf, 0, lenMessage);
-            }
-            inMessage.close();
-		}
-        out.closeEntry();
-	}
+//	private void generateProfileRB(ZipOutputStream out, String profileStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
+//		byte[] buf = new byte[1024];
+//		out.putNextEntry(new ZipEntry("Global" + File.separator + "Profiles" + File.separator + fileName));
+//		if(profileStr != null){
+//			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(profileStr)),"UTF-8");
+//			int lenMessage;
+//            while ((lenMessage = inMessage.read(buf)) > 0) {
+//                out.write(buf, 0, lenMessage);
+//            }
+//            inMessage.close();
+//		}
+//        out.closeEntry();
+//	}
 	
-	private void generateConstraintRB(ZipOutputStream out, String constraintStr, String fileName) throws IOException {
-		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry("Global" + File.separator + "Constraints" + File.separator + fileName));		
-		if(constraintStr != null){
-			InputStream inMessage = IOUtils.toInputStream(constraintStr, "UTF-8");
-			int lenMessage;
-			while ((lenMessage = inMessage.read(buf)) > 0) {
-				out.write(buf, 0, lenMessage);
-			}
-			inMessage.close();
-		}
-		out.closeEntry();
-	}
+//	private void generateConstraintRB(ZipOutputStream out, String constraintStr, String fileName) throws IOException {
+//		byte[] buf = new byte[1024];
+//		out.putNextEntry(new ZipEntry("Global" + File.separator + "Constraints" + File.separator + fileName));		
+//		if(constraintStr != null){
+//			InputStream inMessage = IOUtils.toInputStream(constraintStr, "UTF-8");
+//			int lenMessage;
+//			while ((lenMessage = inMessage.read(buf)) > 0) {
+//				out.write(buf, 0, lenMessage);
+//			}
+//			inMessage.close();
+//		}
+//		out.closeEntry();
+//	}
 	
-	private void generateValueSetRB(ZipOutputStream out, String valueSetStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
-		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry("Global" + File.separator + "ValueSetLibrary" + File.separator + fileName));
-		if(valueSetStr != null){
-			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(valueSetStr)), "UTF-8");
-			int lenMessage;
-            while ((lenMessage = inMessage.read(buf)) > 0) {
-                out.write(buf, 0, lenMessage);
-            }
-            inMessage.close();
-		}
-        out.closeEntry();
-	}
+//	private void generateValueSetRB(ZipOutputStream out, String valueSetStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
+//		byte[] buf = new byte[1024];
+//		out.putNextEntry(new ZipEntry("Global" + File.separator + "ValueSetLibrary" + File.separator + fileName));
+//		if(valueSetStr != null){
+//			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(valueSetStr)), "UTF-8");
+//			int lenMessage;
+//            while ((lenMessage = inMessage.read(buf)) > 0) {
+//                out.write(buf, 0, lenMessage);
+//            }
+//            inMessage.close();
+//		}
+//        out.closeEntry();
+//	}
 	
 	private String htmlStringToPDF(String htmlStr) throws IOException{
 		ClassLoader classLoader = this.getClass().getClassLoader();
@@ -1721,7 +1987,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		file.delete();
 	}
 	
-	private void generateTestStoryRB(ZipOutputStream out, TestStory testStory, String path) throws IOException, ConversionException{
+	private void generateTestStoryRB(ZipOutputStream out, TestStory testStory, String path, boolean needPDF) throws IOException, ConversionException{
 		byte[] buf = new byte[1024];
 		
 		out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.json"));
@@ -1743,20 +2009,21 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         }
         inTestStory.close();
         out.closeEntry();
-        
-        out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.pdf"));
-        String tempFileName = this.htmlStringToPDF(testCaseStoryStr);
-        File zipFile = new File(tempFileName + ".pdf");	        
-        FileInputStream inTestStoryPDF = new FileInputStream(zipFile);
-        int lenTestStoryPDF;
-        while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
-            out.write(buf, 0, lenTestStoryPDF);
+        if(needPDF){
+        	out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.pdf"));
+            String tempFileName = this.htmlStringToPDF(testCaseStoryStr);
+            File zipFile = new File(tempFileName + ".pdf");	        
+            FileInputStream inTestStoryPDF = new FileInputStream(zipFile);
+            int lenTestStoryPDF;
+            while ((lenTestStoryPDF = inTestStoryPDF.read(buf)) > 0) {
+                out.write(buf, 0, lenTestStoryPDF);
+            }
+            inTestStoryPDF.close();
+            out.closeEntry();
+            
+            this.fileDelete(tempFileName + ".html");
+            this.fileDelete(tempFileName + ".pdf");        	
         }
-        inTestStoryPDF.close();
-        out.closeEntry();
-        
-        this.fileDelete(tempFileName + ".html");
-        this.fileDelete(tempFileName + ".pdf");
 	}
 	
 	private String generateTestStory(TestStory testStory) throws IOException {
@@ -1792,7 +2059,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private void updatePositionForPlanAndTree(){
 		int groupIndex = 1;
-		int caseInPlanIndex = 1;
+		int caseInPlanIndex = this.selectedTestPlan.getTestcasegroups().size() + 1;
 		
 		for(TreeNode child:this.testplanRoot.getChildren().get(0).getChildren()){
 			if(child.getData() instanceof DataInstanceTestCaseGroup){
@@ -2169,6 +2436,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setJurorDocumentPDFFileName(String jurorDocumentPDFFileName) {
 		this.jurorDocumentPDFFileName = jurorDocumentPDFFileName;
+	}
+
+	public Long getJurorDocumentId() {
+		return jurorDocumentId;
+	}
+
+	public void setJurorDocumentId(Long jurorDocumentId) {
+		this.jurorDocumentId = jurorDocumentId;
 	}
 	
 }

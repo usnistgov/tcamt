@@ -176,7 +176,6 @@
 					</p:column>
 				</p:dataTable>
 			</p:tab>
-
 			<p:tab title="Context Free Test Plan List">
 				<table width="100%">
 					<tr>
@@ -187,8 +186,7 @@
 								oncomplete="PF('createContextFreeTestPlan').show();" /></td>
 					</tr>
 				</table>
-				<p:dataTable var="plan"
-					value="#{conformanceProfileRequestBean.contextFreeTestPlans}">
+				<p:dataTable var="plan" value="#{conformanceProfileRequestBean.contextFreeTestPlans}">
 					<p:column headerText="Name">
 						<h:outputText value="#{plan.metadata.testSuiteName}" />
 					</p:column>
@@ -223,14 +221,45 @@
 					</p:column>
 				</p:dataTable>
 			</p:tab>
+			<p:tab title="JurorDocument XSLT List">
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+								value="Add JurorDocument" icon="ui-icon-plus"
+								update=":#{p:component('createJurorDocumentForm')}"
+								actionListener="#{conformanceProfileRequestBean.initNewJurorDocument}"
+								oncomplete="PF('createJurorDocument').show();" />
+						</td>
+					</tr>
+				</table>
+				<p:dataTable var="juror"
+					value="#{conformanceProfileRequestBean.jurorDocuments}">
+					<p:column headerText="Name">
+						<h:outputText value="#{juror.name}" />
+					</p:column>
+
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{juror.lastUpdateDate}" />
+					</p:column>
+
+					<p:column headerText="Action" rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}">
+						<p:commandButton value="Del"
+							actionListener="#{conformanceProfileRequestBean.delJurorDocument}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="juror" value="#{juror}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
 
 		</p:accordionPanel>
 	</h:form>
 
 	<h:form id="createContextFreeTestPlanForm">
-		<p:dialog header="Create Context Free Test Plan"
-			widgetVar="createContextFreeTestPlan">
-			<h:panelGrid columns="2" cellpadding="5">
+		<p:dialog header="Create Context Free Test Plan" widgetVar="createContextFreeTestPlan" width="80%" height="80%">
+			<h:panelGrid columns="4" cellpadding="5">
 				<h:outputText value="Name: " />
 				<p:inplace editor="true" emptyLabel="No Name">
 					<p:inputText style="width:500px;"
@@ -291,8 +320,11 @@
 				</p:inplace>
 			</h:panelGrid>
 
-			<p:dataTable id="testObjectTable" var="testObject"
-				value="#{conformanceProfileRequestBean.selectedContextFreeTestPlan.testObjects}">
+			<p:dataTable id="testObjectTable" var="testObject" value="#{conformanceProfileRequestBean.selectedContextFreeTestPlan.testObjects}">
+				<p:column headerText="Position">
+					<h:outputText value="#{testObject.position}" />
+				</p:column>
+				
 				<p:column headerText="Name">
 					<h:outputText value="#{testObject.name}" />
 				</p:column>
@@ -316,29 +348,31 @@
 
 			</p:dataTable>
 			
-			<h:panelGrid id="testObjectForm" columns="7" cellpadding="5">
+			<h:panelGrid id="testObjectForm" columns="4" cellpadding="5">
+				<h:outputText value="Position: " />
+				<p:inputText value="#{conformanceProfileRequestBean.selectedTestObject.position}" />
+				
 				<h:outputText value="Name: " />
-				<p:inputText style="width:500px;" value="#{conformanceProfileRequestBean.selectedTestObject.name}" />
+				<p:inputText value="#{conformanceProfileRequestBean.selectedTestObject.name}" />
 				
 				<h:outputText value="Description: " />
-				<p:inputText style="width:500px;" value="#{conformanceProfileRequestBean.selectedTestObject.longDescription}" />
+				<p:inputText value="#{conformanceProfileRequestBean.selectedTestObject.longDescription}" />
 				
-				<p:selectOneMenu value="#{conformanceProfileRequestBean.conformanceProfileIDForTestObject}"
-					effect="fade">
+				<h:outputText value="Conformance Profile: " />
+				<p:selectOneMenu value="#{conformanceProfileRequestBean.conformanceProfileIDForTestObject}" effect="fade">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItems value="#{conformanceProfileRequestBean.conformanceProfiles}" var="cp"
 						itemLabel="#{cp.name}" itemValue="#{cp.id}" />
 				</p:selectOneMenu>
-				
-				<p:commandButton value="Add Test Object"
-							icon="ui-icon-plus" update=":#{p:component('testObjectForm')} :#{p:component('testObjectTable')}"
-							actionListener="#{conformanceProfileRequestBean.addTestObject}"/>
-				
 			</h:panelGrid>
 
 			<table width="100%">
 				<tr>
-					<td align="right"><p:commandButton value="Update Test Plan"
+					<td align="right">
+						<p:commandButton value="Add Test Object"
+							icon="ui-icon-plus" update=":#{p:component('testObjectForm')} :#{p:component('testObjectTable')}"
+							actionListener="#{conformanceProfileRequestBean.addTestObject}"/>
+						<p:commandButton value="Update Test Plan"
 							icon="ui-icon-plus" update=":#{p:component('profileForm')}"
 							actionListener="#{conformanceProfileRequestBean.addContextFreeTestPlan}"
 							onclick="PF('createContextFreeTestPlan').hide();" /></td>
@@ -349,7 +383,7 @@
 
 	<h:form id="editIntegratedProfileForm">
 		<p:dialog header="Edit Integrated Profile"
-			widgetVar="editIntegratedProfile">
+			widgetVar="editIntegratedProfile" width="80%" height="80%">
 			<h:panelGrid columns="2" cellpadding="5">
 				<h:outputText value="Name: " />
 				<p:inputText
@@ -531,6 +565,36 @@
 							icon="ui-icon-plus" update=":#{p:component('profileForm')}"
 							actionListener="#{conformanceProfileRequestBean.addProfile}"
 							onclick="PF('registerIntegratedProfile').hide();" /></td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="createJurorDocumentForm">
+		<p:dialog id="createJurorDocumentDialog" header="Register JurorDocument" widgetVar="createJurorDocument">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newJurorDocument.name}" />
+				
+				<h:outputText value="HTML XSLT: " />
+				<h:panelGrid id="jurorDocumentHTMLPanel" columns="1" cellpadding="0">
+					<p:fileUpload rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentHTML == null}" fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentHTML}"
+						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+					<h:outputText rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentHTML != null}" value="Juror Document HTML Uploaded" />
+				</h:panelGrid>
+				
+				<h:outputText value="JSON XSLT: " />
+				<h:panelGrid id="jurorDocumentJSONPanel" columns="1" cellpadding="0">
+					<p:fileUpload rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentJSON == null}" fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentJSON}"
+						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+					<h:outputText rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentJSON != null}" value="Juror Document JSON Uploaded" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Add" icon="ui-icon-plus" update=":#{p:component('profileForm')}" actionListener="#{conformanceProfileRequestBean.addJurorDocument}" onclick="PF('createJurorDocument').hide();" />
+					</td>
 				</tr>
 			</table>
 		</p:dialog>

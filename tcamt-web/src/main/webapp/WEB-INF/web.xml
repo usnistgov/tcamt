@@ -52,12 +52,6 @@
 	
 	<!-- Filters END -->
 	
-	<!--  Listeners -->
-	<listener>
-		<listener-class>gov.nist.healthcare.tcamt.web.Log4jConfigListener
-		</listener-class>
-	</listener>
-	
 	<!-- Welcome page -->
 	<welcome-file-list>
 		<welcome-file>faces/index.xhtml</welcome-file>

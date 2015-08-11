@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+<xsl:stylesheet version="2.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:util="http://hl7.nist.gov/juoro-doc/util"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <xsl:output method="xhtml" encoding="UTF-8" indent="yes" />
+    <xsl:output method="xhtml" encoding="UTF-8" indent="yes"/>
     <xsl:template name="commentTemplate">
+
         <td bgcolor="#F2F2F2">
-            <!--  <div  style="width: 100%; height: 100%; border: none; resize: none; max-width: 400px;"
+            <!--    <div  style="width: 100%; height: 100%; border: none; resize: none; max-width: 400px;"
                 contentEditable="true"></div>-->
-                <textarea
-            style="width: 100%; height: 100%; border: 1px; background: 1px  #E2E2E2; resize:vertical "> </textarea>
-            
+            <textarea
+                style="width: 100%; height: 100%; border: 1px; background: 1px  #E2E2E2; resize:vertical; "> </textarea>
+
         </td>
-        
+
     </xsl:template>
     <xsl:template name="testExistence">
         <xsl:param name="node"/>
@@ -32,9 +33,8 @@
                 <xsl:choose>
                     <xsl:when test="$node != ''">
                         <td>
-                            <xsl:call-template name="dateTime">
-                                <xsl:with-param name="dateS" select="$node"/>
-                            </xsl:call-template>
+                           <xsl:value-of select="util:format-date($node)"/>
+                        
                         </td>
                     </xsl:when>
                     <xsl:otherwise>
@@ -53,9 +53,8 @@
         <xsl:choose>
             <xsl:when test="$node2 != ''">
                 <td>
-                    <xsl:call-template name="dateTime">
-                        <xsl:with-param name="dateS" select="$node2"/>
-                    </xsl:call-template>
+                    <xsl:value-of select="util:format-date($node2)"/>
+                   
                 </td>
             </xsl:when>
             <xsl:otherwise>
@@ -64,7 +63,7 @@
         </xsl:choose>
 
     </xsl:template>
-    <xsl:template name="dateTime">
+  <!--   <xsl:template name="dateTime">
         <xsl:param name="dateS"/>
         <xsl:variable name="dateformat"
             select="
@@ -74,8 +73,21 @@
                 substring($dateS, 7, 2)
                 ))"/>
         <xsl:value-of select="format-date($dateformat, '[M01]/[D01]/[Y0001]')"/>
-    </xsl:template>
-
+    </xsl:template>--> 
+    
+    <xsl:function name="util:format-date">
+        <xsl:param name="elementDataIn"/>
+        <xsl:variable name="elementData" select="concat($elementDataIn, '                ')"/>
+        <xsl:if test="string-length(normalize-space($elementData)) > 0">
+            <xsl:variable name="year" select="substring($elementData, 1, 4)"/>
+            <xsl:variable name="month" select="concat(substring($elementData, 5, 2), '/')"/>
+            <xsl:variable name="day" select="concat(substring($elementData, 7, 2), '/')"/>
+            <xsl:value-of select="concat($month, $day, $year)"/>
+            <!-- <xsl:value-of select="format-date(xs:date(concat($month,$day,$year)),'[D1o] 
+				[MNn], [Y]', 'en', (), ())"/> -->
+        </xsl:if>
+    </xsl:function>
+    
     <xsl:template match="/">
         <form>
             <html>
@@ -89,7 +101,8 @@
                     }
                     @media print{
                     .jurordocument fieldset {font-size:x-small;}
-                    .jurordocument table {page-break-inside: avoid;}
+                    .jurordocument table {float:none; page-break-inside: avoid; display:table;}
+                    .jurordocument table tr {page-break-inside:avoid;}
                     .jurordocument table  th { font-size:x-small; }
                     
                     .jurordocument table  td { font-size:xx-small; }* [type=text]{
@@ -260,22 +273,24 @@
                                         <th>Tester Comment</th>
                                     </tr>
 
-                                    <xsl:for-each select="//PID.3.1/../..">
-                                        <tr>
-                                            <xsl:for-each
-                                                select="PID.3/PID.3.4/PID.3.4.1[. = 'MYEHR']/../..">
 
-                                                <xsl:call-template name="testExistence">
-                                                  <xsl:with-param name="node" select="PID.3.1"/>
-                                                </xsl:call-template>
-                                            </xsl:for-each>
+                                    <xsl:for-each select="//PID">
+                                        <tr>
+
+
+                                            <xsl:call-template name="testExistence">
+                                                <xsl:with-param name="node"
+                                                  select="PID.3[1]/PID.3.1"/>
+                                            </xsl:call-template>
+
 
                                             <td>
- 
+
                                                 <xsl:value-of
                                                   select="concat(PID.5/PID.5.2, ' ', PID.5/PID.5.3, ' ', PID.5/PID.5.1/PID.5.1.1)"
                                                 />
                                             </td>
+                                            
                                             <xsl:call-template name="testExistence-with-date">
                                                 <xsl:with-param name="node" select="PID.7/PID.7.1"/>
                                             </xsl:call-template>
@@ -300,6 +315,7 @@
                                         </tr>
 
                                     </xsl:for-each>
+
                                 </tbody>
                                 <tfoot>
                                     <tr>

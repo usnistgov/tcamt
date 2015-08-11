@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
@@ -656,6 +657,81 @@ public class DBImpl implements DBInterface, Serializable {
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
+	}
+
+	public void jurorDocumentInsert(JurorDocument jd) {
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			jd.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.save(jd);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+
+	public void jurorDocumentUpdate(JurorDocument jd) {
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			jd.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(jd);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		
+	}
+
+	public void jurorDocumentDelete(JurorDocument jd) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(jd);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		
+	}
+
+	public List<JurorDocument> getAllJurorDocuments() {
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(JurorDocument.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<JurorDocument> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
+	public JurorDocument getJurorDocumentById(long id) {
+		try{
+			this.openCurrentSession();
+			JurorDocument jd = (JurorDocument)this.currentSession.get(JurorDocument.class, id);
+			this.closeCurrentSession();
+			return jd;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 	
 }

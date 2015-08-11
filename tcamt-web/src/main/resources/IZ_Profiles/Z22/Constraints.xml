@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConformanceContext UUID="2decb2ea-0b10-4c4c-9906-14e41392da67" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<MetaData>
-		<Description>Conformance context for VXU_V04</Description>
+		<Description>Conformance context for VXU_V04, Version: 20150811-1</Description>
 	</MetaData>
 	<Predicates>
 		<Datatype>
@@ -29,6 +29,12 @@
 					<Description>If XCN.11 (Check Digit Identifer) is valued.</Description>
 					<Condition>
 						<Presence Path="11[1]"/>
+					</Condition>
+				</Predicate>
+				<Predicate ID="[XCN_IZ]13[1]" Target="13[1]" TrueUsage="R" FalseUsage="X">
+					<Description>If XCN.1 (ID number) is valued.</Description>
+					<Condition>
+						<Presence Path="1[1]"/>
 					</Condition>
 				</Predicate>
 			</ByID>
@@ -160,9 +166,11 @@
 					</Condition>
 				</Predicate>
 				<Predicate ID="[XON_IZ]10[1]" Target="10[1]" TrueUsage="R" FalseUsage="RE">
-					<Description>If XON.1 (Organization Name) is valued.</Description>
+					<Description>If XON.1 (Organization Name) is not valued.</Description>
 					<Condition>
-						<Presence Path="1[1]"/>
+						<NOT>
+							<Presence Path="1[1]"/>
+						</NOT>
 					</Condition>
 				</Predicate>
 			</ByID>
@@ -377,7 +385,13 @@
 				</Constraint>
 			</ByID>
 			<ByID ID="CQ_IZ">
-				<Constraint ID="IZ-2" Target="2[1].1[1]">
+				<Constraint ID="IZ-1" Target="1[1]">
+					<Description>The value of CQ.1 (Quantity) SHALL be a positive integer.</Description>
+					<Assertion>
+						<SimpleValue Path="1[1]" Operator="GT" Value="0" Type="Number"/>
+					</Assertion>
+				</Constraint>
+				<Constraint ID="IZ-2" Target="2[1]">
 					<Description>The value of CQ.2.1 (Identifier) SHALL be 'RD'.</Description>
 					<Assertion>
 						<PlainText Path="2[1].1[1]" Text="RD" IgnoreCase="false"/>
@@ -600,10 +614,10 @@
 				</Constraint>
 			</ByID>
 			<ByID ID="OBX_IZ 1_5">
-				<Constraint ID="IZ-21" Target="2[1]">
-					<Description>The value of OBX.2 (Value Type) SHALL be one of List Values: 'CE','NM','ST','DT','ID','TS'.</Description>
+				<Constraint ID="IZ-44" Target="4[1]">
+					<Description>The value of OBX-4 SHALL be a positive integer.</Description>
 					<Assertion>
-						<StringList Path="2[1]" CSV="CE,NM,ST,DT,ID,TS"/>
+						<SimpleValue Path="4[1]" Operator="GT" Value="0" Type="Number"/>
 					</Assertion>
 				</Constraint>
 				<Constraint ID="IZ-35" Target="5[1]">
@@ -630,7 +644,7 @@
 									<PlainText Path="2[1]" Text="CE" IgnoreCase="false"/>
 								</AND>
 							</NOT>
-							<StringList Path="5[1].1[1]" CSV="253088698300001111110714,253088698300002811100310,253088698300004211111025,253088698300005911120202,253088698300006611981216,253088698300007311110503,253088698300008011120222,253088698300009711120702,253088698300010311120702,253088698300011011111207,253088698300012711120420,253088698300013411100521,253088698300014111111014,253088698300015811100416,253088698300016511091006,253088698300017211111108,253088698300018911091006,253088698300020211091006,253088698300022611120124,253088698300023311120529"/>
+							<ValueSet Path="5[1]" ValueSetID="PHVS_VISBarcodes_IIS" BindingStrength="R" BindingLocation="1"/>
 						</OR>
 					</Assertion>
 				</Constraint>
@@ -661,11 +675,19 @@
 					</Assertion>
 				</Constraint>
 			</ByID>
+			<ByID ID="NK1_IZ 1_5">
+				<Constraint ID="IZ-70" Target="1[1]">
+					<Description>The Value of NK1-1 (Set ID-NK1) SHALL be valued sequentially starting with the value "1".</Description>
+					<Assertion>
+						<SetID Path="1[1]"/>
+					</Assertion>
+				</Constraint>
+			</ByID>
 		</Segment>
 		<Group>
 			<ByName Name="VXU_V04.ORDER">
 				<Constraint ID="IZ-45" Target="1[1]">
-					<Description> If RXA.20 is valued 'NA' or 'RE' then ORC.3.1 SHALL be valued '9999'.</Description>
+					<Description> If RXA.20 is valued "NA" or "RE" then ORC.3.1 SHALL be valued "9999".</Description>
 					<Assertion>
 						<OR>
 							<NOT>
@@ -676,6 +698,14 @@
 							</NOT>
 							<PlainText Path="1[1].3[1].1[1]" Text="9999" IgnoreCase="false"/>
 						</OR>
+					</Assertion>
+				</Constraint>
+			</ByName>
+			<ByName Name="VXU_V04.ORDER.OBSERVATION">
+				<Constraint ID="IZ-20" Target="1[1]">
+					<Description>The Value of OBX-1 (Set ID-OBX) SHALL be valued sequentially starting with the value "1" within a message.</Description>
+					<Assertion>
+						<SetID Path="1[1].1[1]"/>
 					</Assertion>
 				</Constraint>
 			</ByName>

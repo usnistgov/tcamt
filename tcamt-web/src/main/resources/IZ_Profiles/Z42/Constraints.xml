@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConformanceContext UUID="95c4f44d-7da8-4914-bce0-23c31a310115" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
-        <Description>Conformance context for RSP_K11</Description>
+        <Description>Conformance context for RSP_K11, Version:20150811-1</Description>
     </MetaData>
     <Predicates>
         <Datatype>
@@ -31,6 +31,12 @@
 						<Presence Path="11[1]"/>
 					</Condition>
 				</Predicate>
+			    <Predicate ID="[XCN_IZ]13[1]" Target="13[1]" TrueUsage="R" FalseUsage="X">
+			        <Description>If XCN.1 (ID number) is valued.</Description>
+			        <Condition>
+			            <Presence Path="1[1]"/>
+			        </Condition>
+			    </Predicate>
 			</ByID>
             <ByID ID="CX_IZ">
                 <Predicate ID="[CX_IZ]3[1]" Target="3[1]" TrueUsage="O" FalseUsage="X">
@@ -156,9 +162,11 @@
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XON_IZ]10[1]" Target="10[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If XON.1 (Organization Name) is valued.</Description>
+                    <Description>If XON.1 (Organization Name) is not valued.</Description>
                     <Condition>
-                        <Presence Path="1[1]"/>
+                        <NOT>
+                            <Presence Path="1[1]"/>
+                        </NOT>
                     </Condition>
                 </Predicate>
             </ByID>
@@ -411,19 +419,6 @@
                         </OR>
                     </Assertion>
                 </Constraint>
-                <Constraint ID="IZ_50" Target="6[1]">
-                    <Description>If the value of RXA.9[1].1 (Identifier) is not '00', then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
-                    <Assertion>
-                        <OR>
-                            <NOT>
-                                <NOT>
-                                    <PlainText Path="9[1].1[1]" Text="00" IgnoreCase="false"/>
-                                </NOT>
-                            </NOT>
-                            <PlainText Path="6[1]" Text="999" IgnoreCase="false"/>
-                        </OR>
-                    </Assertion>
-                </Constraint>
                 <Constraint ID="IZ-49" Target="6[1]">
                     <Description>If RXA.5.1 (Identifier) is valued and the value of RXA.5.1 (Identifier) is '998' then the value of RXA.6 (Administered Amount) SHALL be '999'.</Description>
                     <Assertion>
@@ -491,10 +486,30 @@
                 </Constraint>
             </ByID>
             <ByID ID="OBX_IZ 1_5">
-                <Constraint ID="IZ-21" Target="2[1]">
-                    <Description>The value of OBX.2 (Value Type) SHALL be one of List Values: 'CE','NM','ST','DT','ID','TS'.</Description>
+                <Constraint ID="IZ-36" Target="5[1]">
+                    <Description>If The value of OBX.3.1 (Identifier) is '69764-9' and the value of OBX.2 (Value Type) is 'CE' then the value of OBX.5.1 (Observation Value) SHALL be one of codes listed in the Value Set: PHVS_VISBarcodes_IIS.</Description>
                     <Assertion>
-                        <StringList Path="2[1]" CSV="CE,NM,ST,DT,ID,TS"/>
+                        <OR>
+                            <NOT>
+                                <AND>
+                                    <PlainText Path="3[1].1[1]" Text="69764-9" IgnoreCase="false"/>
+                                    <PlainText Path="2[1]" Text="CE" IgnoreCase="false"/>
+                                </AND>
+                            </NOT>
+                            <ValueSet Path="5[1]" ValueSetID="PHVS_VISBarcodes_IIS" BindingStrength="R" BindingLocation="1"/>
+                        </OR>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-20" Target="1[1]">
+                    <Description>The Value of OBX-1 (Set ID-OBX) SHALL be valued sequentially starting with the value "1" within a message.</Description>
+                    <Assertion>
+                        <SetID Path="1[1]"/>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-44" Target="4[1]">
+                    <Description>The value of OBX-4 SHALL be a positive integer.</Description>
+                    <Assertion>
+                        <SimpleValue Path="4[1]" Operator="GT" Value="0" Type="Number"/>
                     </Assertion>
                 </Constraint>
                 <Constraint ID="IZ-37" Target="5[1]">
@@ -525,6 +540,31 @@
                 </Constraint>
             </ByID>
         </Segment>
-        <Group/>
+        <Group>
+            <ByName Name="RSP_K11.IZ_HISTORY_FORECAST.OBSERVATION">
+                <Constraint ID="IZ-20" Target="1[1]">
+                    <Description>The Value of OBX-1 (Set ID-OBX) SHALL be valued sequentially starting with the value "1" within a message.</Description>
+                    <Assertion>
+                        <SetID Path="1[1].1[1]"/>
+                    </Assertion>
+                </Constraint>
+            </ByName>
+            <ByName Name="RSP_K11.IZ_HISTORY_FORECAST">
+                <Constraint ID="IZ-45" Target="1[1]">
+                    <Description> If RXA.20 is valued "NA" or "RE" then ORC.3.1 SHALL be valued "9999".</Description>
+                    <Assertion>
+                        <OR>
+                            <NOT>
+                                <AND>
+                                    <Presence Path="2[1].20[1]"/>
+                                    <StringList Path="2[1].20[1]" CSV="NA,RE"/>
+                                </AND>
+                            </NOT>
+                            <PlainText Path="1[1].3[1].1[1]" Text="9999" IgnoreCase="false"/>
+                        </OR>
+                    </Assertion>
+                </Constraint>
+            </ByName>
+        </Group>
     </Constraints>
 </ConformanceContext>

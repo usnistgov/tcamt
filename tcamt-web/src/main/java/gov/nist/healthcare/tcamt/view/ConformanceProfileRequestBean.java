@@ -3,6 +3,7 @@ package gov.nist.healthcare.tcamt.view;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Metadata;
 import gov.nist.healthcare.tcamt.domain.TestObject;
 import gov.nist.healthcare.tcamt.service.XMLManager;
@@ -51,6 +52,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 	private SessionBeanTCAMT sessionBeanTCAMT;
 	
 	private IntegratedProfile newIntegratedProfile = new IntegratedProfile();
+	private JurorDocument newJurorDocument = new JurorDocument();
 	private ContextFreeTestPlan selectedContextFreeTestPlan = new ContextFreeTestPlan();
 	private ConformanceProfile selectedProfile = null;
 	private IntegratedProfile selectedIntegratedProfile = null;
@@ -93,6 +95,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	public void initNewContextFreeTestPlan() {
 		this.selectedContextFreeTestPlan = new ContextFreeTestPlan();
+	}
+	
+	public void initNewJurorDocument() {
+		this.newJurorDocument = new JurorDocument();
 	}
 	
 	private void updateConformanceProfile(IntegratedProfile ip) {
@@ -190,6 +196,14 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.selectedProfile.setJurorDocumentJSONXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
+	public void uploadJurorDocumentHTML(FileUploadEvent event) throws IOException{
+		this.newJurorDocument.setJurorDocumentHTML(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
+	public void uploadJurorDocumentJSON(FileUploadEvent event) throws IOException{
+		this.newJurorDocument.setJurorDocumentJSON(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
 	public void addProfile() throws CloneNotSupportedException, IOException {
 		ProfileSerialization ps = new ProfileSerializationImpl();
 		Profile p = ps.deserializeXMLToProfile(this.newIntegratedProfile.getProfile(), this.newIntegratedProfile.getValueSet(), this.newIntegratedProfile.getConstraints());
@@ -234,6 +248,14 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.selectedTestObject = new TestObject();
 		this.conformanceProfileIDForTestObject = 0;
 
+	}
+	
+	public void addJurorDocument(){
+		this.sessionBeanTCAMT.getDbManager().jurorDocumentInsert(this.newJurorDocument);
+		this.sessionBeanTCAMT.updateJurorDocuments();
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Juror Document Uploaded.",  "Juror Document has been uploaded."));
 	}
 	
 	public void delTDSHTMLXSLT(ActionEvent event) {
@@ -291,6 +313,11 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateIntegratedProfiles();
 	}
 	
+	public void delJurorDocument(ActionEvent event) {
+		this.sessionBeanTCAMT.getDbManager().jurorDocumentDelete((JurorDocument) event.getComponent().getAttributes().get("juror"));
+		this.sessionBeanTCAMT.updateJurorDocuments();
+	}
+	
 	public void updateConformanceProfile() {
 		ProfileSerialization ps = new ProfileSerializationImpl();
 		Profile p = ps.deserializeXMLToProfile(this.selectedProfile.getIntegratedProfile().getProfile(), this.selectedProfile.getIntegratedProfile().getValueSet(), this.selectedProfile.getIntegratedProfile().getConstraints());
@@ -304,6 +331,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.getDbManager().integratedProfileUpdate(this.selectedProfile.getIntegratedProfile());
 		this.sessionBeanTCAMT.updateConformanceProfiles();
 		this.sessionBeanTCAMT.updateIntegratedProfiles();
+		this.sessionBeanTCAMT.updateContextFreeTestPlans();
 		
 		this.conformanceProfileId = null;
 	}
@@ -313,6 +341,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.getDbManager().integratedProfileUpdate(this.selectedIntegratedProfile);
 		this.sessionBeanTCAMT.updateIntegratedProfiles();
 		this.sessionBeanTCAMT.updateConformanceProfiles();
+		this.sessionBeanTCAMT.updateContextFreeTestPlans();
 	}
 	
 	public void downloadResourceBundleForTestPlan(ContextFreeTestPlan tp) throws Exception{
@@ -345,12 +374,9 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	private void generateContextFreeRB(ZipOutputStream out, ContextFreeTestPlan tp) throws Exception {
 		this.generateTestPlanJsonRB(out, tp);
-		int position = 1;
 		for(TestObject to:tp.getTestObjects()){
 			String testcasePath = "Contextfree" + File.separator + to.getName();
-			to.setPosition(position);
 			this.generateTestObjectJsonRB(out, to, testcasePath);
-			position = position + 1;
 		}
 	}
 	
@@ -521,6 +547,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public List<ContextFreeTestPlan> getContextFreeTestPlans(){
 		return this.sessionBeanTCAMT.getContextFreeTestPlans();
 	}
+	
+	public List<JurorDocument> getJurorDocuments(){
+		return this.sessionBeanTCAMT.getJurorDocuments();
+	}
 
 	public ConformanceProfile getSelectedProfile() {
 		return selectedProfile;
@@ -603,6 +633,14 @@ public class ConformanceProfileRequestBean implements Serializable {
 
 	public void setConformanceProfileId(String conformanceProfileId) {
 		this.conformanceProfileId = conformanceProfileId;
+	}
+
+	public JurorDocument getNewJurorDocument() {
+		return newJurorDocument;
+	}
+
+	public void setNewJurorDocument(JurorDocument newJurorDocument) {
+		this.newJurorDocument = newJurorDocument;
 	}
 	
 	

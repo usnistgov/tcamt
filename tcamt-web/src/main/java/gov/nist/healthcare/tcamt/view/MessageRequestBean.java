@@ -8,6 +8,7 @@ import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.data.TestDataFromCS;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
@@ -57,6 +58,8 @@ public class MessageRequestBean implements Serializable {
 	private TreeNode selectedNode;
 	
 	private int activeIndexOfMessageInstancePanel;
+	
+	private List<TestDataFromCS> testDataFromCSs;
 	
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
@@ -507,18 +510,6 @@ public class MessageRequestBean implements Serializable {
 		}
 	}
 	
-	public void updateTestDataFromCS(){
-		try{
-			this.manageInstanceService.updateTestDataFromCS(this.filtedSegmentTreeRoot);
-		}catch(Exception e){
-			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
-			e.printStackTrace();
-			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
-		}
-	}
-	
 	private String getStackTrace(final Throwable throwable) {
 	     final StringWriter sw = new StringWriter();
 	     final PrintWriter pw = new PrintWriter(sw, true);
@@ -678,6 +669,14 @@ public class MessageRequestBean implements Serializable {
 
 	public void setConformanceProfileId(Long conformanceProfileId) {
 		this.conformanceProfileId = conformanceProfileId;
+	}
+
+	public List<TestDataFromCS> getTestDataFromCSs() {
+		return testDataFromCSs;
+	}
+
+	public void setTestDataFromCSs(List<TestDataFromCS> testDataFromCSs) {
+		this.testDataFromCSs = testDataFromCSs;
 	}
 	
 	

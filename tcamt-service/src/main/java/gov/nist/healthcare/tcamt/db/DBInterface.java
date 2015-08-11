@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
@@ -59,4 +60,10 @@ public interface DBInterface {
 	public void logDelete(Log l);
 	public void allLogsDelete();
 	public List<Log> getAllLogs();
+	
+	public void jurorDocumentInsert(JurorDocument jd);
+	public void jurorDocumentUpdate(JurorDocument jd);
+	public void jurorDocumentDelete(JurorDocument jd);
+	public List<JurorDocument> getAllJurorDocuments();
+	public JurorDocument getJurorDocumentById(long id);
 }

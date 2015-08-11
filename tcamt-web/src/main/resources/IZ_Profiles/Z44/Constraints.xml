@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ConformanceContext UUID="689b43b7-f088-479f-8ba1-551618d13ea3" xsi:noNamespaceSchemaLocation="../ConformanceContext.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <MetaData>
-        <Description>Conformance context for QBP_Q11</Description>
+        <Description>Conformance context for QBP_Q11, Version: 20150811-1</Description>
     </MetaData>
     <Predicates>
         <Datatype>
@@ -89,9 +89,11 @@
                     </Condition>
                 </Predicate>
                 <Predicate ID="[XON_IZ]10[1]" Target="10[1]" TrueUsage="R" FalseUsage="RE">
-                    <Description>If XON.1 (Organization Name) is valued.</Description>
+                    <Description>If XON.1 (Organization Name) is not valued.</Description>
                     <Condition>
-                        <Presence Path="1[1]"/>
+                        <NOT>
+                            <Presence Path="1[1]"/>
+                        </NOT>
                     </Condition>
                 </Predicate>
             </ByID>
@@ -126,7 +128,13 @@
     <Constraints>
         <Datatype>
             <ByID ID="CQ_IZ">
-                <Constraint ID="IZ-2" Target="2[1].1[1]">
+                <Constraint ID="IZ-1" Target="1[1]">
+                    <Description>The value of CQ.1 (Quantity) SHALL be a positive integer.</Description>
+                    <Assertion>
+                        <SimpleValue Path="1[1]" Operator="GT" Value="0" Type="Number"/>
+                    </Assertion>
+                </Constraint>
+                <Constraint ID="IZ-2" Target="2[1]">
                     <Description>The value of CQ.2.1 (Identifier) SHALL be 'RD'.</Description>
                     <Assertion>
                         <PlainText Path="2[1].1[1]" Text="RD" IgnoreCase="false"/>

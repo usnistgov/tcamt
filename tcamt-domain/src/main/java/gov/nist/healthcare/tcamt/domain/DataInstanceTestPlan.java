@@ -75,6 +75,11 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	@Embedded
 	private Metadata metadata = new Metadata();
 	
+	@JsonIgnore
+	@ManyToOne
+    @JoinColumn(name="specific_juror_document_id")
+	private JurorDocument specificJurorDocument;
+	
 	public long getId() {
 		return id;
 	}
@@ -185,6 +190,12 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	}
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+	public JurorDocument getSpecificJurorDocument() {
+		return specificJurorDocument;
+	}
+	public void setSpecificJurorDocument(JurorDocument specificJurorDocument) {
+		this.specificJurorDocument = specificJurorDocument;
 	}
 	
 	

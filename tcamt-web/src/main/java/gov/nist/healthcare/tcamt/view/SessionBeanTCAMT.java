@@ -6,6 +6,7 @@ import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
@@ -30,6 +31,7 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	private DBImpl dbManager = new DBImpl();
 	
+	private List<JurorDocument> jurorDocuments;
 	private List<IntegratedProfile> integratedProfiles;
 	private List<ConformanceProfile> conformanceProfiles;
 	private List<ContextFreeTestPlan> contextFreeTestPlans;
@@ -53,6 +55,7 @@ public class SessionBeanTCAMT implements Serializable {
 			this.updateIntegratedProfiles();
 			this.updateConformanceProfiles();
 			this.updateContextFreeTestPlans();
+			this.updateJurorDocuments();
 		}else if(tabTitle.equals("Actor")){
 			this.updateActors();
 		}else if(tabTitle.equals("Message")){
@@ -66,12 +69,13 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	public SessionBeanTCAMT() {
 		super();
-		this.updateConformanceProfiles();
-		this.updateActors();
-		this.updateMessages();
-		this.updateDataInstanceTestPlans();
+		this.retriveAllData();
 	}
 
+	public void updateJurorDocuments(){
+		this.jurorDocuments = this.dbManager.getAllJurorDocuments();
+	}
+	
 	public void updateContextFreeTestPlans(){
 		this.contextFreeTestPlans = this.dbManager.getAllContextFreeTestPlans();
 	}
@@ -97,9 +101,10 @@ public class SessionBeanTCAMT implements Serializable {
 	}
 	
 	public void retriveAllData() {
+		this.updateJurorDocuments();
 		this.updateIntegratedProfiles();
-		this.updateConformanceProfiles();
 		this.updateContextFreeTestPlans();
+		this.updateConformanceProfiles();
 		this.updateActors();
 		this.updateMessages();
 		this.updateDataInstanceTestPlans();
@@ -203,6 +208,14 @@ public class SessionBeanTCAMT implements Serializable {
 	
 	public void delLog(ActionEvent event) {
 		this.dbManager.logDelete((Log) event.getComponent().getAttributes().get("log"));
+	}
+
+	public List<JurorDocument> getJurorDocuments() {
+		return jurorDocuments;
+	}
+
+	public void setJurorDocuments(List<JurorDocument> jurorDocuments) {
+		this.jurorDocuments = jurorDocuments;
 	}
 	
 }
