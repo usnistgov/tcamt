@@ -130,6 +130,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private String messageContentHTML;
 	
+	private String selectedTestCaseName;
+	
 	
 	public void shareInit(ActionEvent event){
 		try{
@@ -607,6 +609,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 //		        context.addMessage(null, new FacesMessage("Select TestCaseGroup",  "TestCaseGroup has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestStep){
 				this.selectedTestStep = (DataInstanceTestStep)event.getTreeNode().getData();
+				this.selectedTestCaseName = ((DataInstanceTestCase)event.getTreeNode().getParent().getData()).getName();
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = null;
 				this.selectTestStep();
@@ -669,7 +672,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
-				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments);
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
 				this.selectedInstanceSegment = null;
 				
 				this.generateTestDataSpecificationHTML();
@@ -869,7 +872,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							this.instanceSegments = new ArrayList<InstanceSegment>();
 							if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
 								this.manageInstanceService.loadMessage(ts.getMessage());
-								this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments);
+								this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments, tc.getName());
 							}
 							String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
 							packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
@@ -947,7 +950,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						this.instanceSegments = new ArrayList<InstanceSegment>();
 						if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
 							this.manageInstanceService.loadMessage(ts.getMessage());
-							this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments);
+							this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments, tc.getName());
 						}
 						String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
 						packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
@@ -1449,6 +1452,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}else {
 				xsltInputStream = new ByteArrayInputStream(this.selectedTestPlan.getSpecificJurorDocument().getJurorDocumentHTML().getBytes());
 			}
+			
 			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedNISTMessage().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1487,7 +1491,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
@@ -1508,7 +1512,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
@@ -1535,7 +1539,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
@@ -1556,7 +1560,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
@@ -1664,6 +1668,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
+			
+			
+			System.out.println(m.getXmlEncodedNISTMessage());
 			
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1779,13 +1786,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws Exception{		
+	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF, String testCaseId) throws Exception{		
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.html"));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		if(m.getHl7EndcodedMessage() != null && !m.getHl7EndcodedMessage().equals("")){
 			this.manageInstanceService.loadMessage(m);
-			this.manageInstanceService.loadMessageInstance(m, this.instanceSegments);
+			this.manageInstanceService.loadMessageInstance(m, this.instanceSegments, testCaseId);
 		}
 		
         String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(m, instanceSegments);
@@ -2444,6 +2451,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setJurorDocumentId(Long jurorDocumentId) {
 		this.jurorDocumentId = jurorDocumentId;
+	}
+
+	public String getSelectedTestCaseName() {
+		return selectedTestCaseName;
+	}
+
+	public void setSelectedTestCaseName(String selectedTestCaseName) {
+		this.selectedTestCaseName = selectedTestCaseName;
 	}
 	
 }

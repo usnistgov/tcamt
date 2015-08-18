@@ -172,8 +172,7 @@ public class ManageInstance implements Serializable {
 
 	}
 
-	public void loadMessageInstance(Message m,
-			List<InstanceSegment> instanceSegments) throws Exception {
+	public void loadMessageInstance(Message m, List<InstanceSegment> instanceSegments, String testCaseName) throws Exception {
 		List<String> ipathList = new ArrayList<String>();
 		List<String> pathList = new ArrayList<String>();
 		List<String> iPositionPathList = new ArrayList<String>();
@@ -242,8 +241,8 @@ public class ManageInstance implements Serializable {
 			m.setHl7EndcodedMessage(message);
 		}
 
-		this.generateXMLFromMesageInstance(m, instanceSegments, true);
-		this.generateXMLFromMesageInstance(m, instanceSegments, false);
+		this.generateXMLFromMesageInstance(m, instanceSegments, true, testCaseName);
+		this.generateXMLFromMesageInstance(m, instanceSegments, false, testCaseName);
 	}
 
 	private void modifyIPath(List<String> ipathList) {
@@ -1460,14 +1459,11 @@ public class ManageInstance implements Serializable {
 		return header + body + footer;
 	}
 
-	private void generateXMLFromMesageInstance(Message m,
-			List<InstanceSegment> instanceSegments, boolean isSTD)
-			throws Exception {
+	private void generateXMLFromMesageInstance(Message m, List<InstanceSegment> instanceSegments, boolean isSTD, String testCaseName) throws Exception {
 		String messageName = m.getMessageObj().getStructID();
-		org.w3c.dom.Document xmlHL7MessageInstanceDom = XMLManager
-				.stringToDom("<" + messageName + "/>");
-		Element rootElm = (Element) xmlHL7MessageInstanceDom
-				.getElementsByTagName(messageName).item(0);
+		org.w3c.dom.Document xmlHL7MessageInstanceDom = XMLManager.stringToDom("<" + messageName + "/>");
+		Element rootElm = (Element) xmlHL7MessageInstanceDom.getElementsByTagName(messageName).item(0);
+		if(testCaseName != null) rootElm.setAttribute("testcaseName", testCaseName);
 
 		for (InstanceSegment instanceSegment : instanceSegments) {
 			String[] iPathList = instanceSegment.getIpath().split("\\.");

@@ -390,7 +390,7 @@ public class MessageRequestBean implements Serializable {
 		try{
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			if(this.editMessage.getHl7EndcodedMessage() != null &&  this.editMessage.getConformanceProfile() != null && !this.editMessage.getHl7EndcodedMessage().equals("")){
-				this.manageInstanceService.loadMessageInstance(this.editMessage, this.instanceSegments);
+				this.manageInstanceService.loadMessageInstance(this.editMessage, this.instanceSegments, null);
 				this.selectedInstanceSegment = null;
 			}
 			this.activeIndexOfMessageInstancePanel = 2;

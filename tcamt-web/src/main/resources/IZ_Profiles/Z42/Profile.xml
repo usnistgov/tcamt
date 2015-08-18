@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSpy v2015 rel. 3 (x64) (http://www.altova.com) by ww (NIST) -->
 <ConformanceProfile ID="28c0d805-9607-4ead-b81f-68b9f57e4f3a" xsi:noNamespaceSchemaLocation="../Profile.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<MetaData Name="RSP_K11" OrgName="NIST" Version="20150811-1"/>
+	<MetaData Name="RSP_K11" OrgName="NIST" Version="20150814-1"/>
 	<Encodings>
 		<Encoding>ER7</Encoding>
 		<Encoding>XML</Encoding>
@@ -16,7 +16,7 @@
 			<Segment Ref="QPD_IZ1_5" Usage="R" Min="1" Max="1"/>
 			<Segment Ref="PID_IZ_1_5_Z42" Usage="R" Min="1" Max="1"/>
 			<Group ID="RSP_K11.IZ_HISTORY_FORECAST" Name="RSP_K11.IZ_HISTORY_FORECAST" Usage="R" Min="1" Max="*">
-				<Segment Ref="ORC" Usage="O" Min="0" Max="1"/>
+				<Segment Ref="ORC" Usage="R" Min="1" Max="1"/>
 				<Segment Ref="RXA_IZ 1_5" Usage="R" Min="1" Max="1"/>
 				<Segment Ref="RXR_IZ 1_5" Usage="RE" Min="0" Max="1"/>
 				<Group ID="RSP_K11.IZ_HISTORY_FORECAST.OBSERVATION" Name="RSP_K11.IZ_HISTORY_FORECAST.OBSERVATION" Usage="R" Min="1" Max="*">
@@ -162,7 +162,7 @@
 			<Field Name="Call Back Phone Number" Usage="O" Min="0" Max="2" Datatype="XTN" MinLength="1" MaxLength="250" ItemNo="00228"/>
 			<Field Name="Order Effective Date/Time" Usage="O" Min="0" Max="1" Datatype="TS" MinLength="1" MaxLength="26" ItemNo="00229"/>
 			<Field Name="Order Control Code Reason" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00230"/>
-			<Field Name="Entering Organization" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00231"/>
+			<Field Name="Entering Organization" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" Binding="0362" ItemNo="00231"/>
 			<Field Name="Entering Device" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" ItemNo="00232"/>
 			<Field Name="Action By" Usage="O" Min="0" Max="*" Datatype="XCN_IZ" MinLength="1" MaxLength="250" ItemNo="00233"/>
 			<Field Name="Advanced Beneficiary Notice Code" Usage="O" Min="0" Max="1" Datatype="CE" MinLength="1" MaxLength="250" Binding="0339" BindingStrength="R" BindingLocation="1" ItemNo="01310"/>
