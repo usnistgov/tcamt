@@ -9,7 +9,7 @@ public class PDFGenerator {
 
 	public static void main(String[] args) {
 		PDFGenerator gen = new PDFGenerator();
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_MU 2015 Test Plan");
+		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_Pilot Isolated Test Plan");
 
 	}
 

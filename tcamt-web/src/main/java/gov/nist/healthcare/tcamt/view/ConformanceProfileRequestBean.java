@@ -188,6 +188,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.selectedProfile.setTestDataSpecificationJSONXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
+	public void uploadTestDataSpecificationTABXSLT(FileUploadEvent event) throws IOException{
+		this.selectedProfile.setTestDataSpecificationTabXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
 	public void uploadJurorDocumentXSLT(FileUploadEvent event) throws IOException{
 		this.selectedProfile.setJurorDocumentXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
@@ -268,6 +272,13 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void delTDSJSONXSLT(ActionEvent event) {
 		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		cp.setTestDataSpecificationJSONXSLT(null);
+		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
+		this.sessionBeanTCAMT.updateConformanceProfiles();
+	}
+	
+	public void delTDSTABXSLT(ActionEvent event) {
+		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
+		cp.setTestDataSpecificationTabXSLT(null);
 		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
 		this.sessionBeanTCAMT.updateConformanceProfiles();
 	}

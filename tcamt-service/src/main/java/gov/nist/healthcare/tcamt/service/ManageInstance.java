@@ -837,12 +837,10 @@ public class ManageInstance implements Serializable {
 					.equals(TestDataCategorization.Indifferent)) {
 			} else if (c.getCategorization().equals(
 					TestDataCategorization.ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
 			} else if (c.getCategorization().equals(
 					TestDataCategorization.Configurable)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
 			} else if (c.getCategorization().equals(
 					TestDataCategorization.SystemGenerated)) {
 				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
@@ -876,13 +874,10 @@ public class ManageInstance implements Serializable {
 		return XMLManager.docToString(doc);
 	}
 
-	private void createStringListCheck(String values, String iPositionPath,
-			String iPath, String tdc, Element parent) {
-		Element elmConstraint = parent.getOwnerDocument().createElement(
-				"Constraint");
+	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 
-		Element elmReference = parent.getOwnerDocument().createElement(
-				"Reference");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
 		elmReference.setAttribute("Source", "Test Case");
 		elmReference.setAttribute("GeneratedBy", "TCAMT");
 		elmReference.setAttribute("ReferencePath", iPath);
@@ -891,15 +886,10 @@ public class ManageInstance implements Serializable {
 
 		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
 		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement(
-				"Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(
-				iPath + " SHALL be one of list values: " + values + " because "
-						+ iPath + " is " + tdc + "."));
-		Element elmAssertion = parent.getOwnerDocument().createElement(
-				"Assertion");
-		Element elmStringList = parent.getOwnerDocument().createElement(
-				"StringList");
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode( iPath + " SHALL be one of list values: " + values + "."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
 		elmStringList.setAttribute("Path", iPositionPath);
 		elmStringList.setAttribute("CSV", values);
 		elmStringList.setAttribute("IgnoreCase", "false");
@@ -909,13 +899,9 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 
-	private void createPlainTextCheck(String value, String iPositionPath,
-			String iPath, String tdc, Element parent) {
-		Element elmConstraint = parent.getOwnerDocument().createElement(
-				"Constraint");
-
-		Element elmReference = parent.getOwnerDocument().createElement(
-				"Reference");
+	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
 		elmReference.setAttribute("Source", "Test Case");
 		elmReference.setAttribute("GeneratedBy", "TCAMT");
 		elmReference.setAttribute("ReferencePath", iPath);
@@ -924,15 +910,10 @@ public class ManageInstance implements Serializable {
 
 		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
 		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement(
-				"Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(
-				iPath + " SHALL be valued '" + value + "' because " + iPath
-						+ " is " + tdc + "."));
-		Element elmAssertion = parent.getOwnerDocument().createElement(
-				"Assertion");
-		Element elmPlainText = parent.getOwnerDocument().createElement(
-				"PlainText");
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be valued '" + value + "."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
 		elmPlainText.setAttribute("Path", iPositionPath);
 		elmPlainText.setAttribute("Text", value);
 		elmPlainText.setAttribute("IgnoreCase", "false");
@@ -942,8 +923,7 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 
-	private void createPresenceCheck(String usageList, String iPositionPath,
-			String iPath, String tdc, Element parent) {
+	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent) {
 		String[] uList = usageList.split("-");
 		String myIPositionPath = "";
 		String myIPath = "";
@@ -952,35 +932,24 @@ public class ManageInstance implements Serializable {
 				myIPositionPath = iPositionPath.split("\\.")[i];
 				myIPath = iPath.split("\\.")[i];
 			} else {
-				myIPositionPath = myIPositionPath + "."
-						+ iPositionPath.split("\\.")[i];
+				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
 				myIPath = myIPath + "." + iPath.split("\\.")[i];
 			}
 			if (!uList[i].equals("R")) {
-				Element elmConstraint = parent.getOwnerDocument()
-						.createElement("Constraint");
-
-				Element elmReference = parent.getOwnerDocument().createElement(
-						"Reference");
+				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+				Element elmReference = parent.getOwnerDocument().createElement("Reference");
 				elmReference.setAttribute("Source", "Test Case");
 				elmReference.setAttribute("GeneratedBy", "TCAMT");
 				elmReference.setAttribute("ReferencePath", iPath);
 				elmReference.setAttribute("TestDataCategorization", tdc);
 				elmConstraint.appendChild(elmReference);
 
-				elmConstraint.setAttribute("ID", "TCAMT_" + iPath + "_"
-						+ (i + 1));
+				elmConstraint.setAttribute("ID", "TCAMT_" + iPath + "_" + (i + 1));
 				elmConstraint.setAttribute("Target", myIPositionPath);
-				Element elmDescription = parent.getOwnerDocument()
-						.createElement("Description");
-				elmDescription.appendChild(parent.getOwnerDocument()
-						.createTextNode(
-								myIPath + " SHALL be valued, because " + iPath
-										+ " is " + tdc + "."));
-				Element elmAssertion = parent.getOwnerDocument().createElement(
-						"Assertion");
-				Element elmPresence = parent.getOwnerDocument().createElement(
-						"Presence");
+				Element elmDescription = parent.getOwnerDocument().createElement("Description");
+				elmDescription.appendChild(parent.getOwnerDocument().createTextNode(myIPath + " SHALL be valued."));
+				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
 				elmPresence.setAttribute("Path", myIPositionPath);
 				elmAssertion.appendChild(elmPresence);
 				elmConstraint.appendChild(elmDescription);
@@ -1861,24 +1830,15 @@ public class ManageInstance implements Serializable {
 			String usageList = c.getUsageList();
 			String iPositionPath = c.getiPosition();
 			String iPath = c.getIpath();
-			if (c.getCategorization()
-					.equals(TestDataCategorization.Indifferent)) {
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.ContentIndifferent)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath,
-						cTreeNode);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.Configurable)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath,
-						cTreeNode);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.SystemGenerated)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath,
-						cTreeNode);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.TestCaseProper)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath,
-						cTreeNode);
+			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
+			} else if (c.getCategorization().equals(TestDataCategorization.ContentIndifferent)) {
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			} else if (c.getCategorization().equals(TestDataCategorization.Configurable)) {
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			} else if (c.getCategorization().equals(TestDataCategorization.SystemGenerated)) {
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+			} else if (c.getCategorization().equals( TestDataCategorization.TestCaseProper)) {
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(
 					TestDataCategorization.NotValued)) {
 			} else if (c.getCategorization().equals(

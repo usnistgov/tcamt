@@ -82,10 +82,8 @@
 				<table width="100%">
 					<tr>
 						<td align="right">
-							<p:commandButton value="Save Message"
-								icon="ui-icon-disk"
-								update=":#{p:component('messageForm')}"
-								actionListener="#{messageRequestBean.saveMessage}"/>
+							<p:commandButton value="Save Message" icon="ui-icon-disk" update=":#{p:component('messageForm')}" actionListener="#{messageRequestBean.saveMessage}"/>
+							<p:commandButton value="Close" actionListener="#{messageRequestBean.closeMessage}" update=":#{p:component('messageForm')}" icon="ui-icon-close" />	
 						</td>
 					</tr>
 				</table>

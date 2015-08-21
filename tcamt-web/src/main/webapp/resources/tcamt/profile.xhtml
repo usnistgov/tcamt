@@ -85,7 +85,7 @@
 						<h:outputText value="#{profile.constraintId}" />
 					</p:column>
 					
-					<p:column headerText="Test Data Specification HTML XSLT">
+					<p:column headerText="TD HTML XSLT">
 						<h:outputText
 							rendered="#{profile.testDataSpecificationXSLT != null}"
 							value="Uploaded" />
@@ -101,7 +101,7 @@
 						</p:commandButton>
 					</p:column>
 
-					<p:column headerText="Test Data Specification JSON XSLT">
+					<p:column headerText="TD JSON XSLT">
 						<h:outputText
 							rendered="#{profile.testDataSpecificationJSONXSLT != null}"
 							value="Uploaded" />
@@ -111,6 +111,22 @@
 						<p:commandButton
 							rendered="#{profile.testDataSpecificationJSONXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 							actionListener="#{conformanceProfileRequestBean.delTDSJSONXSLT}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+					
+					<p:column headerText="TD TAB XSLT">
+						<h:outputText
+							rendered="#{profile.testDataSpecificationTabXSLT != null}"
+							value="Uploaded" />
+						<h:outputText
+							rendered="#{profile.testDataSpecificationTabXSLT == null}"
+							value="NULL" />
+						<p:commandButton
+							rendered="#{profile.testDataSpecificationTabXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+							actionListener="#{conformanceProfileRequestBean.delTDSTABXSLT}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
 							title="Del">
 							<f:attribute name="profile" value="#{profile}" />
@@ -478,6 +494,14 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadTestDataSpecificationJSONXSLT}"
+						mode="advanced" auto="true" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+				
+				<h:outputText value="Test Data Specification TAB XSLT: " />
+				<h:panelGrid columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadTestDataSpecificationTABXSLT}"
 						mode="advanced" auto="true" sizeLimit="10000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>

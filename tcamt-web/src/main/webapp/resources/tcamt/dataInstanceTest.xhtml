@@ -92,10 +92,16 @@
 					<p:layoutUnit position="north" style="border: 0;">
 						<table width="100%">
 							<tr>
-								<td align="right"><p:commandButton value="Save Test Plan"
+								<td align="right">
+									<p:commandButton value="Save Test Plan"
 										actionListener="#{dataInstanceTestPlanRequestBean.saveTestPlan}"
 										update=":#{p:component('testplanTable')} :#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
-										icon="ui-icon-disk" title="Save Test Plan" /></td>
+										icon="ui-icon-disk" title="Save Test Plan" />
+									<p:commandButton value="Close"
+										actionListener="#{dataInstanceTestPlanRequestBean.closeTestPlan}"
+										update=":#{p:component('DataInstanceTestForm')}"
+										icon="ui-icon-close" title="Close Test Plan" />	
+								</td>
 							</tr>
 						</table>
 					</p:layoutUnit>

@@ -333,6 +333,11 @@ public class MessageRequestBean implements Serializable {
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
 	}
+	
+	public void closeMessage() {
+		this.init();
+		this.sessionBeanTCAMT.setmActiveIndex(0);	
+	}
 
 	public void saveMessage() {
 		try{

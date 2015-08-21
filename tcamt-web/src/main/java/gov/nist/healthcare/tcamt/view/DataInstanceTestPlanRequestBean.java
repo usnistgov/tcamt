@@ -262,6 +262,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	public void closeTestPlan()  {
+		this.init();
+		
+	}
+	
 	public void saveTestPlan()  {
 		try{
 			if(this.selectedTestPlan.getId() <= 0){
@@ -1494,6 +1499,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
 						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
 						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 						this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
@@ -1515,6 +1521,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
 					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
 					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 					this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
@@ -1542,6 +1549,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
 						this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
 						this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 						this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
@@ -1563,6 +1571,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
 					this.generateJurorDocumentRB(out, dits.getMessage(), teststepPath, tp, needPDF);
 					this.generateJurorDocumentJSONRB(out, dits.getMessage(), teststepPath, tp);
 					this.generateTestStepConstraintsRB(out, dits.getMessage(), teststepPath);
@@ -1669,9 +1678,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
 			
-			
-			System.out.println(m.getXmlEncodedNISTMessage());
-			
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
 			String xsltStr = IOUtils.toString(xsltReader);
@@ -1738,6 +1744,33 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        out.closeEntry();
 			}
 			
+		}
+	}
+	
+	private void generateTestDataSpecificationTABRB(ZipOutputStream out, Message m, String path) throws IOException{
+		if(m.getConformanceProfile().getTestDataSpecificationTabXSLT() != null){
+			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getTestDataSpecificationTabXSLT().getBytes());
+			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedNISTMessage().getBytes());
+			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+			String xsltStr = IOUtils.toString(xsltReader);
+			String sourceStr = IOUtils.toString(sourceReader);
+			
+			String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			
+			if(testDataSpecificationHTMLStr != null && !testDataSpecificationHTMLStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "TestDataSpecification-ng-tab.html"));
+				
+		        InputStream inTestDataSpecification = IOUtils.toInputStream(testDataSpecificationHTMLStr, "UTF-8");
+		        int lenTestDataSpecification;
+		        while ((lenTestDataSpecification = inTestDataSpecification.read(buf)) > 0) {
+		            out.write(buf, 0, lenTestDataSpecification);
+		        }
+		        inTestDataSpecification.close();
+		        out.closeEntry();
+			}
 		}
 	}
 	
