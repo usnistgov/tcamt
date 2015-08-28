@@ -85,6 +85,54 @@
 						<h:outputText value="#{profile.constraintId}" />
 					</p:column>
 					
+					<p:column headerText="MC HTML XSLT">
+						<h:outputText
+							rendered="#{profile.messageContentXSLT != null}"
+							value="Uploaded" />
+						<h:outputText
+							rendered="#{profile.messageContentXSLT == null}"
+							value="NULL" />
+						<p:commandButton
+							rendered="#{profile.messageContentXSLT!= null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+							actionListener="#{conformanceProfileRequestBean.delMCHTMLXSLT}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+
+					<p:column headerText="MC JSON XSLT">
+						<h:outputText
+							rendered="#{profile.messageContentJSONXSLT != null}"
+							value="Uploaded" />
+						<h:outputText
+							rendered="#{profile.messageContentJSONXSLT == null}"
+							value="NULL" />
+						<p:commandButton
+							rendered="#{profile.messageContentJSONXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+							actionListener="#{conformanceProfileRequestBean.delMCJSONXSLT}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+					
+					<p:column headerText="MC TAB XSLT">
+						<h:outputText
+							rendered="#{profile.messageContentTabXSLT != null}"
+							value="Uploaded" />
+						<h:outputText
+							rendered="#{profile.messageContentTabXSLT == null}"
+							value="NULL" />
+						<p:commandButton
+							rendered="#{profile.messageContentTabXSLT != null and sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+							actionListener="#{conformanceProfileRequestBean.delMCTABXSLT}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="profile" value="#{profile}" />
+						</p:commandButton>
+					</p:column>
+					
 					<p:column headerText="TD HTML XSLT">
 						<h:outputText
 							rendered="#{profile.testDataSpecificationXSLT != null}"
@@ -480,7 +528,29 @@
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
+				<h:outputText value="Message Content HTML XSLT: " />
+				<h:panelGrid columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadMessageContentHTMLXSLT}"
+						mode="advanced" auto="true" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
 
+				<h:outputText value="Message ContentJSON XSLT: " />
+				<h:panelGrid columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadMessageContentJSONXSLT}"
+						mode="advanced" auto="true" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+				
+				<h:outputText value="Message Content TAB XSLT: " />
+				<h:panelGrid columns="1" cellpadding="0">
+					<p:fileUpload
+						fileUploadListener="#{conformanceProfileRequestBean.uploadMessageContentTABXSLT}"
+						mode="advanced" auto="true" sizeLimit="10000000"
+						allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
 
 				<h:outputText value="Test Data Specification HTML XSLT: " />
 				<h:panelGrid columns="1" cellpadding="0">

@@ -180,6 +180,18 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.newIntegratedProfile.setValueSet(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
+	public void uploadMessageContentHTMLXSLT(FileUploadEvent event) throws IOException{
+		this.selectedProfile.setMessageContentXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
+	public void uploadMessageContentJSONXSLT(FileUploadEvent event) throws IOException{
+		this.selectedProfile.setMessageContentJSONXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
+	public void uploadMessageContentTABXSLT(FileUploadEvent event) throws IOException{
+		this.selectedProfile.setMessageContentTabXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
+	}
+	
 	public void uploadTestDataSpecificationXSLT(FileUploadEvent event) throws IOException{
 		this.selectedProfile.setTestDataSpecificationXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
@@ -260,6 +272,27 @@ public class ConformanceProfileRequestBean implements Serializable {
 		
 		FacesContext context = FacesContext.getCurrentInstance();
         context.addMessage(null, new FacesMessage("Juror Document Uploaded.",  "Juror Document has been uploaded."));
+	}
+	
+	public void delMCHTMLXSLT(ActionEvent event) {
+		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
+		cp.setMessageContentXSLT(null);
+		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
+		this.sessionBeanTCAMT.updateConformanceProfiles();
+	}
+	
+	public void delMCJSONXSLT(ActionEvent event) {
+		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
+		cp.setMessageContentJSONXSLT(null);
+		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
+		this.sessionBeanTCAMT.updateConformanceProfiles();
+	}
+	
+	public void delMCTABXSLT(ActionEvent event) {
+		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
+		cp.setMessageContentTabXSLT(null);
+		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
+		this.sessionBeanTCAMT.updateConformanceProfiles();
 	}
 	
 	public void delTDSHTMLXSLT(ActionEvent event) {

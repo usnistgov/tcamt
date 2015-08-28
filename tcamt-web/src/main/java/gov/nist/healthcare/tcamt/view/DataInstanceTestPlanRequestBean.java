@@ -680,9 +680,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
 				this.selectedInstanceSegment = null;
 				
+				this.generateMessageContentHTML();				
 				this.generateTestDataSpecificationHTML();
 				this.generateJurorDocumentHTML();
-				this.generateMessageContentHTML();
 			}
 			this.updateFilteredInstanceSegments();
 //			FacesContext context = FacesContext.getCurrentInstance();
@@ -879,9 +879,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 								this.manageInstanceService.loadMessage(ts.getMessage());
 								this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments, tc.getName());
 							}
-							String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
-							packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
-							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+
+							if(ts.getMessage().getConformanceProfile().getMessageContentXSLT()!= null){
+								InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+								InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedMessageContent().getBytes());
+								Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+								Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+								String xsltStr = IOUtils.toString(xsltReader);
+								String sourceStr = IOUtils.toString(sourceReader);
+								
+								String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+								packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
+								packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+							}
 							
 							if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
 								InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
@@ -957,9 +967,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							this.manageInstanceService.loadMessage(ts.getMessage());
 							this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments, tc.getName());
 						}
-						String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(ts.getMessage(), instanceSegments);
-						packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
-						packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+						
+						if(ts.getMessage().getConformanceProfile().getMessageContentXSLT()!= null){
+							InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+							InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedMessageContent().getBytes());
+							Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+							Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+							String xsltStr = IOUtils.toString(xsltReader);
+							String sourceStr = IOUtils.toString(sourceReader);
+							
+							String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+							packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
+							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
+						}
 						
 						if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
 							InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
@@ -1445,8 +1465,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentHTML(){
-		this.setMessageContentHTML(this.manageInstanceService.generateMessageContentHTML(this.selectedTestStep.getMessage(), instanceSegments));
+	private void generateMessageContentHTML() throws IOException{
+		if(this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT() != null){
+			InputStream xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedMessageContent().getBytes());
+			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+			String xsltStr = IOUtils.toString(xsltReader);
+			String sourceStr = IOUtils.toString(sourceReader);
+			this.messageContentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);	
+		}	
+		
+		
 	}
 	
 	private void generateJurorDocumentHTML() throws IOException {
@@ -1495,8 +1525,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
+							this.manageInstanceService.loadMessage(dits.getMessage());
+							this.manageInstanceService.loadMessageInstance(dits.getMessage(), this.instanceSegments, ditc.getName());
+						}
+						
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateMessageContentJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateMessageContentTABRB(out, dits.getMessage(), teststepPath);
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 						this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
@@ -1517,8 +1554,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
+						this.manageInstanceService.loadMessage(dits.getMessage());
+						this.manageInstanceService.loadMessageInstance(dits.getMessage(), this.instanceSegments, ditc.getName());
+					}
+					
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateMessageContentJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateMessageContentTABRB(out, dits.getMessage(), teststepPath);
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 					this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
@@ -1545,8 +1589,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 					this.generateTestStepJsonRB(out, dits, teststepPath);
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
+							this.manageInstanceService.loadMessage(dits.getMessage());
+							this.manageInstanceService.loadMessageInstance(dits.getMessage(), this.instanceSegments, ditc.getName());
+						}
+						
 						this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
+						this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+						this.generateMessageContentJSONRB(out, dits.getMessage(), teststepPath);
+						this.generateMessageContentTABRB(out, dits.getMessage(), teststepPath);
 						this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 						this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 						this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
@@ -1567,8 +1618,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath, needPDF);
 				this.generateTestStepJsonRB(out, dits, teststepPath);
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
+					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
+						this.manageInstanceService.loadMessage(dits.getMessage());
+						this.manageInstanceService.loadMessageInstance(dits.getMessage(), this.instanceSegments, ditc.getName());
+					}
+					
 					this.generateMessageRB(out, dits.getMessage().getHl7EndcodedMessage(), teststepPath);
-					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF, ditc.getName());
+					this.generateMessageContentRB(out, dits.getMessage(), teststepPath, needPDF);
+					this.generateMessageContentJSONRB(out, dits.getMessage(), teststepPath);
+					this.generateMessageContentTABRB(out, dits.getMessage(), teststepPath);
 					this.generateTestDataSpecificationRB(out, dits.getMessage(), teststepPath, needPDF);
 					this.generateTestDataSpecificationJSONRB(out, dits.getMessage(), teststepPath);
 					this.generateTestDataSpecificationTABRB(out, dits.getMessage(), teststepPath);
@@ -1819,83 +1877,106 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF, String testCaseId) throws Exception{		
-		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.html"));
-		this.instanceSegments = new ArrayList<InstanceSegment>();
-		if(m.getHl7EndcodedMessage() != null && !m.getHl7EndcodedMessage().equals("")){
-			this.manageInstanceService.loadMessage(m);
-			this.manageInstanceService.loadMessageInstance(m, this.instanceSegments, testCaseId);
+	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws IOException{
+		if(m.getConformanceProfile().getMessageContentXSLT() != null){
+			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getMessageContentXSLT().getBytes());
+			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedMessageContent().getBytes());
+			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+			String xsltStr = IOUtils.toString(xsltReader);
+			String sourceStr = IOUtils.toString(sourceReader);
+			
+			String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			
+			if(messageContentHTMLStr != null && !messageContentHTMLStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.html"));
+				
+		        InputStream inMessageContent = IOUtils.toInputStream(messageContentHTMLStr, "UTF-8");
+		        int lenMessageContent;
+		        while ((lenMessageContent = inMessageContent.read(buf)) > 0) {
+		            out.write(buf, 0, lenMessageContent);
+		        }
+		        inMessageContent.close();
+		        out.closeEntry();
+		        
+		        if(needPDF){
+		        	out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.pdf"));
+			        
+			        String tempFileName = this.htmlStringToPDF(messageContentHTMLStr);
+			        File zipFile = new File(tempFileName + ".pdf");	        
+			        FileInputStream inMessageContentPDF = new FileInputStream(zipFile);
+			        
+			        int lenMessageContentPDF;
+			        while ((lenMessageContentPDF = inMessageContentPDF.read(buf)) > 0) {
+			            out.write(buf, 0, lenMessageContentPDF);
+			        }
+			        inMessageContentPDF.close();
+			        out.closeEntry();
+			        
+			        this.fileDelete(tempFileName + ".html");
+			        this.fileDelete(tempFileName + ".pdf");
+		        }
+			}
 		}
-		
-        String messageContentHTMLStr = this.manageInstanceService.generateMessageContentHTML(m, instanceSegments);
-        
-        InputStream inMessageContent = IOUtils.toInputStream(messageContentHTMLStr, "UTF-8");
-        int lenMessageContent;
-        while ((lenMessageContent = inMessageContent.read(buf)) > 0) {
-            out.write(buf, 0, lenMessageContent);
-        }
-        inMessageContent.close();
-        out.closeEntry();
-        
-        out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.json"));			
-        String messageContentJSONStr = this.manageInstanceService.generateMessageContentJSON(m, instanceSegments);
-        
-        JSONObject xmlJSONObj = XML.toJSONObject(messageContentJSONStr);
-        InputStream inMessageContentJSON = IOUtils.toInputStream(xmlJSONObj.toString(), "UTF-8");
-        int lenMessageContentJSON;
-        while ((lenMessageContentJSON = inMessageContentJSON.read(buf)) > 0) {
-            out.write(buf, 0, lenMessageContentJSON);
-        }
-        inMessageContentJSON.close();
-        out.closeEntry();
-        
-        if(needPDF){
-        	out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.pdf"));
-            String tempFileName = this.htmlStringToPDF(messageContentHTMLStr);
-            File zipFile = new File(tempFileName + ".pdf");	        
-            FileInputStream inMessageContentPDF = new FileInputStream(zipFile);
-            
-            int lenMessageContentPDF;
-            while ((lenMessageContentPDF = inMessageContentPDF.read(buf)) > 0) {
-                out.write(buf, 0, lenMessageContentPDF);
-            }
-            inMessageContentPDF.close();
-            out.closeEntry();
-            this.fileDelete(tempFileName + ".html");
-            this.fileDelete(tempFileName + ".pdf");
-        }
 	}
 	
-//	private void generateProfilesConstraintsValueSetsRB(ZipOutputStream out, DataInstanceTestPlan tp) throws SAXException, ParserConfigurationException, Exception{
-//		Map<Long, IntegratedProfile> integratedProfiles = new HashMap<Long, IntegratedProfile>();
-//		
-//		
-//		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
-//			for(DataInstanceTestCase ditc:ditg.getTestcases()){
-//				for(DataInstanceTestStep dits:ditc.getTeststeps()){
-//					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
-//						integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
-//					}
-//				}
-//			}
-//		}
-//		
-//		for(DataInstanceTestCase ditc:tp.getTestcases()){
-//			for(DataInstanceTestStep dits:ditc.getTeststeps()){
-//				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
-//					integratedProfiles.put(dits.getMessage().getConformanceProfile().getIntegratedProfile().getId(), dits.getMessage().getConformanceProfile().getIntegratedProfile());
-//				}
-//			}
-//		}
-//		
-//		for(Long id:integratedProfiles.keySet()){
-//			this.generateProfileRB(out, integratedProfiles.get(id).getProfile(), integratedProfiles.get(id).getName() + "_Profile.xml");
-//			this.generateValueSetRB(out, integratedProfiles.get(id).getValueSet(), integratedProfiles.get(id).getName() + "_ValueSetLibrary.xml");
-//			this.generateConstraintRB(out, integratedProfiles.get(id).getConstraints(), integratedProfiles.get(id).getName() + "_Constraints.xml");	
-//		}
-//	}
+	private void generateMessageContentTABRB(ZipOutputStream out, Message m, String path) throws IOException{
+		if(m.getConformanceProfile().getMessageContentTabXSLT() != null){
+			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getMessageContentTabXSLT().getBytes());
+			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedMessageContent().getBytes());
+			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+			String xsltStr = IOUtils.toString(xsltReader);
+			String sourceStr = IOUtils.toString(sourceReader);
+			
+			String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			
+			if(messageContentHTMLStr != null && !messageContentHTMLStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent-ng-tab.html"));
+				
+		        InputStream inMessageContent = IOUtils.toInputStream(messageContentHTMLStr, "UTF-8");
+		        int lenMessageContent;
+		        while ((lenMessageContent = inMessageContent.read(buf)) > 0) {
+		            out.write(buf, 0, lenMessageContent);
+		        }
+		        inMessageContent.close();
+		        out.closeEntry();
+			}
+		}
+	}
 	
+	private void generateMessageContentJSONRB(ZipOutputStream out, Message m, String path) throws IOException{
+		if(m.getConformanceProfile().getMessageContentJSONXSLT() != null){
+			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getMessageContentJSONXSLT().getBytes());
+			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedMessageContent().getBytes());
+			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
+			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
+			String xsltStr = IOUtils.toString(xsltReader);
+			String sourceStr = IOUtils.toString(sourceReader);
+			
+			String messageContentJSONStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+			
+			if(messageContentJSONStr != null && !messageContentJSONStr.equals("")){
+				byte[] buf = new byte[1024];
+				
+				out.putNextEntry(new ZipEntry(path + File.separator + "MessageContent.json"));
+				
+		        InputStream inMessageContent = IOUtils.toInputStream(messageContentJSONStr, "UTF-8");
+		        int lenMessageContent;
+		        while ((lenMessageContent = inMessageContent.read(buf)) > 0) {
+		            out.write(buf, 0, lenMessageContent);
+		        }
+		        inMessageContent.close();
+		        out.closeEntry();
+			}
+			
+		}
+	}
+
 	private void generateMetaDataRB(ZipOutputStream out, Metadata md) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry("About" + File.separator + "Metadata.json"));
@@ -1936,48 +2017,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
         out.closeEntry();
 	}
-	
-//	private void generateProfileRB(ZipOutputStream out, String profileStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
-//		byte[] buf = new byte[1024];
-//		out.putNextEntry(new ZipEntry("Global" + File.separator + "Profiles" + File.separator + fileName));
-//		if(profileStr != null){
-//			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(profileStr)),"UTF-8");
-//			int lenMessage;
-//            while ((lenMessage = inMessage.read(buf)) > 0) {
-//                out.write(buf, 0, lenMessage);
-//            }
-//            inMessage.close();
-//		}
-//        out.closeEntry();
-//	}
-	
-//	private void generateConstraintRB(ZipOutputStream out, String constraintStr, String fileName) throws IOException {
-//		byte[] buf = new byte[1024];
-//		out.putNextEntry(new ZipEntry("Global" + File.separator + "Constraints" + File.separator + fileName));		
-//		if(constraintStr != null){
-//			InputStream inMessage = IOUtils.toInputStream(constraintStr, "UTF-8");
-//			int lenMessage;
-//			while ((lenMessage = inMessage.read(buf)) > 0) {
-//				out.write(buf, 0, lenMessage);
-//			}
-//			inMessage.close();
-//		}
-//		out.closeEntry();
-//	}
-	
-//	private void generateValueSetRB(ZipOutputStream out, String valueSetStr, String fileName) throws SAXException, ParserConfigurationException, Exception {
-//		byte[] buf = new byte[1024];
-//		out.putNextEntry(new ZipEntry("Global" + File.separator + "ValueSetLibrary" + File.separator + fileName));
-//		if(valueSetStr != null){
-//			InputStream inMessage = IOUtils.toInputStream(XMLManager.docToString(XMLManager.stringToDom(valueSetStr)), "UTF-8");
-//			int lenMessage;
-//            while ((lenMessage = inMessage.read(buf)) > 0) {
-//                out.write(buf, 0, lenMessage);
-//            }
-//            inMessage.close();
-//		}
-//        out.closeEntry();
-//	}
 	
 	private String htmlStringToPDF(String htmlStr) throws IOException{
 		ClassLoader classLoader = this.getClass().getClassLoader();

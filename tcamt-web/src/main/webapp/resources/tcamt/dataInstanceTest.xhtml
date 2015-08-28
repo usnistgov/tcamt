@@ -89,6 +89,7 @@
 			</p:tab>
 			<p:tab title="Data Instance Test Plan DashBoard">
 				<p:layout style="min-width:400px;min-height:700px;">
+					<p:ajax event="resize" update=":#{p:component('DataInstanceTestForm')}"  />
 					<p:layoutUnit position="north" style="border: 0;">
 						<table width="100%">
 							<tr>
@@ -105,15 +106,13 @@
 							</tr>
 						</table>
 					</p:layoutUnit>
-					<p:layoutUnit position="west" header="TestPlan Structure"
-						resizable="true" size="300" minSize="40" maxSize="500"
-						style="border: 0;" collapsible="true">
+					<p:layoutUnit position="west" header="TestPlan Structure" resizable="true" style="border: 0;" collapsible="true" size="25%">
 						<p:tree id="testplanTree" animate="false"
 							value="#{dataInstanceTestPlanRequestBean.testplanRoot}"
 							draggable="true" droppable="true" var="node"
 							selectionMode="single"
 							selection="#{dataInstanceTestPlanRequestBean.selectedNode}"
-							dynamic="true" style="border-width:0;">
+							dynamic="true" style="border-width:0;width:100%;height:100%;">
 							<p:ajax event="expand" listener="#{dataInstanceTestPlanRequestBean.onNodeExpand}" update=":#{p:component('growl_DataInstanceTest')}"/>
         					<p:ajax event="collapse" listener="#{dataInstanceTestPlanRequestBean.onNodeCollapse}" update=":#{p:component('growl_DataInstanceTest')}"/>
 							<p:ajax event="select" listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
@@ -255,49 +254,64 @@
 									</table>
 								</p:tab>
 								<p:tab title="Test Step Story">
-									<h:panelGrid columns="2" cellpadding="10" style="width:100%;">
-										<h:outputText value="Test Story Desc: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-			 								<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Comments: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Pre-Condition: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Post-Condition: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Test Objectives: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Evaluation Criteria: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Notes: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-									</h:panelGrid>
+									<p:accordionPanel dynamic="true" cache="true">
+        								<p:tab title="Description">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+			 										<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Comments">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Pre-Condition">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Post-Condition">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Test Objectives">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Evaluation Criteria">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Notes">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+    								</p:accordionPanel>
 								</p:tab>
 
 								<p:tab title="HL7 Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
@@ -365,49 +379,64 @@
 									</h:panelGrid>
 								</p:tab>
 								<p:tab title="Test Case Story">
-									<h:panelGrid columns="2" cellpadding="10" style="width:100%;">
-										<h:outputText value="Test Story Desc: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-			 								<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Comments: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Pre-Condition: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Post-Condition: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Test Objectives: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Evaluation Criteria: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-
-										<h:outputText value="Notes: " />
-										<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
-											toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
-											<p:ajax event="save" />
-										</pe:ckEditor>
-									</h:panelGrid>
+									<p:accordionPanel dynamic="true" cache="true">
+        								<p:tab title="Description">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+			 										<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Comments">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Pre-Condition">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Post-Condition">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Test Objectives">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Evaluation Criteria">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+        								<p:tab title="Notes">
+            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
+													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
+													<p:ajax event="save" />
+												</pe:ckEditor>
+            								</h:panelGrid>
+        								</p:tab>
+    								</p:accordionPanel>
 								</p:tab>
 							</p:tabView>
 							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup != null}">

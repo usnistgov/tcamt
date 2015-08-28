@@ -9,7 +9,7 @@ public class PDFGenerator {
 
 	public static void main(String[] args) {
 		PDFGenerator gen = new PDFGenerator();
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_Pilot Isolated Test Plan");
+		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_ONC 2015 Test Plan");
 
 	}
 
@@ -33,7 +33,6 @@ public class PDFGenerator {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 	
 	public void genPDF(String htmlFileName, String pdfFileName) throws IOException{

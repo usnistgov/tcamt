@@ -59,6 +59,10 @@ public class Message implements Cloneable, Serializable{
 	private String xmlEncodedNISTMessage;
 	
 	@JsonIgnore
+	@Column(columnDefinition="longtext")
+	private String xmlEncodedMessageContent;
+	
+	@JsonIgnore
 	@ManyToOne
     @JoinColumn(name="conformance_profile_id")
 	private ConformanceProfile conformanceProfile;
@@ -251,5 +255,15 @@ public class Message implements Cloneable, Serializable{
 	public void setConformanceProfile(ConformanceProfile conformanceProfile) {
 		this.conformanceProfile = conformanceProfile;
 	}
+
+	public String getXmlEncodedMessageContent() {
+		return xmlEncodedMessageContent;
+	}
+
+	public void setXmlEncodedMessageContent(String xmlEncodedMessageContent) {
+		this.xmlEncodedMessageContent = xmlEncodedMessageContent;
+	}
+	
+	
 	
 }

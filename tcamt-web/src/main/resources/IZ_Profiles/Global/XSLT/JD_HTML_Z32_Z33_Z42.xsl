@@ -218,17 +218,33 @@
                         font-weight:bold;
                         color:#0840F8;
                     }</style>
-                <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"/>
-                <script type="text/javascript">
-                    $(function(){
-                    
-                    $("textarea").on("keyup",function (){
-                    var h=$(this);
-                    h.height(30).height(h[0].scrollHeight);
-                    });
-                                               
-                    });
-                </script>
+                <script>
+                        function comment(){
+                        
+                        $("textarea").on("keyup",function (){
+                        var h=$(this);
+                        h.height(30).height(h[0].scrollHeight);
+                        });
+                        
+                        }
+                        if(typeof jQuery =='undefined') {
+                        var headTag = document.getElementsByTagName("head")[0];
+                        var jqTag = document.createElement('script');
+                        jqTag.type = 'text/javascript';
+                        jqTag.src = 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js';
+                        jqTag.onload = comment;
+                        headTag.appendChild(jqTag);
+                        }
+                        else {  
+                        $(document).ready(function (){
+                        
+                        comment();
+                        
+                        })
+                        
+                        }
+                    </script>
+
             </head>
             <body>
 
@@ -254,28 +270,28 @@
                                 <th>Juror ID</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Juror Name</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>HIT System Tested</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Inspection Date/Time</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
                             <tr>
@@ -292,10 +308,10 @@
 
                                             <tr>
                                                 <td>
-                                                  <input type="checkbox"/>
+                                                  <input type="checkbox" value=""/>
                                                 </td>
                                                 <td>
-                                                  <input type="checkbox"/>
+                                                  <input type="checkbox" value=""/>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -306,14 +322,14 @@
                                 <th>Reason Failed</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>Juror Comments</th>
                                 <td>
                                     <input style="background: 1px  #E2E2E2;" type="text"
-                                        maxlength="50"/>
+                                        maxlength="50" value=""/>
                                 </td>
                             </tr>
 
