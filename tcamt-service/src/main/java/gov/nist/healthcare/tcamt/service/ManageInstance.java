@@ -435,6 +435,7 @@ public class ManageInstance implements Serializable {
 					
 					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
 					Table fieldTable = m.getTables().findOne(field.getTable());
+					
 					Predicate fieldPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]");
 					List<ConformanceStatement> fieldConformanceStatements = this.findConformanceStatements(segment.getConformanceStatements(), (i+1) + "[1]");
 					
@@ -451,9 +452,12 @@ public class ManageInstance implements Serializable {
 
 					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
 						// TODO OBX Dynamic mapping needed
-						fieldDT = m.getDatatypes().findOneDatatype(obx5DTStr+"_IZ");
-						if(fieldDT == null){
-							fieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
+						Datatype dynamicFieldDT = m.getDatatypes().findOneDatatype(obx5DTStr+"_IZ");
+						if(dynamicFieldDT == null){
+							dynamicFieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
+						}
+						if(dynamicFieldDT != null){
+							fieldDT = dynamicFieldDT;
 						}
 					}
 					

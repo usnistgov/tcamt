@@ -37,7 +37,7 @@
             <Segment Ref="MSH" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="EVN" Usage="R" Min="1" Max="1"/>
-            <Segment Ref="PID" Usage="R" Min="1" Max="1"/>
+            <Segment Ref="PID_A03_A04_A08" Usage="R" Min="1" Max="1"/>
             <Segment Ref="PD1" Usage="O" Min="0" Max="1"/>
             <Segment Ref="ROL" Usage="O" Min="0" Max="*"/>
             <Segment Ref="NK1" Usage="O" Min="0" Max="*"/>
@@ -63,11 +63,11 @@
             <Segment Ref="ACC" Usage="O" Min="0" Max="1"/>
             <Segment Ref="PDA" Usage="O" Min="0" Max="1"/>
         </Message>
-        <Message ID="0d741773-619a-4ec1-b6c2-2589faa75b93" Type="ADT" Event="A04" StructID="ADT_A01" Description="ADT message">
+        <Message ID="0d741773-619a-4ec1-b6c2-2589faa75b93" Type="ADT" Event="A04" StructID="ADT_A04" Description="ADT message">
             <Segment Ref="MSH" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="EVN" Usage="R" Min="1" Max="1"/>
-            <Segment Ref="PID" Usage="R" Min="1" Max="1"/>
+            <Segment Ref="PID_A03_A04_A08" Usage="R" Min="1" Max="1"/>
             <Segment Ref="PD1" Usage="O" Min="0" Max="1"/>
             <Segment Ref="ROL" Usage="O" Min="0" Max="*"/>
             <Segment Ref="NK1" Usage="O" Min="0" Max="*"/>
@@ -95,11 +95,11 @@
             <Segment Ref="UB2" Usage="O" Min="0" Max="1"/>
             <Segment Ref="PDA" Usage="O" Min="0" Max="1"/>
         </Message>        
-        <Message ID="0d741773-619a-4ec1-b6c2-2589faa75b94" Type="ADT" Event="A08" StructID="ADT_A01" Description="ADT message">
+        <Message ID="0d741773-619a-4ec1-b6c2-2589faa75b94" Type="ADT" Event="A08" StructID="ADT_A08" Description="ADT message">
             <Segment Ref="MSH" Usage="R" Min="1" Max="1"/>
             <Segment Ref="SFT" Usage="O" Min="0" Max="*"/>
             <Segment Ref="EVN" Usage="R" Min="1" Max="1"/>
-            <Segment Ref="PID" Usage="R" Min="1" Max="1"/>
+            <Segment Ref="PID_A03_A04_A08" Usage="R" Min="1" Max="1"/>
             <Segment Ref="PD1" Usage="O" Min="0" Max="1"/>
             <Segment Ref="ROL" Usage="O" Min="0" Max="*"/>
             <Segment Ref="NK1" Usage="O" Min="0" Max="*"/>
@@ -169,7 +169,7 @@
             <Field Name="Event Occurred" Usage="X" Min="0" Max="1" Datatype="TS" MinLength="1" MaxLength="26" ItemNo="01278"/>
             <Field Name="Event Facility" Usage="R" Min="1" Max="1" Datatype="HD" MinLength="1" MaxLength="241" ItemNo="01534"/>
         </Segment>
-        <Segment ID="PID" Name="PID" Description="Patient Identification">
+        <Segment ID="PID_A03_A04_A08" Name="PID" Description="Patient Identification">
             <Field Name="Set ID - PID" Usage="R" Min="1" Max="1" Datatype="SI" MinLength="1" MaxLength="4" ItemNo="00104"/>
             <Field Name="Patient ID" Usage="X" Min="0" Max="0" Datatype="CX" MinLength="1" MaxLength="20" ItemNo="00105"/>
             <Field Name="Patient Identifier List" Usage="R" Min="1" Max="*" Datatype="CX" MinLength="1" MaxLength="478" ItemNo="00106"/>
@@ -553,6 +553,15 @@
             <Field Name="Disability Unable to Work Date" Usage="O" Min="0" Max="1" Datatype="DT" MinLength="1" MaxLength="8" ItemNo="01290"/>
         </Segment>
         <Segment ID="OBX" Name="OBX" Description="Observation/Result">
+            <DynamicMapping>
+                <Mapping Position="5" Reference="2">
+                    <Case Value="TS" Datatype="TS"/>
+                    <Case Value="TX" Datatype="TX"/>
+                    <Case Value="NM" Datatype="NM"/>
+                    <Case Value="CWE" Datatype="CWE"/>
+                    <Case Value="XAD" Datatype="XAD"/>
+                </Mapping>
+            </DynamicMapping>
             <Field Name="Set ID - OBX" Usage="R" Min="1" Max="1" Datatype="SI" MinLength="1" MaxLength="4" ItemNo="00569"/>
             <Field Name="Value Type" Usage="R" Min="1" Max="1" Datatype="ID" MinLength="1" MaxLength="3" Binding="0125" BindingStrength="R"  ItemNo="00570"/>
             <Field Name="Observation Identifier" Usage="R" Min="1" Max="1" Datatype="CE" MinLength="1" MaxLength="478" ItemNo="00571"/>
@@ -1095,7 +1104,18 @@
             <Component Name="Name of Alternate Coding System" Usage="C" Datatype="ID" MinLength="1" MaxLength="20" Binding="0396" BindingStrength="R" />
             <Component Name="Coding System Version ID" Usage="O" Datatype="ST" MinLength="1" MaxLength="10"/>
             <Component Name="Alternate Coding System Version ID" Usage="O" Datatype="ST" MinLength="1" MaxLength="10"/>
-            <Component Name="Original Text" Usage="O" Datatype="ST" MinLength="1" MaxLength="199"/>
+            <Component Name="Original Text" Usage="RE" Datatype="ST" MinLength="1" MaxLength="199"/>
+        </Datatype>
+        <Datatype ID="CWE_OBX" Name="CWE" Description="Coded with Exceptions">
+            <Component Name="Identifier" Usage="R" Datatype="ST" MinLength="1" MaxLength="20"/>
+            <Component Name="Text" Usage="RE" Datatype="ST" MinLength="1" MaxLength="199"/>
+            <Component Name="Name of Coding System" Usage="R" Datatype="ID" MinLength="1" MaxLength="20" Binding="0396" BindingStrength="R" />
+            <Component Name="Alternate Identifier" Usage="RE" Datatype="ST" MinLength="1" MaxLength="20"/>
+            <Component Name="Alternate Text" Usage="RE" Datatype="ST" MinLength="1" MaxLength="199"/>
+            <Component Name="Name of Alternate Coding System" Usage="C" Datatype="ID" MinLength="1" MaxLength="20" Binding="0396" BindingStrength="R" />
+            <Component Name="Coding System Version ID" Usage="O" Datatype="ST" MinLength="1" MaxLength="10"/>
+            <Component Name="Alternate Coding System Version ID" Usage="O" Datatype="ST" MinLength="1" MaxLength="10"/>
+            <Component Name="Original Text" Usage="RE" Datatype="ST" MinLength="1" MaxLength="199"/>
         </Datatype>
         <Datatype ID="IS" Name="IS" Description=" CODED VALUE FOR USER-DEFINED TABLES"/>
         <Datatype ID="DDI" Name="DDI" Description="Daily Deductible Information">
@@ -1122,6 +1142,24 @@
             <Component Name="Address Validity Range" Usage="X" Datatype="ST"  MinLength="0" MaxLength="0"/>
             <Component Name="Effective Date" Usage="O" Datatype="TS" MinLength="1" MaxLength="26"/>
             <Component Name="Expiration Date" Usage="O" Datatype="TS" MinLength="1" MaxLength="26"/>
+        </Datatype>
+        <Datatype ID="XAD_OBX" Name="XAD" Description="Extended Address">
+            <Component Name="Street Address" Usage="C" Datatype="SAD" MinLength="1" MaxLength="50"/>
+            <!-- Dwelling number is a subcomponent; check implementation. -->
+            <Component Name="Dwelling Number" Usage="O" Datatype="ST" MinLength="1" MaxLength="12"/>
+            <Component Name="Other Designation" Usage="O" Datatype="ST" MinLength="1" MaxLength="120"/>
+            <Component Name="City" Usage="RE" Datatype="ST" MinLength="1" MaxLength="50"/>
+            <Component Name="State or Province" Usage="RE" Datatype="ST" MinLength="1" MaxLength="50"/>
+            <Component Name="Zip or Postal Code" Usage="RE" Datatype="ST" MinLength="1" MaxLength="12"/>
+            <Component Name="Country" Usage="RE" Datatype="ID" MinLength="1" MaxLength="3"/>
+            <Component Name="Address Type" Usage="O" Datatype="ID" MinLength="1" MaxLength="3"/>
+            <Component Name="Other Geographic Designation" Usage="O" Datatype="ST" MinLength="1" MaxLength="50"/>
+            <Component Name="County/Parish Code" Usage="RE" Datatype="IS" MinLength="1" MaxLength="20" />
+            <Component Name="Census Tract" Usage="X" Datatype="IS" MinLength="0" MaxLength="20"/>
+            <Component Name="Address Representation Code" Usage="X" Datatype="ID" MinLength="0" MaxLength="1"/>
+            <Component Name="Address Validity Range" Usage="X" Datatype="DR"  MinLength="0" MaxLength="53"/>
+            <Component Name="Effective Date" Usage="X" Datatype="TS" MinLength="1" MaxLength="26"/>
+            <Component Name="Expiration Date" Usage="X" Datatype="TS" MinLength="1" MaxLength="26"/>
         </Datatype>
         <Datatype ID="varies" Name="varies" Description="varies"/>
         <Datatype ID="XPN" Name="XPN" Description="Extended Person Name">

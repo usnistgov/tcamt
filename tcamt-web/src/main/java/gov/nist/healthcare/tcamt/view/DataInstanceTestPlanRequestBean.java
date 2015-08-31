@@ -1334,6 +1334,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	public boolean checkUsageList(String usageList){
+		String[] usageArray = usageList.split("-");
+		for(String u:usageArray){
+    		if(u.equals("X")){
+    			return false;
+    		}
+    	}
+		return true;
+	}
+	
 	/*
 	 * 
 	 * 
