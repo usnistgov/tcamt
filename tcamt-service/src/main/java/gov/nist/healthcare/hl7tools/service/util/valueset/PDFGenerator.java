@@ -9,10 +9,10 @@ public class PDFGenerator {
 
 	public static void main(String[] args) {
 		PDFGenerator gen = new PDFGenerator();
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_ONC 2015 Test Plan");
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_Pilot Isolated Test Plan");
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_Pilot Isolated Test Plan-2");
-		gen.subDirList("/Users/jungyubw/Desktop/TestPlan_CDC Immunization Project (CNI) - No Registry Query");
+		gen.subDirList("/Users/jungyubw/Downloads/TestPlan_ONC 2015 Test Plan");
+		gen.subDirList("/Users/jungyubw/Downloads/TestPlan_Pilot Isolated Test Plan");
+		gen.subDirList("/Users/jungyubw/Downloads/TestPlan_Pilot Isolated Test Plan-2");
+		gen.subDirList("/Users/jungyubw/Downloads/TestPlan_CDC Immunization Project (CNI) - No Registry Query");
 
 	}
 
