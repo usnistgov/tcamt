@@ -1328,7 +1328,6 @@ public class ManageInstance implements Serializable {
 		String segmentName = lineStr.substring(0, 3);
 		Segment segment = m.getSegments().findOne(
 				instanceSegment.getSegmentRef().getRef());
-
 		String variesDT = "";
 
 		if (lineStr.startsWith("MSH")) {

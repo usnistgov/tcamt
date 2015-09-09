@@ -57,14 +57,8 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 	private TestStory testStepStory = new TestStory();
 	
 	
-	@Transient
-	private String messageId;
-	
-	@Transient
-	private String valueSetLibraryId;
-	
-	@Transient
-	private String constraintId;
+	@Embedded
+	private ProfileContainer hl7v2;
 	
 	private String type;
 	
@@ -166,30 +160,6 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 		return this.position - comparePosition;
 	}
 	
-	public String getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
-	}
-
-	public String getValueSetLibraryId() {
-		return valueSetLibraryId;
-	}
-
-	public void setValueSetLibraryId(String valueSetLibraryId) {
-		this.valueSetLibraryId = valueSetLibraryId;
-	}
-
-	public String getConstraintId() {
-		return constraintId;
-	}
-
-	public void setConstraintId(String constraintId) {
-		this.constraintId = constraintId;
-	}
-
 	public String getType() {
 		return type;
 	}
@@ -205,6 +175,16 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
+	
+	public ProfileContainer getHl7v2() {
+		return hl7v2;
+	}
+
+	public void setHl7v2(ProfileContainer hl7v2) {
+		this.hl7v2 = hl7v2;
+	}
+
+
 
 	public static Comparator<DataInstanceTestStep> testCasePositionComparator = new Comparator<DataInstanceTestStep>() {
 		public int compare(DataInstanceTestStep ts1, DataInstanceTestStep ts2) {

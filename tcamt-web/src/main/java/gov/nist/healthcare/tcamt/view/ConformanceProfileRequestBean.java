@@ -5,6 +5,7 @@ import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
 import gov.nist.healthcare.tcamt.domain.TestObject;
 import gov.nist.healthcare.tcamt.service.XMLManager;
 import gov.nist.healthcare.tcamt.service.converter.ContextFreeTestPlanConverter;
@@ -188,20 +189,12 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.selectedProfile.setMessageContentJSONXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
-	public void uploadMessageContentTABXSLT(FileUploadEvent event) throws IOException{
-		this.selectedProfile.setMessageContentTabXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
-	}
-	
 	public void uploadTestDataSpecificationXSLT(FileUploadEvent event) throws IOException{
 		this.selectedProfile.setTestDataSpecificationXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
 	public void uploadTestDataSpecificationJSONXSLT(FileUploadEvent event) throws IOException{
 		this.selectedProfile.setTestDataSpecificationJSONXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
-	}
-	
-	public void uploadTestDataSpecificationTABXSLT(FileUploadEvent event) throws IOException{
-		this.selectedProfile.setTestDataSpecificationTabXSLT(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
 	public void uploadJurorDocumentXSLT(FileUploadEvent event) throws IOException{
@@ -288,13 +281,6 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.sessionBeanTCAMT.updateConformanceProfiles();
 	}
 	
-	public void delMCTABXSLT(ActionEvent event) {
-		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
-		cp.setMessageContentTabXSLT(null);
-		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
-		this.sessionBeanTCAMT.updateConformanceProfiles();
-	}
-	
 	public void delTDSHTMLXSLT(ActionEvent event) {
 		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		cp.setTestDataSpecificationXSLT(null);
@@ -305,13 +291,6 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void delTDSJSONXSLT(ActionEvent event) {
 		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		cp.setTestDataSpecificationJSONXSLT(null);
-		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
-		this.sessionBeanTCAMT.updateConformanceProfiles();
-	}
-	
-	public void delTDSTABXSLT(ActionEvent event) {
-		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
-		cp.setTestDataSpecificationTabXSLT(null);
 		this.sessionBeanTCAMT.getDbManager().conformanceProfileUpdate(cp);
 		this.sessionBeanTCAMT.updateConformanceProfiles();
 	}
@@ -442,10 +421,11 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	private void generateTestObjectJsonRB(ZipOutputStream out, TestObject to, String testcasePath) {
 		try {
-			to.setMessageId(to.getConformanceProfile().getConformanceProfileId());
-			to.setConstraintId(to.getConformanceProfile().getConstraintId());
-			to.setValueSetLibraryId(to.getConformanceProfile().getValueSetLibraryId());
-			
+			ProfileContainer hl7v2 = new ProfileContainer();
+			hl7v2.setMessageId(to.getConformanceProfile().getConformanceProfileId());
+			hl7v2.setConstraintId(to.getConformanceProfile().getConstraintId());
+			hl7v2.setValueSetLibraryId(to.getConformanceProfile().getValueSetLibraryId());
+			to.setHl7v2(hl7v2);
 			
 			byte[] buf = new byte[1024];
 			out.putNextEntry(new ZipEntry(testcasePath + File.separator + "TestObject.json"));

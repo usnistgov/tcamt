@@ -94,10 +94,10 @@
 		
 		<p:column headerText="Test Data" style="width:8%; text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
-			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null and cc.attrs.bean.checkUsageList(model.usageList)}"  style="width:90%;" value="#{model.data}">
+			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  style="width:90%;" value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:inputText>
-			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null and cc.attrs.bean.checkUsageList(model.usageList)}">
+			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.value}" itemValue="#{code.value}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />

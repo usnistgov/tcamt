@@ -3,6 +3,7 @@ package gov.nist.healthcare.tcamt.domain;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -29,10 +30,9 @@ public class TestObject implements Cloneable, Serializable {
 	
 	private String name;
 	
-	private String messageId;
-	private String constraintId;
-	private String valueSetLibraryId;
-	
+	@Embedded
+	private ProfileContainer hl7v2;
+
 	@JsonProperty("description")
 	@Column(columnDefinition="longtext")
 	private String longDescription;
@@ -89,37 +89,21 @@ public class TestObject implements Cloneable, Serializable {
 		cloned.setConformanceProfile(conformanceProfile);
 		return cloned;
 	}
-
-	public String getMessageId() {
-		return messageId;
-	}
-
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
-	}
-
-	public String getConstraintId() {
-		return constraintId;
-	}
-
-	public void setConstraintId(String constraintId) {
-		this.constraintId = constraintId;
-	}
-
-	public String getValueSetLibraryId() {
-		return valueSetLibraryId;
-	}
-
-	public void setValueSetLibraryId(String valueSetLibraryId) {
-		this.valueSetLibraryId = valueSetLibraryId;
-	}
-
+	
 	public int getPosition() {
 		return position;
 	}
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public ProfileContainer getHl7v2() {
+		return hl7v2;
+	}
+
+	public void setHl7v2(ProfileContainer hl7v2) {
+		this.hl7v2 = hl7v2;
 	}
 	
 	

@@ -49,19 +49,11 @@ public class ConformanceProfile implements Serializable{
 	
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
-	private String messageContentTabXSLT;
-	
-	@JsonIgnore
-	@Column(columnDefinition="longtext")
 	private String testDataSpecificationXSLT;
 	
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
 	private String testDataSpecificationJSONXSLT;
-	
-	@JsonIgnore
-	@Column(columnDefinition="longtext")
-	private String testDataSpecificationTabXSLT;
 	
 	@JsonIgnore
 	@Column(columnDefinition="longtext")
@@ -168,14 +160,6 @@ public class ConformanceProfile implements Serializable{
 		this.sampleER7Message = sampleER7Message;
 	}
 
-	public String getTestDataSpecificationTabXSLT() {
-		return testDataSpecificationTabXSLT;
-	}
-
-	public void setTestDataSpecificationTabXSLT(String testDataSpecificationTabXSLT) {
-		this.testDataSpecificationTabXSLT = testDataSpecificationTabXSLT;
-	}
-
 	public String getMessageContentXSLT() {
 		return messageContentXSLT;
 	}
@@ -191,15 +175,5 @@ public class ConformanceProfile implements Serializable{
 	public void setMessageContentJSONXSLT(String messageContentJSONXSLT) {
 		this.messageContentJSONXSLT = messageContentJSONXSLT;
 	}
-
-	public String getMessageContentTabXSLT() {
-		return messageContentTabXSLT;
-	}
-
-	public void setMessageContentTabXSLT(String messageContentTabXSLT) {
-		this.messageContentTabXSLT = messageContentTabXSLT;
-	}
-	
-	
 	
 }
