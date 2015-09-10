@@ -4,6 +4,7 @@ import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
@@ -726,6 +727,71 @@ public class DBImpl implements DBInterface, Serializable {
 			JurorDocument jd = (JurorDocument)this.currentSession.get(JurorDocument.class, id);
 			this.closeCurrentSession();
 			return jd;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
+	public void defaultTestDataCategorizationSheetInsert(DefaultTestDataCategorizationSheet sheet) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.save(sheet);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+
+	public void defaultTestDataCategorizationSheetAllDelete() {
+		
+		List<DefaultTestDataCategorizationSheet> sets = this.getAllDefaultTestDataCategorizationSheets();
+		if(sets != null && !sets.isEmpty()){
+			try{
+				this.openCurrentSession();
+				
+				
+				
+				for(DefaultTestDataCategorizationSheet sheet:sets){
+					this.currentSession.delete(sheet);	
+				}
+				this.closeCurrentSession();
+			}catch(Exception e){
+				e.printStackTrace();
+				Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+				this.logInsert(log);
+			}	
+		}
+		
+	}
+
+	public List<DefaultTestDataCategorizationSheet> getAllDefaultTestDataCategorizationSheets() {
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(DefaultTestDataCategorizationSheet.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<DefaultTestDataCategorizationSheet> results = criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
+	public DefaultTestDataCategorizationSheet getDefaultTestDataCategorizationSheetById(long id) {
+		try{
+			this.openCurrentSession();
+			DefaultTestDataCategorizationSheet sheet = (DefaultTestDataCategorizationSheet)this.currentSession.get(DefaultTestDataCategorizationSheet.class, id);
+			this.closeCurrentSession();
+			return sheet;
 		}catch(Exception e){
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));

@@ -478,10 +478,11 @@
 											<p:ajax event="save" />
 										</p:inplace>
 										
-										<h:outputText value="Specific Juror Document: "/>
+										<h:outputText value="Juror Document: "/>
 										<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.jurorDocumentId}" effect="fade">
 											<p:ajax event="change" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" listener="#{dataInstanceTestPlanRequestBean.updateSpecificJurorDocument}" />
 											<f:selectItem itemLabel="Default One" itemValue="" />
+											<f:selectItem itemLabel="None" itemValue="0" />
 											<f:selectItems value="#{conformanceProfileRequestBean.jurorDocuments}" var="juror" itemLabel="#{juror.name}" itemValue="#{juror.id}" />
 										</p:selectOneMenu>
 										

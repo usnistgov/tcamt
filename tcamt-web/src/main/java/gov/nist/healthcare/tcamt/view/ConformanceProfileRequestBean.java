@@ -1,24 +1,6 @@
 package gov.nist.healthcare.tcamt.view;
 
 
-import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
-import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Metadata;
-import gov.nist.healthcare.tcamt.domain.ProfileContainer;
-import gov.nist.healthcare.tcamt.domain.TestObject;
-import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.ContextFreeTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonContextFreeTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestObjectConverter;
-import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestObjectConverter;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,9 +19,35 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TestObject;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.service.XMLManager;
+import gov.nist.healthcare.tcamt.service.converter.ContextFreeTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonContextFreeTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestObjectConverter;
+import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestObjectConverter;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
 @ManagedBean
 @SessionScoped
@@ -144,6 +152,59 @@ public class ConformanceProfileRequestBean implements Serializable {
 			if(cp.getConformanceProfileId().equals(identifier)) return cp;
 		}
 		return null;
+	}
+	
+	public void uploadJDefaultTDC(FileUploadEvent event) throws IOException{
+		this.sessionBeanTCAMT.getDbManager().defaultTestDataCategorizationSheetAllDelete();
+		XSSFRow row;
+		XSSFWorkbook workbook = new XSSFWorkbook(event.getFile().getInputstream());
+		
+		int sheetCn = workbook.getNumberOfSheets();
+		
+		for(int cn = 0; cn < sheetCn; cn++){
+			DefaultTestDataCategorizationSheet dSheet = new DefaultTestDataCategorizationSheet();
+			dSheet.setSheetName(workbook.getSheetName(cn));
+						
+			XSSFSheet sheet = workbook.getSheetAt(cn);
+			int rows = sheet.getPhysicalNumberOfRows();
+			
+			for (int r = 1; r < rows; r++) {
+				row = sheet.getRow(r);
+				if (row != null) {
+					DefaultTestDataCategorization data = new DefaultTestDataCategorization();
+					
+					Cell segmentCell = row.getCell(0);
+					segmentCell.setCellType(Cell.CELL_TYPE_STRING);
+					data.setSegmentName(segmentCell.getStringCellValue());
+					
+					Cell pathCell = row.getCell(1);
+					pathCell.setCellType(Cell.CELL_TYPE_STRING);
+					String[] paths = pathCell.getStringCellValue().split("_");
+					
+					if(paths.length == 1){
+						data.setFieldPosition(Integer.parseInt(paths[0]));
+					}else if(paths.length == 2){
+						data.setFieldPosition(Integer.parseInt(paths[0]));
+						data.setComponentPosition(Integer.parseInt(paths[1]));
+					}else if(paths.length == 3){
+						data.setFieldPosition(Integer.parseInt(paths[0]));
+						data.setComponentPosition(Integer.parseInt(paths[1]));
+						data.setSubComponentPosition(Integer.parseInt(paths[2]));
+					}
+					
+					Cell categorizatioCell = row.getCell(2);
+					
+					if(categorizatioCell != null){
+						categorizatioCell.setCellType(Cell.CELL_TYPE_STRING);
+						data.setCategorization(TestDataCategorization.valueOf(categorizatioCell.getStringCellValue()));
+						
+						dSheet.getDefaultTestDataCategorizations().add(data);	
+					}
+				}
+			}
+			this.sessionBeanTCAMT.getDbManager().defaultTestDataCategorizationSheetInsert(dSheet);
+		}
+		workbook.close();
 	}
 	
 	public void updateProfileForSelectedProfile(FileUploadEvent event) throws IOException{
@@ -668,5 +729,8 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.newJurorDocument = newJurorDocument;
 	}
 	
+	public List<DefaultTestDataCategorizationSheet> getDefaultTestDataCategorizationSheets(){
+		return this.sessionBeanTCAMT.getDbManager().getAllDefaultTestDataCategorizationSheets();
+	}
 	
 }

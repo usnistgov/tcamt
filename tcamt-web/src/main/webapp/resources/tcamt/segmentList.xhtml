@@ -25,6 +25,15 @@
         		</p:selectOneButton>
 			</td>
 		</tr>
+		<tr>
+			<td align="right">
+				<p:selectOneMenu value="#{cc.attrs.bean.defaultTDCId}" effect="fade">
+					<f:selectItem itemLabel="Select Default TestData Categorization template" itemValue="" />
+					<f:selectItems value="#{conformanceProfileRequestBean.defaultTestDataCategorizationSheets}" var="sheet" itemLabel="#{sheet.sheetName}" itemValue="#{sheet.id}" />
+					<p:ajax event="change" update="#{cc.attrs.panelId}" listener="#{cc.attrs.bean.updateTDC}" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
 	</table>
 	<p:dataTable
 		var="instanceSegment"

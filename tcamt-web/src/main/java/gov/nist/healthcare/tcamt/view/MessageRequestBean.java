@@ -1,17 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.data.TestDataFromCS;
-import gov.nist.healthcare.tcamt.service.ManageInstance;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
-
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -28,6 +16,20 @@ import javax.faces.event.ActionEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.data.TestDataFromCS;
+import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
 @ManagedBean
 @SessionScoped
@@ -49,6 +51,7 @@ public class MessageRequestBean implements Serializable {
 	private ManageInstance manageInstanceService;
 	private Long shareTo;
 	private Long conformanceProfileId;
+	private Long defaultTDCId = null;
 	
 	private String usageViewOption;
 	private String usageViewOption2;
@@ -532,6 +535,94 @@ public class MessageRequestBean implements Serializable {
 		return true;
 	}
 	
+	public void updateTDC() {
+		if(this.defaultTDCId != null){
+			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
+			for(InstanceSegment is:this.instanceSegments){
+				this.segmentTreeRoot = new DefaultTreeNode("root", null);
+				this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, is, this.editMessage);
+				
+				for(TreeNode fNode:this.segmentTreeRoot.getChildren()){
+					FieldModel fModel = (FieldModel)fNode.getData();
+					String[] paths = fModel.getPath().split("\\.");
+					
+					String segmentName = paths[paths.length-2];
+					Integer fieldPosition = Integer.parseInt(paths[paths.length-1]);
+					Integer componentPosition = null;
+					Integer subComponentPosition = null;
+					
+					TestDataCategorization testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+					
+					if(testDataCategorization != null){
+						fModel.setTdc(testDataCategorization);
+						this.createTCAMTConstraint(fModel);
+					}
+					
+					for(TreeNode cNode:fNode.getChildren()){
+						ComponentModel cModel = (ComponentModel)cNode.getData();
+						
+						paths = cModel.getPath().split("\\.");
+						
+						segmentName = paths[paths.length-3];
+						fieldPosition = Integer.parseInt(paths[paths.length-2]);
+						componentPosition = Integer.parseInt(paths[paths.length-1]);
+						subComponentPosition = null;
+						
+						testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+						
+						if(testDataCategorization != null){
+							cModel.setTdc(testDataCategorization);
+							this.createTCAMTConstraint(cModel);
+						}
+						
+						for(TreeNode scNode:cNode.getChildren()){
+							ComponentModel scModel = (ComponentModel)scNode.getData();
+							
+							paths = scModel.getPath().split("\\.");
+							
+							segmentName = paths[paths.length-4];
+							fieldPosition = Integer.parseInt(paths[paths.length-3]);
+							componentPosition = Integer.parseInt(paths[paths.length-2]);
+							subComponentPosition = Integer.parseInt(paths[paths.length-1]);
+							
+							testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+							
+							if(testDataCategorization != null){
+								scModel.setTdc(testDataCategorization);
+								this.createTCAMTConstraint(scModel);
+							}
+						}
+						
+					}
+				}
+				
+				
+				
+				
+			}	
+		}
+		this.defaultTDCId = null;
+	}
+	
+	private TestDataCategorization findTestDataCategorizationFromSheet(DefaultTestDataCategorizationSheet sheet, String segmentName, Integer fieldPosition, Integer componentPosition, Integer subComponentPosition){
+		for(DefaultTestDataCategorization dtdc:sheet.getDefaultTestDataCategorizations()){
+			if(dtdc.getSegmentName().equals(segmentName)){
+				if(dtdc.getFieldPosition() != null && dtdc.getFieldPosition().equals(fieldPosition)){
+					if(dtdc.getComponentPosition() != null && dtdc.getComponentPosition().equals(componentPosition)){
+						if(dtdc.getSubComponentPosition() != null && dtdc.getSubComponentPosition().equals(subComponentPosition)){
+							return dtdc.getCategorization();
+						}else if(dtdc.getSubComponentPosition() == null && subComponentPosition == null){
+							return dtdc.getCategorization();
+						}
+					}else if(dtdc.getComponentPosition() == null && dtdc.getSubComponentPosition() == null && componentPosition == null && subComponentPosition == null){
+						return dtdc.getCategorization();
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
 	/**
 	 * 
 	 */
@@ -692,6 +783,14 @@ public class MessageRequestBean implements Serializable {
 
 	public void setTestDataFromCSs(List<TestDataFromCS> testDataFromCSs) {
 		this.testDataFromCSs = testDataFromCSs;
+	}
+
+	public Long getDefaultTDCId() {
+		return defaultTDCId;
+	}
+
+	public void setDefaultTDCId(Long defaultTDCId) {
+		this.defaultTDCId = defaultTDCId;
 	}
 	
 	

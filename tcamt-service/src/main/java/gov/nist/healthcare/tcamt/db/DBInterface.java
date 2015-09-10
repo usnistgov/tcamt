@@ -1,16 +1,17 @@
 package gov.nist.healthcare.tcamt.db;
 
+import java.util.List;
+
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
-
-import java.util.List;
 
 public interface DBInterface {
 	public User isValidUser(User user);
@@ -66,4 +67,9 @@ public interface DBInterface {
 	public void jurorDocumentDelete(JurorDocument jd);
 	public List<JurorDocument> getAllJurorDocuments();
 	public JurorDocument getJurorDocumentById(long id);
+	
+	public void defaultTestDataCategorizationSheetInsert(DefaultTestDataCategorizationSheet sheet);
+	public void defaultTestDataCategorizationSheetAllDelete();
+	public List<DefaultTestDataCategorizationSheet> getAllDefaultTestDataCategorizationSheets();
+	public DefaultTestDataCategorizationSheet getDefaultTestDataCategorizationSheetById(long id);
 }

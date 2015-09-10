@@ -80,6 +80,9 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
     @JoinColumn(name="specific_juror_document_id")
 	private JurorDocument specificJurorDocument;
 	
+	@JsonIgnore
+	private boolean isJurorDocumentNeed;
+	
 	public long getId() {
 		return id;
 	}
@@ -196,6 +199,12 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	}
 	public void setSpecificJurorDocument(JurorDocument specificJurorDocument) {
 		this.specificJurorDocument = specificJurorDocument;
+	}
+	public boolean isJurorDocumentNeed() {
+		return isJurorDocumentNeed;
+	}
+	public void setJurorDocumentNeed(boolean isJurorDocumentNeed) {
+		this.isJurorDocumentNeed = isJurorDocumentNeed;
 	}
 	
 	

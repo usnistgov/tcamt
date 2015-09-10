@@ -285,6 +285,17 @@
 					</p:column>
 				</p:dataTable>
 			</p:tab>
+			<p:tab title="Default TestData Categorization Setting">
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+								value="Update Default TDC" icon="ui-icon-plus"
+								oncomplete="PF('updateDefaultTDC').show();" />
+						</td>
+					</tr>
+				</table>
+			</p:tab>
 
 		</p:accordionPanel>
 	</h:form>
@@ -643,6 +654,17 @@
 					</td>
 				</tr>
 			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="updateDefaultTDCForm">
+		<p:dialog id="updateDefaultTDCDialog" header="Update Default TestData Categorizations" widgetVar="updateDefaultTDC">
+			<h:panelGrid columns="2" cellpadding="5">				
+				<h:outputText value="MS xlsx file: " />
+				<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJDefaultTDC}"
+						update=":#{p:component('profileForm')}" mode="advanced" auto="true" 
+						sizeLimit="10000000" allowTypes="/(\.|\/)(xlsx)$/" oncomplete="PF('updateDefaultTDC').hide();" />
+			</h:panelGrid>
 		</p:dialog>
 	</h:form>
 </composite:implementation>

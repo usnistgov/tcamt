@@ -5,6 +5,8 @@ import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.ManualTestStep;
@@ -91,6 +93,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestStep selectedTestStep = null;
 	private DataInstanceTestCaseGroup selectedTestCaseGroup = null;
 	private Long messageId = null;
+	private Long defaultTDCId = null;
 	private Long jurorDocumentId = null;
 	private Long shareTo = null;
 	private int activeIndexOfMessageInstancePanel = 0;
@@ -208,13 +211,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
 			
 			if(this.selectedTestPlan.getSpecificJurorDocument() == null){
-				jurorDocumentId = null;
+				if(this.selectedTestPlan.isJurorDocumentNeed()){
+					jurorDocumentId = null;
+				}else {
+					jurorDocumentId = (long) 0;
+				}
 			}else {
 				jurorDocumentId = this.selectedTestPlan.getSpecificJurorDocument().getId();
 			}
-			
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Select TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been selected."));
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1219,6 +1223,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			if(this.jurorDocumentId == null){
 				this.selectedTestPlan.setSpecificJurorDocument(null);
+				this.selectedTestPlan.setJurorDocumentNeed(true);
+			}else if(this.jurorDocumentId == 0){
+				this.selectedTestPlan.setSpecificJurorDocument(null);
+				this.selectedTestPlan.setJurorDocumentNeed(false);
 			}else {
 				JurorDocument jd = this.sessionBeanTCAMT.getDbManager().getJurorDocumentById(this.jurorDocumentId);
 				this.selectedTestPlan.setSpecificJurorDocument(jd);
@@ -1347,6 +1355,95 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
     		}
     	}
 		return true;
+	}
+	
+	public void updateTDC() {
+		if(this.defaultTDCId != null){
+			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
+			for(InstanceSegment is:this.instanceSegments){
+				this.segmentTreeRoot = new DefaultTreeNode("root", null);
+				this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, is, this.selectedTestStep.getMessage());
+				
+				for(TreeNode fNode:this.segmentTreeRoot.getChildren()){
+					FieldModel fModel = (FieldModel)fNode.getData();
+					String[] paths = fModel.getPath().split("\\.");
+					
+					String segmentName = paths[paths.length-2];
+					Integer fieldPosition = Integer.parseInt(paths[paths.length-1]);
+					Integer componentPosition = null;
+					Integer subComponentPosition = null;
+					
+					TestDataCategorization testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+					
+					if(testDataCategorization != null){
+						fModel.setTdc(testDataCategorization);
+						this.createTCAMTConstraint(fModel);
+					}
+					
+					for(TreeNode cNode:fNode.getChildren()){
+						ComponentModel cModel = (ComponentModel)cNode.getData();
+						
+						paths = cModel.getPath().split("\\.");
+						
+						segmentName = paths[paths.length-3];
+						fieldPosition = Integer.parseInt(paths[paths.length-2]);
+						componentPosition = Integer.parseInt(paths[paths.length-1]);
+						subComponentPosition = null;
+						
+						testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+						
+						if(testDataCategorization != null){
+							cModel.setTdc(testDataCategorization);
+							this.createTCAMTConstraint(cModel);
+						}
+						
+						for(TreeNode scNode:cNode.getChildren()){
+							ComponentModel scModel = (ComponentModel)scNode.getData();
+							
+							paths = scModel.getPath().split("\\.");
+							
+							segmentName = paths[paths.length-4];
+							fieldPosition = Integer.parseInt(paths[paths.length-3]);
+							componentPosition = Integer.parseInt(paths[paths.length-2]);
+							subComponentPosition = Integer.parseInt(paths[paths.length-1]);
+							
+							testDataCategorization = this.findTestDataCategorizationFromSheet(sheet, segmentName, fieldPosition, componentPosition, subComponentPosition);
+							
+							if(testDataCategorization != null){
+								scModel.setTdc(testDataCategorization);
+								this.createTCAMTConstraint(scModel);
+							}
+						}
+						
+					}
+				}
+				
+				
+				
+				
+			}	
+		}
+		this.defaultTDCId = null;
+		this.activeIndexOfMessageInstancePanel = 3;
+	}
+	
+	private TestDataCategorization findTestDataCategorizationFromSheet(DefaultTestDataCategorizationSheet sheet, String segmentName, Integer fieldPosition, Integer componentPosition, Integer subComponentPosition){
+		for(DefaultTestDataCategorization dtdc:sheet.getDefaultTestDataCategorizations()){
+			if(dtdc.getSegmentName().equals(segmentName)){
+				if(dtdc.getFieldPosition() != null && dtdc.getFieldPosition().equals(fieldPosition)){
+					if(dtdc.getComponentPosition() != null && dtdc.getComponentPosition().equals(componentPosition)){
+						if(dtdc.getSubComponentPosition() != null && dtdc.getSubComponentPosition().equals(subComponentPosition)){
+							return dtdc.getCategorization();
+						}else if(dtdc.getSubComponentPosition() == null && subComponentPosition == null){
+							return dtdc.getCategorization();
+						}
+					}else if(dtdc.getComponentPosition() == null && dtdc.getSubComponentPosition() == null && componentPosition == null && subComponentPosition == null){
+						return dtdc.getCategorization();
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	/*
@@ -1495,7 +1592,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private void generateJurorDocumentHTML() throws IOException {
-		if(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
+		if(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null && this.selectedTestPlan.isJurorDocumentNeed()){
 			InputStream xsltInputStream = null;
 			if(this.selectedTestPlan.getSpecificJurorDocument() == null){
 				xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getJurorDocumentXSLT().getBytes());
@@ -1707,7 +1804,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 
 	private void generateJurorDocumentJSONRB(ZipOutputStream out, Message m, String path, DataInstanceTestPlan tp) throws IOException{
-		if(m.getConformanceProfile().getJurorDocumentJSONXSLT() != null){
+		if(m.getConformanceProfile().getJurorDocumentJSONXSLT() != null && tp.isJurorDocumentNeed()){
 			InputStream xsltInputStream = null;
 			if(tp.getSpecificJurorDocument() == null){
 				xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentJSONXSLT().getBytes());
@@ -1738,7 +1835,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 
 	private void generateJurorDocumentRB(ZipOutputStream out, Message m, String path, DataInstanceTestPlan tp, boolean needPDF) throws IOException{
-		if(m.getConformanceProfile().getJurorDocumentXSLT() != null){
+		if(m.getConformanceProfile().getJurorDocumentXSLT() != null && tp.isJurorDocumentNeed()){
 			InputStream xsltInputStream = null;
 			if(tp.getSpecificJurorDocument() == null){
 				xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getJurorDocumentXSLT().getBytes());
@@ -2490,6 +2587,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setSelectedTestCaseName(String selectedTestCaseName) {
 		this.selectedTestCaseName = selectedTestCaseName;
+	}
+
+	public Long getDefaultTDCId() {
+		return defaultTDCId;
+	}
+
+	public void setDefaultTDCId(Long defaultTDCId) {
+		this.defaultTDCId = defaultTDCId;
 	}
 	
 }
