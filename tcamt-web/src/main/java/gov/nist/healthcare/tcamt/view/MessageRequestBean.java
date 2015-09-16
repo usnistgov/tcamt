@@ -116,7 +116,7 @@ public class MessageRequestBean implements Serializable {
 	public void cloneMessage(ActionEvent event) {
 		try{
 			Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
-			m.setName("Copy_" + m.getName());
+			m.setName("(Copy)" + m.getName());
 			m.setVersion(1);
 			this.sessionBeanTCAMT.getDbManager().messageInsert(m);
 			this.sessionBeanTCAMT.updateMessages();

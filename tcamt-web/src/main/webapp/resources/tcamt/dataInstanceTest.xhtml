@@ -348,6 +348,10 @@
 								<p:tab title="NIST XML Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
 								</p:tab>
+								
+								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
+									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
+								</p:tab>
 
 								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
 									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
@@ -356,9 +360,9 @@
 								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName != null}">
 									<tcamt:pdfViewer fileName="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName}" />
 								</p:tab>
-
-								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
-									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
+								
+								<p:tab title="Validation" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:htmlValidationReportViewer bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')}" />
 								</p:tab>
 							</p:tabView>
 							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">
@@ -482,7 +486,7 @@
 										<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.jurorDocumentId}" effect="fade">
 											<p:ajax event="change" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" listener="#{dataInstanceTestPlanRequestBean.updateSpecificJurorDocument}" />
 											<f:selectItem itemLabel="Default One" itemValue="" />
-											<f:selectItem itemLabel="None" itemValue="0" />
+											<f:selectItem itemLabel="None" itemValue="-1" />
 											<f:selectItems value="#{conformanceProfileRequestBean.jurorDocuments}" var="juror" itemLabel="#{juror.name}" itemValue="#{juror.id}" />
 										</p:selectOneMenu>
 										

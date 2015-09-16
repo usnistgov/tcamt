@@ -81,7 +81,7 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	private JurorDocument specificJurorDocument;
 	
 	@JsonIgnore
-	private boolean isJurorDocumentNeed;
+	private boolean jurorDocumentEnable;
 	
 	public long getId() {
 		return id;
@@ -200,13 +200,10 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	public void setSpecificJurorDocument(JurorDocument specificJurorDocument) {
 		this.specificJurorDocument = specificJurorDocument;
 	}
-	public boolean isJurorDocumentNeed() {
-		return isJurorDocumentNeed;
+	public boolean isJurorDocumentEnable() {
+		return jurorDocumentEnable;
 	}
-	public void setJurorDocumentNeed(boolean isJurorDocumentNeed) {
-		this.isJurorDocumentNeed = isJurorDocumentNeed;
+	public void setJurorDocumentEnable(boolean jurorDocumentEnable) {
+		this.jurorDocumentEnable = jurorDocumentEnable;
 	}
-	
-	
-	
 }

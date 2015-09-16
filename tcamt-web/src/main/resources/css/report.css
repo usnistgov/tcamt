@@ -1,0 +1,108 @@
+ 
+h2 {
+	font: 1.6em 'Trebuchet MS', Tahoma, Arial, Helvetica, Verdana,
+		sans-serif;
+	color: #003399;
+	font-weight: bold;
+	margin-bottom: 8px;
+}
+
+h3 {
+	font: 1.2em/ 1.8em 'Trebuchet MS', Tahoma, Arial, Helvetica, Verdana,
+		sans-serif;
+	color: #003399;
+	font-weight: bold;
+	/*margin: 1em 0 -.3em 0;*/
+	font-weight: normal;
+	/* position: relative; */
+}
+
+h3 a {
+	text-decoration: none;
+}
+ 
+.row1 {
+	vertical-align: top;
+	background-color: #EFEFEF;
+	width: 100px;
+}
+
+.row2 {
+	background-color: #DEE3E7;
+	width: 100px;
+}
+
+.row3 {
+	background-color: #D1D7DC;
+	vertical-align: top;
+}
+
+.row4 {
+	background-color: #EFEFEF;
+	vertical-align: top;
+}
+
+.row5 {
+	background-color: #FFEC9D;
+	vertical-align: top;
+}
+
+/* XSL transformation */
+.row4 a,.row3 a {
+	color: #003399;
+	text-decoration: underline;
+}
+
+.row4 a:hover,.row3 a:hover {
+	color: #000000;
+	text-decoration: underline;
+}
+
+.headerReport {
+	width: 250px;
+}
+
+.colspan_2{
+	-fs-table-cell-colspan:2
+}
+
+.colspan_3{
+	-fs-table-cell-colspan:3
+}
+
+.colspan_4{
+	-fs-table-cell-colspan:4
+}
+
+.colspan_5{
+	-fs-table-cell-colspan:5
+}
+
+.rowspan_2{
+	-fs-table-cell-rowspan:2
+}
+
+.rowspan_3{
+	-fs-table-cell-rowspan:3
+}
+
+.rowspan_4{
+	-fs-table-cell-rowspan:4
+}
+
+.rowspan_5{
+	-fs-table-cell-rowspan:5
+}
+
+.rowspan_7{
+	-fs-table-cell-rowspan:7
+}
+.rowspan_6{
+	-fs-table-cell-rowspan:6
+}
+
+
+.custom-span {
+	border: 0;
+}
+ 

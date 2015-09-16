@@ -5,28 +5,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:composite="http://java.sun.com/jsf/composite">
 
 <composite:interface>
 	<composite:attribute name="bean" />
-	<composite:attribute name="hl7EndcodedMessage" />
 	<composite:attribute name="panelId" />
 </composite:interface>
 
 <composite:implementation>
 
-	<table width="100%">
-		<tr>
-			<td align="right">
-				<p:commandButton value="Load Sample Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.loadHL7Message}"/>
-				<p:commandButton value="Update er7 Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.readHL7Message}"/>
-			</td>
-		</tr>
-	</table>
-	<pe:codeMirror mode="xml" theme="neat" value="#{cc.attrs.hl7EndcodedMessage}" lineNumbers="true">
-	</pe:codeMirror>
+	<p:commandButton icon="ui-icon-pencil" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.er7MessageValidation}" />
+	<iframe srcdoc="#{cc.attrs.bean.validationReportsHTML}" frameBorder="0" style="width: 100%; height: 400px;"></iframe>
 </composite:implementation>
 
 </html>

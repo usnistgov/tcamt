@@ -1,0 +1,117 @@
+.wijmo-wijmenu-list {
+	width: 600px; 
+}
+
+.wijmo-wijmenu {
+	width: 600px; 
+}
+
+
+.ui-growl {
+	align:center; 
+}
+
+/*
+.lined::selection { color:green; background-color:#EDDA74;  border-color:#FFA500;}
+.lined::-moz-selection {  color:green;background-color:#EDDA74;border-color:#FFA500; }
+.lined::-webkit-selection {  color:green; background-color:#EDDA74;
+}
+
+
+ 
+ 
+.textarea { font-family:arial; font-size:11px; border:0; width:700px; height:200px; }
+.realTextarea { margin:0; background:transparent; position: absolute; z-index:999; }
+.overlayTextarea { margin:0; position:absolute; top:1; left:1; z-index:999;}
+.textareaBorder { border:groove 1px #ccc; position:relative; width:702px; height:202px; }
+.highlight { background: yellow; }
+
+
+.searched {background: yellow;}
+*/
+.edi-marker-class{
+	font-weight:bold;
+	color:black;
+	font-size:14px;
+}
+      
+.ehr-outbound-tab a{
+	background: ui-icon ui-icon-arrowthickstop-1-n;
+}
+
+#session_timeout_nav_bar{
+	border: 1px solid; 
+	border-color: lightblue; 
+	background-color:lightblue;
+	align:center;
+}
+
+#session-timeout-content{
+	border: 1px solid; 
+	border-color: red; 
+	background-color:white;
+	font-weight:bold;
+	align:center;
+}
+
+
+.ui-datatable-even{
+	    background: #ffffff;
+}
+
+
+ 
+.ui-datatable-odd {
+    background: #f7f7f7;
+}
+
+.ui-menu{
+	width:200px;
+}
+
+.lri-readonly {
+  padding: 0px 6px 0px 6px;
+  border: 2px outset ButtonFace;
+  color: GrayText;
+  cursor: inherit;
+}
+ 
+.ui-datatable-scrollable-header-box{
+	width: 100% !important;
+}
+ 
+.result-errors a{
+	image: url(../core-images/errors.png);
+	display:inline-block;
+}
+
+ 
+.result-warnings a{
+	image: url(../core-images/warnings.png);
+	display:inline-block;
+}
+
+ 
+.result-alerts a{
+	image: url(../core-images/alerts.png);
+	display:inline-block;
+}
+
+ 
+.result-affirmatives a{
+	image: url(../core-images/affirmatives.png);
+	display:inline-block;
+}
+
+.webkit-ui-button-hack {
+  width: 100%;  
+}
+
+.ui-selectcheckboxmenu-header .ui-chkbox .ui-chkbox-box {
+    visibility: hidden;
+}
+
+.ui-picklist-list {
+				height:400px !important;
+				width:500px !important;
+}
