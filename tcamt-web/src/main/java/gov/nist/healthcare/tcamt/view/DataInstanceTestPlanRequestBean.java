@@ -19,7 +19,9 @@ import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
 import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.report.HL7V2MessageValidationReport;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tcamt.service.ValidationMessage;
 import gov.nist.healthcare.tcamt.service.XMLManager;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
@@ -35,13 +37,6 @@ import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
 import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
-import gov.nist.healthcare.unified.enums.Context;
-import gov.nist.healthcare.unified.model.EnhancedReport;
-import gov.nist.healthcare.unified.proxy.ValidationProxy;
-import hl7.v2.validation.content.ConformanceContext;
-import hl7.v2.validation.content.DefaultConformanceContext;
-import hl7.v2.validation.vs.ValueSetLibrary;
-import hl7.v2.validation.vs.ValueSetLibraryImpl;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -56,7 +51,6 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -134,8 +128,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestCaseConverter tcConverter;
 	private DataInstanceTestGroupConverter tgConverter;
 	private DataInstanceTestPlanConverter tpConverter;
+	private HL7V2MessageValidationReport hL7V2MessageValidationReport;
 	
-	private String validationReportsHTML;
 	private String testDataSpecificationHTML;
 	private String jurorDocumentHTML;
 	private String jurorDocumentPDFFileName;
@@ -703,8 +697,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.generateMessageContentHTML();				
 				this.generateTestDataSpecificationHTML();
 				this.generateJurorDocumentHTML();
-				
-				this.validationReportsHTML = null;
 			}
 			this.updateFilteredInstanceSegments();
 		}catch(Exception e){
@@ -1233,7 +1225,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	public void updateSpecificJurorDocument(){
 		try{
-			if(this.jurorDocumentId == null){
+			if(this.jurorDocumentId == 0){
 				this.selectedTestPlan.setSpecificJurorDocument(null);
 				this.selectedTestPlan.setJurorDocumentEnable(true);
 			}else {
@@ -1349,10 +1341,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.jurorDocumentPDFFileName = null;
 			this.messageContentHTML = null;
 			this.testDataSpecificationHTML = null;	
-			this.validationReportsHTML = null;
-			
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Reset Message",  "Message of Test Step has been reset."));
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1571,27 +1559,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	public void er7MessageValidation() throws Exception {
-		ValidationProxy vp = new ValidationProxy("Unified Report Test Application", "NIST", "1.0");
 		
-		InputStream csis = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints().getBytes());
-		List<InputStream> confContexts = Arrays.asList(csis);
-		ConformanceContext c = DefaultConformanceContext.apply(confContexts).get();
+		ValidationMessage vm = new ValidationMessage();
 		
-		InputStream vsLibXMLis = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet().getBytes());
-		ValueSetLibrary valueSetLibrary = ValueSetLibraryImpl.apply(vsLibXMLis).get();
-
-		
-		this.selectedTestStep.getMessage().getHl7EndcodedMessage();
-		EnhancedReport report = vp.validate(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
-											this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(), 
-											c,
-											valueSetLibrary,	
-											this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId(), Context.Free);
-		System.out.println(report.render("iz-report", null));
-	
-		this.setValidationReportsHTML(report.render("iz-report", null));
-		
-		
+		this.hL7V2MessageValidationReport = vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
 	}
 	
 	private void selectTestStep() throws Exception {
@@ -1608,6 +1583,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.filteredInstanceSegments =  new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
+		
+		this.hL7V2MessageValidationReport = null;
 		
 		if(this.selectedTestStep.getMessage() != null && this.selectedTestStep.getMessage().getConformanceProfile() != null && this.selectedTestStep.getMessage().getName() != null){
 			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
@@ -2130,17 +2107,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         return fileName;
 	}
 	
-	private String fileWriter(String str) throws IOException{
-		ClassLoader classLoader = this.getClass().getClassLoader();
-		File file = new File(classLoader.getResource("TestStory.html").getFile());
-		File parentFile = new File(file.getParent());
-		File grandParentFile = new File(parentFile.getParent());
-		String fileName = UUID.randomUUID().toString();
-		String fileFullName = grandParentFile.getParent() + File.separator + "temp" + File.separator + fileName;
-		FileUtils.writeStringToFile(new File(fileFullName), str);
-		return fileFullName;
-	}
-	
 	private String htmlStringToPDF2(String htmlStr) throws IOException{
 		ClassLoader classLoader = this.getClass().getClassLoader();
 		File file = new File(classLoader.getResource("TestStory.html").getFile());
@@ -2644,12 +2610,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.defaultTDCId = defaultTDCId;
 	}
 
-	public String getValidationReportsHTML() {
-		return validationReportsHTML;
+	public HL7V2MessageValidationReport gethL7V2MessageValidationReport() {
+		return hL7V2MessageValidationReport;
 	}
 
-	public void setValidationReportsHTML(String validationReportsHTML) {
-		this.validationReportsHTML = validationReportsHTML;
-	}
-	
+	public void sethL7V2MessageValidationReport(
+			HL7V2MessageValidationReport hL7V2MessageValidationReport) {
+		this.hL7V2MessageValidationReport = hL7V2MessageValidationReport;
+	}	
 }

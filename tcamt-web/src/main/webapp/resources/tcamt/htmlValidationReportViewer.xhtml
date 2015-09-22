@@ -16,7 +16,57 @@
 <composite:implementation>
 
 	<p:commandButton icon="ui-icon-pencil" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.er7MessageValidation}" />
-	<iframe srcdoc="#{cc.attrs.bean.validationReportsHTML}" frameBorder="0" style="width: 100%; height: 400px;"></iframe>
+	<p:tabView rendered="#{cc.attrs.bean.hL7V2MessageValidationReport != null}">
+		<p:tab title="Report Header">
+			<h:panelGrid columns="5" cellpadding="10">
+				<h:outputText value="Service Name: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.serviceName}" />
+				<h:outputText value=" " />
+				<h:outputText value="Service Provider: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.serviceProvider}" />
+				
+				<h:outputText value="Service Version: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.serviceVersion}" />
+				<h:outputText value=" " />
+				<h:outputText value="Standard Type: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.standardType}" />
+				
+				<h:outputText value="Validation Type: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.validationType}" />
+				<h:outputText value=" " />
+				<h:outputText value="Type: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.type}" />
+				
+				<h:outputText value="Date Of Test: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.dateOfTest}" />
+				<h:outputText value=" " />
+				<h:outputText value="TimeOfTest: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.timeOfTest}" />
+				
+				<h:outputText value="Positive Assertion Indicator: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.positiveAssertionIndicator}" />
+				<h:outputText value=" " />
+				<h:outputText value="Affirm Count: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.affirmCount}" />
+				
+				<h:outputText value="Error Count: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.errorCount}" />
+				<h:outputText value=" " />
+				<h:outputText value="Warning Count: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.warningCount}" />
+				
+				<h:outputText value="Info Count: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.infoCount}" />
+				<h:outputText value=" " />
+				<h:outputText value="Alert Count: " />
+				<h:outputText value="#{cc.attrs.bean.hL7V2MessageValidationReport.headerReport.alertCount}" />
+				
+				
+			</h:panelGrid>
+		</p:tab>
+		<p:tab title="Report">
+		</p:tab>
+	</p:tabView>
 </composite:implementation>
 
 </html>
