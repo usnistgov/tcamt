@@ -64,6 +64,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -73,6 +74,7 @@ import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TreeDragDropEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
@@ -137,6 +139,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private String messageContentHTML;
 	
 	private String selectedTestCaseName;
+	
+	
+	private DataInstanceTestCaseGroup parentTestGroup;
+	private DataInstanceTestCase parentTestCase;
 	
 	
 	public void shareInit(ActionEvent event){
@@ -222,6 +228,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}else {
 				jurorDocumentId = this.selectedTestPlan.getSpecificJurorDocument().getId();
 			}
+			
+			this.selectedTestPlan.setChanged(false);
+			
+			for(DataInstanceTestCaseGroup group:this.selectedTestPlan.getTestcasegroups()){
+				group.setChanged(false);
+				for(DataInstanceTestCase testcase:group.getTestcases()){
+					testcase.setChanged(false);
+					for(DataInstanceTestStep teststep:testcase.getTeststeps()){
+						teststep.setChanged(false);
+					}
+				}
+			}
+			
+			for(DataInstanceTestCase testcase:this.selectedTestPlan.getTestcases()){
+				testcase.setChanged(false);
+				for(DataInstanceTestStep teststep:testcase.getTeststeps()){
+					teststep.setChanged(false);
+				}
+			}
+			
+			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -296,6 +323,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestStep = null;
 			this.selectedTestCaseGroup = null;
 			
+			this.selectedTestPlan.setChanged(false);
+			
+			for(DataInstanceTestCaseGroup group:this.selectedTestPlan.getTestcasegroups()){
+				group.setChanged(false);
+				for(DataInstanceTestCase testcase:group.getTestcases()){
+					testcase.setChanged(false);
+					for(DataInstanceTestStep teststep:testcase.getTeststeps()){
+						teststep.setChanged(false);
+					}
+				}
+			}
+			
+			for(DataInstanceTestCase testcase:this.selectedTestPlan.getTestcases()){
+				testcase.setChanged(false);
+				for(DataInstanceTestStep teststep:testcase.getTeststeps()){
+					teststep.setChanged(false);
+				}
+			}
+			
+			
+			
 			FacesContext context = FacesContext.getCurrentInstance();
 	        context.addMessage(null, new FacesMessage("Save TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
 		}catch(Exception e){
@@ -322,9 +370,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = newDataInstacneTestCaseGroup;
-				
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("New TestCaseGroup",  "New TestCaseGroup has been created."));
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -351,9 +397,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = clonedGroup;
 				this.selectedTestStep = null;
-				
-//		        FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Clone TestCaseGroup",  "TestCaseGroup: " + this.selectedTestCaseGroup.getName() + " has been clonned.") );
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -379,9 +423,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				
 				this.createTestPlanTree(this.selectedTestPlan);
 				this.updatePositionForPlanAndTree();
-				
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Delete TestCaseGroup",  "TestCaseGroup has been deleted.") );
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -419,8 +461,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = newDataInstacneTestCase;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = null;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("New TestCase",  "New TestCase has been created."));
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -458,8 +499,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = clonedTestcase;
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Clone TestCase",  "TestCase: " + this.selectedTestCase.getName() + " has been clonned.") );
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -492,8 +532,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				
 				this.createTestPlanTree(this.selectedTestPlan);
 				this.updatePositionForPlanAndTree();
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Delete TestCase",  "TestCase has been deleted."));
+				
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -524,8 +564,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestStep = newTestStep;
 				
 				this.selectTestStep();
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("New TestStep",  "New TestStep has been created."));
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -554,8 +593,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCaseGroup = null;
 				this.selectedTestCase = null;
 				this.selectedTestStep = clonedStep;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Clone TestStep",  "TestStep has been cloned."));
+				
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -585,8 +624,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Delete TestStep",  "TestStep has been deleted."));
+				
+				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -606,20 +645,20 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Select TestPlan",  "TestPlan has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCase){
 				this.selectedTestCase = (DataInstanceTestCase)event.getTreeNode().getData();
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Select TestCase",  "TestCase has been selected."));
+				
+				if(event.getTreeNode().getParent().getData() instanceof DataInstanceTestPlan){
+					this.parentTestGroup = null;
+				}else if(event.getTreeNode().getParent().getData() instanceof DataInstanceTestCaseGroup){
+					this.parentTestGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getParent().getData();
+				}
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestCaseGroup){
 				this.selectedTestCase = null;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getData();
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Select TestCaseGroup",  "TestCaseGroup has been selected."));
 			}else if(event.getTreeNode().getData() instanceof DataInstanceTestStep){
 				this.selectedTestStep = (DataInstanceTestStep)event.getTreeNode().getData();
 				this.selectedTestCaseName = ((DataInstanceTestCase)event.getTreeNode().getParent().getData()).getName();
@@ -627,8 +666,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCaseGroup = null;
 				this.selectTestStep();
 				this.activeIndexOfMessageInstancePanel = 0;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Select TestStep",  "TestStep has been selected."));
+				
+				this.parentTestCase = (DataInstanceTestCase)event.getTreeNode().getParent().getData();
+				
+				if(event.getTreeNode().getParent().getParent().getData() instanceof DataInstanceTestPlan){
+					this.parentTestGroup = null;
+				}else if(event.getTreeNode().getParent().getParent().getData() instanceof DataInstanceTestCaseGroup){
+					this.parentTestGroup = (DataInstanceTestCaseGroup)event.getTreeNode().getParent().getParent().getData();
+				}
 			}
 			this.clearSelectNode(this.testplanRoot);
 			event.getTreeNode().setSelected(true);			
@@ -693,7 +738,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
 				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
 				this.selectedInstanceSegment = null;
-				
 				this.generateMessageContentHTML();				
 				this.generateTestDataSpecificationHTML();
 				this.generateJurorDocumentHTML();
@@ -712,6 +756,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.selectedTestStep.getMessage().getConformanceProfile().getSampleER7Message());
 			this.readHL7Message();
+			
+			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -760,8 +806,37 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.readHL7Message();
 			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
 			this.activeIndexOfMessageInstancePanel = 4;
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Update TestData",  "TestData has been updated."));
+			
+			this.modifyTestStep();
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
+	public void delInstanceSegment(ActionEvent event) {
+		try{
+			InstanceSegment toBeDeletedInstanceSegment = (InstanceSegment)event.getComponent().getAttributes().get("instanceSegment");
+			
+			int rowIndex = this.instanceSegments.indexOf(toBeDeletedInstanceSegment);
+			String[] lines = this.selectedTestStep.getMessage().getHl7EndcodedMessage().split(System.getProperty("line.separator"));
+			String editedHl7EndcodedMessage = "";
+			for(int i=0; i<lines.length;i++){
+				if(i != rowIndex){
+					editedHl7EndcodedMessage = editedHl7EndcodedMessage + lines[i] + System.getProperty("line.separator");
+				}
+			}
+			this.selectedTestStep.getMessage().setHl7EndcodedMessage(editedHl7EndcodedMessage);
+			this.readHL7Message();
+			
+			this.selectedInstanceSegment = null;
+			this.segmentTreeRoot = new DefaultTreeNode("root", null);
+		    this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+		    
+		    this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1121,8 +1196,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			this.activeIndexOfMessageInstancePanel = 4;
 			
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Update Constraints",  "Constraints has been updated."));
+			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1139,8 +1213,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			if(this.usageViewOption.equals("all")){
 				this.filteredInstanceSegments = this.instanceSegments;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "All of Instacne Segments are shown."));
 			}else{
 				for(InstanceSegment is:this.instanceSegments){
 					String[] usageList = is.getUsageList().split("-");
@@ -1154,8 +1226,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		        	
 		        	if(usageCheck) this.filteredInstanceSegments.add(is);
 				}
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "R/RE/C of Instacne Segments are shown."));
 			}  
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -1170,12 +1240,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			if(this.usageViewOption2.equals("all")){
 				this.filtedSegmentTreeRoot = this.segmentTreeRoot;
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "All of node are shown in the Segment Tree."));
 			}else {
 				this.filtedSegmentTreeRoot = this.manageInstanceService.genRestrictedTree(this.segmentTreeRoot);
-//				FacesContext context = FacesContext.getCurrentInstance();
-//		        context.addMessage(null, new FacesMessage("Chagne View Option",  "R/RE/C of node are shown in the Segment Tree."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -1190,8 +1256,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			this.manageInstanceService.addRepeatedField(fieldModel, this.segmentTreeRoot, this.selectedTestStep.getMessage());
 			this.updateFilteredSegmentTree();
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Repeat Field",  "Repeatable Field has been added."));
+			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1211,8 +1276,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 			selectTestStep();
 			
-//			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Update Message",  "Message of Test Step has been updated."));
+			this.modifyTestStep();
 	        
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -1237,6 +1301,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.selectedTestPlan.setJurorDocumentEnable(true);
 				}
 			}
+			
+			this.modifyTestPlan();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1273,8 +1339,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        }else if(dragNode.getData() instanceof DataInstanceTestCaseGroup){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
-//	        		FacesContext context = FacesContext.getCurrentInstance();
-//	    	        context.addMessage(null, new FacesMessage("Drop TestCaseGroup",  "TestCaseGroup has been droped in TestPlan."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
 	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have another Test Group. Have been reverted."));
@@ -1291,12 +1355,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        }else if(dragNode.getData() instanceof DataInstanceTestCase){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
-//	        		FacesContext context = FacesContext.getCurrentInstance();
-//	    	        context.addMessage(null, new FacesMessage("Drop TestCase",  "TestCase has been droped in TestPlan."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
-//	        		FacesContext context = FacesContext.getCurrentInstance();
-//	    	        context.addMessage(null, new FacesMessage("Drop TestCase",  "TestCase has been droped in TestCaseGroup."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
 	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have another Test Case. Have been reverted."));
@@ -1317,14 +1377,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
-//	        		FacesContext context = FacesContext.getCurrentInstance();
-//	    	        context.addMessage(null, new FacesMessage("Drop TestStep",  "TestStep has been droped in TestCase."));
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
 	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have another Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }
+	        
+	        this.modifyTestPlan();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1340,7 +1400,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.jurorDocumentHTML = null;
 			this.jurorDocumentPDFFileName = null;
 			this.messageContentHTML = null;
-			this.testDataSpecificationHTML = null;	
+			this.testDataSpecificationHTML = null;
+			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1428,6 +1489,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 		this.defaultTDCId = null;
 		this.activeIndexOfMessageInstancePanel = 3;
+		
+		this.modifyTestStep();
 	}
 	
 	private TestDataCategorization findTestDataCategorizationFromSheet(DefaultTestDataCategorizationSheet sheet, String segmentName, Integer fieldPosition, Integer componentPosition, Integer subComponentPosition){
@@ -1447,6 +1510,39 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	public void detectChangeEr7Message(AjaxBehaviorEvent event){
+		this.selectedInstanceSegment = null;
+		this.segmentTreeRoot = new DefaultTreeNode("root", null);
+	    this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+	    this.modifyTestStep();
+	}
+	
+	public void onTabChange(TabChangeEvent event) {
+		this.readHL7Message();
+    }
+	
+	public void modifyTestPlan(){
+		this.selectedTestPlan.setChanged(true);
+	}
+	
+	public void modifyTestCaseGroup(){
+		this.selectedTestPlan.setChanged(true);
+		this.selectedTestCaseGroup.setChanged(true);
+	}
+	
+	public void modifyTestCase(){
+		this.selectedTestPlan.setChanged(true);
+		this.selectedTestCase.setChanged(true);
+		if(this.parentTestGroup != null) this.parentTestGroup.setChanged(true);
+	}
+	
+	public void modifyTestStep(){
+		this.selectedTestPlan.setChanged(true);
+		this.selectedTestStep.setChanged(true);
+		this.parentTestCase.setChanged(true);
+		if(this.parentTestGroup != null) this.parentTestGroup.setChanged(true);
 	}
 	
 	/*
@@ -2617,5 +2713,21 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	public void sethL7V2MessageValidationReport(
 			HL7V2MessageValidationReport hL7V2MessageValidationReport) {
 		this.hL7V2MessageValidationReport = hL7V2MessageValidationReport;
+	}
+
+	public DataInstanceTestCaseGroup getParentTestGroup() {
+		return parentTestGroup;
+	}
+
+	public void setParentTestGroup(DataInstanceTestCaseGroup parentTestGroup) {
+		this.parentTestGroup = parentTestGroup;
+	}
+
+	public DataInstanceTestCase getParentTestCase() {
+		return parentTestCase;
+	}
+
+	public void setParentTestCase(DataInstanceTestCase parentTestCase) {
+		this.parentTestCase = parentTestCase;
 	}	
 }

@@ -12,8 +12,10 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -238,7 +240,10 @@ public class MessageRequestBean implements Serializable {
 				}
 			}
 			this.editMessage.setHl7EndcodedMessage(editedHl7EndcodedMessage);
-			this.readHL7Message();			
+			this.readHL7Message();
+			this.selectedInstanceSegment = null;
+			this.segmentTreeRoot = new DefaultTreeNode("root", null);
+		    this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -622,6 +627,40 @@ public class MessageRequestBean implements Serializable {
 		}
 		return null;
 	}
+
+	public void detectChangeEr7Message(AjaxBehaviorEvent event){
+		this.selectedInstanceSegment = null;
+		this.segmentTreeRoot = new DefaultTreeNode("root", null);
+	    this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
+	}
+	
+	public void onTabChange(TabChangeEvent event) throws Exception {
+		this.readHL7Message();
+
+		switch (event.getTab().getTitle().toLowerCase()) {
+        	case "hl7 message tree":
+        		this.activeIndexOfMessageInstancePanel = 0;
+        		break;
+        	case "hl7 encoded message":
+        		this.activeIndexOfMessageInstancePanel = 1;
+        		break;
+        	case "segments list":
+        		this.activeIndexOfMessageInstancePanel = 2;
+        		break;
+        	case "testdata of selected segment":
+        		this.activeIndexOfMessageInstancePanel = 3;
+        		break;
+        	case "list constraints":
+        		this.activeIndexOfMessageInstancePanel = 4;
+        		break;
+        	case "std xml encoded message":
+        		this.activeIndexOfMessageInstancePanel = 5;
+        		break;
+        	case "nist xml encoded message":
+        		this.activeIndexOfMessageInstancePanel = 6;
+        		break;
+		}
+    }
 	
 	/**
 	 * 

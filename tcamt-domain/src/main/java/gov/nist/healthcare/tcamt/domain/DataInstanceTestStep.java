@@ -66,6 +66,11 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 	@Transient
 	private boolean selected;
 	
+	
+	@JsonIgnore
+	@Transient
+	private boolean changed;
+	
 	public DataInstanceTestStep(long id, String name, String longDescription, Integer version) {
 		super();
 		this.id = id;
@@ -184,7 +189,22 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 		this.hl7v2 = hl7v2;
 	}
 
+	public boolean isChanged() {
+		return changed;
+	}
 
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+
+	public static Comparator<DataInstanceTestStep> getTestCasePositionComparator() {
+		return testCasePositionComparator;
+	}
+
+	public static void setTestCasePositionComparator(
+			Comparator<DataInstanceTestStep> testCasePositionComparator) {
+		DataInstanceTestStep.testCasePositionComparator = testCasePositionComparator;
+	}
 
 	public static Comparator<DataInstanceTestStep> testCasePositionComparator = new Comparator<DataInstanceTestStep>() {
 		public int compare(DataInstanceTestStep ts1, DataInstanceTestStep ts2) {

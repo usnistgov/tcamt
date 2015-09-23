@@ -21,11 +21,11 @@
 		<tr>
 			<td align="right">
 				<p:commandButton value="Load Sample Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.loadHL7Message}"/>
-				<p:commandButton value="Update er7 Message" icon="ui-icon-refresh" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.readHL7Message}"/>
 			</td>
 		</tr>
 	</table>
 	<pe:codeMirror mode="xml" theme="neat" value="#{cc.attrs.hl7EndcodedMessage}" lineNumbers="true">
+		<p:ajax event="change" update="#{cc.attrs.panelId}" listener="#{cc.attrs.bean.detectChangeEr7Message}" />
 	</pe:codeMirror>
 </composite:implementation>
 

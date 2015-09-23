@@ -72,6 +72,10 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	private boolean selected;
 	
 	@JsonIgnore
+	@Transient
+	private boolean changed;
+	
+	@JsonIgnore
 	@Embedded
 	private Metadata metadata = new Metadata();
 	
@@ -205,5 +209,11 @@ public class DataInstanceTestPlan implements Cloneable, Serializable{
 	}
 	public void setJurorDocumentEnable(boolean jurorDocumentEnable) {
 		this.jurorDocumentEnable = jurorDocumentEnable;
+	}
+	public boolean isChanged() {
+		return changed;
+	}
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 }

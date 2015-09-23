@@ -58,6 +58,10 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 	@JsonIgnore
 	@Transient
 	private boolean selected;
+	
+	@JsonIgnore
+	@Transient
+	private boolean changed;
 
 	public long getId() {
 		return id;
@@ -140,8 +144,6 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 	public void setExpanded(boolean expanded) {
 		this.expanded = expanded;
 	}
-	
-	
 
 	public boolean isSelected() {
 		return selected;
@@ -149,6 +151,23 @@ public class DataInstanceTestCaseGroup implements Cloneable, Serializable, Compa
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+
+	public static Comparator<DataInstanceTestCaseGroup> getTestCaseGroupPositionComparator() {
+		return testCaseGroupPositionComparator;
+	}
+
+	public static void setTestCaseGroupPositionComparator(
+			Comparator<DataInstanceTestCaseGroup> testCaseGroupPositionComparator) {
+		DataInstanceTestCaseGroup.testCaseGroupPositionComparator = testCaseGroupPositionComparator;
 	}
 
 

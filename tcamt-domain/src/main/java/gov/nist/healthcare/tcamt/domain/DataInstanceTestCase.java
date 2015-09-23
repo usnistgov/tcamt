@@ -62,6 +62,10 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	@Transient
 	private boolean selected;
 	
+	@JsonIgnore
+	@Transient
+	private boolean changed;
+	
 	public long getId() {
 		return id;
 	}
@@ -148,6 +152,20 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 	}
 	public void setSelected(boolean selected) {
 		this.selected = selected;
+	}
+	
+	public boolean isChanged() {
+		return changed;
+	}
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+	}
+	public static Comparator<DataInstanceTestCase> getTestCasePositionComparator() {
+		return testCasePositionComparator;
+	}
+	public static void setTestCasePositionComparator(
+			Comparator<DataInstanceTestCase> testCasePositionComparator) {
+		DataInstanceTestCase.testCasePositionComparator = testCasePositionComparator;
 	}
 
 	public static Comparator<DataInstanceTestCase> testCasePositionComparator = new Comparator<DataInstanceTestCase>() {

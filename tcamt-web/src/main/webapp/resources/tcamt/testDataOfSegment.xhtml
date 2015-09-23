@@ -26,8 +26,9 @@
 			</td>
 		</tr>
 	</table>
-	<p:treeTable value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true"
-		rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
+	<p:treeTable id="woorion" value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true" liveResize="true" rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
+		<p:ajax event="colResize" update=":#{p:component('woorion')}" />
+		
 		<p:column headerText="Path" style="width:20%;">
 			<h:outputText value="#{model.ipath}" />
 		</p:column>
@@ -41,13 +42,10 @@
 			<h:outputText value="#{model.usage}" />
 		</p:column>
 		<p:column headerText="Cardi." style="width:5%; text-align: center;">
-			<h:outputText
-				rendered="#{model.node.getClass().getSimpleName() == 'Field'}"
-				value="[#{model.node.min},#{model.node.max}]" />
+			<h:outputText rendered="#{model.node.getClass().getSimpleName() == 'Field'}" value="[#{model.node.min},#{model.node.max}]" />
 		</p:column>
 		<p:column headerText="Length" style="width:5%; text-align: center;">
-			<h:outputText rendered="#{model.leafNode}"
-				value="[#{model.node.minLength},#{model.node.maxLength}]" />
+			<h:outputText rendered="#{model.leafNode}" value="[#{model.node.minLength},#{model.node.maxLength}]" />
 		</p:column>
 		<p:column headerText="Value Set" style="width:8%; text-align: center;">
 			<h:outputText id="valueSet" value="#{model.table.bindingIdentifier}" />

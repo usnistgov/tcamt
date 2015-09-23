@@ -99,6 +99,8 @@
 					</p:selectOneMenu>
 				</h:panelGrid>
 				<p:accordionPanel id="mInstancePanel" widgetVar="MessageInstancePanel" activeIndex="#{messageRequestBean.activeIndexOfMessageInstancePanel}">
+					<p:ajax event="tabChange" listener="#{messageRequestBean.onTabChange}" update=":#{p:component('mInstancePanel')}"/>
+					
 					<p:tab title="HL7 Message Tree">
 						<tcamt:messageConstructor bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:tab>
@@ -111,8 +113,8 @@
 					<p:tab title="TestData of Selected Segment">
 						<tcamt:testDataOfSegment bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}"/>
 					</p:tab>
-					<p:tab title="List Contraints">
-						<tcamt:constraintsTable bean="#{messageRequestBean}" panelId=":#{p:component('mInstancePanel')}" />
+					<p:tab title="List Constraints">
+						<tcamt:constraintsTable bean="#{messageRequestBean}" />
 					</p:tab>
 					<p:tab title="STD XML Encoded Message">
 						<tcamt:hl7XMLMessage xmlEncodedMessage="#{messageRequestBean.editMessage.xmlEncodedSTDMessage}"/>
