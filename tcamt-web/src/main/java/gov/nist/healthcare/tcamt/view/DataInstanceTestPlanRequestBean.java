@@ -51,6 +51,7 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +71,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
+import org.primefaces.event.ColumnResizeEvent;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -144,7 +146,24 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestCaseGroup parentTestGroup;
 	private DataInstanceTestCase parentTestCase;
 	
-	
+	private String[] selectedDisplayColumns;   
+    private List<String> displayColumns;
+    
+	public DataInstanceTestPlanRequestBean() {
+		super();
+		
+		displayColumns = new ArrayList<String>();
+		displayColumns.add("DT");
+		displayColumns.add("Usage");
+		displayColumns.add("Cardi.");
+		displayColumns.add("Length");
+		displayColumns.add("Value Set");
+		displayColumns.add("Predicate");
+		displayColumns.add("Conf.Statements");
+		
+		selectedDisplayColumns = new String[]{"DT", "Usage", "Cardi.", "Value Set"};
+	}
+		
 	public void shareInit(ActionEvent event){
 		try{
 			this.shareTo = null;
@@ -304,6 +323,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	public void saveTestPlan()  {
 		try{
+			if(this.selectedTestCaseGroup != null) this.selectedTestCaseGroup.setSelected(true);
+			if(this.selectedTestCase != null) this.selectedTestCase.setSelected(true);
+			if(this.selectedTestStep != null) this.selectedTestStep.setSelected(true);
+			
 			if(this.selectedTestPlan.getId() <= 0){
 				this.selectedTestPlan.setVersion(1);
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(this.selectedTestPlan);
@@ -313,16 +336,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(testplan);
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 				this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanDelete(this.sessionBeanTCAMT.getDbManager().getDataInstanceTestPlanById(this.selectedTestPlan.getId()));
-				this.selectedTestPlan = this.sessionBeanTCAMT.getDbManager().getDataInstanceTestPlanById(testplan.getId());
+				this.selectedTestPlan = testplan;
 				this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			}
-			this.selectedTestPlan.setSelected(true);
+			
 			this.createTestPlanTree(this.selectedTestPlan);
-			
-			this.selectedTestCase = null;
-			this.selectedTestStep = null;
-			this.selectedTestCaseGroup = null;
-			
 			this.selectedTestPlan.setChanged(false);
 			
 			for(DataInstanceTestCaseGroup group:this.selectedTestPlan.getTestcasegroups()){
@@ -341,8 +359,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					teststep.setChanged(false);
 				}
 			}
-			
-			
 			
 			FacesContext context = FacesContext.getCurrentInstance();
 	        context.addMessage(null, new FacesMessage("Save TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
@@ -1605,6 +1621,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			groupNode.setExpanded(ditcg.isExpanded());
 			groupNode.setSelected(ditcg.isSelected());
 			ditcg.setSelected(false);
+			if(groupNode.isSelected()) this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)groupNode.getData();
 			
 			List<DataInstanceTestCase> sortedDataInstanceTestCases = new ArrayList<DataInstanceTestCase>(ditcg.getTestcases());
 			Collections.sort(sortedDataInstanceTestCases);
@@ -1613,12 +1630,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				caseNode.setExpanded(ditc.isExpanded());
 				caseNode.setSelected(ditc.isSelected());
 				ditc.setSelected(false);
+				if(caseNode.isSelected()) this.selectedTestCase = (DataInstanceTestCase)caseNode.getData();
 				List<DataInstanceTestStep> sortedDataInstanceTestStep = new ArrayList<DataInstanceTestStep>(ditc.getTeststeps());
 				Collections.sort(sortedDataInstanceTestStep);
 				for(DataInstanceTestStep dits:sortedDataInstanceTestStep){
 					TreeNode stepNode = new DefaultTreeNode("step", dits, caseNode);
 					stepNode.setSelected(dits.isSelected());
 					dits.setSelected(false);
+					if(stepNode.isSelected()) this.selectedTestStep = (DataInstanceTestStep)stepNode.getData();
 				}
 			}
 		}
@@ -1629,12 +1648,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			caseNode.setExpanded(ditc.isExpanded());
 			caseNode.setSelected(ditc.isSelected());
 			ditc.setSelected(false);
+			if(caseNode.isSelected()) this.selectedTestCase = (DataInstanceTestCase)caseNode.getData();
 			List<DataInstanceTestStep> sortedDataInstanceTestStep = new ArrayList<DataInstanceTestStep>(ditc.getTeststeps());
 			Collections.sort(sortedDataInstanceTestStep);
 			for(DataInstanceTestStep dits:sortedDataInstanceTestStep){
 				TreeNode stepNode = new DefaultTreeNode("step", dits, caseNode);
 				stepNode.setSelected(dits.isSelected());
 				dits.setSelected(false);
+				if(stepNode.isSelected()) this.selectedTestStep = (DataInstanceTestStep)stepNode.getData();
 			}
 		}
 	}
@@ -2405,6 +2426,18 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 	}
 	
+	public boolean isSelectedColumn(String columnName){
+		return Arrays.asList(this.selectedDisplayColumns).contains(columnName);
+	}
+	
+	public String cutSegmentPath(String ipath){
+		if(this.selectedInstanceSegment == null){
+			return ipath;
+		}
+		
+		return ipath.replace(this.selectedInstanceSegment.getIpath() + ".", "");
+	}
+	
 	
 	
 	
@@ -2729,5 +2762,21 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setParentTestCase(DataInstanceTestCase parentTestCase) {
 		this.parentTestCase = parentTestCase;
+	}
+
+	public String[] getSelectedDisplayColumns() {
+		return selectedDisplayColumns;
+	}
+
+	public void setSelectedDisplayColumns(String[] selectedDisplayColumns) {
+		this.selectedDisplayColumns = selectedDisplayColumns;
+	}
+
+	public List<String> getDisplayColumns() {
+		return displayColumns;
+	}
+
+	public void setDisplayColumns(List<String> displayColumns) {
+		this.displayColumns = displayColumns;
 	}	
 }

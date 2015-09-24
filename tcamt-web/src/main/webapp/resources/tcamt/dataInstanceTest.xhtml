@@ -88,7 +88,7 @@
 				</p:dataTable>
 			</p:tab>
 			<p:tab title="Data Instance Test Plan DashBoard">
-				<p:layout style="min-width:400px;min-height:700px;">
+				<p:layout style="min-width:400px;min-height:1000px;">
 					<p:ajax event="resize" update=":#{p:component('testplanTree')} :#{p:component('dashboard')}"  />
 					<p:layoutUnit position="north" style="border: 0;">
 						<table width="100%">
@@ -114,7 +114,7 @@
 						</table>
 					</p:layoutUnit>
 					<p:layoutUnit position="west" header="TestPlan Structure" resizable="true" style="border: 0;" collapsible="true" size="25%">
-						<p:tree id="testplanTree" animate="false" value="#{dataInstanceTestPlanRequestBean.testplanRoot}" draggable="true" droppable="true" var="node" selectionMode="single" selection="#{dataInstanceTestPlanRequestBean.selectedNode}" dynamic="true" style="border-width:0;width:100%;height:100%;">
+						<p:tree id="testplanTree" animate="false" value="#{dataInstanceTestPlanRequestBean.testplanRoot}" draggable="true" droppable="true" var="node" selectionMode="single" selection="#{dataInstanceTestPlanRequestBean.selectedNode}" dynamic="true" style="border-width:0;">
 							<p:ajax event="expand" listener="#{dataInstanceTestPlanRequestBean.onNodeExpand}" update=":#{p:component('growl_DataInstanceTest')}"/>
         					<p:ajax event="collapse" listener="#{dataInstanceTestPlanRequestBean.onNodeCollapse}" update=":#{p:component('growl_DataInstanceTest')}"/>
 							<p:ajax event="select" listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />

@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -68,6 +69,9 @@ public class MessageRequestBean implements Serializable {
 	
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
+	
+	private String[] selectedDisplayColumns;   
+    private List<String> displayColumns;
 
 	/**
 	 * 
@@ -75,6 +79,17 @@ public class MessageRequestBean implements Serializable {
 	public MessageRequestBean() {
 		super();
 		this.init();
+		
+		displayColumns = new ArrayList<String>();
+		displayColumns.add("DT");
+		displayColumns.add("Usage");
+		displayColumns.add("Cardi.");
+		displayColumns.add("Length");
+		displayColumns.add("Value Set");
+		displayColumns.add("Predicate");
+		displayColumns.add("Conf.Statements");
+		
+		selectedDisplayColumns = new String[]{"DT", "Usage", "Cardi.", "Value Set"};
 	}
 	
 	private void init(){
@@ -662,6 +677,14 @@ public class MessageRequestBean implements Serializable {
 		}
     }
 	
+	public boolean isSelectedColumn(String columnName){
+		return Arrays.asList(this.selectedDisplayColumns).contains(columnName);
+	}
+	
+	public String cutSegmentPath(String ipath){
+		return ipath.replace(this.selectedInstanceSegment.getIpath() + ".", "");
+	}
+	
 	/**
 	 * 
 	 */
@@ -830,6 +853,22 @@ public class MessageRequestBean implements Serializable {
 
 	public void setDefaultTDCId(Long defaultTDCId) {
 		this.defaultTDCId = defaultTDCId;
+	}
+
+	public String[] getSelectedDisplayColumns() {
+		return selectedDisplayColumns;
+	}
+
+	public void setSelectedDisplayColumns(String[] selectedDisplayColumns) {
+		this.selectedDisplayColumns = selectedDisplayColumns;
+	}
+
+	public List<String> getDisplayColumns() {
+		return displayColumns;
+	}
+
+	public void setDisplayColumns(List<String> displayColumns) {
+		this.displayColumns = displayColumns;
 	}
 	
 	

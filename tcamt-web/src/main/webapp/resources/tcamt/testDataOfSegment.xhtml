@@ -17,37 +17,47 @@
 <composite:implementation>
 	<table width="100%">
 		<tr>
+			<td align="left">
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputText value="Selected Segment: " style="font-weight:bold" />
+					<h:outputText value="#{cc.attrs.bean.selectedInstanceSegment.ipath}" style="font-weight:bold" />
+				</h:panelGrid>
+			</td>
 			<td align="right">
-				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
-					<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
-            		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
-            		<f:selectItem itemLabel="All" itemValue="all" />
-        		</p:selectOneButton>
+				<h:panelGrid columns="2" cellpadding="5">
+        			<p:selectCheckboxMenu id="columnMenu" value="#{cc.attrs.bean.selectedDisplayColumns}" label="Display Column" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
+            			<p:ajax event="change" update="testDataTable" />
+            			<f:selectItems value="#{cc.attrs.bean.displayColumns}" />
+        			</p:selectCheckboxMenu>
+        			<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
+						<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
+            			<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
+            			<f:selectItem itemLabel="All" itemValue="all" />
+        			</p:selectOneButton>
+    			</h:panelGrid>
 			</td>
 		</tr>
 	</table>
-	<p:treeTable id="woorion" value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true" liveResize="true" rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
-		<p:ajax event="colResize" update=":#{p:component('woorion')}" />
-		
-		<p:column headerText="Path" style="width:20%;">
-			<h:outputText value="#{model.ipath}" />
+	<p:treeTable id="testDataTable" value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true" rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
+		<p:column headerText="Path" style="width:50px;">
+			<h:outputText value="#{cc.attrs.bean.cutSegmentPath(model.ipath)}" />
 		</p:column>
-		<p:column headerText="Name" style="width:20%;">
+		<p:column headerText="Name" style="width:200px;">
 			<h:outputText value="#{model.node.name}" />
 		</p:column>
-		<p:column headerText="DT" style="width:8%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('DT')}" headerText="DT" style="text-align: center;">
 			<h:outputText value="#{model.datatype.label}" />
 		</p:column>
-		<p:column headerText="Usage" style="width:5%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Usage')}" headerText="Usage" style="text-align: center;">
 			<h:outputText value="#{model.usage}" />
 		</p:column>
-		<p:column headerText="Cardi." style="width:5%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Cardi.')}" headerText="Cardi." style="text-align: center;">
 			<h:outputText rendered="#{model.node.getClass().getSimpleName() == 'Field'}" value="[#{model.node.min},#{model.node.max}]" />
 		</p:column>
-		<p:column headerText="Length" style="width:5%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Length')}" headerText="Length" style="text-align: center;">
 			<h:outputText rendered="#{model.leafNode}" value="[#{model.node.minLength},#{model.node.maxLength}]" />
 		</p:column>
-		<p:column headerText="Value Set" style="width:8%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Value Set')}" headerText="Value Set" style="text-align: center;">
 			<h:outputText id="valueSet" value="#{model.table.bindingIdentifier}" />
 			<p:overlayPanel for="valueSet" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
         		<p:dataTable var="code" value="#{model.table.codes}" rows="5" paginator="true" >
@@ -68,14 +78,14 @@
     		</p:overlayPanel>
 			
 		</p:column>
-		<p:column headerText="Predicate" style="width:5%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Predicate')}" headerText="Predicate" style="text-align: center;">
 			<p:graphicImage id="predicate" name="/images/message-icon.png" rendered="#{model.predicate != null}" style="cursor:pointer" title="Predicate" />
 			<p:overlayPanel for="predicate" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true">
         		<h:outputText value="#{model.predicate.description}" />
     		</p:overlayPanel>
 		</p:column>
 		
-		<p:column headerText="Conf.Statements" style="width:6%; text-align: center;">
+		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Conf.Statements')}" headerText="Conf.Statements" style="text-align: center;">
 			<p:graphicImage id="conformanceStatements" name="/images/list.png" rendered="#{model.conformanceStatements != null}" style="cursor:pointer" title="Conformance Statements" />
 			<p:overlayPanel for="conformanceStatements" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
         		<p:dataTable var="cs" value="#{model.conformanceStatements}" rows="5" paginator="true" >
@@ -90,7 +100,7 @@
     		</p:overlayPanel>
 		</p:column>
 		
-		<p:column headerText="Test Data" style="width:8%; text-align: center;">
+		<p:column headerText="Test Data" style="width:100px; text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
 			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  style="width:90%;" value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
@@ -103,7 +113,7 @@
 			</p:selectOneMenu>
 		</p:column>
 		
-		<p:column headerText="TestData Cate." style="width:8%; text-align: center;">
+		<p:column id="cateColumn" headerText="TestData Cate." style="width:100px; text-align: center;">
 			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
@@ -121,7 +131,7 @@
 			</p:selectOneMenu>
 		</p:column>
 		
-		<p:column headerText="Action" style="width:2%; text-align: center;">
+		<p:column headerText="Action" style="width:10px; text-align: center;">
 			<p:commandButton icon="ui-icon-plus" rendered="#{model.node.getClass().getSimpleName() == 'Field' and model.node.max == '*'}" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.addRepeatedField(model)}" />
 		</p:column>
 	</p:treeTable>
