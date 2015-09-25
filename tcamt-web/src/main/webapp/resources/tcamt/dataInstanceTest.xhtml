@@ -372,58 +372,72 @@
 									<p:accordionPanel dynamic="true" cache="true">
         								<p:tab title="Description">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 			 										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Comments">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Pre-Condition">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Post-Condition">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Test Objectives">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Evaluation Criteria">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Notes">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
     								</p:accordionPanel>
@@ -495,7 +509,7 @@
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 
-										<h:outputText value="Test Suite Title: " />
+										<!-- <h:outputText value="Test Suite Title: " />
 										<p:inplace editor="true" emptyLabel="No Header Info">
 											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteHomeTitle}" style="width:100%;" />
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
@@ -511,7 +525,7 @@
 										<p:inplace editor="true" emptyLabel="No Header Info">
 											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteHomeContent}" style="width:100%;" />
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
-										</p:inplace>
+										</p:inplace> -->
 
 										<h:outputText value="Author: " />
 										<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.author.userId}" />
