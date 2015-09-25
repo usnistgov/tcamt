@@ -932,36 +932,22 @@ public class ManageInstance implements Serializable {
 			String iPath = c.getIpath();
 			String tdc = c.getCategorization().getValue();
 
-			if (c.getCategorization()
-					.equals(TestDataCategorization.Indifferent)) {
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.ContentIndifferent)) {
+			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
+			} else if (c.getCategorization().equals(TestDataCategorization.ContentIndifferent)) {
 				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.Configurable)) {
+			} else if (c.getCategorization().equals(TestDataCategorization.Configurable)) {
 				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.NotValued)) {
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.TestCaseFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
-				this.createPlainTextCheck(c.getData(), iPositionPath, iPath,
-						tdc, elmByName);
-			} else if (c.getCategorization().equals(
-					TestDataCategorization.TestCaseFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc,
-						elmByName);
-				this.createStringListCheck(c.getData(), iPositionPath, iPath,
-						tdc, elmByName);
+			} else if (c.getCategorization().equals(TestDataCategorization.SystemGenerated)) {
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+			} else if (c.getCategorization().equals(TestDataCategorization.TestCaseProper)) {
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+			} else if (c.getCategorization().equals(TestDataCategorization.NotValued)) {
+			} else if (c.getCategorization().equals(TestDataCategorization.TestCaseFixed)) {
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName);
+			} else if (c.getCategorization().equals(TestDataCategorization.TestCaseFixedList)) {
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName);
 			}
 		}
 		if (messageName != null) {

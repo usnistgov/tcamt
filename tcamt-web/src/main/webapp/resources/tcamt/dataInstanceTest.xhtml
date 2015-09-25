@@ -126,19 +126,19 @@
 							</p:treeNode>
 							<p:treeNode type="plan" icon="ui-icon-home">
 								<h:outputText rendered="#{not node.changed}" value="#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="#{node.name}" style="color:red;font-style:italic;" />
+								<h:outputText rendered="#{node.changed}" value="*#{node.name}" style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="group" icon="ui-icon-cart">
 								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="[#{node.position}]#{node.name}" style="color:red;font-style:italic;" />
+								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="case" icon="ui-icon-note">
 								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="[#{node.position}]#{node.name}" style="color:red;font-style:italic;" />
+								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="step" icon="ui-icon-document">
 								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="[#{node.position}]#{node.name}" style="color:red;font-style:italic;" />
+								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
 							</p:treeNode>
 						</p:tree>
 						<p:contextMenu for="testplanTree" nodeType="plan">
@@ -248,58 +248,72 @@
 									<p:accordionPanel dynamic="true" cache="true">
         								<p:tab title="Description">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 			 										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Comments">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Pre-Condition">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Post-Condition">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Test Objectives">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Evaluation Criteria">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
         								<p:tab title="Notes">
             								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
-												<pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
+												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-												</pe:ckEditor>
+												</pe:ckEditor> -->
+												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" style="width:100%;" />
+        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
             								</h:panelGrid>
         								</p:tab>
     								</p:accordionPanel>

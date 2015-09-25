@@ -71,7 +71,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
-import org.primefaces.event.ColumnResizeEvent;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -386,7 +385,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = newDataInstacneTestCaseGroup;
-				this.modifyTestPlan();
+				this.modifyTestCaseGroup();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -413,7 +412,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestCaseGroup = clonedGroup;
 				this.selectedTestStep = null;
-				this.modifyTestPlan();
+				this.modifyTestCaseGroup();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -464,12 +463,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					newDataInstacneTestCase.setPosition(this.selectedTestPlan.getTestcases().size() + 1);
 					newDataInstacneTestCase.setSelected(true);
 					this.selectedTestPlan.setExpanded(true);
-					((DataInstanceTestPlan)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);	
+					((DataInstanceTestPlan)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
 				}else if(this.selectedNode.getData() instanceof  DataInstanceTestCaseGroup){
 					newDataInstacneTestCase.setPosition(((DataInstanceTestCaseGroup)this.selectedNode.getData()).getTestcases().size() + 1);
 					newDataInstacneTestCase.setSelected(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).setExpanded(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
+					this.parentTestGroup = null;
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
@@ -477,7 +478,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = newDataInstacneTestCase;
 				this.selectedTestStep = null;
 				this.selectedTestCaseGroup = null;
-				this.modifyTestPlan();
+				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -503,11 +504,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					group.setExpanded(true);
 					clonedTestcase.setPosition(group.getTestcases().size()+1);
 					group.addTestCase(clonedTestcase);
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
 				}else if(this.selectedNode.getParent().getData() instanceof DataInstanceTestPlan){
 					DataInstanceTestPlan plan = (DataInstanceTestPlan)this.selectedNode.getParent().getData();
 					plan.setExpanded(true);
 					clonedTestcase.setPosition(plan.getTestcases().size()+1);
 					plan.addTestCase(clonedTestcase);
+					this.parentTestGroup = null;
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
@@ -515,7 +518,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = clonedTestcase;
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
-				this.modifyTestPlan();
+				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -541,15 +544,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.selectedTestCaseGroup = (DataInstanceTestCaseGroup)parentNode.getData();
 					this.selectedTestCaseGroup.getTestcases().remove(this.selectedNode.getData());
 					this.selectedTestCaseGroup.setSelected(true);
+					this.modifyTestCaseGroup();
 				}else if(parentNode.getData() instanceof DataInstanceTestPlan){
 					this.selectedTestPlan.getTestcases().remove(this.selectedNode.getData());
 					this.selectedTestPlan.setSelected(true);
+					this.modifyTestPlan();
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
 				this.updatePositionForPlanAndTree();
-				
-				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -567,6 +570,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			if(this.selectedNode != null){
 				this.selectedTestCase = (DataInstanceTestCase)this.selectedNode.getData();
+				this.parentTestCase =  (DataInstanceTestCase)this.selectedNode.getData();
+				if(this.selectedNode.getParent().getData() instanceof DataInstanceTestCaseGroup){
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
+				}
 				DataInstanceTestStep newTestStep = new DataInstanceTestStep();
 				newTestStep.setName("New Test Step");
 				newTestStep.setPosition(this.selectedTestCase.getTeststeps().size() + 1);
@@ -580,7 +587,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestStep = newTestStep;
 				
 				this.selectTestStep();
-				this.modifyTestPlan();
+				this.modifyTestStep();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -599,6 +606,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			if(this.selectedNode != null){
 				DataInstanceTestCase testcase = (DataInstanceTestCase)this.selectedNode.getParent().getData();
 				DataInstanceTestStep clonedStep = ((DataInstanceTestStep)this.selectedNode.getData()).clone();
+				
+				this.parentTestCase =  (DataInstanceTestCase)this.selectedNode.getParent().getData();
+				if(this.selectedNode.getParent().getParent().getParent().getData() instanceof DataInstanceTestCaseGroup){
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getParent().getData();
+				}
+				
 				clonedStep.setName("(Copy)" + clonedStep.getName());
 				clonedStep.setPosition(testcase.getTeststeps().size()+1);
 				clonedStep.setSelected(true);
@@ -610,7 +623,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCase = null;
 				this.selectedTestStep = clonedStep;
 				
-				this.modifyTestPlan();
+				this.selectTestStep();
+				this.modifyTestStep();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
@@ -633,6 +647,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					this.selectedTestCase.getTeststeps().remove(this.selectedNode.getData());
 					this.selectedTestCase.setExpanded(true);
 					this.selectedTestCase.setSelected(true);
+					
+					if(parentNode.getParent().getData() instanceof DataInstanceTestCaseGroup){
+						this.parentTestGroup = (DataInstanceTestCaseGroup)parentNode.getParent().getData();
+					}
+					
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
@@ -641,7 +660,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.selectedTestCaseGroup = null;
 				this.selectedTestStep = null;
 				
-				this.modifyTestPlan();
+				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
