@@ -1223,10 +1223,12 @@ public class ManageInstance implements Serializable {
 											fieldElm.appendChild(componentElm);
 
 										}
+									} else {
+										Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+										fieldElm.appendChild(value);
 									}
 								} else {
-									Text value = segmentElm.getOwnerDocument()
-											.createTextNode(fieldStr);
+									Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
 									fieldElm.appendChild(value);
 								}
 							} else {
@@ -1344,46 +1346,29 @@ public class ManageInstance implements Serializable {
 					if (fieldStr != null && !fieldStr.equals("")) {
 						if (i < segment.getFields().size()) {
 							Field field = segment.getFields().get(i);
-							Element fieldElm = segmentElm.getOwnerDocument()
-									.createElement(
-											segmentName + "."
-													+ field.getPosition());
-							if (m.getDatatypes().findOne(field.getDatatype())
-									.getComponents() == null
-									|| m.getDatatypes()
-											.findOne(field.getDatatype())
-											.getComponents().size() == 0) {
+							Element fieldElm = segmentElm.getOwnerDocument().createElement(segmentName + "." + field.getPosition());
+							if (m.getDatatypes().findOne(field.getDatatype()).getComponents() == null || m.getDatatypes().findOne(field.getDatatype()).getComponents().size() == 0) {
 								if (lineStr.startsWith("OBX")) {
 									if (field.getPosition().equals(2)) {
 										variesDT = fieldStr;
-										Text value = segmentElm
-												.getOwnerDocument()
-												.createTextNode(fieldStr);
+										Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
 										fieldElm.appendChild(value);
 									} else if (field.getPosition().equals(5)) {
-										String[] componentStrs = fieldStr
-												.split("\\^");
+										String[] componentStrs = fieldStr.split("\\^");
 
 										for (int index = 0; index < componentStrs.length; index++) {
 											String componentStr = componentStrs[index];
-											Element componentElm = segmentElm
-													.getOwnerDocument()
-													.createElement(
-															variesDT
-																	+ "."
-																	+ (index + 1));
-											Text value = segmentElm
-													.getOwnerDocument()
-													.createTextNode(
-															componentStr);
+											Element componentElm = segmentElm.getOwnerDocument().createElement(variesDT + "." + (index + 1));
+											Text value = segmentElm.getOwnerDocument().createTextNode(componentStr);
 											componentElm.appendChild(value);
 											fieldElm.appendChild(componentElm);
-
 										}
+									} else {
+										Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
+										fieldElm.appendChild(value);
 									}
 								} else {
-									Text value = segmentElm.getOwnerDocument()
-											.createTextNode(fieldStr);
+									Text value = segmentElm.getOwnerDocument().createTextNode(fieldStr);
 									fieldElm.appendChild(value);
 								}
 							} else {
