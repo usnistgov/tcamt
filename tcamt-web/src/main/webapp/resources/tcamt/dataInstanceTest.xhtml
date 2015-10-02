@@ -216,10 +216,15 @@
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
 										
-										<h:outputText value="Description: " />
+										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
+    										<f:facet name="output">
+        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}" escape="false" />
+    										</f:facet>
+    										<f:facet name="input">
+    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}" style="width:100%;" />
+    										</f:facet>
+    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
 										
 										<h:outputText value="Message: " />
@@ -375,10 +380,15 @@
 											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCase.name}" />
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 										</p:inplace>
-										<h:outputText emptyLabel="No Description" value="Description: " />
-										<p:inplace editor="true">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
+										<h:outputText value="Description &amp; Purpose: " />
+										<p:inplace emptyLabel="No Description" editor="true">
+    										<f:facet name="output">
+        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" escape="false" />
+    										</f:facet>
+    										<f:facet name="input">
+    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" style="width:100%;" />
+    										</f:facet>
+    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
 										</p:inplace>
 									</h:panelGrid>
 								</p:tab>
@@ -465,10 +475,15 @@
 											<p:inputText value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.name}" required="true" label="text" />
 											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}"/>
 										</p:inplace>
-										<h:outputText value="Description: " />
+										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}"/>
+    										<f:facet name="output">
+        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" escape="false" />
+    										</f:facet>
+    										<f:facet name="input">
+    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" style="width:100%;" />
+    										</f:facet>
+    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}" />
 										</p:inplace>
 									</h:panelGrid>
 								</p:tab>
@@ -499,10 +514,15 @@
 											<f:selectItems value="#{conformanceProfileRequestBean.jurorDocuments}" var="juror" itemLabel="#{juror.name}" itemValue="#{juror.id}" />
 										</p:selectOneMenu>
 										
-										<h:outputText value="Description: " />
-										<p:inplace editor="true" emptyLabel="No Description">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+										<h:outputText value="Description &amp; Purpose: " />
+										<p:inplace emptyLabel="No Description" editor="true">
+    										<f:facet name="output">
+        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}" escape="false" />
+    										</f:facet>
+    										<f:facet name="input">
+    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}" style="width:100%;" />
+    										</f:facet>
+    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 										
 										<h:outputText value="Version: " />

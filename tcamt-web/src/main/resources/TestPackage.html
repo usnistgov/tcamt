@@ -2,317 +2,192 @@
 <html>
 <head>
 <style type="text/css" media="print,screen">
-
-	li {
-    list-style-type: none;
-	}	
-				.test-data-specs-main .tds_obxGrpSpl{
-			        background:#B8B8B8;
-			    }
-			    .test-data-specs-main tds_maskByMediaType{
-			        display:table;
-			    }
-			    .test-data-specs-main fieldset table tbody tr th{
-			        font-size:90%
-			    }
-			    .test-data-specs-main fieldset table tbody tr td{
-			        font-size:90%;
-			    }
-			    .test-data-specs-main fieldset table tbody tr th{
-			        text-align:left;
-			        background:#C6DEFF
-			    }
-			    .test-data-specs-main fieldset table thead tr th{
-			        text-align:center;
-			        background:#4682B4
-			    }
-			    .test-data-specs-main fieldset{
-			        text-align:center;
-			        page-break-inside:avoid;
-			    }
-			    .test-data-specs-main fieldset table{
-			        width:98%;
-			        border:1px groove;
-			        table-layout:fixed;
-			        margin:0 auto;
-			        page-break-inside:avoid;
-			        border-collapse:collapse;
-			    }
-			    .test-data-specs-main fieldset table[id = vendor-labResults] thead tr{
-			        font-size:80%
-			    }
-			    .test-data-specs-main fieldset table[id = vendor-labResults] tbody tr{
-			        font-size:75%
-			    }
-			    .test-data-specs-main fieldset table tr{
-			        border:3px groove;
-			    }
-			    .test-data-specs-main fieldset table th{
-			        border:2px groove;
-			    }
-			    .test-data-specs-main fieldset table td{
-			        border:2px groove;
-			    }
-			    .test-data-specs-main fieldset table thead{
-			        border:1px groove;
-			        background:#446BEC;
-			        text-align:left;
-			    }
-			    .test-data-specs-main fieldset table tbody tr td{
-			        text-align:left;
-			    }
-			    .test-data-specs-main .tds_noData{
-			        background:#B8B8B8;
-			    }
-			    .test-data-specs-main .tds_childField{
-			        background:#B8B8B8;
-			    }
-			    .test-data-specs-main .tds_title{
-			        text-align:left;
-			        margin-bottom:1%
-			    }
-			    .test-data-specs-main h3{
-			        text-align:center;
-			    }
-			    .test-data-specs-main h2{
-			        text-align:center;
-			    }
-			    .test-data-specs-main h1{
-			        text-align:center;
-			    }
-			    .test-data-specs-main .tds_pgBrk{
-			        page-break-after:always;
-			    }
-			    .test-data-specs-main fieldset#tds_er7Message table{
-			        border:0px;
-			        width:80%
-			    }
-			    .test-data-specs-main fieldset#tds_er7Message td{
-			        background:#B8B8B8;
-			        font-size:65%;
-			        margin-top:6.0pt;
-			        border:0px;
-			        text-wrap:preserve-breaks;
-			        white-space:pre;
-			    }
-			    .test-data-specs-main .tds_er7Msg{
-			        width:100%;
-			        font-size:80%;
-			    }
-			    .test-data-specs-main .tds_er7MsgNote{
-			        width:100%;
-			        font-style:italic;
-			        font-size:80%;
-			    }
-			    .test-data-specs-main .tds_embSpace{
-			        padding-left:15px;
-			    }
-			    .test-data-specs-main .tds_embSubSpace{
-			        padding-left:25px;
-			    }
+					.test-data-specs-main legend {text-align:center;font-size:110%; font-weight:bold;}					
+					.test-data-specs-main .nav-tabs {font-weight:bold;}					
+					.test-data-specs-main .obxGrpSpl {background:#B8B8B8;}
+					.test-data-specs-main maskByMediaType {display:table;}
+					.test-data-specs-main table tbody tr th {font-size:90%}
+					.test-data-specs-main table tbody tr td {font-size:90%;}
+					.test-data-specs-main table tbody tr th {text-align:left;background:#C6DEFF}
+					.test-data-specs-main table thead tr th {text-align:center;background:#4682B4}
+					.test-data-specs-main fieldset {text-align:center;page-break-inside: avoid;}
+					.test-data-specs-main table { width:98%;border: 1px groove;table-layout: fixed; margin:0 auto;page-break-inside: avoid;border-collapse: collapse;}
+					.test-data-specs-main table[id=vendor-labResults] thead tr {font-size:80%}
+					.test-data-specs-main table[id=vendor-labResults] tbody tr {font-size:75%}
+					.test-data-specs-main table  tr { border: 3px groove; }
+					.test-data-specs-main table  th { border: 2px groove;}
+					.test-data-specs-main table  td { border: 2px groove; }
+					.test-data-specs-main table thead {border: 1px groove;background:#446BEC;text-align:left;}
+					.test-data-specs-main .separator {background:rgb(240, 240, 255); text-align:left;}
+					.test-data-specs-main table tbody tr td {text-align:left;}
+					.test-data-specs-main .noData {background:#B8B8B8;}
+					.test-data-specs-main .childField {background:#B8B8B8;}
+					.test-data-specs-main .tds_title {text-align:left;margin-bottom:1%}
+					.test-data-specs-main h3 {text-align:center;}
+					.test-data-specs-main h2 {text-align:center;}
+					.test-data-specs-main h1 {text-align:center;}
+					.test-data-specs-main .tds_pgBrk {page-break-after:always;}
+					.test-data-specs-main #er7Message table {border:0px;width:80%}
+					.test-data-specs-main #er7Message td {background:#B8B8B8;font-size:65%;margin-top:6.0pt;border:0px;text-wrap:preserve-breaks;white-space:pre;}
+					.test-data-specs-main .er7Msg {width:100%;font-size:80%;}
+					.test-data-specs-main .er7MsgNote{width:100%;font-style:italic;font-size:80%;}
+					.test-data-specs-main .embSpace {padding-left:15px;}
+					.test-data-specs-main .embSubSpace {padding-left:25px;}
+					.test-data-specs-main .accordion-heading { font-weight:bold; font-size:90%; }										
+					.test-data-specs-main .accordion-heading i.fa:after { content: "\00a0 "; }									
+					.test-data-specs-main  panel { margin: 10px 5px 5px 5px; }
 
 
-	.testStory maskByMediaType {
-		display: table;
-	}
-	.testStory table tbody tr th {
-		font-size: 70%
-	}
-	.testStory table tbody tr td {
-		font-size: 70%;
-	}
-	.testStory table tbody tr th {
-		text-align: left;
-		background: #C6DEFF
-	}
-	.testStory table thead tr th {
-		text-align: center;
-		font-size: 70%;
-	}
-	.testStory table thead tr th:first-child {
-		width: 15%;
-	}
-	.testStory table thead tr th:nth-child(2) {
-		width: 35%;
-	}
-	.testStory table thead tr th:nth-child(3) {
-		width: 35%;
-	}
-	.testStory table thead tr th:last-child {
-		width: 10%;
-	}
-
-	.testStory table {
-		width: 98%;
-		border: 1px groove;
-		table-layout: fixed;
-		margin: 0 auto;
-		border-collapse: collapse;
-		page-break-inside: avoid;
-	}
-	.testStory table tr {
-		border: 3px groove;
-	}
-	.testStory table th {
-		border: 2px groove;
-	}
-	.testStory table td {
-		border: 2px groove;
-	}
-	.testStory table thead {
-		border: 1px groove;
-		background: #446BEC;
-		text-align: left;
-	}
-	.testStory table tbody tr td {
-		text-align: left
-	}
-	.testStory .embSpace {
-		padding-left: 10px;
-	}
-	.testStory .embSubSpace {
-		padding-left: 20px;
-	}
-	.testStory .childField {
-		background: #B8B8B8;
-	}
+					.testStory legend {text-align:center;font-size:110%; font-weight:bold;}					
+					.testStory  {text-align:center;page-break-inside: avoid;}
+                    .testStory maskByMediaType {display:table;}
+                    .testStory  table tbody tr th {font-size:100%;}
+                    .testStory  table tbody tr td {font-size:90%;}
+                    .testStory  table tbody tr th {text-align:center;background:#436BEC}
+					.testStory  table { width:98%;border: 1px groove;table-layout: fixed; margin:0 auto;border-collapse: collapse;page-break-inside: avoid;}
+                    .testStory  table  tr { border: 3px groove; }
+                    .testStory  table  th { border: 2px groove;}
+                    .testStory  table  td { border: 2px groove; }
+                    .testStory  table tbody tr td {text-align:left}
 	
-	.messagecontent maskByMediaType {
-		display: table;
-	}
-	.messagecontent table tbody tr th {
-		font-size: 70%
-	}
-	.messagecontent table tbody tr td {
-		font-size: 70%;
-	}
-	.messagecontent table tbody tr th {
-		text-align: left;
-		background: #C6DEFF
-	}
-	.messagecontent table thead tr th {
-		text-align: center;
-		font-size: 70%;
-	}
-	.messagecontent table thead tr th:first-child {
-		width: 15%;
-	}
-	.messagecontent table thead tr th:nth-child(2) {
-		width: 35%;
-	}
-	.messagecontent table thead tr th:nth-child(3) {
-		width: 35%;
-	}
-	.messagecontent table thead tr th:last-child {
-		width: 10%;
-	}
-
-	.messagecontent table {
-		width: 98%;
-		border: 1px groove;
-		table-layout: fixed;
-		margin: 0 auto;
-		border-collapse: collapse;
-		page-break-inside: avoid;
-	}
-	.messagecontent table tr {
-		border: 3px groove;
-	}
-	.messagecontent table th {
-		border: 2px groove;
-	}
-	.messagecontent table td {
-		border: 2px groove;
-	}
-	.messagecontent table thead {
-		border: 1px groove;
-		background: #446BEC;
-		text-align: left;
-	}
-	.messagecontent table tbody tr td {
-		text-align: left
-	}
-	.messagecontent .embSpace {
-		padding-left: 10px;
-	}
-	.messagecontent .embSubSpace {
-		padding-left: 20px;
-	}
-	.messagecontent .childField {
-		background: #B8B8B8;
-	}
+					.message-content legend {text-align:center;font-size:110%; font-weight:bold;}					
+					.message-content .nav-tabs {font-weight:bold;}					
+					.message-content  {text-align:center;page-break-inside: avoid;}
+                    .message-content maskByMediaType {display:table;}
+                    .message-content  table tbody tr th {font-size:80%}
+                    .message-content  table tbody tr td {font-size:70%;}
+                    .message-content  table tbody tr th {text-align:left;background:#436BEC}
+                    .message-content  table thead tr th {text-align:center;font-size:80%;}
+                    .message-content  legend {text-align:center;font-size:70%;}
+                    .message-content  table thead tr th:first-child {width:15%;}
+                    .message-content  table thead tr th:nth-child(2) {width:30%;}
+                    .message-content  table thead tr th:nth-child(3) {width:30%;}
+                    .message-content  table thead tr th:last-child {width:20%;}
+					.message-content  table { width:98%;border: 1px groove;table-layout: fixed; margin:0 auto;border-collapse: collapse;page-break-inside: avoid;}
+                    .message-content  table  tr { border: 3px groove; }
+                    .message-content  table  th { border: 2px groove;}
+                    .message-content  table  td { border: 2px groove; }
+                    .message-content  table thead {border: 1px groove;background:#436BEC;text-align:left;}
+                    .message-content  table tbody tr td {text-align:left}
+					.message-content  .Field  { font: bold; background-color: rgb(198, 222, 255); }
+                    .message-content  .Component {padding-left:10px;}
+                    .message-content  .SubComponent {padding-left:20px;}
+                    .message-content td.noData {background:#B8B8B8;}
+					.message-content  td.noData {background:rgb(198, 222, 255);;}
+					.message-content .accordion-heading { font-weight:bold;  font-size:90%; }										
+					.message-content .accordion-heading i.glyphicon:after { content: "\00a0 "; }	
 	
-	@media screen {
-                    .jurordocument fieldset {font-size:100%;}
-                    .jurordocument table tbody tr th {font-size:90%;}
-                    .jurordocument table tbody tr td {font-size:90%;}
-                    }
-                    @media print{
-                    .jurordocument fieldset {font-size:x-small;}
-                    .jurordocument table {page-break-inside: avoid;}
-                    .jurordocument table  th { font-size:x-small; }
+						.jurordocument fieldset{
+                            font-size:small;
+                            page-break-inside:avoid;
+                        }
+                        .jurordocument table{
+                            float:none !important;
+                            page-break-before:avoid;
+                            overflow:visible !important;
+                            position:relative;
+                        }
+                        .jurordocument table tr{
+                            page-break-inside:avoid;
+                        }
+                        .jurordocument table th{
+                            font-size:x-small;
+                        }
                     
-                    .jurordocument table  td { font-size:xx-small; }* [type=text]{
-                    width: 98%;
-                    height: 15px;
-                    margin: 2px;
-                    padding: 0px;
-                    background: 1px  #ccc;
-                   
-                    }
-                    .jurordocument h3 {font-size:xx-small;}
-                    .jurordocument p {font-size:x-small;}
+                        .jurordocument table td{
+                            font-size:medium;
+                        }
+                        * [type = text]{
+                            width:98%;
+                            height:15px;
+                            margin:2px;
+                            padding:0px;
+                            background:1px #ccc;
                     
-                    
-                    .jurordocument * [type=checkbox]{
-                    width: 10px;
-                    height: 10px;
-                    margin: 2px;
-                    padding: 0px;
-                    background: 1px  #ccc;
-                    }}
-                    @page {
-                    counter-increment: page;
-                    
-                    @bottom-center {
-                    content: "Page " counter(page);
-                    }
-                    }
-                    @page :left {
-                    margin-left: 5%;
-                    margin-right: 5%;
-                    }
-                    
-                    @page :right {
-                    margin-left: 5%;
-                    margin-right: 5%;
-                    }
+                        }
+                        .jurordocument h3{
+                            font-size:xx-small;
+                        }
+                        .jurordocument p{
+                            font-size:x-small;
+                        }
                     
                     
-                    .jurordocument * [type=text]{
-                    width: 95%;
-                 
+                        .jurordocument * [type = checkbox]{
+                            width:10px;
+                            height:10px;
+                            margin:2px;
+                            padding:0px;
+                            background:1px #ccc;
+                        }
                     }
-                  
-                 .jurordocument fieldset{width:98%;font-weight:bold;border:1px solid #446BEC; page-break-inside: avoid;}
-                  .embSpace {padding-left:25px;}
-                  .noData {background:#D2D2D2;}
-                  .jurordocument table {
-                   width:98%;border: 1px groove; margin:0 auto;page-break-inside: avoid; }
-                   .jurordocument table tr { border: 1px groove; }
-                   .jurordocument table th { border: 1px groove; }
-                   .jurordocument table td { border: 1px groove;empty-cells:show; }
-                   .jurordocument table thead {border: 1px groove;background:#446BEC;text-align:left;}       
-                   .jurordocument table[id=inspectionStatus] thead tr th:last-child {width:2%;}
-                   .jurordocument table[id=inspectionStatus] thead tr th:nth-last-child(2) {width:2%;}
-                   .jurordocument table[id=inspectionStatus] thead tr th:nth-last-child(3) {width:45%;}
-                   .jurordocument table tbody tr th {text-align:left;background:#C6DEFF; }
-                   .jurordocument table tbody tr td {text-align:left; }
-                   .jurordocument table tbody tr td [type=text]{text-align:left;margin-left:1%;}
-                   .jurordocument table tbody tr td div {width: 100%; height: 100%; border: none; background: 1px  #E2E2E2
-                   resize: none; max-width: 400px; word-wrap: break-word;}
-                   .jurordocument table caption {font-weight:bold;color:#0840F8;}}
-}
+                    
+                    .jurordocument * [type = text]{
+                        width:95%;
+                    
+                    }
+                    
+                    
+                    .jurordocument fieldset{
+                        width:95%;
+                        border:1px solid #446BEC;
+                        font-size:small;
+                    }
+                    .embSpace{
+                        padding-left:25px;
+                    }
+                    .noData{
+                        background:#D2D2D2;
+                    }
+                    .jurordocument table{
+                        width:98%;
+                        border:1px groove;
+                        margin:0 auto;
+                        page-break-inside:avoid;
+                    }
+                    .jurordocument table tr{
+                        border:1px groove;
+                    }
+                    .jurordocument table th{
+                        border:1px groove;
+                    }
+                    .jurordocument table td{
+                        border:1px groove;
+                        empty-cells:show;
+                    }
+                    .jurordocument table thead{
+                        border:1px groove;
+                        background:#446BEC;
+                        text-align:center;
+                        color:white;
+                    }
+                    .jurordocument table[id = inspectionStatus] thead tr th:last-child{
+                        width:2%;
+                        color:black;
+                    }
+                    .jurordocument table[id = inspectionStatus] thead tr th:nth-last-child(2){
+                        width:2%;
+                        color:black;
+                    }
+                    .jurordocument table[id = inspectionStatus] thead tr th:nth-last-child(3){
+                        width:45%;
+                    }
+                    .jurordocument table tbody tr th{
+                        text-align:center;
+                        background:#C6DEFF;
+                    }
+                    .jurordocument table tbody tr td{
+                        text-align:left;
+                        font-size:medium;
+                    }
+                    .jurordocument table tbody tr td [type = text]{
+                        text-align:left;
+                        margin-left:1%;
+                    }
+                    .jurordocument table caption{
+                        font-weight:bold;
+                        color:#0840F8;
+                    }
 </style>
 </head>
 <body>
