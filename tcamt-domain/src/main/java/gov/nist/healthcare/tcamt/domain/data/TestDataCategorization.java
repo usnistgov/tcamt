@@ -4,11 +4,24 @@ import java.io.Serializable;
 
 public enum TestDataCategorization implements Serializable {
 	Indifferent("Indifferent"),
-	ContentIndifferent("Content Indifferent"), Configurable("Configurable"), SystemGenerated("System Generated"), TestCaseProper("Test Case Proper"), ProfileFixedPresence("Profile Fixed Presence"),
-	NotValued("Not-Valued"),
-	ProfileFixed("Profile Fixed"), ProfileFixedList("Profile Fixed List"), TestCaseFixed("Test Case Fixed"), TestCaseFixedList("Test Case Fixed List"),
-	TestCaseFixedLength("Test Case Fixed Length");
-
+	
+	Presence_ContentIndifferent("Presence-Content Indifferent"),
+	Presence_Configuration("Presence-Configuration"),
+	Presence_SystemGenerated("Presence-System Generated"),
+	Presence_TestCaseProper("Presence-Test Case Proper"),
+	
+	PresenceLength_ContentIndifferent("Presence Length-Content Indifferent"),
+	PresenceLength_Configuration("Presence Length-Configuration"),
+	PresenceLength_SystemGenerated("Presence Length-System Generated"),
+	PresenceLength_TestCaseProper("Presence Length-Test Case Proper"),
+	
+	Value_ProfileFixed("Value-Profile Fixed"),
+	Value_ProfileFixedList("Value-Profile Fixed List"),
+	Value_TestCaseFixed("Value-Test Case Fixed"),
+	Value_TestCaseFixedList("Value-Test Case Fixed List"),
+	
+	NonPresence("NonPresence");
+	
 	private String value;
 
 	TestDataCategorization(String value) {

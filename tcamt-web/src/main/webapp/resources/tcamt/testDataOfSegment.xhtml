@@ -117,16 +117,25 @@
 			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
-				<f:selectItem itemLabel="Content Indifferent" itemValue="ContentIndifferent" />
-				<f:selectItem itemLabel="Configurable" itemValue="Configurable" />
-				<f:selectItem itemLabel="System Generated" itemValue="SystemGenerated" />
-				<f:selectItem itemLabel="Test Case Proper" itemValue="TestCaseProper" />
-				<f:selectItem itemLabel="Not-Valued" itemValue="NotValued" />
-				<f:selectItem itemLabel="Profile Fixed" itemValue="ProfileFixed" />
-				<f:selectItem itemLabel="Profile Fixed List" itemValue="ProfileFixedList" />
-				<f:selectItem itemLabel="Test Case Fixed" itemValue="TestCaseFixed" />
-				<f:selectItem itemLabel="Test Case Fixed - List" itemValue="TestCaseFixedList" />
-				<f:selectItem itemLabel="Test Case Fixed - Length" itemValue="TestCaseFixedLength" />
+				
+				<f:selectItem itemLabel="Presence-Content Indifferent" itemValue="Presence_ContentIndifferent" />
+				<f:selectItem itemLabel="Presence-Configuration" itemValue="Presence_Configuration" />
+				<f:selectItem itemLabel="Presence-System Generated" itemValue="Presence_SystemGenerated" />
+				<f:selectItem itemLabel="Presence-Test Case Proper" itemValue="Presence_TestCaseProper" />
+				
+				<f:selectItem itemLabel="Presence Length-Content Indifferent" itemValue="PresenceLength_ContentIndifferent" />
+				<f:selectItem itemLabel="Presence Length-Configuration" itemValue="PresenceLength_Configuration" />
+				<f:selectItem itemLabel="Presence Length-System Generated" itemValue="PresenceLength_SystemGenerated" />
+				<f:selectItem itemLabel="Presence Length-Test Case Proper" itemValue="PresenceLength_TestCaseProper" />
+				
+				
+				<f:selectItem itemLabel="Value-Profile Fixed" itemValue="Value_ProfileFixed" />
+				<f:selectItem itemLabel="Value-Profile Fixed List" itemValue="Value_ProfileFixedList" />
+				<f:selectItem itemLabel="Value-Test Case Fixed" itemValue="Value_TestCaseFixed" />
+				<f:selectItem itemLabel="Value-Test Case Fixed List" itemValue="Value_TestCaseFixedList" />
+				
+				<f:selectItem itemLabel="NonPresence" itemValue="NonPresence" />
+				
  				<p:ajax event="change" listener="#{cc.attrs.bean.createTCAMTConstraint(model)}" update="#{cc.attrs.panelId}" />
 			</p:selectOneMenu>
 		</p:column>
