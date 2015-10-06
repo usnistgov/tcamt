@@ -1001,7 +1001,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							}
 
 							if(ts.getMessage().getConformanceProfile().getMessageContentXSLT()!= null){
-								InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+								String mcXSL = ts.getMessage().getConformanceProfile().getMessageContentXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+								InputStream xsltInputStream = new ByteArrayInputStream(mcXSL.getBytes());
 								InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedMessageContent().getBytes());
 								Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 								Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1015,7 +1016,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							}
 							
 							if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
-								InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
+								String tdXSL = ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+								InputStream xsltInputStream = new ByteArrayInputStream(tdXSL.getBytes());
 								InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
 								Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 								Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1090,7 +1092,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						}
 						
 						if(ts.getMessage().getConformanceProfile().getMessageContentXSLT()!= null){
-							InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+							String mcXSL = ts.getMessage().getConformanceProfile().getMessageContentXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+							InputStream xsltInputStream = new ByteArrayInputStream(mcXSL.getBytes());
 							InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedMessageContent().getBytes());
 							Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 							Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1104,7 +1107,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						}
 						
 						if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
-							InputStream xsltInputStream = new ByteArrayInputStream(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
+							String tdXSL = ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+							InputStream xsltInputStream = new ByteArrayInputStream(tdXSL.getBytes());
 							InputStream sourceInputStream = new ByteArrayInputStream(ts.getMessage().getXmlEncodedNISTMessage().getBytes());
 							Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 							Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1731,7 +1735,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private void generateMessageContentHTML() throws IOException{
 		if(this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT() != null){
-			InputStream xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT().getBytes());
+			String mcXSL = this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+			InputStream xsltInputStream = new ByteArrayInputStream(mcXSL.getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedMessageContent().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
@@ -1767,7 +1772,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private void generateTestDataSpecificationHTML() throws IOException {
 		if(this.selectedTestStep.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
-			InputStream xsltInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().getBytes());
+			String tdXSL = this.selectedTestStep.getMessage().getConformanceProfile().getTestDataSpecificationXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
+			InputStream xsltInputStream = new ByteArrayInputStream(tdXSL.getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedNISTMessage().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");

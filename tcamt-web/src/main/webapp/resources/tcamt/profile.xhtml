@@ -276,6 +276,15 @@
 					</p:column>
 
 					<p:column headerText="Action" rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}">
+						<p:commandButton value="Edit"
+							actionListener="#{conformanceProfileRequestBean.editJurorDocument}"
+							update=":#{p:component('editJurorDocumentForm')}" 
+							icon="ui-icon-pencle"
+							oncomplete="PF('editJurorDocument').show();" 
+							title="Edit">
+							<f:attribute name="juror" value="#{juror}" />	
+						</p:commandButton>
+						
 						<p:commandButton value="Del"
 							actionListener="#{conformanceProfileRequestBean.delJurorDocument}"
 							update=":#{p:component('profileForm')}" icon="ui-icon-close"
@@ -651,6 +660,34 @@
 				<tr>
 					<td align="right">
 						<p:commandButton value="Add" icon="ui-icon-plus" update=":#{p:component('profileForm')}" actionListener="#{conformanceProfileRequestBean.addJurorDocument}" onclick="PF('createJurorDocument').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="editJurorDocumentForm">
+		<p:dialog id="editJurorDocumentDialog" header="Edit JurorDocument" widgetVar="editJurorDocument">
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newJurorDocument.name}" />
+				
+				<h:outputText value="HTML XSLT: " />
+				<h:panelGrid id="jurorDocumentHTMLPanel" columns="1" cellpadding="0">
+					<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentHTML}"
+						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+				
+				<h:outputText value="JSON XSLT: " />
+				<h:panelGrid id="jurorDocumentJSONPanel" columns="1" cellpadding="0">
+					<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentJSON}"
+						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+				</h:panelGrid>
+			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Edit" icon="ui-icon-plus" update=":#{p:component('profileForm')}" actionListener="#{conformanceProfileRequestBean.updateJurorDocument}" onclick="PF('editJurorDocument').hide();" />
 					</td>
 				</tr>
 			</table>

@@ -328,6 +328,14 @@ public class ConformanceProfileRequestBean implements Serializable {
         context.addMessage(null, new FacesMessage("Juror Document Uploaded.",  "Juror Document has been uploaded."));
 	}
 	
+	public void updateJurorDocument(){
+		this.sessionBeanTCAMT.getDbManager().jurorDocumentUpdate(this.newJurorDocument);
+		this.sessionBeanTCAMT.updateJurorDocuments();
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage("Juror Document Updated.",  "Juror Document has been updated."));
+	}
+	
 	public void delMCHTMLXSLT(ActionEvent event) {
 		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		cp.setMessageContentXSLT(null);
@@ -400,6 +408,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void delJurorDocument(ActionEvent event) {
 		this.sessionBeanTCAMT.getDbManager().jurorDocumentDelete((JurorDocument) event.getComponent().getAttributes().get("juror"));
 		this.sessionBeanTCAMT.updateJurorDocuments();
+	}
+	
+	public void editJurorDocument(ActionEvent event) {
+		this.newJurorDocument = (JurorDocument) event.getComponent().getAttributes().get("juror");
 	}
 	
 	public void updateConformanceProfile() {
