@@ -464,13 +464,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					newDataInstacneTestCase.setSelected(true);
 					this.selectedTestPlan.setExpanded(true);
 					((DataInstanceTestPlan)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
-					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
+					this.parentTestGroup = null;
 				}else if(this.selectedNode.getData() instanceof  DataInstanceTestCaseGroup){
 					newDataInstacneTestCase.setPosition(((DataInstanceTestCaseGroup)this.selectedNode.getData()).getTestcases().size() + 1);
 					newDataInstacneTestCase.setSelected(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).setExpanded(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
-					this.parentTestGroup = null;
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
@@ -891,13 +891,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.setMtsConverter(new JsonManualTestStepConverter());
 			this.setMetadataConverter(new JsonMetadataConverter());
 			
-			String outFilename = "TestPlan_" + tp.getName() + ".zip";
+			String outFilename = tp.getName() + ".zip";
 			ByteArrayOutputStream outputStream = null;
 			byte[] bytes;
 			outputStream = new ByteArrayOutputStream();
 			ZipOutputStream out = new ZipOutputStream(outputStream);
 			
-			this.generateMetaDataRB(out, tp.getMetadata());
+//			this.generateMetaDataRB(out, tp.getMetadata());
 			this.generateTestPackage(out, tp, needPDF);
 			
 			if(tp.getType() != null && tp.getType().equals("Isolated")){
@@ -1765,6 +1765,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				String sourceStr = IOUtils.toString(sourceReader);
 				
 				this.jurorDocumentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
+				
+				
 				this.jurorDocumentPDFFileName = this.htmlStringToPDF2(this.jurorDocumentHTML) + ".pdf";
 			}
 		}
@@ -1784,9 +1786,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private void generateIsolatedRB(ZipOutputStream out, DataInstanceTestPlan tp, boolean needPDF) throws Exception {
-		this.generateTestPlanJsonRB("Isolated" + File.separator + "TestPlan", out, tp);
+		this.generateTestPlanJsonRB(out, tp);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
-			String groupPath = "Isolated" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
+			String groupPath = "TestGroup_" + ditg.getPosition();
+//			String groupPath = "Isolated" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
@@ -1845,10 +1848,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private void generateContextBasedRB(ZipOutputStream out, DataInstanceTestPlan tp, boolean needPDF) throws Exception {
-		this.generateTestPlanJsonRB("Contextbased" + File.separator + "TestPlan", out, tp);
+		this.generateTestPlanJsonRB(out, tp);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
-			String groupPath = "Contextbased" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
+			String groupPath = "TestGroup_" + ditg.getPosition();
+//			String groupPath = "Contextbased" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
@@ -2188,17 +2192,17 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 
-	private void generateMetaDataRB(ZipOutputStream out, Metadata md) throws IOException, ConversionException {
-		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry("About" + File.separator + "Metadata.json"));
-		InputStream inMetadata = IOUtils.toInputStream(this.metadataConverter.toString(md));
-		int lenMeta;
-        while ((lenMeta = inMetadata.read(buf)) > 0) {
-            out.write(buf, 0, lenMeta);
-        }
-        out.closeEntry();
-        inMetadata.close();
-	}
+//	private void generateMetaDataRB(ZipOutputStream out, Metadata md) throws IOException, ConversionException {
+//		byte[] buf = new byte[1024];
+//		out.putNextEntry(new ZipEntry("About" + File.separator + "Metadata.json"));
+//		InputStream inMetadata = IOUtils.toInputStream(this.metadataConverter.toString(md));
+//		int lenMeta;
+//        while ((lenMeta = inMetadata.read(buf)) > 0) {
+//            out.write(buf, 0, lenMeta);
+//        }
+//        out.closeEntry();
+//        inMetadata.close();
+//	}
 	
 	private void generateTestStepConstraintsRB(ZipOutputStream out, Message m, String path) throws Exception {
 		byte[] buf = new byte[1024];
@@ -2217,7 +2221,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private void generateMessageRB(ZipOutputStream out, String messageStr, String path) throws IOException {
 		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry(path + File.separator + "Message.text"));
+		out.putNextEntry(new ZipEntry(path + File.separator + "Message.txt"));
 		if(messageStr != null){
 			InputStream inMessage = IOUtils.toInputStream(messageStr,"UTF-8");
 			int lenMessage;
@@ -2335,9 +2339,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		return testStoryStr;
 	}
 	
-	private void generateTestPlanJsonRB(String path, ZipOutputStream out, DataInstanceTestPlan tp) throws IOException, ConversionException {
+	private void generateTestPlanJsonRB(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry(path + File.separator + "TestPlan.json"));
+		out.putNextEntry(new ZipEntry("TestPlan.json"));
 		InputStream inTP = IOUtils.toInputStream(this.tpConverter.toString(tp));
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
