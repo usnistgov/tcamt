@@ -470,7 +470,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					newDataInstacneTestCase.setSelected(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).setExpanded(true);
 					((DataInstanceTestCaseGroup)this.selectedNode.getData()).addTestCase(newDataInstacneTestCase);
-					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getParent().getData();
+					this.parentTestGroup = (DataInstanceTestCaseGroup)this.selectedNode.getData();
 				}
 				
 				this.createTestPlanTree(this.selectedTestPlan);
@@ -842,6 +842,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
 			this.activeIndexOfMessageInstancePanel = 4;
 			
+			this.createTCAMTConstraint(model);
+			
 			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -1194,7 +1196,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		try{
 			String ipath = null;
 			String data = null;
-			String level = "DataInstanceTestCase";
+			String level = "TestCase";
 			String iPosition = null;
 			String messageName = null;
 			String usageList = null;

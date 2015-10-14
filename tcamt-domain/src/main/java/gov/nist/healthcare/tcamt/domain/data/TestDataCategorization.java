@@ -20,7 +20,9 @@ public enum TestDataCategorization implements Serializable {
 	Value_TestCaseFixed("Value-Test Case Fixed"),
 	Value_TestCaseFixedList("Value-Test Case Fixed List"),
 	
-	NonPresence("NonPresence");
+	NonPresence("NonPresence"),
+	
+	Presence_ProfileFixed("Presence-Profile Fixed");
 	
 	private String value;
 

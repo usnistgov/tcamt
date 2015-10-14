@@ -150,5 +150,17 @@ public class TCAMTConstraint implements Serializable, Cloneable{
 		return result;
 		
 	}
+
+	@Override
+	public String toString() {
+		return "TCAMTConstraint [id=" + id + ", messageName=" + messageName
+				+ ", usageList=" + usageList + ", ipath=" + ipath
+				+ ", iPosition=" + iPosition + ", comments=" + comments
+				+ ", level=" + level + ", categorization=" + categorization
+				+ ", data=" + data + ", assertionScript=" + assertionScript
+				+ "]";
+	}
+	
+	
 	
 }

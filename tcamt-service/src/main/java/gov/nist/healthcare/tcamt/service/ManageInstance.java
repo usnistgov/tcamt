@@ -924,46 +924,50 @@ public class ManageInstance implements Serializable {
 
 		Element elmByName = doc.createElement("ByName");
 		String messageName = null;
+		int counter = 0;
+		
 		for (TCAMTConstraint c : m.getTcamtConstraints()) {
 			messageName = c.getMessageName();
 			String usageList = c.getUsageList();
 			String iPositionPath = c.getiPosition();
 			String iPath = c.getIpath();
 			String tdc = c.getCategorization().getValue();
+			String level = c.getLevel();
+			counter = counter + 1;
 
 			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
 			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				//TODO
+				this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				//TODO
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				//TODO
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				//TODO
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				//TODO
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName);
-				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
 			}
 		}
 		if (messageName != null) {
@@ -975,17 +979,17 @@ public class ManageInstance implements Serializable {
 		return XMLManager.docToString(doc);
 	}
 
-	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent) {
+	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
 		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 
 		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", "Test Case");
-		elmReference.setAttribute("GeneratedBy", "TCAMT");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
 		elmReference.setAttribute("ReferencePath", iPath);
 		elmReference.setAttribute("TestDataCategorization", tdc);
 		elmConstraint.appendChild(elmReference);
 
-		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
 		elmDescription.appendChild(parent.getOwnerDocument().createTextNode( iPath + " SHALL be one of list values: " + values + "."));
@@ -999,20 +1003,63 @@ public class ManageInstance implements Serializable {
 		elmConstraint.appendChild(elmAssertion);
 		parent.appendChild(elmConstraint);
 	}
-
-	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent) {
+	
+	private void createNonPresenceCheck(String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
 		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", "Test Case");
-		elmReference.setAttribute("GeneratedBy", "TCAMT");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
 		elmReference.setAttribute("ReferencePath", iPath);
 		elmReference.setAttribute("TestDataCategorization", tdc);
 		elmConstraint.appendChild(elmReference);
 
-		elmConstraint.setAttribute("ID", "TCAMT_" + iPath);
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be valued '" + value + "."));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL NOT be valued."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+		Element elmNOT = parent.getOwnerDocument().createElement("NOT");
+		elmPresence.setAttribute("Path", iPositionPath);
+		elmNOT.appendChild(elmPresence);
+		elmAssertion.appendChild(elmNOT);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	private void createLengthCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("The minimum length of " + iPath + " is '" + value.length() + "'."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+
+	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be valued '" + value + "'."));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
 		elmPlainText.setAttribute("Path", iPositionPath);
@@ -1024,7 +1071,7 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 
-	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent) {
+	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
 		String[] uList = usageList.split("-");
 		String myIPositionPath = "";
 		String myIPath = "";
@@ -1039,13 +1086,13 @@ public class ManageInstance implements Serializable {
 			if (!uList[i].equals("R")) {
 				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
 				Element elmReference = parent.getOwnerDocument().createElement("Reference");
-				elmReference.setAttribute("Source", "Test Case");
-				elmReference.setAttribute("GeneratedBy", "TCAMT");
+				elmReference.setAttribute("Source", level);
+				elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
 				elmReference.setAttribute("ReferencePath", iPath);
 				elmReference.setAttribute("TestDataCategorization", tdc);
 				elmConstraint.appendChild(elmReference);
 
-				elmConstraint.setAttribute("ID", "TCAMT_" + iPath + "_" + (i + 1));
+				elmConstraint.setAttribute("ID", "TCA-" + counter + "-" + (i + 1));
 				elmConstraint.setAttribute("Target", myIPositionPath);
 				Element elmDescription = parent.getOwnerDocument().createElement("Description");
 				elmDescription.appendChild(parent.getOwnerDocument().createTextNode(myIPath + " SHALL be valued."));
@@ -1490,7 +1537,7 @@ public class ManageInstance implements Serializable {
 			
 			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
 			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				//TODO
+				this.createNonPresenceTree(iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
@@ -1501,16 +1548,16 @@ public class ManageInstance implements Serializable {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				//TODO
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				//TODO
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				//TODO
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				//TODO
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
 				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
@@ -1531,12 +1578,23 @@ public class ManageInstance implements Serializable {
 			String iPath, TreeNode parent) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("The value of " + iPath
-				+ " SHALL be one of List Values: " + data);
+		c.setDescription("The value of " + iPath + " SHALL be one of List Values: " + data);
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
 		c.setType("StringList");
+		new DefaultTreeNode(c, parent);
+
+	}
+	
+	private void createLengthTree(String data, String iPositionPath, String iPath, TreeNode parent) {
+		Constraint c = new Constraint();
+		c.setData(data);
+		c.setDescription("The value length of " + iPath + " SHALL be '" + data.length() + "'.");
+		c.setId("TCAMT");
+		c.setIpath(iPath);
+		c.setiPositionPath(iPositionPath);
+		c.setType("Length");
 		new DefaultTreeNode(c, parent);
 
 	}
@@ -1553,9 +1611,18 @@ public class ManageInstance implements Serializable {
 		new DefaultTreeNode(c, parent);
 
 	}
+	
+	private void createNonPresenceTree(String iPositionPath, String iPath, TreeNode parent){
+		Constraint c = new Constraint();
+		c.setDescription(iPath + " SHALL not be valued.");
+		c.setId("TCAMT");
+		c.setIpath(iPath);
+		c.setiPositionPath(iPositionPath);
+		c.setType("NonPresence");
+		new DefaultTreeNode(c, parent);
+	}
 
-	private void createPresenceTree(String usageList, String iPositionPath,
-			String iPath, TreeNode parent) {
+	private void createPresenceTree(String usageList, String iPositionPath, String iPath, TreeNode parent) {
 		String[] uList = usageList.split("-");
 		String myIPositionPath = "";
 		String myIPath = "";

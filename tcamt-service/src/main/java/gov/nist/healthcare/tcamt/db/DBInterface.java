@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.db;
 
-import java.util.List;
-
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
@@ -13,7 +11,11 @@ import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.User;
 
+import java.util.List;
+
 public interface DBInterface {
+	public void adjustAllTCAMTConstraints();
+	
 	public User isValidUser(User user);
 	public User getUserById(long id);
 	public List<User> getAllUsers();

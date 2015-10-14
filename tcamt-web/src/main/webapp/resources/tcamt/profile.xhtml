@@ -306,6 +306,17 @@
 				</table>
 			</p:tab>
 
+			<p:tab title="ADJ ALL TDC">
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+								value="Adjust TDC" icon="ui-icon-plus"
+								actionListener="#{conformanceProfileRequestBean.adjTDC}" />
+						</td>
+					</tr>
+				</table>
+			</p:tab>
 		</p:accordionPanel>
 	</h:form>
 
@@ -448,7 +459,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateProfile}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
@@ -456,7 +467,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateConstraints}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
@@ -464,7 +475,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateValueSet}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -496,7 +507,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateProfileForSelectedProfile}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
@@ -504,7 +515,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateConstraintsForSelectedProfile}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
@@ -512,7 +523,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.updateValueSetForSelectedProfile}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xml)$/" />
 				</h:panelGrid>
 
@@ -520,7 +531,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadMessageContentHTMLXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 
@@ -528,7 +539,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadMessageContentJSONXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 
@@ -536,7 +547,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadTestDataSpecificationXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 
@@ -544,7 +555,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadTestDataSpecificationJSONXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 
@@ -552,7 +563,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 
@@ -560,7 +571,7 @@
 				<h:panelGrid columns="1" cellpadding="0">
 					<p:fileUpload
 						fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentJSONXSLT}"
-						mode="advanced" auto="true" sizeLimit="10000000"
+						mode="advanced" auto="true" sizeLimit="100000000"
 						allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -597,7 +608,7 @@
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.profile == null}"
 						fileUploadListener="#{conformanceProfileRequestBean.uploadProfile}"
 						update=":#{p:component('profilePanel')}" mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xml)$/" />
 					<h:outputText
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.profile != null}"
 						value="Profile Uploaded" />
@@ -608,7 +619,7 @@
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.constraints == null}"
 						fileUploadListener="#{conformanceProfileRequestBean.uploadConstraints}"
 						update=":#{p:component('constraintsPanel')}" mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xml)$/" />
 					<h:outputText
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.constraints != null}"
 						value="Constraints Uploaded" />
@@ -619,7 +630,7 @@
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.valueSet == null}"
 						fileUploadListener="#{conformanceProfileRequestBean.uploadValueSet}"
 						update=":#{p:component('valueSetsPanel')}" mode="advanced"
-						auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xml)$/" />
+						auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xml)$/" />
 					<h:outputText
 						rendered="#{conformanceProfileRequestBean.newIntegratedProfile.valueSet != null}"
 						value="ValueSet Library Uploaded" />
@@ -645,14 +656,14 @@
 				<h:outputText value="HTML XSLT: " />
 				<h:panelGrid id="jurorDocumentHTMLPanel" columns="1" cellpadding="0">
 					<p:fileUpload rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentHTML == null}" fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentHTML}"
-						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xsl)$/" />
 					<h:outputText rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentHTML != null}" value="Juror Document HTML Uploaded" />
 				</h:panelGrid>
 				
 				<h:outputText value="JSON XSLT: " />
 				<h:panelGrid id="jurorDocumentJSONPanel" columns="1" cellpadding="0">
 					<p:fileUpload rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentJSON == null}" fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentJSON}"
-						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xsl)$/" />
 					<h:outputText rendered="#{conformanceProfileRequestBean.newJurorDocument.jurorDocumentJSON != null}" value="Juror Document JSON Uploaded" />
 				</h:panelGrid>
 			</h:panelGrid>
@@ -675,13 +686,13 @@
 				<h:outputText value="HTML XSLT: " />
 				<h:panelGrid id="jurorDocumentHTMLPanel" columns="1" cellpadding="0">
 					<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentHTML}"
-						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+						update=":#{p:component('jurorDocumentHTMLPanel')}" mode="advanced" auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 				
 				<h:outputText value="JSON XSLT: " />
 				<h:panelGrid id="jurorDocumentJSONPanel" columns="1" cellpadding="0">
 					<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJurorDocumentJSON}"
-						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="10000000" allowTypes="/(\.|\/)(xsl)$/" />
+						update=":#{p:component('jurorDocumentJSONPanel')}" mode="advanced" auto="true" sizeLimit="100000000" allowTypes="/(\.|\/)(xsl)$/" />
 				</h:panelGrid>
 			</h:panelGrid>
 			<table width="100%">
@@ -700,7 +711,7 @@
 				<h:outputText value="MS xlsx file: " />
 				<p:fileUpload fileUploadListener="#{conformanceProfileRequestBean.uploadJDefaultTDC}"
 						update=":#{p:component('profileForm')}" mode="advanced" auto="true" 
-						sizeLimit="10000000" allowTypes="/(\.|\/)(xlsx)$/" oncomplete="PF('updateDefaultTDC').hide();" />
+						sizeLimit="100000000" allowTypes="/(\.|\/)(xlsx)$/" oncomplete="PF('updateDefaultTDC').hide();" />
 			</h:panelGrid>
 		</p:dialog>
 	</h:form>

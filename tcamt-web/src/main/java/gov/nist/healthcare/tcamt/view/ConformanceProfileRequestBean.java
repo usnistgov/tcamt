@@ -336,6 +336,10 @@ public class ConformanceProfileRequestBean implements Serializable {
         context.addMessage(null, new FacesMessage("Juror Document Updated.",  "Juror Document has been updated."));
 	}
 	
+	public void adjTDC(ActionEvent event){
+		this.sessionBeanTCAMT.getDbManager().adjustAllTCAMTConstraints();
+	}
+	
 	public void delMCHTMLXSLT(ActionEvent event) {
 		ConformanceProfile cp = (ConformanceProfile) event.getComponent().getAttributes().get("profile");
 		cp.setMessageContentXSLT(null);

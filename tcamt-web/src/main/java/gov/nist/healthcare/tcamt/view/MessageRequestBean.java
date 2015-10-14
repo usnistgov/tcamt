@@ -388,6 +388,8 @@ public class MessageRequestBean implements Serializable {
 			this.readHL7Message();
 			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
 			this.activeIndexOfMessageInstancePanel = 3;			
+			
+			this.createTCAMTConstraint(model);
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
