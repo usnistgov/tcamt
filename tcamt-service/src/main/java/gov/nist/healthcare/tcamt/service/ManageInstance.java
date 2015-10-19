@@ -463,7 +463,8 @@ public class ManageInstance implements Serializable {
 					
 
 					if (fieldDT.getComponents().size() > 0) {
-						FieldModel fieldModel = new FieldModel( selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, field, fieldStr[j], m.findTCAMTConstraintByIPath(iPath), false, fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+						TCAMTConstraint c1 = m.findTCAMTConstraintByIPath(iPath);
+						FieldModel fieldModel = new FieldModel( selectedInstanceSegment.getMessageName(), path, iPath, iPositionPath, usageList, field, fieldStr[j], c1.getCategorization(), false, fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage, c1.getListData());
 						TreeNode fieldTreeNode = new DefaultTreeNode(fieldModel, segmentTreeRoot);
 
 						String[] componentStr = fieldStr[j].split("\\^");
@@ -488,6 +489,7 @@ public class ManageInstance implements Serializable {
 							String[] subComponentStr;
 							if (k >= componentStr.length) {
 								if (componentDT.getComponents().size() > 0) {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(componentIPath);
 									ComponentModel componentModel = new ComponentModel(
 											selectedInstanceSegment.getMessageName(),
 											componentPath,
@@ -496,11 +498,12 @@ public class ManageInstance implements Serializable {
 											componentUsageList,
 											component,
 											"",
-											m.findTCAMTConstraintByIPath(componentIPath),
-											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
+											c2.getCategorization(),
+											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage, c2.getListData());
 									componentTreeNode = new DefaultTreeNode(componentModel, fieldTreeNode);
 									subComponentStr = new String[] { "" };
 								} else {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(componentIPath);
 									ComponentModel componentModel = new ComponentModel(
 											selectedInstanceSegment.getMessageName(),
 											componentPath,
@@ -509,8 +512,8 @@ public class ManageInstance implements Serializable {
 											componentUsageList,
 											component,
 											"",
-											m.findTCAMTConstraintByIPath(componentIPath),
-											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
+											c2.getCategorization(),
+											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage, c2.getListData());
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = new String[] { "" };
@@ -518,6 +521,7 @@ public class ManageInstance implements Serializable {
 
 							} else {
 								if (componentDT.getComponents().size() > 0) {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(componentIPath);
 									ComponentModel componentModel = new ComponentModel(
 											selectedInstanceSegment
 													.getMessageName(),
@@ -527,13 +531,14 @@ public class ManageInstance implements Serializable {
 											componentUsageList,
 											component,
 											componentStr[k],
-											m.findTCAMTConstraintByIPath(componentIPath),
-											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
+											c2.getCategorization(),
+											false, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage, c2.getListData());
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k]
 											.split("\\&");
 								} else {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(componentIPath);
 									ComponentModel componentModel = new ComponentModel(
 											selectedInstanceSegment
 													.getMessageName(),
@@ -543,8 +548,8 @@ public class ManageInstance implements Serializable {
 											componentUsageList,
 											component,
 											componentStr[k],
-											m.findTCAMTConstraintByIPath(componentIPath),
-											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage);
+											c2.getCategorization(),
+											true, componentDT, componentTable, componentPredicate, componentConformanceStatements, componentUsage, c2.getListData());
 									componentTreeNode = new DefaultTreeNode(
 											componentModel, fieldTreeNode);
 									subComponentStr = componentStr[k]
@@ -574,21 +579,22 @@ public class ManageInstance implements Serializable {
 								
 								
 								if (l >= subComponentStr.length) {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(subComponentIPath);
 									ComponentModel subComponentModel = new ComponentModel(
-											selectedInstanceSegment
-													.getMessageName(),
+											selectedInstanceSegment.getMessageName(),
 											subComponentPath,
 											subComponentIPath,
 											subComponentIPositionPath,
 											subComponentUsageList,
 											subComponent,
 											"",
-											m.findTCAMTConstraintByIPath(subComponentIPath),
+											c2.getCategorization(),
 											true, subComponentDT,
-											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage);
+											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage, c2.getListData());
 									new DefaultTreeNode(subComponentModel,
 											componentTreeNode);
 								} else {
+									TCAMTConstraint c2 = m.findTCAMTConstraintByIPath(subComponentIPath);
 									ComponentModel subComponentModel = new ComponentModel(
 											selectedInstanceSegment
 													.getMessageName(),
@@ -598,9 +604,9 @@ public class ManageInstance implements Serializable {
 											subComponentUsageList,
 											subComponent,
 											subComponentStr[l],
-											m.findTCAMTConstraintByIPath(subComponentIPath),
+											c2.getCategorization(),
 											true, subComponentDT,
-											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage);
+											subComponentTable, subComponentPredicate, subComponentConformanceStatements, subComponentUsage, c2.getListData());
 									new DefaultTreeNode(subComponentModel,
 											componentTreeNode);
 								}
@@ -608,29 +614,32 @@ public class ManageInstance implements Serializable {
 						}
 					} else {
 						if (path.equals("MSH.1")) {
+							TCAMTConstraint c1 = m.findTCAMTConstraintByIPath(iPath);
 							FieldModel fieldModel = new FieldModel(
 									selectedInstanceSegment.getMessageName(),
 									path, iPath, iPositionPath, usageList,
 									segment.getFields().get(i), "|",
-									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+									c1.getCategorization(), true,
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage, c1.getListData());
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						} else if (path.equals("MSH.2")) {
+							TCAMTConstraint c1 = m.findTCAMTConstraintByIPath(iPath);
 							FieldModel fieldModel = new FieldModel(
 									selectedInstanceSegment.getMessageName(),
 									path, iPath, iPositionPath, usageList,
 									segment.getFields().get(i), "^" + "~"
 											+ "\\" + "&",
-									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+											c1.getCategorization(), true,
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage, c1.getListData());
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						} else {
+							TCAMTConstraint c1 = m.findTCAMTConstraintByIPath(iPath);
 							FieldModel fieldModel = new FieldModel(
 									selectedInstanceSegment.getMessageName(),
 									path, iPath, iPositionPath, usageList,
 									segment.getFields().get(i), fieldStr[j],
-									m.findTCAMTConstraintByIPath(iPath), true,
-									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage);
+									c1.getCategorization(), true,
+									fieldDT, fieldTable, fieldPredicate, fieldConformanceStatements, fieldUsage, c1.getListData());
 							new DefaultTreeNode(fieldModel, segmentTreeRoot);
 						}
 					}
@@ -741,7 +750,7 @@ public class ManageInstance implements Serializable {
 				fieldModel.getMessageName(), path, iPath, iPositionPath,
 				fieldModel.getUsageList(), fieldModel.getNode(), "", null,
 				fieldModel.isLeafNode(), fieldModel.getDatatype(),
-				fieldModel.getTable(), fieldModel.getPredicate(), fieldModel.getConformanceStatements(), fieldModel.getUsage());
+				fieldModel.getTable(), fieldModel.getPredicate(), fieldModel.getConformanceStatements(), fieldModel.getUsage(), new ArrayList<String>());
 		TreeNode addedField = new DefaultTreeNode(repeatedFieldModel, segmentTreeRoot);
 
 		if (!fieldModel.isLeafNode()) {
@@ -765,7 +774,7 @@ public class ManageInstance implements Serializable {
 					ComponentModel repatedComponentModel = new ComponentModel(
 							fieldModel.getMessageName(), componentPath,
 							componentIPath, componentIPositionPath,
-							componentUsageList, c, "", null, false, cDT, cTable, cPredicate, cConformanceStatements, componentUsage);
+							componentUsageList, c, "", null, false, cDT, cTable, cPredicate, cConformanceStatements, componentUsage, new ArrayList<String>());
 					TreeNode addedComponent = new DefaultTreeNode(repatedComponentModel, addedField);
 
 					for (int j = 0; j < cDT.getComponents().size(); j++) {
@@ -788,14 +797,14 @@ public class ManageInstance implements Serializable {
 								fieldModel.getMessageName(), subComponentPath,
 								subComponentIPath, subComponentIPositionPath,
 								subComponentUsageList, sc, "", null, true,
-								scDT, scTable, scPredicate, scConformanceStatements, subComponentUsage);
+								scDT, scTable, scPredicate, scConformanceStatements, subComponentUsage, new ArrayList<String>());
 						new DefaultTreeNode(repatedSubComponentModel, addedComponent);
 					}
 				} else {
 					ComponentModel repatedComponentModel = new ComponentModel(
 							fieldModel.getMessageName(), componentPath,
 							componentIPath, componentIPositionPath,
-							componentUsageList, c, "", null, true, cDT, cTable, cPredicate, cConformanceStatements, componentUsage);
+							componentUsageList, c, "", null, true, cDT, cTable, cPredicate, cConformanceStatements, componentUsage, new ArrayList<String>());
 					new DefaultTreeNode(repatedComponentModel, addedField);
 				}
 
@@ -937,37 +946,37 @@ public class ManageInstance implements Serializable {
 
 			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
 			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter);
-				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter);
+				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 			}
 		}
 		if (messageName != null) {
@@ -977,134 +986,6 @@ public class ManageInstance implements Serializable {
 		groupElement.appendChild(elmByName);
 
 		return XMLManager.docToString(doc);
-	}
-
-	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
-		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-
-		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", level);
-		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-		elmReference.setAttribute("ReferencePath", iPath);
-		elmReference.setAttribute("TestDataCategorization", tdc);
-		elmConstraint.appendChild(elmReference);
-
-		elmConstraint.setAttribute("ID", "TCA-" + counter);
-		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode( iPath + " SHALL be one of list values: " + values + "."));
-		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
-		elmStringList.setAttribute("Path", iPositionPath);
-		elmStringList.setAttribute("CSV", values);
-		elmStringList.setAttribute("IgnoreCase", "false");
-		elmAssertion.appendChild(elmStringList);
-		elmConstraint.appendChild(elmDescription);
-		elmConstraint.appendChild(elmAssertion);
-		parent.appendChild(elmConstraint);
-	}
-	
-	private void createNonPresenceCheck(String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
-		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", level);
-		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-		elmReference.setAttribute("ReferencePath", iPath);
-		elmReference.setAttribute("TestDataCategorization", tdc);
-		elmConstraint.appendChild(elmReference);
-
-		elmConstraint.setAttribute("ID", "TCA-" + counter);
-		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL NOT be valued."));
-		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-		Element elmPresence = parent.getOwnerDocument().createElement("Presence");
-		Element elmNOT = parent.getOwnerDocument().createElement("NOT");
-		elmPresence.setAttribute("Path", iPositionPath);
-		elmNOT.appendChild(elmPresence);
-		elmAssertion.appendChild(elmNOT);
-		elmConstraint.appendChild(elmDescription);
-		elmConstraint.appendChild(elmAssertion);
-		parent.appendChild(elmConstraint);
-	}
-	
-	private void createLengthCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
-		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", level);
-		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-		elmReference.setAttribute("ReferencePath", iPath);
-		elmReference.setAttribute("TestDataCategorization", tdc);
-		elmConstraint.appendChild(elmReference);
-
-		elmConstraint.setAttribute("ID", "TCA-" + counter);
-		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("The minimum length of " + iPath + " is '" + value.length() + "'."));
-		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-		elmConstraint.appendChild(elmDescription);
-		elmConstraint.appendChild(elmAssertion);
-		parent.appendChild(elmConstraint);
-	}
-
-	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
-		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-		Element elmReference = parent.getOwnerDocument().createElement("Reference");
-		elmReference.setAttribute("Source", level);
-		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-		elmReference.setAttribute("ReferencePath", iPath);
-		elmReference.setAttribute("TestDataCategorization", tdc);
-		elmConstraint.appendChild(elmReference);
-
-		elmConstraint.setAttribute("ID", "TCA-" + counter);
-		elmConstraint.setAttribute("Target", iPositionPath);
-		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode(iPath + " SHALL be valued '" + value + "'."));
-		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
-		elmPlainText.setAttribute("Path", iPositionPath);
-		elmPlainText.setAttribute("Text", value);
-		elmPlainText.setAttribute("IgnoreCase", "false");
-		elmAssertion.appendChild(elmPlainText);
-		elmConstraint.appendChild(elmDescription);
-		elmConstraint.appendChild(elmAssertion);
-		parent.appendChild(elmConstraint);
-	}
-
-	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter) {
-		String[] uList = usageList.split("-");
-		String myIPositionPath = "";
-		String myIPath = "";
-		for (int i = 0; i < uList.length; i++) {
-			if (i == 0) {
-				myIPositionPath = iPositionPath.split("\\.")[i];
-				myIPath = iPath.split("\\.")[i];
-			} else {
-				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
-				myIPath = myIPath + "." + iPath.split("\\.")[i];
-			}
-			if (!uList[i].equals("R")) {
-				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-				Element elmReference = parent.getOwnerDocument().createElement("Reference");
-				elmReference.setAttribute("Source", level);
-				elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-				elmReference.setAttribute("ReferencePath", iPath);
-				elmReference.setAttribute("TestDataCategorization", tdc);
-				elmConstraint.appendChild(elmReference);
-
-				elmConstraint.setAttribute("ID", "TCA-" + counter + "-" + (i + 1));
-				elmConstraint.setAttribute("Target", myIPositionPath);
-				Element elmDescription = parent.getOwnerDocument().createElement("Description");
-				elmDescription.appendChild(parent.getOwnerDocument().createTextNode(myIPath + " SHALL be valued."));
-				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
-				elmPresence.setAttribute("Path", myIPositionPath);
-				elmAssertion.appendChild(elmPresence);
-				elmConstraint.appendChild(elmDescription);
-				elmConstraint.appendChild(elmAssertion);
-				parent.appendChild(elmConstraint);
-			}
-		}
 	}
 
 	private String getFieldStrFromSegment(String segmentName,
@@ -1525,6 +1406,76 @@ public class ManageInstance implements Serializable {
 
 		return "";
 	}
+	
+	
+	private Object findChildByPosition(int position, List<?> children, Message m){
+		for(Object o:children){
+			if(o instanceof Group){
+				Group group = (Group)o;
+				if(group.getPosition() == position) return group;
+			}else if(o instanceof SegmentRef){
+				SegmentRef sr = (SegmentRef)o;
+				if(sr.getPosition() == position) return m.getSegments().findOne(sr.getRef());
+			}else if(o instanceof Field){
+				Field f = (Field)o;
+				if(f.getPosition() == position) return f;
+			}else if(o instanceof Component){
+				Component c = (Component)o;
+				if(c.getPosition() == position) return c;
+			}
+		}
+		
+		return null;
+
+	}
+	
+	private String findNodeNameByIPath(Message m, String iPositionPath){
+		
+		List<?> currentChildren = m.getMessageObj().getChildren();
+		Object currentObject = null;
+		
+		String[] pathList = iPositionPath.split("\\.");
+		for(String p:pathList){
+			int position = Integer.parseInt(p.substring(0,p.indexOf("[")));
+			
+			Object o = this.findChildByPosition(position, currentChildren, m);
+			
+			if(o instanceof Group){
+				Group group = (Group)o;
+				currentObject = group;
+				currentChildren = group.getChildren();
+				
+				
+			}else if(o instanceof Segment){
+				Segment s = (Segment)o;
+				currentObject = s;
+				currentChildren = s.getFields();
+			}else if(o instanceof Field){
+				Field f = (Field)o;
+				currentObject = f;
+				currentChildren = m.getDatatypes().findOne(f.getDatatype()).getComponents();
+			}else if(o instanceof Component){
+				Component c = (Component)o;
+				currentObject = c;
+				currentChildren = m.getDatatypes().findOne(c.getDatatype()).getComponents();
+			}
+			
+		}
+		
+		if(currentObject == null){
+			return null;
+		}else if(currentObject instanceof Group){
+			return ((Group)currentObject).getName();
+		}else if(currentObject instanceof Segment){
+			return ((Segment)currentObject).getName();
+		}else if(currentObject instanceof Field){
+			return ((Field)currentObject).getName();
+		}else if(currentObject instanceof Component){
+			return ((Component)currentObject).getName();
+		}
+		
+		return null;
+	}
 
 	public TreeNode generateConstraintTree(Message m) {
 		TreeNode root = new DefaultTreeNode("", null);
@@ -1535,62 +1486,88 @@ public class ManageInstance implements Serializable {
 			String iPositionPath = c.getiPosition();
 			String iPath = c.getIpath();
 			
+			
 			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
 			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				this.createNonPresenceTree(iPositionPath, iPath, cTreeNode);
+				this.createNonPresenceTree(iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createPlainTextTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createPlainTextTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode);
-				this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode);
+				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 			}
 		}
 
 		return root;
 	}
-
-	private void createStringListTree(String data, String iPositionPath,
-			String iPath, TreeNode parent) {
+	
+	//Expected profile fixed content is missing. The $value at $location ($element_name) does not match one of the expected values $expected_value_list.
+	private void createStringListTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("The value of " + iPath + " SHALL be one of List Values: " + data);
+		c.setDescription("Expected profile fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + data);
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
 		c.setType("StringList");
 		new DefaultTreeNode(c, parent);
-
 	}
 	
-	private void createLengthTree(String data, String iPositionPath, String iPath, TreeNode parent) {
+	private void createStringListCheck(String values, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected profile fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + values));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
+		elmStringList.setAttribute("Path", iPositionPath);
+		elmStringList.setAttribute("CSV", values);
+		elmStringList.setAttribute("IgnoreCase", "false");
+		elmAssertion.appendChild(elmStringList);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	//Content does not meet the minimum length requirement. The value at $location ($element_name) is expected to be at minimum $length characters.
+	private void createLengthTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("The value length of " + iPath + " SHALL be '" + data.length() + "'.");
+		c.setDescription("Content does not meet the minimum length requirement. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + data.length() + "' characters.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1598,12 +1575,35 @@ public class ManageInstance implements Serializable {
 		new DefaultTreeNode(c, parent);
 
 	}
+	
+	private void createLengthCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
 
-	private void createPlainTextTree(String data, String iPositionPath,
-			String iPath, TreeNode parent) {
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Content does not meet the minimum length requirement. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + value.length() + "' characters."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmFormat = parent.getOwnerDocument().createElement("Format");
+		elmFormat.setAttribute("Path", iPositionPath);
+		elmFormat.setAttribute("Regex", "^.{"+ value.length() +",}$");
+		elmAssertion.appendChild(elmFormat);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	//Expected test case fixed content is missing. The $value at $location ($element_name) does not match the expected value $expected_value.
+	private void createPlainTextTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("The value of " + iPath + " SHALL be '" + data + "'.");
+		c.setDescription("Expected test case fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + data + "'.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1612,17 +1612,68 @@ public class ManageInstance implements Serializable {
 
 	}
 	
-	private void createNonPresenceTree(String iPositionPath, String iPath, TreeNode parent){
+	private void createPlainTextCheck(String value, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
+
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected test case fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + value + "'."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
+		elmPlainText.setAttribute("Path", iPositionPath);
+		elmPlainText.setAttribute("Text", value);
+		elmPlainText.setAttribute("IgnoreCase", "false");
+		elmAssertion.appendChild(elmPlainText);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	//Unexpected content found. The $value at $location ($element_name) is not expected to be valued for test case.
+	private void createNonPresenceTree(String iPositionPath, String iPath, TreeNode parent, Message m){
 		Constraint c = new Constraint();
-		c.setDescription(iPath + " SHALL not be valued.");
+		c.setDescription("Unexpected content found. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
 		c.setType("NonPresence");
 		new DefaultTreeNode(c, parent);
 	}
+	
+	private void createNonPresenceCheck(String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
+		Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+		Element elmReference = parent.getOwnerDocument().createElement("Reference");
+		elmReference.setAttribute("Source", level);
+		elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+		elmReference.setAttribute("ReferencePath", iPath);
+		elmReference.setAttribute("TestDataCategorization", tdc);
+		elmConstraint.appendChild(elmReference);
 
-	private void createPresenceTree(String usageList, String iPositionPath, String iPath, TreeNode parent) {
+		elmConstraint.setAttribute("ID", "TCA-" + counter);
+		elmConstraint.setAttribute("Target", iPositionPath);
+		Element elmDescription = parent.getOwnerDocument().createElement("Description");
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Unexpected content found. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case."));
+		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+		Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+		Element elmNOT = parent.getOwnerDocument().createElement("NOT");
+		elmPresence.setAttribute("Path", iPositionPath);
+		elmNOT.appendChild(elmPresence);
+		elmAssertion.appendChild(elmNOT);
+		elmConstraint.appendChild(elmDescription);
+		elmConstraint.appendChild(elmAssertion);
+		parent.appendChild(elmConstraint);
+	}
+	
+	//Expected content is missing. A descendent of $location ($element_name) is expected to be present.
+	//Expected content is missing. The empty value at $location ($element_name) is expected to be present.
+	private void createPresenceTree(String usageList, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		String[] uList = usageList.split("-");
 		String myIPositionPath = "";
 		String myIPath = "";
@@ -1637,7 +1688,11 @@ public class ManageInstance implements Serializable {
 			}
 			if (!uList[i].equals("R")) {
 				Constraint c = new Constraint();
-				c.setDescription(myIPath + " SHALL be valued.");
+				if(myIPositionPath.equals(iPositionPath)){
+					c.setDescription("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
+				}else {
+					c.setDescription("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
+				}
 				c.setId("TCAMT");
 				c.setIpath(myIPath);
 				c.setiPositionPath(myIPositionPath);
@@ -1646,6 +1701,47 @@ public class ManageInstance implements Serializable {
 			}
 		}
 
+	}
+	
+	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
+		String[] uList = usageList.split("-");
+		String myIPositionPath = "";
+		String myIPath = "";
+		for (int i = 0; i < uList.length; i++) {
+			if (i == 0) {
+				myIPositionPath = iPositionPath.split("\\.")[i];
+				myIPath = iPath.split("\\.")[i];
+			} else {
+				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
+				myIPath = myIPath + "." + iPath.split("\\.")[i];
+			}
+			if (!uList[i].equals("R")) {
+				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+				Element elmReference = parent.getOwnerDocument().createElement("Reference");
+				elmReference.setAttribute("Source", level);
+				elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+				elmReference.setAttribute("ReferencePath", iPath);
+				elmReference.setAttribute("TestDataCategorization", tdc);
+				elmConstraint.appendChild(elmReference);
+
+				elmConstraint.setAttribute("ID", "TCA-" + counter + "-" + (i + 1));
+				elmConstraint.setAttribute("Target", myIPositionPath);
+				Element elmDescription = parent.getOwnerDocument().createElement("Description");
+				
+				if(myIPositionPath.equals(iPositionPath)){
+					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
+				}else {
+					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
+				}
+				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+				elmPresence.setAttribute("Path", myIPositionPath);
+				elmAssertion.appendChild(elmPresence);
+				elmConstraint.appendChild(elmDescription);
+				elmConstraint.appendChild(elmAssertion);
+				parent.appendChild(elmConstraint);
+			}
+		}
 	}
 
 	public TreeNode genRestrictedTree(TreeNode segmentTreeRoot) {

@@ -4,6 +4,7 @@ import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -159,6 +160,11 @@ public class TCAMTConstraint implements Serializable, Cloneable{
 				+ ", level=" + level + ", categorization=" + categorization
 				+ ", data=" + data + ", assertionScript=" + assertionScript
 				+ "]";
+	}
+
+	public List<String> getListData() {
+		if(this.data == null || data.equals("")) return new ArrayList<String>();
+		else return Arrays.asList(this.data.substring(1, this.data.length()-1).split("','"));
 	}
 	
 	

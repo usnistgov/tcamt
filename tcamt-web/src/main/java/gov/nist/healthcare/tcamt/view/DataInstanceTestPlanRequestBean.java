@@ -1201,6 +1201,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			String messageName = null;
 			String usageList = null;
 			TestDataCategorization tdc = null;
+			List<String> listValue = null;
 			
 			if(model instanceof FieldModel){
 				FieldModel fModel = (FieldModel)model;
@@ -1210,6 +1211,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				iPosition = fModel.getiPositionPath();
 				messageName = fModel.getMessageName();
 				usageList = fModel.getUsageList();
+				listValue = fModel.getListValues();
 			}else if(model instanceof ComponentModel){
 				ComponentModel cModel = (ComponentModel)model;
 				ipath = cModel.getIpath();
@@ -1218,13 +1220,28 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				iPosition = cModel.getiPositionPath();
 				messageName = cModel.getMessageName();
 				usageList = cModel.getUsageList();
+				listValue = cModel.getListValues();
 			}
 			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(ipath);
 
 			if(tdc != null && !tdc.getValue().equals("")){
 				TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
 				tcamtConstraint.setCategorization(tdc);
-				tcamtConstraint.setData(data);
+				if(tdc.equals(TestDataCategorization.Value_TestCaseFixedList)){
+					String listValueStr = "";
+					
+					for(String v:listValue){
+						if(listValueStr.equals("")){
+							listValueStr = listValueStr + "'" + v + "'";
+						}else{
+							listValueStr = listValueStr + ",'" + v + "'";
+						}
+					}
+					tcamtConstraint.setData(listValueStr);
+					
+				}else {
+					tcamtConstraint.setData(data);
+				}
 				tcamtConstraint.setIpath(ipath);
 				tcamtConstraint.setLevel(level);
 				tcamtConstraint.setiPosition(iPosition);
@@ -2468,8 +2485,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		return ipath.replace(this.selectedInstanceSegment.getIpath() + ".", "");
 	}
-	
-	
 	
 	
 	/*

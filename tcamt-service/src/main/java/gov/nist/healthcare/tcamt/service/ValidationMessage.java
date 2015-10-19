@@ -34,6 +34,10 @@ public class ValidationMessage {
 		
 		String resultXML = report.to("xml").toString();
 		
+		
+		
+		System.out.println(resultXML);
+		
 		Document resultDom = XMLManager.stringToDom(resultXML);
 		HL7V2MessageValidationReport hL7V2MessageValidationReport = new HL7V2MessageValidationReport();
 		

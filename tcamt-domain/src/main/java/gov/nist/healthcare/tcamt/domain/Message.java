@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -188,13 +186,14 @@ public class Message implements Cloneable, Serializable{
 		}
 	}
 	
-	public TestDataCategorization findTCAMTConstraintByIPath(String iPath){
+	public TCAMTConstraint findTCAMTConstraintByIPath(String iPath){
 		for(TCAMTConstraint c:this.getTcamtConstraints()){
 			if(c.getIpath().equals(iPath)){
-				return c.getCategorization();
+				return c;
 			}
 		}
-		return null;
+		
+		return new TCAMTConstraint();
 	}
 	
 	public String getXmlEncodedSTDMessage() {

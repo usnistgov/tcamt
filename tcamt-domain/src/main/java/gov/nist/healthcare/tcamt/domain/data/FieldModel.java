@@ -7,6 +7,7 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Conformanc
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FieldModel implements Serializable{
@@ -28,11 +29,12 @@ public class FieldModel implements Serializable{
 	private Predicate predicate;
 	private List<ConformanceStatement> conformanceStatements;
 	private String usage;
-	
+	private List<String> listValues = new ArrayList<String>();
+	private String newValue;
 	
 	
 	public FieldModel(String messageName, String path, String ipath, String iPositionPath, String usageList, Field node, String data,
-			TestDataCategorization tdc, boolean isLeafNode, Datatype datatype, Table table, Predicate predicate, List<ConformanceStatement> conformanceStatements, String usage) {
+			TestDataCategorization tdc, boolean isLeafNode, Datatype datatype, Table table, Predicate predicate, List<ConformanceStatement> conformanceStatements, String usage, List<String> listValues) {
 		super();
 		this.messageName = messageName;
 		this.path = path;
@@ -48,6 +50,7 @@ public class FieldModel implements Serializable{
 		this.predicate = predicate;
 		this.conformanceStatements = conformanceStatements;
 		this.usage = usage;
+		this.listValues = listValues;
 	}
 	
 	
@@ -185,6 +188,34 @@ public class FieldModel implements Serializable{
 	public void setConformanceStatements(List<ConformanceStatement> conformanceStatements) {
 		this.conformanceStatements = conformanceStatements;
 	}
+
+
+	public List<String> getListValues() {
+		return listValues;
+	}
+
+
+	public void setListValues(List<String> listValues) {
+		this.listValues = listValues;
+	}
+
+
+	public String getNewValue() {
+		return newValue;
+	}
+
+
+	public void setNewValue(String newValue) {
+		this.newValue = newValue;
+	}
 	
+	public void addValueList(){
+		if(this.newValue != null && !this.newValue.equals("")) this.listValues.add(this.newValue);
+		this.newValue = "";
+	}
+	
+	public void delValue(String v){
+		this.listValues.remove(v);
+	}
 	
 }

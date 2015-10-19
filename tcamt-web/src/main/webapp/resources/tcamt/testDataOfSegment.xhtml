@@ -9,6 +9,7 @@
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
 
+
 <composite:interface>
 	<composite:attribute name="bean" />
 	<composite:attribute name="panelId" />
@@ -100,12 +101,12 @@
     		</p:overlayPanel>
 		</p:column>
 		
-		<p:column headerText="Test Data" style="width:100px; text-align: center;">
-			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}"  style="width:90%;" value="#{model.data}" />
-			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  style="width:90%;" value="#{model.data}">
+		<p:column headerText="Test Data" style="text-align: center;">
+			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}" value="#{model.data}" />
+			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:inputText>
-			<p:selectOneMenu value="#{model.data}" effect="fade" style="width:100%;" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
+			<p:selectOneMenu value="#{model.data}" effect="fade" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.value}" itemValue="#{code.value}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
@@ -113,34 +114,51 @@
 			</p:selectOneMenu>
 		</p:column>
 		
-		<p:column id="cateColumn" headerText="TestData Cate." style="width:100px; text-align: center;">
-			<p:selectOneMenu value="#{model.tdc}" effect="fade" style="width:100%;" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
+		<p:column id="cateColumn" headerText="TestData Cate." style="text-align: center;">
+				<p:selectOneMenu value="#{model.tdc}" effect="fade" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
 				
-				<f:selectItem itemLabel="Presence-Content Indifferent" itemValue="Presence_ContentIndifferent" />
-				<f:selectItem itemLabel="Presence-Configuration" itemValue="Presence_Configuration" />
-				<f:selectItem itemLabel="Presence-System Generated" itemValue="Presence_SystemGenerated" />
-				<f:selectItem itemLabel="Presence-Test Case Proper" itemValue="Presence_TestCaseProper" />
+					<f:selectItem itemLabel="Presence-Content Indifferent" itemValue="Presence_ContentIndifferent" />
+					<f:selectItem itemLabel="Presence-Configuration" itemValue="Presence_Configuration" />
+					<f:selectItem itemLabel="Presence-System Generated" itemValue="Presence_SystemGenerated" />
+					<f:selectItem itemLabel="Presence-Test Case Proper" itemValue="Presence_TestCaseProper" />
 				
-				<f:selectItem itemLabel="Presence Length-Content Indifferent" itemValue="PresenceLength_ContentIndifferent" />
-				<f:selectItem itemLabel="Presence Length-Configuration" itemValue="PresenceLength_Configuration" />
-				<f:selectItem itemLabel="Presence Length-System Generated" itemValue="PresenceLength_SystemGenerated" />
-				<f:selectItem itemLabel="Presence Length-Test Case Proper" itemValue="PresenceLength_TestCaseProper" />
+					<f:selectItem itemLabel="Presence Length-Content Indifferent" itemValue="PresenceLength_ContentIndifferent" />
+					<f:selectItem itemLabel="Presence Length-Configuration" itemValue="PresenceLength_Configuration" />
+					<f:selectItem itemLabel="Presence Length-System Generated" itemValue="PresenceLength_SystemGenerated" />
+					<f:selectItem itemLabel="Presence Length-Test Case Proper" itemValue="PresenceLength_TestCaseProper" />
+				
+					<f:selectItem itemLabel="Value-Profile Fixed" itemValue="Value_ProfileFixed" />
+					<f:selectItem itemLabel="Value-Profile Fixed List" itemValue="Value_ProfileFixedList" />
+					<f:selectItem itemLabel="Value-Test Case Fixed" itemValue="Value_TestCaseFixed" />
+					<f:selectItem itemLabel="Value-Test Case Fixed List" itemValue="Value_TestCaseFixedList" />
+				
+					<f:selectItem itemLabel="NonPresence" itemValue="NonPresence" />
+				
+ 					<p:ajax event="change" listener="#{cc.attrs.bean.createTCAMTConstraint(model)}" update="#{cc.attrs.panelId}" />
+				</p:selectOneMenu>
+				<p:dataList value="#{model.listValues}" rendered="#{model.tdc == 'Value_TestCaseFixedList'}" var="value" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
+        			<f:facet name="header">Expected value list</f:facet>
+        			
+        			<p:commandLink update="#{cc.attrs.panelId}" styleClass="ui-icon ui-icon-close" actionListener="#{model.delValue(value)}" action="#{cc.attrs.bean.createTCAMTConstraint(model)}" title="Delete Value" style="float:left;margin-right:10px"/>
+        			<h:outputText value="#{value}" style="display:inline-block"/>
+        			<f:facet name="footer">
+        				<p:inputText value="#{model.newValue}"></p:inputText>
+        				<p:commandButton icon="ui-icon-plus" update="#{cc.attrs.panelId}" actionListener="#{model.addValueList}" action="#{cc.attrs.bean.createTCAMTConstraint(model)}" />
+        			</f:facet>
+    			</p:dataList>
 				
 				
-				<f:selectItem itemLabel="Value-Profile Fixed" itemValue="Value_ProfileFixed" />
-				<f:selectItem itemLabel="Value-Profile Fixed List" itemValue="Value_ProfileFixedList" />
-				<f:selectItem itemLabel="Value-Test Case Fixed" itemValue="Value_TestCaseFixed" />
-				<f:selectItem itemLabel="Value-Test Case Fixed List" itemValue="Value_TestCaseFixedList" />
-				
-				<f:selectItem itemLabel="NonPresence" itemValue="NonPresence" />
-				
- 				<p:ajax event="change" listener="#{cc.attrs.bean.createTCAMTConstraint(model)}" update="#{cc.attrs.panelId}" />
-			</p:selectOneMenu>
+<!-- 				<h:panelGrid columns="2" cellpadding="5" rendered="#{model.tdc == 'Value_TestCaseFixedList'}" style="background: none !important; border: none !important;">
+					<h:outputText value="List Data: " />
+					<p:inputText>
+						<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
+					</p:inputText>
+				</h:panelGrid> -->
 		</p:column>
 		
-		<p:column headerText="Action" style="width:10px; text-align: center;">
+		<p:column headerText="Action" style="width:30px; text-align: center;">
 			<p:commandButton icon="ui-icon-plus" rendered="#{model.node.getClass().getSimpleName() == 'Field' and model.node.max == '*'}" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.addRepeatedField(model)}" />
 		</p:column>
 	</p:treeTable>
