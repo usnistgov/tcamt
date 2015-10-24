@@ -210,17 +210,18 @@ public class ManageInstance implements Serializable {
 
 		int previousPathSize = 1;
 		for (int i = 0; i < pathList.size(); i++) {
+			String line = lines[i].trim();
 			String[] pathDivided = ipathList.get(i).split("\\.");
 			if (previousPathSize + 1 == pathDivided.length) {
 				instanceSegments.add(new InstanceSegment(ipathList.get(i),
 						pathList.get(i), m.getMessageObj().getStructID(),
-						iPositionPathList.get(i), lines[i], true,
+						iPositionPathList.get(i), line, true,
 						messageStrucutreMap.get(pathList.get(i)), usageMap
 								.get(pathList.get(i))));
 			} else {
 				instanceSegments.add(new InstanceSegment(ipathList.get(i),
 						pathList.get(i), m.getMessageObj().getStructID(),
-						iPositionPathList.get(i), lines[i], false,
+						iPositionPathList.get(i), line, false,
 						messageStrucutreMap.get(pathList.get(i)), usageMap
 								.get(pathList.get(i))));
 			}
@@ -238,6 +239,7 @@ public class ManageInstance implements Serializable {
 		this.generateXMLFromMesageInstance(m, instanceSegments, true, testCaseName);
 		this.generateXMLFromMesageInstance(m, instanceSegments, false, testCaseName);
 		this.generateXMLforMessageContent(m, instanceSegments);
+		//TODO need to update TestCategorization Data
 	}
 
 	private void generateXMLforMessageContent(Message m, List<InstanceSegment> instanceSegments) throws Exception {
@@ -942,42 +944,55 @@ public class ManageInstance implements Serializable {
 			String iPath = c.getIpath();
 			String tdc = c.getCategorization().getValue();
 			String level = c.getLevel();
-			counter = counter + 1;
-
-			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
-			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-				this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-				this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+			
+			boolean usageCheck = true;
+			
+			String usage[] = usageList.split("-");
+			for(String u:usage){
+				if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+					usageCheck = false;
+				}
 			}
+				
+			if(usageCheck){
+				counter = counter + 1;
+
+				if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
+				} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
+					this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
+					this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				}
+			}
+			
 		}
 		if (messageName != null) {
 			elmByName.setAttribute("Name", messageName);
@@ -1486,40 +1501,50 @@ public class ManageInstance implements Serializable {
 			String iPositionPath = c.getiPosition();
 			String iPath = c.getIpath();
 			
+			boolean usageCheck = true;
 			
-			if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
-			} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-				this.createNonPresenceTree(iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createPlainTextTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
-			} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-				this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
-				this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+			String usage[] = usageList.split("-");
+			for(String u:usage){
+				if(!u.equals("R") && !u.equals("RE") && !u.equals("C")){
+					usageCheck = false;
+				}
+			}
+				
+			if(usageCheck){
+				if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
+				} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
+					this.createNonPresenceTree(iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createLengthTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createPlainTextTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
+					this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
+					this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
+				}
 			}
 		}
 

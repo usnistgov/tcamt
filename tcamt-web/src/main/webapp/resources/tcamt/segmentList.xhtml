@@ -27,6 +27,7 @@
 		</tr>
 		<tr>
 			<td align="right">
+				<p:commandButton value="Reset TestDataCategorization" actionListener="#{cc.attrs.bean.resetAllTestDataCategorizations}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Remove All"/>
 				<p:selectOneMenu value="#{cc.attrs.bean.defaultTDCId}" effect="fade">
 					<f:selectItem itemLabel="Select Default TestData Categorization template" itemValue="" />
 					<f:selectItems value="#{conformanceProfileRequestBean.defaultTestDataCategorizationSheets}" var="sheet" itemLabel="#{sheet.sheetName}" itemValue="#{sheet.id}" />

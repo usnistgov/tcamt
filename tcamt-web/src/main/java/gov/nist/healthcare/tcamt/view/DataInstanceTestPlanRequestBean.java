@@ -54,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.zip.ZipEntry;
@@ -1479,7 +1480,26 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		return true;
 	}
 	
+	public void resetAllTestDataCategorizations(){
+		this.selectedTestStep.getMessage().setTcamtConstraints(new HashSet<TCAMTConstraint>());
+		
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
+	}
+	
+	public void removeTCAMTConstraint(Object model){
+		if(model instanceof FieldModel){
+			FieldModel fModel = (FieldModel)model;
+			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(fModel.getIpath());
+			fModel.setTdc(null);
+		}else if(model instanceof ComponentModel){
+			ComponentModel cModel = (ComponentModel)model;
+			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(cModel.getIpath());
+			cModel.setTdc(null);
+		}
+	}
+	
 	public void updateTDC() {
+		this.resetAllTestDataCategorizations();
 		if(this.defaultTDCId != null){
 			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
 			for(InstanceSegment is:this.instanceSegments){
@@ -1761,6 +1781,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Reader sourceReader = new InputStreamReader(sourceInputStream, "UTF-8");
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
+			
+			System.out.println(sourceStr);
+			
 			this.messageContentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);	
 		}	
 		

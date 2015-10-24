@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -557,7 +558,28 @@ public class MessageRequestBean implements Serializable {
 		return true;
 	}
 	
+	
+	public void resetAllTestDataCategorizations(){
+		this.editMessage.setTcamtConstraints(new HashSet<TCAMTConstraint>());
+		
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+	}
+	
+	public void removeTCAMTConstraint(Object model){
+		if(model instanceof FieldModel){
+			FieldModel fModel = (FieldModel)model;
+			this.editMessage.deleteTCAMTConstraintByIPath(fModel.getIpath());
+			fModel.setTdc(null);
+		}else if(model instanceof ComponentModel){
+			ComponentModel cModel = (ComponentModel)model;
+			this.editMessage.deleteTCAMTConstraintByIPath(cModel.getIpath());
+			cModel.setTdc(null);
+
+		}
+	}
+	
 	public void updateTDC() {
+		this.resetAllTestDataCategorizations();
 		if(this.defaultTDCId != null){
 			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
 			for(InstanceSegment is:this.instanceSegments){
