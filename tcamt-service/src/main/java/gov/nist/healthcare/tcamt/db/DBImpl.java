@@ -1,18 +1,5 @@
 package gov.nist.healthcare.tcamt.db;
 
-import gov.nist.healthcare.tcamt.domain.Actor;
-import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
-import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.User;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -28,6 +15,18 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+
+import gov.nist.healthcare.tcamt.domain.Actor;
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.User;
 
 public class DBImpl implements DBInterface, Serializable {
 	/**
@@ -509,6 +508,23 @@ public class DBImpl implements DBInterface, Serializable {
 		}
 		return null;
 	}
+	
+	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans() {
+		try{
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			@SuppressWarnings("unchecked")
+			List<DataInstanceTestPlan> results =  criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
 
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id) {
 		try{
@@ -802,56 +818,32 @@ public class DBImpl implements DBInterface, Serializable {
 		return null;
 	}
 
-	public void adjustAllTCAMTConstraints() {
+	public List<TCAMTConstraint> getAllTCAMTConstraints() {
 		try{
 			this.openCurrentSession();
 			Criteria criteria = this.currentSession.createCriteria(TCAMTConstraint.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
-			List<TCAMTConstraint> constraints = criteria.list();
-			
-			for(TCAMTConstraint c:constraints){
-				System.out.println(c.toString());
-				if(c.getCategorization().equals(TestDataCategorization.Indifferent)){
-					c.setCategorization(TestDataCategorization.Indifferent);
-				}else if(c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)){
-					c.setCategorization(TestDataCategorization.Presence_ContentIndifferent);
-				}else if(c.getCategorization().equals(TestDataCategorization.Presence_Configuration)){
-					c.setCategorization(TestDataCategorization.Presence_Configuration);
-				}else if(c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)){
-					c.setCategorization(TestDataCategorization.Presence_SystemGenerated);
-				}else if(c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)){
-					c.setCategorization(TestDataCategorization.Presence_TestCaseProper);
-				}else if(c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)){
-					c.setCategorization(TestDataCategorization.Presence_ProfileFixed);
-				}else if(c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)){
-					c.setCategorization(TestDataCategorization.NonPresence);
-				}else if(c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)){
-					c.setCategorization(TestDataCategorization.Value_ProfileFixed);
-				}else if(c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)){
-					c.setCategorization(TestDataCategorization.Value_ProfileFixedList);
-				}else if(c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)){
-					c.setCategorization(TestDataCategorization.Value_TestCaseFixed);
-				}else if(c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)){
-					c.setCategorization(TestDataCategorization.Value_TestCaseFixedList);
-				}else if(c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)){
-					c.setCategorization(TestDataCategorization.PresenceLength_TestCaseProper);
-				}else if(c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)){
-					c.setCategorization(TestDataCategorization.Value_TestCaseFixedList);
-				}else if(c.getCategorization().equals(TestDataCategorization.NonPresence)){
-					c.setCategorization(TestDataCategorization.NonPresence);
-				}
-				
-				this.currentSession.update(c);
-				
-			}
-			
+			List<TCAMTConstraint> results = criteria.list();
 			this.closeCurrentSession();
+			return results;
 		}catch(Exception e){
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
+		return null;
+	}
+
+	public void tcamtConstraintDelete(TCAMTConstraint constraint) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(constraint);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			System.out.println(constraint.getId() + " is using.");
+		}
+		
 	}
 	
 }

@@ -48,7 +48,7 @@ public class ManageInstance implements Serializable {
 	 */
 	private static final long serialVersionUID = 574095903906379334L;
 
-	public TreeNode loadMessage(Message m) throws CloneNotSupportedException {
+	public TreeNode loadMessage(Message m) {
 		TreeNode treeNode = new DefaultTreeNode("root", null);
 		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message mp = null;
 		Profile p = null;
@@ -59,10 +59,8 @@ public class ManageInstance implements Serializable {
 			ProfileSerialization ps = new ProfileSerializationImpl();
 			p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(),
 					ip.getConstraints());
-			for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p
-					.getMessages().getChildren()) {
-				if (message.getIdentifier().equals(
-						m.getConformanceProfile().getConformanceProfileId())) {
+			for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p.getMessages().getChildren()) {
+				if (message.getIdentifier().equals(m.getConformanceProfile().getConformanceProfileId())) {
 					mp = message;
 				}
 			}
@@ -97,7 +95,7 @@ public class ManageInstance implements Serializable {
 
 	}
 
-	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg, String path, TreeNode parentTreeNode) throws CloneNotSupportedException {
+	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg, String path, TreeNode parentTreeNode) {
 		if (sg instanceof SegmentRef) {
 			SegmentRef segment = (SegmentRef) sg;
 			String segmentName = m.getSegments().findOne(segment.getRef()).getName();
@@ -1580,6 +1578,9 @@ public class ManageInstance implements Serializable {
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
 		elmStringList.setAttribute("Path", iPositionPath);
+		
+		values = values.replace("'", "");
+		
 		elmStringList.setAttribute("CSV", values);
 		elmStringList.setAttribute("IgnoreCase", "false");
 		elmAssertion.appendChild(elmStringList);
@@ -1777,36 +1778,33 @@ public class ManageInstance implements Serializable {
 
 			String[] usageList = fm.getUsageList().split("-");
 			boolean usageCheck = true;
-
+			
 			for (String u : usageList) {
 				if (!u.equals("R") && !u.equals("RE") && !u.equals("C")) {
 					usageCheck = false;
 				}
 			}
+			
+			if(fm.getNode().isHide()) usageCheck = false;
+			
 
 			if (usageCheck) {
 				TreeNode fieldNode = new DefaultTreeNode(fm, result);
 
 				for (TreeNode componentTN : fieldTN.getChildren()) {
 					ComponentModel cm = (ComponentModel) componentTN.getData();
-					if (cm.getNode().getUsage().value().equals("R")
-							|| cm.getNode().getUsage().value().equals("RE")
-							|| cm.getNode().getUsage().value().equals("C")) {
-						TreeNode compomnentNode = new DefaultTreeNode(cm,
-								fieldNode);
-						for (TreeNode subComponentTN : componentTN
-								.getChildren()) {
-							ComponentModel scm = (ComponentModel) subComponentTN
-									.getData();
-							if (scm.getNode().getUsage().value().equals("R")
-									|| scm.getNode().getUsage().value()
-											.equals("RE")
-									|| scm.getNode().getUsage().value()
-											.equals("C")) {
-								new DefaultTreeNode(scm, compomnentNode);
+					if (cm.getNode().getUsage().value().equals("R") || cm.getNode().getUsage().value().equals("RE") || cm.getNode().getUsage().value().equals("C")) {
+						if(!cm.getNode().isHide()){
+							TreeNode compomnentNode = new DefaultTreeNode(cm, fieldNode);
+							for (TreeNode subComponentTN : componentTN.getChildren()) {
+								ComponentModel scm = (ComponentModel) subComponentTN.getData();
+								if (scm.getNode().getUsage().value().equals("R") || scm.getNode().getUsage().value().equals("RE") || scm.getNode().getUsage().value().equals("C")) {
+									if(!scm.getNode().isHide()){
+										new DefaultTreeNode(scm, compomnentNode);
+									}
+								}
 							}
 						}
-
 					}
 				}
 			}

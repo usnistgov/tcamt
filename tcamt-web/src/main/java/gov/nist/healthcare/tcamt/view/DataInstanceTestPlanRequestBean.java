@@ -1,43 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.ManualTestStep;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.Metadata;
-import gov.nist.healthcare.tcamt.domain.ProfileContainer;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.TestStory;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.report.HL7V2MessageValidationReport;
-import gov.nist.healthcare.tcamt.service.ManageInstance;
-import gov.nist.healthcare.tcamt.service.ValidationMessage;
-import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
-import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -82,6 +44,53 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+
+import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.ManualTestStep;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestStory;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.report.HL7V2MessageValidationReport;
+import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tcamt.service.ValidationMessage;
+import gov.nist.healthcare.tcamt.service.XMLManager;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
+import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
 
 @ManagedBean
 @SessionScoped
@@ -1623,6 +1632,142 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		if(this.parentTestGroup != null) this.parentTestGroup.setChanged(true);
 	}
 	
+	public void deleteAllTestDataCategorizationForNonLeafNode(){
+		List<DataInstanceTestPlan> plans = this.getSessionBeanTCAMT().getDbManager().getAllDataInstanceTestPlans();
+		
+		for(DataInstanceTestPlan plan : plans){
+			for(DataInstanceTestCaseGroup tcg:plan.getTestcasegroups()){
+				for(DataInstanceTestCase tc:tcg.getTestcases()){
+					for(DataInstanceTestStep ts:tc.getTeststeps()){
+						Message m = ts.getMessage();
+						this.manageInstanceService.loadMessage(m);
+						
+						List<TCAMTConstraint> toBeDeletedTCAMTConstraints = new ArrayList<TCAMTConstraint>();
+						
+						for(TCAMTConstraint c:m.getTcamtConstraints()){
+							if(!this.isLeafNode(this.makePathFromIPath(c.getiPosition()), m.getMessageObj(), m.getSegments(), m.getDatatypes())){
+								toBeDeletedTCAMTConstraints.add(c);
+							}
+						}
+						
+						for(TCAMTConstraint c:toBeDeletedTCAMTConstraints){
+							m.getTcamtConstraints().remove(c);
+						}
+					}
+				}
+				
+				
+			}
+			for(DataInstanceTestCase tc:plan.getTestcases()){
+				for(DataInstanceTestStep ts:tc.getTeststeps()){
+					Message m = ts.getMessage();
+					this.manageInstanceService.loadMessage(m);
+					
+					List<TCAMTConstraint> toBeDeletedTCAMTConstraints = new ArrayList<TCAMTConstraint>();
+					
+					for(TCAMTConstraint c:m.getTcamtConstraints()){
+						if(!this.isLeafNode(this.makePathFromIPath(c.getiPosition()), m.getMessageObj(), m.getSegments(), m.getDatatypes())){
+							toBeDeletedTCAMTConstraints.add(c);
+						}
+					}
+					
+					for(TCAMTConstraint c:toBeDeletedTCAMTConstraints){
+						m.getTcamtConstraints().remove(c);
+					}
+				}
+			}
+			this.getSessionBeanTCAMT().getDbManager().dataInstanceTestPlanUpdate(plan);
+		}
+		
+		List<TCAMTConstraint> tcamtConstraints = this.getSessionBeanTCAMT().getDbManager().getAllTCAMTConstraints();
+		for(TCAMTConstraint c:tcamtConstraints){
+			this.getSessionBeanTCAMT().getDbManager().tcamtConstraintDelete(c);
+		}
+	}
+	
+	
+	private boolean isLeafNode(String path,
+			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj, Segments segments,
+			Datatypes datatypes) {
+		
+		Object currentNode = messageObj;
+		String[] pathList = path.split("\\.");
+		for(String location:pathList){
+			if(currentNode != null){
+				currentNode = this.findChild(location, currentNode, segments, datatypes);
+			}
+		}
+		
+		if(currentNode == null){
+			return false;
+			
+		}else if (currentNode instanceof Datatype){
+			Datatype dt = (Datatype)currentNode;
+			if(dt.getComponents() == null || dt.getComponents().size() == 0){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private Object findChild(String location, Object parentObj, Segments segments, Datatypes datatypes){
+		int position = Integer.parseInt(location);
+		
+		if(parentObj instanceof gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message){
+			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj = (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message)parentObj;
+			
+			for(SegmentRefOrGroup child : messageObj.getChildren()){
+				if(child.getPosition() == position){
+					if(child instanceof Group){
+						return child;
+					}else if (child instanceof SegmentRef){
+						SegmentRef segmentRef = (SegmentRef)child;
+						return segments.findOne(segmentRef.getRef());
+					}
+				}
+			}
+		}else if(parentObj instanceof Group){
+			Group group = (Group)parentObj;
+			
+			for(SegmentRefOrGroup child : group.getChildren()){
+				if(child.getPosition() == position){
+					if(child instanceof Group){
+						return child;
+					}else if (child instanceof SegmentRef){
+						SegmentRef segmentRef = (SegmentRef)child;
+						return segments.findOne(segmentRef.getRef());
+					}
+				}
+			}
+		}else if(parentObj instanceof Segment){
+			Segment segment = (Segment)parentObj;
+			for(Field child:segment.getFields()){
+				if(child.getPosition() == position){
+					return datatypes.findOne(child.getDatatype());
+				}
+			}
+		}else if(parentObj instanceof Datatype){
+			Datatype dt = (Datatype)parentObj;
+			for(Component child:dt.getComponents()){
+				if(child.getPosition() == position){
+					return datatypes.findOne(child.getDatatype());
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	private String makePathFromIPath(String ipath) {
+		String[] pathList = ipath.split("\\.");
+		String result = "";
+		for(String path:pathList){
+			result = result + "." + path.substring(0, path.indexOf("["));
+		}
+		return result.substring(1);
+	}
+
 	/*
 	 * 
 	 * 
@@ -1831,7 +1976,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.generateTestPlanJsonRB(out, tp);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "TestGroup_" + ditg.getPosition();
-//			String groupPath = "Isolated" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
@@ -1862,7 +2006,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 		
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
-			String testcasePath = "Isolated" + File.separator + "TestPlan" + File.separator  + "TestCase_" +  ditc.getPosition();
+			String testcasePath = "TestCase_" +  ditc.getPosition();
 			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 			this.generateTestCaseJsonRB(out, ditc, testcasePath);
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
@@ -1894,7 +2038,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "TestGroup_" + ditg.getPosition();
-//			String groupPath = "Contextbased" + File.separator + "TestPlan" + File.separator + "TestGroup_" + ditg.getPosition();
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
@@ -1925,7 +2068,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 		
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
-			String testcasePath = "Contextbased" + File.separator + "TestPlan" + File.separator  + "TestCase_" +  ditc.getPosition();
+			String testcasePath = "TestCase_" +  ditc.getPosition();
 			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath, needPDF);
 			this.generateTestCaseJsonRB(out, ditc, testcasePath);
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){

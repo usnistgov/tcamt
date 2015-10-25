@@ -1,5 +1,7 @@
 package gov.nist.healthcare.tcamt.db;
 
+import java.util.List;
+
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
@@ -9,13 +11,10 @@ import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
 import gov.nist.healthcare.tcamt.domain.User;
 
-import java.util.List;
-
 public interface DBInterface {
-	public void adjustAllTCAMTConstraints();
-	
 	public User isValidUser(User user);
 	public User getUserById(long id);
 	public List<User> getAllUsers();
@@ -57,6 +56,7 @@ public interface DBInterface {
 	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp);
 	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp);
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author);
+	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans();
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id);
 	
 	public void logInsert(Log l);
@@ -74,4 +74,8 @@ public interface DBInterface {
 	public void defaultTestDataCategorizationSheetAllDelete();
 	public List<DefaultTestDataCategorizationSheet> getAllDefaultTestDataCategorizationSheets();
 	public DefaultTestDataCategorizationSheet getDefaultTestDataCategorizationSheetById(long id);
+	
+	public List<TCAMTConstraint> getAllTCAMTConstraints();
+	public void tcamtConstraintDelete(TCAMTConstraint constraint);
+	
 }
