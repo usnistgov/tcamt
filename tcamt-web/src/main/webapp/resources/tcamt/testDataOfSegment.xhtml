@@ -115,8 +115,9 @@
 		</p:column>
 		
 		<p:column id="cateColumn" headerText="TestData Cate." style="text-align: center;">
-				<h:outputText rendered="#{!model.leafNode or !model.checkTestDataCategorizationAvaiablility()}" value="#{model.tdc}"  />
+				<!-- <h:outputText rendered="#{!model.leafNode or !model.checkTestDataCategorizationAvaiablility()}" value="#{model.tdc}"  />
 				<p:commandButton icon="ui-icon-close" rendered="#{(!model.leafNode or !model.checkTestDataCategorizationAvaiablility()) and (model.tdc != null and model != '')}" update="#{cc.attrs.panelId}" action="#{cc.attrs.bean.removeTCAMTConstraint(model)}" />
+				 -->
 				<p:selectOneMenu value="#{model.tdc}" effect="fade" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />

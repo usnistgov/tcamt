@@ -16,8 +16,8 @@
 		<p:growl id="msgs" showDetail="true" />
 		<p:outputPanel id="panel" deferred="true">
         	<h3>Welcome Test Case Authoring and Management Tool (TCAMT)!</h3>
-        	<h3>Release Date: 2015-10-22</h3>
-        	<h3>Version: 0.95</h3>
+        	<h3>Release Date: 2015-10-26</h3>
+        	<h3>Version: 0.97</h3>
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedUser != null}" columns="1" cellpadding="5">
         		<p>Hello </p> <h:outputText value="#{sessionBeanTCAMT.loggedUser.userId}" />
         		<!-- <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.logoutAction}"/>

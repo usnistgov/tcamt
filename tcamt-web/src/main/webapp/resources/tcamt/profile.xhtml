@@ -312,6 +312,9 @@
 							<p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
 								value="Delete All TestDataCategorization for NonLeafNode" icon="ui-icon-plus"
 								actionListener="#{dataInstanceTestPlanRequestBean.deleteAllTestDataCategorizationForNonLeafNode}" />
+							<p:commandButton rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}"
+								value="Delete All Missing TestDataCategorization" icon="ui-icon-plus"
+								actionListener="#{dataInstanceTestPlanRequestBean.deleteAllMissingTestDataCategorization}" />
 						</td>
 					</tr>
 				</table>

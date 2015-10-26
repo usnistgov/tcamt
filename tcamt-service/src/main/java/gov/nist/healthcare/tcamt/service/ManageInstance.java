@@ -1700,74 +1700,125 @@ public class ManageInstance implements Serializable {
 	//Expected content is missing. A descendent of $location ($element_name) is expected to be present.
 	//Expected content is missing. The empty value at $location ($element_name) is expected to be present.
 	private void createPresenceTree(String usageList, String iPositionPath, String iPath, TreeNode parent, Message m) {
-		String[] uList = usageList.split("-");
-		String myIPositionPath = "";
-		String myIPath = "";
-		for (int i = 0; i < uList.length; i++) {
-			if (i == 0) {
-				myIPath = iPath.split("\\.")[i];
-				myIPositionPath = iPositionPath.split("\\.")[i];
-			} else {
-				myIPath = myIPath + "." + iPath.split("\\.")[i];
-				myIPositionPath = myIPositionPath + "."
-						+ iPositionPath.split("\\.")[i];
-			}
-			if (!uList[i].equals("R")) {
-				Constraint c = new Constraint();
-				if(myIPositionPath.equals(iPositionPath)){
-					c.setDescription("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
-				}else {
-					c.setDescription("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
-				}
-				c.setId("TCAMT");
-				c.setIpath(myIPath);
-				c.setiPositionPath(myIPositionPath);
-				c.setType("Presence");
-				new DefaultTreeNode(c, parent);
+		boolean usageCheck = true;
+		
+		String usage[] = usageList.split("-");
+		for(String u:usage){
+			if(!u.equals("R")){
+				usageCheck = false;
 			}
 		}
+		if(!usageCheck){
+			Constraint c = new Constraint();
+			c.setDescription("Expected content is missing. The empty value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present.");
+			c.setId("TCAMT");
+			c.setIpath(iPath);
+			c.setiPositionPath(iPositionPath);
+			c.setType("Presence");
+			new DefaultTreeNode(c, parent);
+		}
+		
+		
+//		String[] uList = usageList.split("-");
+//		String myIPositionPath = "";
+//		String myIPath = "";
+//		for (int i = 0; i < uList.length; i++) {
+//			if (i == 0) {
+//				myIPath = iPath.split("\\.")[i];
+//				myIPositionPath = iPositionPath.split("\\.")[i];
+//			} else {
+//				myIPath = myIPath + "." + iPath.split("\\.")[i];
+//				myIPositionPath = myIPositionPath + "."
+//						+ iPositionPath.split("\\.")[i];
+//			}
+//			if (!uList[i].equals("R")) {
+//				Constraint c = new Constraint();
+//				if(myIPositionPath.equals(iPositionPath)){
+//					c.setDescription("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
+//				}else {
+//					c.setDescription("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present.");
+//				}
+//				c.setId("TCAMT");
+//				c.setIpath(myIPath);
+//				c.setiPositionPath(myIPositionPath);
+//				c.setType("Presence");
+//				new DefaultTreeNode(c, parent);
+//			}
+//		}
 
 	}
 	
 	private void createPresenceCheck(String usageList, String iPositionPath, String iPath, String tdc, Element parent, String level, int counter, Message m) {
-		String[] uList = usageList.split("-");
-		String myIPositionPath = "";
-		String myIPath = "";
-		for (int i = 0; i < uList.length; i++) {
-			if (i == 0) {
-				myIPositionPath = iPositionPath.split("\\.")[i];
-				myIPath = iPath.split("\\.")[i];
-			} else {
-				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
-				myIPath = myIPath + "." + iPath.split("\\.")[i];
-			}
-			if (!uList[i].equals("R")) {
-				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
-				Element elmReference = parent.getOwnerDocument().createElement("Reference");
-				elmReference.setAttribute("Source", level);
-				elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
-				elmReference.setAttribute("ReferencePath", iPath);
-				elmReference.setAttribute("TestDataCategorization", tdc);
-				elmConstraint.appendChild(elmReference);
-
-				elmConstraint.setAttribute("ID", "TCA-" + counter + "-" + (i + 1));
-				elmConstraint.setAttribute("Target", myIPositionPath);
-				Element elmDescription = parent.getOwnerDocument().createElement("Description");
-				
-				if(myIPositionPath.equals(iPositionPath)){
-					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
-				}else {
-					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
-				}
-				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
-				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
-				elmPresence.setAttribute("Path", myIPositionPath);
-				elmAssertion.appendChild(elmPresence);
-				elmConstraint.appendChild(elmDescription);
-				elmConstraint.appendChild(elmAssertion);
-				parent.appendChild(elmConstraint);
+		
+		boolean usageCheck = true;
+		
+		String usage[] = usageList.split("-");
+		for(String u:usage){
+			if(!u.equals("R")){
+				usageCheck = false;
 			}
 		}
+		
+		if(!usageCheck){
+			Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+			Element elmReference = parent.getOwnerDocument().createElement("Reference");
+			elmReference.setAttribute("Source", level);
+			elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+			elmReference.setAttribute("ReferencePath", iPath);
+			elmReference.setAttribute("TestDataCategorization", tdc);
+			elmConstraint.appendChild(elmReference);
+
+			elmConstraint.setAttribute("ID", "TCA-" + counter);
+			elmConstraint.setAttribute("Target", iPositionPath);
+			Element elmDescription = parent.getOwnerDocument().createElement("Description");
+			elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present."));
+			Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+			Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+			elmPresence.setAttribute("Path", iPositionPath);
+			elmAssertion.appendChild(elmPresence);
+			elmConstraint.appendChild(elmDescription);
+			elmConstraint.appendChild(elmAssertion);
+			parent.appendChild(elmConstraint);
+		}
+		
+//		String[] uList = usageList.split("-");
+//		String myIPositionPath = "";
+//		String myIPath = "";
+//		for (int i = 0; i < uList.length; i++) {
+//			if (i == 0) {
+//				myIPositionPath = iPositionPath.split("\\.")[i];
+//				myIPath = iPath.split("\\.")[i];
+//			} else {
+//				myIPositionPath = myIPositionPath + "." + iPositionPath.split("\\.")[i];
+//				myIPath = myIPath + "." + iPath.split("\\.")[i];
+//			}
+//			if (!uList[i].equals("R")) {
+//				Element elmConstraint = parent.getOwnerDocument().createElement("Constraint");
+//				Element elmReference = parent.getOwnerDocument().createElement("Reference");
+//				elmReference.setAttribute("Source", level);
+//				elmReference.setAttribute("GeneratedBy", "Test Case Authoring & Management Tool(TCAMT)");
+//				elmReference.setAttribute("ReferencePath", iPath);
+//				elmReference.setAttribute("TestDataCategorization", tdc);
+//				elmConstraint.appendChild(elmReference);
+//
+//				elmConstraint.setAttribute("ID", "TCA-" + counter + "-" + (i + 1));
+//				elmConstraint.setAttribute("Target", myIPositionPath);
+//				Element elmDescription = parent.getOwnerDocument().createElement("Description");
+//				
+//				if(myIPositionPath.equals(iPositionPath)){
+//					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
+//				}else {
+//					elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. A descendant of " + myIPath + "("+ this.findNodeNameByIPath(m, myIPositionPath) +") is expected to be present."));
+//				}
+//				Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
+//				Element elmPresence = parent.getOwnerDocument().createElement("Presence");
+//				elmPresence.setAttribute("Path", myIPositionPath);
+//				elmAssertion.appendChild(elmPresence);
+//				elmConstraint.appendChild(elmDescription);
+//				elmConstraint.appendChild(elmAssertion);
+//				parent.appendChild(elmConstraint);
+//			}
+//		}
 	}
 
 	public TreeNode genRestrictedTree(TreeNode segmentTreeRoot) {

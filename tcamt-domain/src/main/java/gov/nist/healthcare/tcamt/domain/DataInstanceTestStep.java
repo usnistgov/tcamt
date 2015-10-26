@@ -130,6 +130,7 @@ public class DataInstanceTestStep implements Cloneable, Serializable, Comparable
 	
 
 	public TestStory getTestStepStory() {
+		testStepStory = testStepStory.normalize();
 		return testStepStory;
 	}
 

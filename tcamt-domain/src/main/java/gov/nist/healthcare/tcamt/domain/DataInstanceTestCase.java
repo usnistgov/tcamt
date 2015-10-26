@@ -102,6 +102,7 @@ public class DataInstanceTestCase implements Cloneable, Serializable, Comparable
 		this.teststeps = teststeps;
 	}
 	public TestStory getTestCaseStory() {
+		testCaseStory = testCaseStory.normalize();
 		return testCaseStory;
 	}
 	public void setTestCaseStory(TestStory testCaseStory) {

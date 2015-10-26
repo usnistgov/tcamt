@@ -112,6 +112,17 @@ public class TestStory implements Cloneable, Serializable{
 	public void setEvaluationCriteria(String evaluationCriteria) {
 		this.evaluationCriteria = evaluationCriteria;
 	}
+
+	public TestStory normalize() {
+		this.teststorydesc = teststorydesc.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.comments = comments.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.preCondition = preCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.postCondition = postCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.testObjectives = testObjectives.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.evaluationCriteria = evaluationCriteria.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.notes = notes.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		return this;
+	}
 	
 	
 }

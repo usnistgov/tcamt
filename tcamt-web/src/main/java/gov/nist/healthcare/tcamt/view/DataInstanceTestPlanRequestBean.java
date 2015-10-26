@@ -1,50 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
-import javax.faces.event.AjaxBehaviorEvent;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
-import org.json.XML;
-import org.primefaces.event.NodeCollapseEvent;
-import org.primefaces.event.NodeExpandEvent;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.event.TabChangeEvent;
-import org.primefaces.event.TreeDragDropEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.StreamedContent;
-import org.primefaces.model.TreeNode;
-
 import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
 import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
@@ -91,6 +46,51 @@ import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.Serializable;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
+import javax.faces.event.AjaxBehaviorEvent;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONObject;
+import org.json.XML;
+import org.primefaces.event.NodeCollapseEvent;
+import org.primefaces.event.NodeExpandEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.TabChangeEvent;
+import org.primefaces.event.TreeDragDropEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 
 @ManagedBean
 @SessionScoped
@@ -984,7 +984,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					
 					packageBodyHTML = packageBodyHTML + "<span>" + tc.getLongDescription() + "</span>" + System.getProperty("line.separator");
 					packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
-					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory()));
+					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory(), "plain"));
 					packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
 					
 					HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
@@ -1003,7 +1003,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						}
 						packageBodyHTML = packageBodyHTML + "<span>" + ts.getLongDescription() + "</span>" + System.getProperty("line.separator");
 						packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
-						packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory()));
+						packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory(), "plain"));
 						
 						if(ts != null && ts.getMessage() != null && ts.getMessage().getConformanceProfile() != null){
 							this.instanceSegments = new ArrayList<InstanceSegment>();
@@ -1077,7 +1077,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				tocHTML = tocHTML + "<li><a href=\"#" + (i+1) + "\">"+ (i+1) + ". " + tc.getName() +"</a></li>" +  System.getProperty("line.separator");
 				packageBodyHTML = packageBodyHTML + "<span>" + tc.getLongDescription() + "</span>" + System.getProperty("line.separator");
 				packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
-				packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory()));
+				packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(tc.getTestCaseStory(), "plain"));
 				packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
 				
 				HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
@@ -1095,7 +1095,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					}
 					packageBodyHTML = packageBodyHTML + "<span>" + ts.getLongDescription() + "</span>" + System.getProperty("line.separator");
 					packageBodyHTML = packageBodyHTML + "<h3>" + "Test Story" + "</h3>" + System.getProperty("line.separator");
-					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory()));
+					packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(this.generateTestStory(ts.getTestStepStory(), "plain"));
 					if(ts != null && ts.getMessage() != null && ts.getMessage().getConformanceProfile() != null){
 						this.instanceSegments = new ArrayList<InstanceSegment>();
 						if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
@@ -1196,6 +1196,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 
 	private String retrieveBodyContent(String generateTestStory) {
+		
+		
 		int beginIndex = generateTestStory.indexOf("<body>");
 		int endIndex = generateTestStory.indexOf("</body>");
 		
@@ -1678,7 +1680,52 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 			this.getSessionBeanTCAMT().getDbManager().dataInstanceTestPlanUpdate(plan);
 		}
-		
+	}
+	
+	public void deleteAllTestDataCategorizationForNonLeafNodeForTestPlan(){
+			for(DataInstanceTestCaseGroup tcg:this.selectedTestPlan.getTestcasegroups()){
+				for(DataInstanceTestCase tc:tcg.getTestcases()){
+					for(DataInstanceTestStep ts:tc.getTeststeps()){
+						Message m = ts.getMessage();
+						this.manageInstanceService.loadMessage(m);
+						
+						List<TCAMTConstraint> toBeDeletedTCAMTConstraints = new ArrayList<TCAMTConstraint>();
+						
+						for(TCAMTConstraint c:m.getTcamtConstraints()){
+							if(!this.isLeafNode(this.makePathFromIPath(c.getiPosition()), m.getMessageObj(), m.getSegments(), m.getDatatypes())){
+								toBeDeletedTCAMTConstraints.add(c);
+							}
+						}
+						
+						for(TCAMTConstraint c:toBeDeletedTCAMTConstraints){
+							m.getTcamtConstraints().remove(c);
+						}
+					}
+				}
+				
+				
+			}
+			for(DataInstanceTestCase tc:this.selectedTestPlan.getTestcases()){
+				for(DataInstanceTestStep ts:tc.getTeststeps()){
+					Message m = ts.getMessage();
+					this.manageInstanceService.loadMessage(m);
+					
+					List<TCAMTConstraint> toBeDeletedTCAMTConstraints = new ArrayList<TCAMTConstraint>();
+					
+					for(TCAMTConstraint c:m.getTcamtConstraints()){
+						if(!this.isLeafNode(this.makePathFromIPath(c.getiPosition()), m.getMessageObj(), m.getSegments(), m.getDatatypes())){
+							toBeDeletedTCAMTConstraints.add(c);
+						}
+					}
+					
+					for(TCAMTConstraint c:toBeDeletedTCAMTConstraints){
+						m.getTcamtConstraints().remove(c);
+					}
+				}
+			}		
+	}
+	
+	public void deleteAllMissingTestDataCategorization(){
 		List<TCAMTConstraint> tcamtConstraints = this.getSessionBeanTCAMT().getDbManager().getAllTCAMTConstraints();
 		for(TCAMTConstraint c:tcamtConstraints){
 			this.getSessionBeanTCAMT().getDbManager().tcamtConstraintDelete(c);
@@ -1927,7 +1974,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			String xsltStr = IOUtils.toString(xsltReader);
 			String sourceStr = IOUtils.toString(sourceReader);
 			
-			System.out.println(sourceStr);
 			
 			this.messageContentHTML = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);	
 		}	
@@ -2466,7 +2512,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		file.delete();
 	}
 	
-	private void generateTestStoryRB(ZipOutputStream out, TestStory testStory, String path, boolean needPDF) throws IOException, ConversionException{
+	private void generateTestStoryRB(ZipOutputStream out, TestStory testStory, String path, boolean needPDF) throws Exception{
 		byte[] buf = new byte[1024];
 		
 		out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.json"));
@@ -2480,7 +2526,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.html"));
 		
-		String testCaseStoryStr = this.generateTestStory(testStory);
+		String testCaseStoryStr = this.generateTestStory(testStory, "ng-tab-html");
         InputStream inTestStory = IOUtils.toInputStream(testCaseStoryStr, "UTF-8");
         int lenTestStory;
         while ((lenTestStory = inTestStory.read(buf)) > 0) {
@@ -2505,23 +2551,24 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         }
 	}
 	
-	private String generateTestStory(TestStory testStory) throws IOException {
-		if(testStory == null){
-			testStory = new TestStory();
-		}
+	private String generateTestStory(TestStory testStory, String option) throws Exception {
+		
 		
 		ClassLoader classLoader = getClass().getClassLoader();
-		String testStoryStr = IOUtils.toString(classLoader.getResourceAsStream("TestStory.html"));
-		testStoryStr = testStoryStr.replace("?Description?", testStory.getTeststorydesc());
-		testStoryStr = testStoryStr.replace("?Comments?", testStory.getComments());
-		testStoryStr = testStoryStr.replace("?PreCondition?", testStory.getPreCondition());
-		testStoryStr = testStoryStr.replace("?PostCondition?", testStory.getPostCondition());
-		testStoryStr = testStoryStr.replace("?TestObjectives?", testStory.getTestObjectives());
-		testStoryStr = testStoryStr.replace("?EvaluationCriteria?", testStory.getEvaluationCriteria());
-		testStoryStr = testStoryStr.replace("?Notes?", testStory.getNotes());
-		testStoryStr = testStoryStr.replace("<br>", " ");
-		testStoryStr = testStoryStr.replace("</br>", " ");
-		return testStoryStr;
+		String xsltStr;
+		
+		if(option.equals("ng-tab-html")){
+			xsltStr = IOUtils.toString(classLoader.getResourceAsStream("TestStory_ng-tab-html.xsl"));
+		}else{
+			xsltStr = IOUtils.toString(classLoader.getResourceAsStream("TestStory_plain-html.xsl"));
+		}
+
+		String jsonStr = this.testStoryConverter.toString(testStory);
+		JSONObject json = new JSONObject(jsonStr);
+		String sourceStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestStory>" + XML.toString(json) + "</TestStory>";
+		sourceStr = XMLManager.docToString(XMLManager.stringToDom(sourceStr));
+		
+		return XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 	}
 	
 	private void generateTestPlanJsonRB(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException, ConversionException {
