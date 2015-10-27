@@ -118,7 +118,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
     
     private TreeNode segmentTreeRoot = new DefaultTreeNode("root", null);
     private TreeNode filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
-	private TreeNode messageTreeRoot = new DefaultTreeNode("root", null);
+//	private TreeNode messageTreeRoot = new DefaultTreeNode("root", null);
 	private TreeNode constraintTreeRoot = new DefaultTreeNode("root", null);
     
     private InstanceSegment selectedInstanceSegment= null;
@@ -827,34 +827,45 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	public void genrateHL7Message() {
-		try{
-			this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot,  this.selectedTestStep.getMessage()));
-			
+//	public void genrateHL7Message() {
+//		try{
+//			this.selectedTestStep.getMessage().setHl7EndcodedMessage(this.manageInstanceService.generateHL7Message(this.messageTreeRoot,  this.selectedTestStep.getMessage()));
+//			this.readHL7Message();			
+//		}catch(Exception e){
 //			FacesContext context = FacesContext.getCurrentInstance();
-//	        context.addMessage(null, new FacesMessage("Generate Message",  "HL7 Message of TestStep has been generated."));
-	        
-			this.readHL7Message();			
-		}catch(Exception e){
-			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
-			e.printStackTrace();
-			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
-			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+//            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+//			e.printStackTrace();
+//			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+//			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+//		}
+//	}
+	
+	private int findLineNum(String ipath){
+		int result = 0;
+		for(InstanceSegment is: this.instanceSegments){
+			if(is.getIpath().equals(ipath)){
+				return result;
+			}
+			result = result + 1;
 		}
+		return -1;
 	}
 	
 	public void updateInstanceData(Object model) {
 		try{
-			int lineNum = this.instanceSegments.indexOf(this.selectedInstanceSegment);
-			this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.selectedTestStep.getMessage());
-			this.readHL7Message();
-			this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
-			this.activeIndexOfMessageInstancePanel = 4;
-			
-			this.createTCAMTConstraint(model);
-			
-			this.modifyTestStep();
+			int lineNum = this.findLineNum(this.selectedInstanceSegment.getIpath());
+			if(lineNum >= 0){
+				this.manageInstanceService.updateHL7Message(lineNum, this.manageInstanceService.generateLineStr(this.segmentTreeRoot), this.selectedTestStep.getMessage());
+				this.readHL7Message();
+				this.selectedInstanceSegment = this.instanceSegments.get(lineNum);
+				this.activeIndexOfMessageInstancePanel = 4;
+				
+				this.createTCAMTConstraint(model);
+				
+				this.modifyTestStep();
+			}else {
+				throw new Exception("NOT FOUND Line Num");
+			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -1261,7 +1272,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				tcamtConstraint.setUsageList(usageList);
 				this.selectedTestStep.getMessage().addTCAMTConstraint(tcamtConstraint);
 			}
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage(), this.instanceSegments);
 			this.generateMessageContentHTML();	
 			
 			this.activeIndexOfMessageInstancePanel = 4;
@@ -1491,10 +1502,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		return true;
 	}
 	
-	public void resetAllTestDataCategorizations(){
+	public void resetAllTestDataCategorizations() throws Exception{
 		this.selectedTestStep.getMessage().setTcamtConstraints(new HashSet<TCAMTConstraint>());
 		
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage(), this.instanceSegments);
 	}
 	
 	public void removeTCAMTConstraint(Object model){
@@ -1509,7 +1520,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	public void updateTDC() {
+	public void updateTDC() throws Exception {
 		this.resetAllTestDataCategorizations();
 		if(this.defaultTDCId != null){
 			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
@@ -1608,8 +1619,62 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	    this.modifyTestStep();
 	}
 	
-	public void onTabChange(TabChangeEvent event) {
-		this.readHL7Message();
+	public void onTabChange(TabChangeEvent event) throws Exception {
+		if(event.getTab().getTitle().equals("Test Step MetaData")){
+		
+		}else if(event.getTab().getTitle().equals("Test Step Story")){
+			
+		}else if(event.getTab().getTitle().equals("HL7 Encoded Message")){
+			
+		}else if(event.getTab().getTitle().equals("Segments List")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.updateFilteredInstanceSegments();
+		}else if(event.getTab().getTitle().equals("TestData of Selected Segment")){
+		
+		}else if(event.getTab().getTitle().equals("List Constraints")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage(), this.instanceSegments);
+		}else if(event.getTab().getTitle().equals("STD XML Encoded Message")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.manageInstanceService.generateXMLFromMesageInstance(this.selectedTestStep.getMessage(), instanceSegments, true, selectedTestCaseName);
+		}else if(event.getTab().getTitle().equals("NIST XML Encoded Message")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.manageInstanceService.generateXMLFromMesageInstance(this.selectedTestStep.getMessage(), instanceSegments, false, selectedTestCaseName);
+		}else if(event.getTab().getTitle().equals("Message Contents")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(this.selectedTestStep.getMessage(), this.instanceSegments);
+			this.generateMessageContentHTML();
+		}else if(event.getTab().getTitle().equals("Test Data Specification")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.manageInstanceService.generateXMLFromMesageInstance(this.selectedTestStep.getMessage(), instanceSegments, false, selectedTestCaseName);
+			this.generateTestDataSpecificationHTML();
+		}else if(event.getTab().getTitle().equals("Juror Document")){
+			this.instanceSegments = new ArrayList<InstanceSegment>();
+			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
+				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
+			}
+			this.manageInstanceService.generateXMLFromMesageInstance(this.selectedTestStep.getMessage(), instanceSegments, false, selectedTestCaseName);
+			this.generateJurorDocumentHTML();
+		}else {
+		}
     }
 	
 	public void modifyTestPlan(){
@@ -1840,7 +1905,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		this.selectedInstanceSegment = null;
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
-		this.messageTreeRoot = new DefaultTreeNode("root", null);
+//		this.messageTreeRoot = new DefaultTreeNode("root", null);
 		this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
@@ -1947,20 +2012,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.jurorDocumentPDFFileName = null;
 		this.setMessageContentHTML(null);
 		
-		this.selectedInstanceSegment = new InstanceSegment();
-		this.messageTreeRoot = new DefaultTreeNode("root", null);
+		this.selectedInstanceSegment = null;
+//		this.messageTreeRoot = new DefaultTreeNode("root", null);
 		this.segmentTreeRoot = new DefaultTreeNode("root", null);
+		this.filtedSegmentTreeRoot = new DefaultTreeNode("root", null);
 		this.setConstraintTreeRoot(new DefaultTreeNode("root", null));
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.filteredInstanceSegments =  new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
-		
 		this.hL7V2MessageValidationReport = null;
 		
 		if(this.selectedTestStep.getMessage() != null && this.selectedTestStep.getMessage().getConformanceProfile() != null && this.selectedTestStep.getMessage().getName() != null){
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage());
-			this.readHL7Message();
+//			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
+			this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
 		}
 	}
 	
@@ -2563,9 +2627,33 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			xsltStr = IOUtils.toString(classLoader.getResourceAsStream("TestStory_plain-html.xsl"));
 		}
 
-		String jsonStr = this.testStoryConverter.toString(testStory);
-		JSONObject json = new JSONObject(jsonStr);
-		String sourceStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestStory>" + XML.toString(json) + "</TestStory>";
+//		String jsonStr = this.testStoryConverter.toString(testStory);
+//		JSONObject json = new JSONObject(jsonStr);
+		System.out.println(testStory.getComments());
+		
+		
+		String sourceStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
+						"<TestStory>" + 
+							"<comments><![CDATA["+ testStory.getComments().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></comments>" +
+							"<postCondition><![CDATA[" + testStory.getPostCondition().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></postCondition>" +
+							"<notes><![CDATA[" + testStory.getNotes().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></notes>" + 
+							"<teststorydesc><![CDATA[" + testStory.getTeststorydesc().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></teststorydesc>" + 
+							"<evaluationCriteria><![CDATA[" + testStory.getEvaluationCriteria().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></evaluationCriteria>" + 
+							"<preCondition><![CDATA[" + testStory.getPreCondition().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></preCondition>" + 
+							"<testObjectives><![CDATA[" + testStory.getTestObjectives().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></testObjectives>" + 
+						"</TestStory>";
+//		System.out.println(sourceStr);
+		
+		/*
+		 * <![CDATA[
+    Since this is a CDATA section
+    I can use all sorts of reserved characters
+    like > < " and &
+    or write things like
+    <foo></bar>
+    but my document is still well formed!
+]]>
+		 */
 		sourceStr = XMLManager.docToString(XMLManager.stringToDom(sourceStr));
 		
 		return XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
@@ -2778,13 +2866,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.selectedInstanceSegment = selectedInstanceSegment;
 	}
 
-	public TreeNode getMessageTreeRoot() {
-		return messageTreeRoot;
-	}
-
-	public void setMessageTreeRoot(TreeNode messageTreeRoot) {
-		this.messageTreeRoot = messageTreeRoot;
-	}
+//	public TreeNode getMessageTreeRoot() {
+//		return messageTreeRoot;
+//	}
+//
+//	public void setMessageTreeRoot(TreeNode messageTreeRoot) {
+//		this.messageTreeRoot = messageTreeRoot;
+//	}
 
 	public List<InstanceSegment> getInstanceSegments() {
 		return instanceSegments;

@@ -141,8 +141,7 @@ public class MessageRequestBean implements Serializable {
 			
 			
 			this.editMessage = m;
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.messageTreeRoot = this.manageInstanceService.loadMessageAndCreateTreeNode(this.editMessage);
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			this.readHL7Message();
 			this.shareTo = null;
@@ -182,10 +181,10 @@ public class MessageRequestBean implements Serializable {
 			this.sessionBeanTCAMT.updateMessages();
 			
 			this.editMessage = newMessage;
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.messageTreeRoot = this.manageInstanceService.loadMessageAndCreateTreeNode(this.editMessage);
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			this.readHL7Message();
+			
 			this.shareTo = null;
 			
 			this.setActiveIndexOfMessageInstancePanel(2);
@@ -205,8 +204,7 @@ public class MessageRequestBean implements Serializable {
 		try{
 			this.setActiveIndexOfMessageInstancePanel(1);
 			this.sessionBeanTCAMT.setmActiveIndex(1);
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.messageTreeRoot = this.manageInstanceService.loadMessageAndCreateTreeNode(this.editMessage);
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			this.readHL7Message();			
 		}catch(Exception e){
@@ -226,8 +224,7 @@ public class MessageRequestBean implements Serializable {
 			if(this.editMessage.getConformanceProfile() == null) this.conformanceProfileId = null;
 			else this.conformanceProfileId = this.editMessage.getConformanceProfile().getId();
 			
-			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.editMessage);
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+			this.messageTreeRoot = this.manageInstanceService.loadMessageAndCreateTreeNode(this.editMessage);
 			this.instanceSegments = new ArrayList<InstanceSegment>();
 			this.readHL7Message();
 			this.shareTo = null;
@@ -309,7 +306,7 @@ public class MessageRequestBean implements Serializable {
 				this.editMessage.addTCAMTConstraint(tcamtConstraint);
 			}
 			
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);	
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage, this.instanceSegments);	
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -325,7 +322,7 @@ public class MessageRequestBean implements Serializable {
 			this.selectedInstanceSegment = null;
 			this.segmentTreeRoot = new DefaultTreeNode("root", null);
 			
-			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);			
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage, this.instanceSegments);			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -426,6 +423,7 @@ public class MessageRequestBean implements Serializable {
 			}
 			this.activeIndexOfMessageInstancePanel = 2;
 			this.updateFilteredInstanceSegments();	
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage, this.instanceSegments);
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
@@ -559,10 +557,10 @@ public class MessageRequestBean implements Serializable {
 	}
 	
 	
-	public void resetAllTestDataCategorizations(){
+	public void resetAllTestDataCategorizations() throws Exception{
 		this.editMessage.setTcamtConstraints(new HashSet<TCAMTConstraint>());
 		
-		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage);
+		this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.editMessage, this.instanceSegments);
 	}
 	
 	public void removeTCAMTConstraint(Object model){
@@ -578,7 +576,7 @@ public class MessageRequestBean implements Serializable {
 		}
 	}
 	
-	public void updateTDC() {
+	public void updateTDC() throws Exception {
 		this.resetAllTestDataCategorizations();
 		if(this.defaultTDCId != null){
 			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);

@@ -338,10 +338,14 @@
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedInstanceSegment != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
 										<tcamt:testDataOfSegment bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
 									</p:scrollPanel>
+								</p:tab>
+								
+								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.selectedInstanceSegment == null}">
+									Segment Unselected!
 								</p:tab>
 
 								<p:tab title="List Constraints" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
@@ -358,12 +362,24 @@
 									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
 								</p:tab>
 								
+								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.messageContentHTML == null}">
+									No Message Contents
+								</p:tab>
+								
 								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
 									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
 								</p:tab>
-
+								
+								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.testDataSpecificationHTML == null}">
+									No Test Data Specification
+								</p:tab>
+								
 								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
 									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
+								</p:tab>
+								
+								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName == null}">
+									No Juror Document
 								</p:tab>
 
 								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName != null}">

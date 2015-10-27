@@ -24,7 +24,8 @@
 					</tr>
 				</table>
         		<p:tree id="mTree" value="#{cc.attrs.bean.messageTreeRoot}" var="model" dynamic="true" 
-        			selectionMode="single" style="width:100%;border-width:0;">                    
+        			selectionMode="single" style="width:100%;border-width:0;"
+        			selection="#{cc.attrs.bean.selectedNode}">                    
         			<p:treeNode expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
             			<h:outputText value="#{model.path}[#{model.node.usage}, {#{model.node.min}..#{model.node.max}}]"/>
         			</p:treeNode>

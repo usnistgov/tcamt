@@ -116,6 +116,8 @@ public class FieldModel implements Serializable{
 				return false;
 			}
 		}
+		if(this.data == null || this.data.equals("")) return false;
+		
 		return true;
 	}
 

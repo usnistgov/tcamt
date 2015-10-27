@@ -116,9 +116,10 @@ public class ComponentModel implements Serializable{
 				return false;
 			}
 		}
+		if(this.data == null || this.data.equals("")) return false;
+		
 		return true;
 	}
-
 
 	public String getiPositionPath() {
 		return iPositionPath;
