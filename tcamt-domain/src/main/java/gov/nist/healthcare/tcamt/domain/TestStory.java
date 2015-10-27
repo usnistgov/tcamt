@@ -114,13 +114,13 @@ public class TestStory implements Cloneable, Serializable{
 	}
 
 	public TestStory normalize() {
-		this.teststorydesc = teststorydesc.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.comments = comments.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.preCondition = preCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.postCondition = postCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.testObjectives = testObjectives.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.evaluationCriteria = evaluationCriteria.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
-		this.notes = notes.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-");
+		this.teststorydesc = teststorydesc.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.comments = comments.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.preCondition = preCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.postCondition = postCondition.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.testObjectives = testObjectives.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.evaluationCriteria = evaluationCriteria.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
+		this.notes = notes.replace ("“", "\"").replace ("”", "\"").replace ("‘", "\'").replace ("’", "\'").replace ("–", "-").replace("&nbsp;", " ");
 		return this;
 	}
 	

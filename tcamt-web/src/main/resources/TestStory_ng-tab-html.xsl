@@ -6,8 +6,9 @@
     <!-- param: output   values:  ng-tab-html    default: plain-html -->
 
     <!--<xsl:param name="output" select="'plain-html'"/>-->
-   <xsl:param name="output" select="'ng-tab-html'"/>
-
+     <xsl:param name="output" select="'ng-tab-html'"/>
+    <!-- param for font size in table 'td' -->
+    <xsl:param name="font-size" select="'110%'"/>
     <xsl:character-map name="tags">
         <xsl:output-character character="&lt;" string="&lt;"/>
         <xsl:output-character character="&gt;" string="&gt;"/>
@@ -118,10 +119,10 @@
         <xsl:choose>
             <xsl:when test="$generate-plain-html">
                 <xsl:value-of select="util:tag('table', $ind)"/>
-                <!-- <xsl:value-of select="util:tag('tr', $ind)"/>
+                <xsl:value-of select="util:tag('tr', $ind)"/>
                 <xsl:value-of select="util:tags('th', $title, $ind)"/>
 
-                <xsl:value-of select="util:tag('/tr', $ind)"/> -->
+                <xsl:value-of select="util:tag('/tr', $ind)"/>
             </xsl:when>
 
         </xsl:choose>
@@ -226,11 +227,12 @@
                     font-size:95%
                 }
                 .test-story-main table tbody tr td{
-                    font-size:100%;
+                    font-size: <xsl:value-of select="$font-size"/>;
                 }
                 .test-story-main table tbody tr th{
-                    text-align:center;
-                    background:#C6DEFF
+                    text-align:left;
+                    background:#C6DEFF;
+                    font-size:100%;
                 }
                 .test-story-main fieldset{
                     text-align:center;
@@ -244,12 +246,15 @@
                 }
                 .test-story-main table tr{
                     border:2px groove;
+            
                 }
                 .test-story-main table th{
                     border:2px groove;
+            
                 }
                 .test-story-main table td{
                     border:1px groove;
+            
                 }
                 .test-story-main table thead{
                     border:1px groove;
@@ -326,11 +331,13 @@
                 }
                 .test-story-main table tbody tr th{
                     text-align:left;
-                    background:#C6DEFF
+                    background:#C6DEFF;
+            
                 }
                 .test-story-main table thead tr th{
                     text-align:center;
-                    background:#4682B4
+                    background:#4682B4;
+            
                 }
                 .test-story-main fieldset{
                     text-align:center;
@@ -536,14 +543,11 @@
                     <xsl:value-of select="util:tag('/span', '')"/>
                     <xsl:value-of select="util:tag('/accordion-heading', '')"/>
                 </xsl:if>
-                <xsl:value-of select="util:tag('div class=&quot;panel panel-info&quot;', $ind)"/>
+
                 <xsl:value-of select="util:tag('div class=&quot;panel-body&quot;', $ind)"/>
-                <xsl:value-of select="util:tag('fieldset', $ind)"/>
+
             </xsl:when>
-            <xsl:when test="$output = 'plain-html'">
-                <xsl:value-of select="util:tag('fieldset', $ind)"/>
-                <xsl:value-of select="util:tags('legend', $val, $ind)"/>
-            </xsl:when>
+            <xsl:when test="$output = 'plain-html'"> </xsl:when>
         </xsl:choose>
     </xsl:function>
     <xsl:function xmlns:xalan="http://xml.apache.org/xslt" name="util:end-tab">
@@ -551,30 +555,24 @@
         <xsl:param name="vertical-orientation" as="xs:boolean"/>
         <xsl:choose>
             <xsl:when test="$output = 'ng-tab-html'">
-                <xsl:value-of select="util:tag('/fieldset', '')"/>
-                <xsl:value-of select="util:tag('/div', '')"/>
+
+
                 <xsl:value-of select="util:tag('/div', '')"/>
                 <xsl:value-of
                     select="util:tag(util:IfThenElse($vertical-orientation, '/accordion-group', '/tab'), '')"
                 />
             </xsl:when>
-            <xsl:when test="$output = 'plain-html'">
-                <xsl:value-of select="util:tag('/fieldset', '')"/>
-            </xsl:when>
+            <xsl:when test="$output = 'plain-html'"> </xsl:when>
         </xsl:choose>
     </xsl:function>
     <xsl:function xmlns:xalan="http://xml.apache.org/xslt" name="util:strip-tabsets">
         <xsl:param name="html"/>
         <xsl:variable name="pass1"
-            select="replace($html, 'tab heading=&quot;([^&quot;]*)&quot; *vertical=&quot;false&quot;', 'fieldset> &lt;legend> $1 &lt;/legend')"/>
-        <xsl:variable name="pass2" select="replace($pass1, '/tab>', '/fieldset>')"/>
-        <xsl:variable name="pass3"
-            select="replace($pass2, 'span class=&quot;accordion-heading pull-left&quot;', 'span')"/>
-        <xsl:variable name="pass4"
-            select="replace($pass3, 'i class=&quot;pull-left fa&quot; ng-', 'i ')"/>
-        <xsl:variable name="pass5" select="replace($pass4, 'accordion-heading', 'legend')"/>
+            select="replace($html, '&lt;tab heading=&quot;([^&quot;]*)&quot; *vertical=&quot;false&quot;>', '')"/>
+        <xsl:variable name="pass2" select="replace($pass1, '&lt;/tab>', '')"/>
+
         <xsl:value-of
-            select="replace(replace($pass5, '(&lt;tab heading=&quot;.*&quot;)|(&lt;tabset)|(&lt;accordion((-group)|(-heading))?)', '&lt;div'), '(&lt;/tab>)|(&lt;/tabset>)|(&lt;/accordion((-group)|(-heading))?>)', '&lt;/div>')"
+            select="replace(replace($pass2, '(&lt;tab heading=&quot;.*&quot;)', '&lt;div'), '(&lt;/tab>)|(&lt;/tabset>)', '&lt;/div>')"
         />
     </xsl:function>
     <xsl:function xmlns:xalan="http://xml.apache.org/xslt" name="util:end">

@@ -2616,8 +2616,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private String generateTestStory(TestStory testStory, String option) throws Exception {
-		
-		
 		ClassLoader classLoader = getClass().getClassLoader();
 		String xsltStr;
 		
@@ -2626,11 +2624,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}else{
 			xsltStr = IOUtils.toString(classLoader.getResourceAsStream("TestStory_plain-html.xsl"));
 		}
-
-//		String jsonStr = this.testStoryConverter.toString(testStory);
-//		JSONObject json = new JSONObject(jsonStr);
-		System.out.println(testStory.getComments());
-		
 		
 		String sourceStr = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
 						"<TestStory>" + 
@@ -2642,20 +2635,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							"<preCondition><![CDATA[" + testStory.getPreCondition().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></preCondition>" + 
 							"<testObjectives><![CDATA[" + testStory.getTestObjectives().replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&nbsp;", " ") + "]]></testObjectives>" + 
 						"</TestStory>";
-//		System.out.println(sourceStr);
-		
-		/*
-		 * <![CDATA[
-    Since this is a CDATA section
-    I can use all sorts of reserved characters
-    like > < " and &
-    or write things like
-    <foo></bar>
-    but my document is still well formed!
-]]>
-		 */
 		sourceStr = XMLManager.docToString(XMLManager.stringToDom(sourceStr));
-		
+	
 		return XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 	}
 	

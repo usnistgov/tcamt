@@ -39,17 +39,103 @@
 					.test-data-specs-main  panel { margin: 10px 5px 5px 5px; }
 
 
-					.testStory legend{text-align:center; font-size:110%; font-weight:bold;}
-                	.testStory{text-align:center;  page-break-inside:avoid;}
-                	.testStory maskByMediaType{display:table;}
-                	.testStory table tbody tr th{font-size:100%;}
-                	.testStory table tbody tr td{font-size:90%;}
-                	.testStory table tbody tr th{text-align:left; background:#436BEC}
-                	.testStory table{width:98%;border:1px groove;table-layout:fixed;margin:0 auto;border-collapse:collapse;page-break-inside:avoid;}
-                	.testStory table tr{border:3px groove;}
-                	.testStory table th{border:2px groove;}
-                	.testStory table td{border:2px groove;}
-                	.testStory table tbody tr td{text-align:left}
+					.test-story-main legend{
+                    text-align:center;
+                    font-size:110%;
+                    font-weight:bold;
+                }
+                .test-story-main .nav-tabs{
+                    font-weight:bold;
+                }
+                .test-story-main .tds_obxGrpSpl{
+                    background:#B8B8B8;
+                }
+                .test-story-main maskByMediaType{
+                    display:table;
+                }
+                .test-story-main table tbody tr th{
+                    font-size:95%
+                }
+                .test-story-main table tbody tr td{
+                    font-size: <xsl:value-of select="$font-size"/>;
+                }
+                .test-story-main table tbody tr th{
+                    text-align:left;
+                    background:#C6DEFF;
+                    font-size:100%;
+                }
+                .test-story-main fieldset{
+                    text-align:center;
+                }
+                .test-story-main table{
+                    width:98%;
+                    border:1px groove;
+                    table-layout:fixed;
+                    margin:0 auto;
+                    border-collapse:collapse;
+                }
+                .test-story-main table tr{
+                    border:2px groove;
+            
+                }
+                .test-story-main table th{
+                    border:2px groove;
+            
+                }
+                .test-story-main table td{
+                    border:1px groove;
+            
+                }
+                .test-story-main table thead{
+                    border:1px groove;
+                    background:#446BEC;
+                    text-align:center;
+                }
+                .test-story-main .separator{
+                    background:rgb(240, 240, 255);
+                    text-align:left;
+                }
+                .test-story-main table tbody tr td{
+                    text-align:left
+                }
+                .test-story-main .noData{
+                    background:#B8B8B8;
+                }
+                .test-story-main .childField{
+                    background:#B8B8B8;
+                }
+                .test-story-main .title{
+                    text-align:left;
+                }
+                .test-story-main h3{
+                    text-align:center;
+                    page-break-inside:avoid;
+                }
+                .test-story-main h2{
+                    text-align:center;
+                }
+                .test-story-main h1{
+                    text-align:center;
+                }
+                .test-story-main .pgBrk{
+                    padding-top:15px;
+                }
+                .test-story-main .er7Msg{
+                    width:100%;
+                }
+                .test-story-main .embSpace{
+                    padding-left:15px;
+                }
+                .test-story-main .accordion-heading{
+                    font-weight:bold;
+                    font-size:90%;
+                }
+                .test-story-main .accordion-heading i.fa:after{
+                    content:"\00a0 ";
+                }
+                .test-story-main panel{
+                    margin:10px 5px 5px 5px;
+                }
 	
 					.message-content legend {text-align:center;font-size:110%; font-weight:bold;}					
 					.message-content .nav-tabs {font-weight:bold;}					
