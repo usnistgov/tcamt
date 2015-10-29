@@ -1,6 +1,7 @@
 package gov.nist.healthcare.tcamt.view;
 
 import gov.nist.healthcare.tcamt.domain.User;
+import gov.nist.healthcare.tcamt.web.LoginManager;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
+import javax.servlet.http.HttpSession;
 
 @ManagedBean
 @SessionScoped
@@ -17,31 +19,55 @@ public class UserControl {
 
 	private User user = new User();
 	private User newUser = new User();
+	
+	private String killUserId;
 
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
 	
 	public void loginAction(ActionEvent actionEvent) {
+		LoginManager loginManager = LoginManager.getInstance();
 		this.user = this.sessionBeanTCAMT.getDbManager().isValidUser(user);
-
 		if (this.user != null) {
-			addMessage("Hello " + this.user.getUserId());
-			sessionBeanTCAMT.setLoggedUser(user);
+			
+			if(loginManager.isUsing(this.user.getUserId())){
+				this.user = new User();
+				sessionBeanTCAMT.setLoggedUser(null);
+				addMessage("Login Error: ID is currently used.");
+				
+				
+			}else {
+				addMessage("Hello " + this.user.getUserId());
+				sessionBeanTCAMT.setLoggedUser(user);
+				FacesContext context = FacesContext.getCurrentInstance();
+				loginManager.setSession((HttpSession)context.getExternalContext().getSession(true), this.user.getUserId());
+			}
+			loginManager.printloginUsers();
 		} else {
 			this.user = new User();
 			sessionBeanTCAMT.setLoggedUser(null);
-			addMessage("Sorry but failed!");
+			addMessage("Login Error: Invalid User ID or password.");
 		}
 		
 		sessionBeanTCAMT.retriveAllData();
 	}
 
 	public void logoutAction(ActionEvent actionEvent) {
+		LoginManager loginManager = LoginManager.getInstance();
+		loginManager.removeSession(this.user.getUserId());
+		loginManager.printloginUsers();
 		this.user = new User();
 		sessionBeanTCAMT.setLoggedUser(null);
 		addMessage("Bye");
 		
 		sessionBeanTCAMT.retriveAllData();
+	}
+	
+	public void killUserIdAction(ActionEvent actionEvent) {
+		LoginManager loginManager = LoginManager.getInstance();
+		HttpSession session = loginManager.findSession(killUserId);
+		if(session != null) session.invalidate();
+		this.killUserId = "";
 	}
 	
 	public void editUser(){
@@ -98,6 +124,14 @@ public class UserControl {
 
 	public void setNewUser(User newUser) {
 		this.newUser = newUser;
+	}
+
+	public String getKillUserId() {
+		return killUserId;
+	}
+
+	public void setKillUserId(String killUserId) {
+		this.killUserId = killUserId;
 	}
 	
 	

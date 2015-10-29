@@ -1021,6 +1021,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							if(ts.getMessage().getHl7EndcodedMessage() != null && !ts.getMessage().getHl7EndcodedMessage().equals("")){
 								this.manageInstanceService.loadMessage(ts.getMessage());
 								this.manageInstanceService.loadMessageInstance(ts.getMessage(), this.instanceSegments, tc.getName());
+								
+								this.manageInstanceService.generateXMLFromMesageInstance(ts.getMessage(), instanceSegments, true, tc.getName());
+								this.manageInstanceService.generateXMLFromMesageInstance(ts.getMessage(), instanceSegments, false, tc.getName());
+								this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(ts.getMessage(), instanceSegments);
 							}
 
 							if(ts.getMessage().getConformanceProfile().getMessageContentXSLT()!= null){
@@ -1657,7 +1661,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			if(this.selectedTestStep.getMessage().getHl7EndcodedMessage() != null && !this.selectedTestStep.getMessage().getHl7EndcodedMessage().equals("")){
 				this.manageInstanceService.loadMessageInstance(this.selectedTestStep.getMessage(), this.instanceSegments, selectedTestCaseName);
 			}
-			this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(this.selectedTestStep.getMessage(), this.instanceSegments);
 			this.generateMessageContentHTML();
 		}else if(event.getTab().getTitle().equals("Test Data Specification")){
 			this.instanceSegments = new ArrayList<InstanceSegment>();
@@ -2028,8 +2031,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentHTML() throws IOException{
+	private void generateMessageContentHTML() throws Exception{
 		if(this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT() != null){
+			this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(this.selectedTestStep.getMessage(), this.instanceSegments);
+			
 			String mcXSL = this.selectedTestStep.getMessage().getConformanceProfile().getMessageContentXSLT().replaceAll("<xsl:param name=\"output\" select=\"'ng-tab-html'\"/>", "<xsl:param name=\"output\" select=\"'plain-html'\"/>");
 			InputStream xsltInputStream = new ByteArrayInputStream(mcXSL.getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(this.selectedTestStep.getMessage().getXmlEncodedMessageContent().getBytes());
@@ -2414,8 +2419,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws IOException{
+	private void generateMessageContentRB(ZipOutputStream out, Message m, String path, boolean needPDF) throws Exception{
 		if(m.getConformanceProfile().getMessageContentXSLT() != null){
+			this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(m, this.instanceSegments);
 			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getMessageContentXSLT().getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedMessageContent().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
@@ -2459,8 +2465,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateMessageContentJSONRB(ZipOutputStream out, Message m, String path) throws IOException{
+	private void generateMessageContentJSONRB(ZipOutputStream out, Message m, String path) throws Exception{
 		if(m.getConformanceProfile().getMessageContentJSONXSLT() != null){
+			this.manageInstanceService.generateXMLforMessageContentAndUpdateTestData(m, this.instanceSegments);
 			InputStream xsltInputStream = new ByteArrayInputStream(m.getConformanceProfile().getMessageContentJSONXSLT().getBytes());
 			InputStream sourceInputStream = new ByteArrayInputStream(m.getXmlEncodedMessageContent().getBytes());
 			Reader xsltReader =  new InputStreamReader(xsltInputStream, "UTF-8");
@@ -2598,9 +2605,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         }
         inTestStory.close();
         out.closeEntry();
+        
         if(needPDF){
         	out.putNextEntry(new ZipEntry(path + File.separator + "TestStory.pdf"));
-            String tempFileName = this.htmlStringToPDF(testCaseStoryStr);
+        	String testCaseStoryPDFStr = this.generateTestStory(testStory, "plain");
+            String tempFileName = this.htmlStringToPDF(testCaseStoryPDFStr);
             File zipFile = new File(tempFileName + ".pdf");	        
             FileInputStream inTestStoryPDF = new FileInputStream(zipFile);
             int lenTestStoryPDF;
@@ -2612,6 +2621,17 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
             
             this.fileDelete(tempFileName + ".html");
             this.fileDelete(tempFileName + ".pdf");        	
+        }else{
+        	out.putNextEntry(new ZipEntry(path + File.separator + "TestStoryPDF.html"));
+    		
+    		String testCaseStoryPDFStr = this.generateTestStory(testStory, "plain");
+            InputStream inTestStoryPDFHTML = IOUtils.toInputStream(testCaseStoryPDFStr, "UTF-8");
+            int lenTestStoryPDFHTML;
+            while ((lenTestStoryPDFHTML = inTestStoryPDFHTML.read(buf)) > 0) {
+                out.write(buf, 0, lenTestStoryPDFHTML);
+            }
+            inTestStoryPDFHTML.close();
+            out.closeEntry();
         }
 	}
 	

@@ -12,7 +12,7 @@ public class PDFGenerator {
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Isolated");
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Contextbased");
 		
-		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Test Plan");
+		gen.subDirList("/Users/jungyubw/Downloads/New TestPlan");
 		
 		
 	}
@@ -26,9 +26,19 @@ public class PDFGenerator {
 				if (file.isFile()) {
 					if(file.getName().endsWith(".html")){
 						
-						String htmlFileName = file.getAbsolutePath();
-						String pdfFileName = file.getAbsolutePath().replace(".html", ".pdf");
-						genPDF(htmlFileName, pdfFileName);
+						if(file.getName().equals("TestStory.html")){
+							
+						}else if(file.getName().equals("TestStoryPDF.html")){
+							String htmlFileName = file.getAbsolutePath();
+							String pdfFileName = file.getAbsolutePath().replace("PDF.html", ".pdf");
+							genPDF(htmlFileName, pdfFileName);
+							file.delete();
+						}else{
+							String htmlFileName = file.getAbsolutePath();
+							String pdfFileName = file.getAbsolutePath().replace(".html", ".pdf");
+							genPDF(htmlFileName, pdfFileName);
+						}
+						
 					}
 				} else if (file.isDirectory()) {
 					subDirList(file.getCanonicalPath().toString());

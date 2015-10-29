@@ -58,8 +58,21 @@ public class LoginManager implements HttpSessionBindingListener {
 		}
 	}
 
-	public boolean isUsing(String userID) {
-		return loginUsers.containsValue(userID);
+	public boolean isUsing(String userId) {
+		return loginUsers.containsValue(userId);
+	}
+	
+	public HttpSession findSession(String userId){
+		Enumeration<HttpSession> e = loginUsers.keys();
+		HttpSession session = null;
+		while (e.hasMoreElements()) {
+			session = (HttpSession) e.nextElement();
+			if (loginUsers.get(session).equals(userId)) {
+				return session;
+			}
+		}
+		
+		return null;
 	}
 
 	public void setSession(HttpSession session, String userId) {

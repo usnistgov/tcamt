@@ -40,6 +40,7 @@
 		</tr>
 	</table>
 	<p:treeTable id="testDataTable" value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true" rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
+		<p:ajax event="colResize" update=":#{p:component('testDataSelectOneMenu')}"></p:ajax>
 		<p:column headerText="Path" style="width:50px;">
 			<h:outputText value="#{cc.attrs.bean.cutSegmentPath(model.ipath)}" />
 		</p:column>
@@ -101,12 +102,12 @@
     		</p:overlayPanel>
 		</p:column>
 		
-		<p:column headerText="Test Data" style="text-align: center;">
+		<p:column id="testDataColumn" headerText="Test Data" style="text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}" value="#{model.data}" />
-			<p:inputText rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  value="#{model.data}">
+			<p:inputText style="width:90%;" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:inputText>
-			<p:selectOneMenu value="#{model.data}" effect="fade" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
+			<p:selectOneMenu id="testDataSelectOneMenu" style="width:90%;" value="#{model.data}" effect="fade" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.value}" itemValue="#{code.value}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />

@@ -16,8 +16,8 @@
 		<p:growl id="msgs" showDetail="true" />
 		<p:outputPanel id="panel" deferred="true">
         	<h3>Welcome Test Case Authoring and Management Tool (TCAMT)!</h3>
-        	<h3>Release Date: 2015-10-27</h3>
-        	<h3>Version: 0.99</h3>
+        	<h3>Release Date: 2015-10-29</h3>
+        	<h3>Version: 1.00</h3>
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedUser != null}" columns="1" cellpadding="5">
         		<p>Hello </p> <h:outputText value="#{sessionBeanTCAMT.loggedUser.userId}" />
         		<!-- <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.logoutAction}"/>
@@ -33,6 +33,13 @@
         		<!-- <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('interactionForm')} :#{p:component('testStepForm')} :#{p:component('transactionForm')} :#{p:component('testCaseForm')} :#{p:component('listTestPlanForm')}" actionListener="#{userControl.loginAction}"/>
         		 -->
         		 <p:commandButton value="Login" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" actionListener="#{userControl.loginAction}"/>
+        	</h:panelGrid>
+        	
+        	
+        	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedUser.userId == 'woorion'}" columns="3" cellpadding="5">
+        		<h:outputText value="Id: " />
+        		<p:inputText value="#{userControl.killUserId}" />
+        		<p:commandButton value="Kill" update=":#{p:component('panel')}" actionListener="#{userControl.killUserIdAction}"/>
         	</h:panelGrid>
     	</p:outputPanel>
 	</h:form>

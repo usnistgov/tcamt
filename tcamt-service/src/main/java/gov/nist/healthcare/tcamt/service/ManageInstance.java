@@ -284,6 +284,7 @@ public class ManageInstance implements Serializable {
 			Element segmentElement = doc.createElement("Segment");
 			segmentElement.setAttribute("Name", segName);
 			segmentElement.setAttribute("Description", segDesc);
+			segmentElement.setAttribute("InstancePath", instanceSegment.getIpath());
 			rootElement.appendChild(segmentElement);
 
 			for (Field field : segment.getFields()) {
@@ -362,6 +363,9 @@ public class ManageInstance implements Serializable {
 			}
 		}
 		m.setXmlEncodedMessageContent(XMLManager.docToString(doc));
+		
+		
+//		System.out.println(m.getXmlEncodedMessageContent());
 	}
 	
 	private void modifyIPath(List<String> ipathList) {

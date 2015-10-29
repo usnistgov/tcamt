@@ -49,15 +49,15 @@ public class Message implements Cloneable, Serializable{
 	private String hl7EndcodedMessage;
 	
 	@JsonIgnore
-	@Column(columnDefinition="longtext")
+	@Transient
 	private String xmlEncodedSTDMessage;
 	
 	@JsonIgnore
-	@Column(columnDefinition="longtext")
+	@Transient
 	private String xmlEncodedNISTMessage;
 	
 	@JsonIgnore
-	@Column(columnDefinition="longtext")
+	@Transient
 	private String xmlEncodedMessageContent;
 	
 	@JsonIgnore
