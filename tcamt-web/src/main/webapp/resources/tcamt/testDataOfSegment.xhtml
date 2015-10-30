@@ -40,8 +40,7 @@
 		</tr>
 	</table>
 	<p:treeTable id="testDataTable" value="#{cc.attrs.bean.filtedSegmentTreeRoot}" var="model" resizableColumns="true" rowStyleClass="#{model.data == null or model.data == ''? 'zeroOccurRow' :'normalRow' }">
-		<p:ajax event="colResize" update=":#{p:component('testDataSelectOneMenu')}"></p:ajax>
-		<p:column headerText="Path" style="width:50px;">
+		<p:column headerText="Path" style="width:100px;">
 			<h:outputText value="#{cc.attrs.bean.cutSegmentPath(model.ipath)}" />
 		</p:column>
 		<p:column headerText="Name" style="width:200px;">
@@ -62,7 +61,7 @@
 		<p:column rendered="#{cc.attrs.bean.isSelectedColumn('Value Set')}" headerText="Value Set" style="text-align: center;">
 			<h:outputText id="valueSet" value="#{model.table.bindingIdentifier}" />
 			<p:overlayPanel for="valueSet" showEffect="blind" hideEffect="explode" showEvent="click" hideEvent="mousedown" dismissable="true" showCloseIcon="true" style="width:600px">
-        		<p:dataTable var="code" value="#{model.table.codes}" rows="5" paginator="true" >
+        		<p:dataTable var="code" value="#{model.table.codes}" rows="15" paginator="true" >
             		<p:column headerText="Value" style="width:20%;">
                 		<h:outputText value="#{code.value}" />
             		</p:column>
@@ -104,22 +103,22 @@
 		
 		<p:column id="testDataColumn" headerText="Test Data" style="text-align: center;">
 			<h:outputText rendered="#{model.path=='MSH.1' or model.path=='MSH.2'}" value="#{model.data}" />
-			<p:inputText style="width:90%;" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table == null}"  value="#{model.data}">
+			<p:inputText style="width:95%;" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2'}"  value="#{model.data}">
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 			</p:inputText>
-			<p:selectOneMenu id="testDataSelectOneMenu" style="width:90%;" value="#{model.data}" effect="fade" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
+			<!-- <p:selectOneMenu id="testDataSelectOneMenu" style="width:90%;" value="#{model.data}" effect="fade" editable="true" rendered="#{model.leafNode and model.path!='MSH.1' and model.path!='MSH.2' and model.table != null}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{model.table.codes}" var="code" itemLabel="#{code.value}" itemValue="#{code.value}" />
 				<p:ajax event="blur" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
 				<p:ajax event="change" listener="#{cc.attrs.bean.updateInstanceData(model)}" update="#{cc.attrs.panelId}" />
-			</p:selectOneMenu>
+			</p:selectOneMenu> -->
 		</p:column>
 		
 		<p:column id="cateColumn" headerText="TestData Cate." style="text-align: center;">
 				<!-- <h:outputText rendered="#{!model.leafNode or !model.checkTestDataCategorizationAvaiablility()}" value="#{model.tdc}"  />
 				<p:commandButton icon="ui-icon-close" rendered="#{(!model.leafNode or !model.checkTestDataCategorizationAvaiablility()) and (model.tdc != null and model != '')}" update="#{cc.attrs.panelId}" action="#{cc.attrs.bean.removeTCAMTConstraint(model)}" />
 				 -->
-				<p:selectOneMenu value="#{model.tdc}" effect="fade" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
+				<h:selectOneMenu value="#{model.tdc}" effect="fade" style="width:95%;" rendered="#{model.leafNode and model.checkTestDataCategorizationAvaiablility()}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
 				
@@ -141,7 +140,7 @@
 					<f:selectItem itemLabel="NonPresence" itemValue="NonPresence" />
 				
  					<p:ajax event="change" listener="#{cc.attrs.bean.createTCAMTConstraint(model)}" update="#{cc.attrs.panelId}" />
-				</p:selectOneMenu>
+				</h:selectOneMenu>
 				<p:dataList value="#{model.listValues}" rendered="#{model.tdc == 'Value_TestCaseFixedList'}" var="value" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
         			<f:facet name="header">Expected value list</f:facet>
         			

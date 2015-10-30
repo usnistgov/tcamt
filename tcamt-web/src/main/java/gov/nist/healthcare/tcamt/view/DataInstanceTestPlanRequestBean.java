@@ -81,6 +81,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
+import org.primefaces.event.ColumnResizeEvent;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -1882,7 +1883,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 		return result.substring(1);
 	}
-
+	
 	/*
 	 * 
 	 * 
