@@ -21,7 +21,7 @@ import org.w3c.dom.Element;
 public class ValidationMessage {
 
 	public HL7V2MessageValidationReport er7MessageValidation(String er7Message, String profile, String constraints, String valueSets, String oid) throws Exception {
-		ValidationProxy vp = new ValidationProxy("TCAMT Instant Testing", "NIST", "1.0");
+		ValidationProxy vp = new ValidationProxy("TCAMT Instant Testing", "NIST");
 		
 		InputStream csis = IOUtils.toInputStream(constraints, "UTF-8");
 		List<InputStream> confContexts = Arrays.asList(csis);
