@@ -8,13 +8,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
 
-<h:head>
-
-	<h:outputStylesheet library="primefaces-extensions" name="codemirror/mode/tiki.css" /> 
-
-
-</h:head>
-
 <h:body>
 	<p:tabView>  
 		<p:ajax event="tabChange" update=":#{p:component('panel')} :#{p:component('msgs')} :#{p:component('profileForm')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" listener="#{sessionBeanTCAMT.onTabChange}"/>
