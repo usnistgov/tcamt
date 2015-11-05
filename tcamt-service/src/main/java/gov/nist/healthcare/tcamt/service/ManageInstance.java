@@ -123,7 +123,7 @@ public class ManageInstance implements Serializable {
 	private void loadSegmentRefOrGroup(Message m, SegmentRefOrGroup sg, String path, TreeNode parentTreeNode) {
 		if (sg instanceof SegmentRef) {
 			SegmentRef segment = (SegmentRef) sg;
-			String segmentName = m.getSegments().findOne(segment.getRef()).getName();
+			String segmentName = m.getSegments().findOneSegmentById(segment.getRef()).getName();
 			path = path + "." + segmentName;
 			String messageId = path.split("\\.")[0];
 			String messagePath = path.replace(messageId + ".", "");
@@ -152,7 +152,7 @@ public class ManageInstance implements Serializable {
 			Map<String, String> positionPathMap, String postionPath) {
 		if (srog instanceof SegmentRef) {
 			SegmentRef sr = (SegmentRef) srog;
-			String segmentName = m.getSegments().findOne(sr.getRef()).getName();
+			String segmentName = m.getSegments().findOneSegmentById(sr.getRef()).getName();
 			if (parentGroup == null) {
 				messageStrucutreMap.put(segmentName, sr);
 				usageMap.put(segmentName, sr.getUsage().name());
@@ -275,7 +275,7 @@ public class ManageInstance implements Serializable {
 		doc.appendChild(rootElement);
 
 		for (InstanceSegment instanceSegment : instanceSegments) {
-			Segment segment = m.getSegments().findOne(instanceSegment.getSegmentRef().getRef());
+			Segment segment = m.getSegments().findOneSegmentById(instanceSegment.getSegmentRef().getRef());
 			String segName = segment.getName();
 			String segDesc = segment.getDescription();
 			String segmentiPath = instanceSegment.getIpath();
@@ -433,7 +433,7 @@ public class ManageInstance implements Serializable {
 			InstanceSegment selectedInstanceSegment, Message m) {
 		String segmentStr = selectedInstanceSegment.getLineStr();
 		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = m
-				.getSegments().findOne(
+				.getSegments().findOneSegmentById(
 						selectedInstanceSegment.getSegmentRef().getRef());
 
 		if (segment.getName().equals("MSH")) {
@@ -462,7 +462,7 @@ public class ManageInstance implements Serializable {
 					Field field = segment.getFields().get(i);
 					
 					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
-					Table fieldTable = m.getTables().findOne(field.getTable());
+					Table fieldTable = m.getTables().findOneTableById(field.getTable());
 					
 					Predicate fieldPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]");
 					List<ConformanceStatement> fieldConformanceStatements = this.findConformanceStatements(segment.getConformanceStatements(), (i+1) + "[1]");
@@ -480,7 +480,7 @@ public class ManageInstance implements Serializable {
 
 					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
 						// TODO OBX Dynamic mapping needed
-						Datatype dynamicFieldDT = m.getDatatypes().findOneDatatype(obx5DTStr+"_IZ");
+						Datatype dynamicFieldDT = m.getDatatypes().findOne(obx5DTStr+"_IZ");
 						if(dynamicFieldDT == null){
 							dynamicFieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
 						}
@@ -506,7 +506,7 @@ public class ManageInstance implements Serializable {
 
 							Component component = fieldDT.getComponents().get(k);
 							Datatype componentDT = m.getDatatypes().findOne(component.getDatatype());
-							Table componentTable = m.getTables().findOne(component.getTable());
+							Table componentTable = m.getTables().findOneTableById(component.getTable());
 							Predicate componentPredicate = this.findPreficate(fieldDT.getPredicates(), (k+1) + "[1]");
 							List<ConformanceStatement> componentConformanceStatements = this.findConformanceStatements(fieldDT.getConformanceStatements(), (k+1) + "[1]");
 							if(componentPredicate != null && componentUsage.equals("C")){
@@ -597,7 +597,7 @@ public class ManageInstance implements Serializable {
 								String subComponentUsage = subComponent.getUsage().name();
 										
 								Datatype subComponentDT = m.getDatatypes().findOne(subComponent.getDatatype());
-								Table subComponentTable = m.getTables().findOne(subComponent.getTable());
+								Table subComponentTable = m.getTables().findOneTableById(subComponent.getTable());
 								Predicate subComponentPredicate = this.findPreficate(componentDT.getPredicates(), (l+1) + "[1]");
 								List<ConformanceStatement> subComponentConformanceStatements = this.findConformanceStatements(componentDT.getConformanceStatements(), (l+1) + "[1]");
 								
@@ -785,7 +785,7 @@ public class ManageInstance implements Serializable {
 			for (int i = 0; i < fieldModel.getDatatype().getComponents().size(); i++) {
 				Component c = fieldModel.getDatatype().getComponents().get(i);
 				Datatype cDT = m.getDatatypes().findOne(c.getDatatype());
-				Table cTable = m.getTables().findOne(c.getTable());
+				Table cTable = m.getTables().findOneTableById(c.getTable());
 				Predicate cPredicate = this.findPreficate(fieldModel.getDatatype().getPredicates(), (i+1) + "[1]");
 				List<ConformanceStatement> cConformanceStatements = this.findConformanceStatements(fieldModel.getDatatype().getConformanceStatements(), (i+1) + "[1]");
 				String componentPath = path + "." + (i + 1);
@@ -808,7 +808,7 @@ public class ManageInstance implements Serializable {
 					for (int j = 0; j < cDT.getComponents().size(); j++) {
 						Component sc = cDT.getComponents().get(j);
 						Datatype scDT = m.getDatatypes().findOne(sc.getDatatype());
-						Table scTable = m.getTables().findOne(sc.getTable());
+						Table scTable = m.getTables().findOneTableById(sc.getTable());
 						Predicate scPredicate = this.findPreficate(cDT.getPredicates(), (j+1) + "[1]");
 						List<ConformanceStatement> scConformanceStatements = this.findConformanceStatements(cDT.getConformanceStatements(), (j+1) + "[1]");
 						String subComponentPath = componentPath + "." + (j + 1);
@@ -882,11 +882,10 @@ public class ManageInstance implements Serializable {
 			for (SegmentRefOrGroup child : g.getChildren()) {
 				if (child instanceof SegmentRef) {
 					SegmentRef segmentRef = (SegmentRef) child;
-					String segmentName = m.getSegments()
-							.findOne(segmentRef.getRef()).getName();
+					String segmentName = m.getSegments().findOneSegmentById(segmentRef.getRef()).getName();
 					String path = model.getPath()
 							+ "."
-							+ m.getSegments().findOne(segmentRef.getRef())
+							+ m.getSegments().findOneSegmentById(segmentRef.getRef())
 									.getName();
 
 					MessageTreeModel newModel = new MessageTreeModel(
@@ -926,7 +925,7 @@ public class ManageInstance implements Serializable {
 
 		if (model.getNode() instanceof SegmentRef) {
 			SegmentRef segmentRef = (SegmentRef) model.getNode();
-			String segmentName = m.getSegments().findOne(segmentRef.getRef())
+			String segmentName = m.getSegments().findOneSegmentById(segmentRef.getRef())
 					.getName();
 			if (!segmentName.equals("MSH")) {
 				if (!segmentRef.getMax().equals("0"))
@@ -1144,7 +1143,7 @@ public class ManageInstance implements Serializable {
 			InstanceSegment instanceSegment) {
 		String lineStr = instanceSegment.getLineStr();
 		String segmentName = lineStr.substring(0, 3);
-		Segment segment = m.getSegments().findOne(
+		Segment segment = m.getSegments().findOneSegmentById(
 				instanceSegment.getSegmentRef().getRef());
 
 		if (lineStr.startsWith("MSH")) {
@@ -1303,7 +1302,7 @@ public class ManageInstance implements Serializable {
 			InstanceSegment instanceSegment) {
 		String lineStr = instanceSegment.getLineStr();
 		String segmentName = lineStr.substring(0, 3);
-		Segment segment = m.getSegments().findOne(
+		Segment segment = m.getSegments().findOneSegmentById(
 				instanceSegment.getSegmentRef().getRef());
 		String variesDT = "";
 
@@ -1462,7 +1461,7 @@ public class ManageInstance implements Serializable {
 				if(group.getPosition() == position) return group;
 			}else if(o instanceof SegmentRef){
 				SegmentRef sr = (SegmentRef)o;
-				if(sr.getPosition() == position) return m.getSegments().findOne(sr.getRef());
+				if(sr.getPosition() == position) return m.getSegments().findOneSegmentById(sr.getRef());
 			}else if(o instanceof Field){
 				Field f = (Field)o;
 				if(f.getPosition() == position) return f;

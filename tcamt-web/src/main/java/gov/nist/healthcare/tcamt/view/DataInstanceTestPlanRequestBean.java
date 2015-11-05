@@ -1839,7 +1839,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						return child;
 					}else if (child instanceof SegmentRef){
 						SegmentRef segmentRef = (SegmentRef)child;
-						return segments.findOne(segmentRef.getRef());
+						return segments.findOneSegmentById(segmentRef.getRef());
 					}
 				}
 			}
@@ -1852,7 +1852,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						return child;
 					}else if (child instanceof SegmentRef){
 						SegmentRef segmentRef = (SegmentRef)child;
-						return segments.findOne(segmentRef.getRef());
+						return segments.findOneSegmentById(segmentRef.getRef());
 					}
 				}
 			}
