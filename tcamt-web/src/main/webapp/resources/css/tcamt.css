@@ -1,0 +1,78 @@
+html,body,p,a,h4,h5,h6,div,span,ul,li,ol,dl,dd,dt,form,pre,blockquote {
+	margin: 0;
+	padding: 0;
+	text-align: justify;
+}
+.top_vertical_align {
+	vertical-align:top;
+}
+
+.noBorders tr, .noBorders td {
+background: none !important;
+border: none !important;
+}
+
+a {
+	text-decoration: none;
+}
+
+a img {
+	border: none;
+}
+
+/* The Basics */
+body {
+	font: 76%/1.4em Arial, Geneva, Verdana, Helvetica, sans-serif;
+ 	color: #000;
+ 	background: #021a4c;
+	overflow-y: scroll;
+	overflow: scroll;
+}
+
+a img {
+	border: none;
+}
+
+.CodeMirror-scroll {
+    height: auto;
+  	overflow-y: hidden;
+  	overflow-x: auto;
+}
+
+#appheader {
+    background-color: #021a4c;
+    float: none;
+    font-family: Verdana;
+    font-weight: bold;
+    margin-left: 0;
+}
+#apptitle {
+    color: #f3c60d;
+    display: inline-block;
+    font-size: 32px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+#apptitle.a {
+    color: #f3c60d;
+    font-size: 32px;
+}
+
+#appsubtitle {
+	font-size: 14px;
+	margin-left: 10px;
+	color: #ffcc00;
+	text-shadow: none;
+}
+
+#floatingNav {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 20px;
+    
+    
+    padding: 0
+}

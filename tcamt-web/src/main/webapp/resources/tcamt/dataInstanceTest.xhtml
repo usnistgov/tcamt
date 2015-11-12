@@ -34,7 +34,7 @@
 					<p:column headerText="Name">
 						<h:outputText value="#{testplan.name}" />
 					</p:column>
-					
+
 					<p:column headerText="Type">
 						<h:outputText value="#{testplan.type}" />
 					</p:column>
@@ -68,13 +68,16 @@
 						</p:commandButton>
 						<p:commandButton value="Export ResourceBundle" ajax="false"
 							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, false)}"
-							icon="ui-icon-print" update=":#{p:component('growl_DataInstanceTest')}">
+							icon="ui-icon-print"
+							update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
 						</p:commandButton>
-						<p:commandButton value="Export ResourceBundle with PDF" ajax="false"
+						<p:commandButton value="Export ResourceBundle with PDF"
+							ajax="false"
 							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, true)}"
-							icon="ui-icon-print" update=":#{p:component('growl_DataInstanceTest')}">
+							icon="ui-icon-print"
+							update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
 						</p:commandButton>
@@ -88,59 +91,85 @@
 				</p:dataTable>
 			</p:tab>
 			<p:tab title="Data Instance Test Plan DashBoard">
-				<p:layout style="min-width:400px;min-height:1000px;">
-					<p:ajax event="resize" update=":#{p:component('testplanTree')} :#{p:component('dashboard')}"  />
+				<p:layout style="min-width:400px;height:1000px;">
+					<p:ajax event="resize" update=":#{p:component('testplanTree')} :#{p:component('dashboard')}" />
 					<p:layoutUnit position="north" style="border: 0;">
 						<table width="100%">
 							<tr>
 								<td align="right">
-<!-- 									<p:commandButton value="Delete All TestDataCategorization for NonLeafNode" icon="ui-icon-alert"
-										actionListener="#{dataInstanceTestPlanRequestBean.deleteAllTestDataCategorizationForNonLeafNodeForTestPlan}" /> -->
 									<p:commandButton value="Save Test Plan"
 										actionListener="#{dataInstanceTestPlanRequestBean.saveTestPlan}"
 										update=":#{p:component('testplanTable')} :#{p:component('testplanTree')} :#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
-										icon="ui-icon-disk" title="Save Test Plan" />
-									<p:commandButton value="Close"
+										icon="ui-icon-disk" title="Save Test Plan" /> <p:commandButton
+										value="Close"
 										actionListener="#{dataInstanceTestPlanRequestBean.closeTestPlan}"
 										update=":#{p:component('DataInstanceTestForm')}"
-										icon="ui-icon-close" title="Close Test Plan" >
-										<p:confirm header="Confirmation" message="Unsaved data will be lost. Do you want to close?" icon="ui-icon-alert" />
-									</p:commandButton>
-									
-									<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-        								<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-        								<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-    								</p:confirmDialog>
+										icon="ui-icon-close" title="Close Test Plan">
+										<p:confirm header="Confirmation"
+											message="Unsaved data will be lost. Do you want to close?"
+											icon="ui-icon-alert" />
+									</p:commandButton> <p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Yes" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="No" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
 								</td>
 							</tr>
 						</table>
 					</p:layoutUnit>
-					<p:layoutUnit position="west" header="TestPlan Structure" resizable="true" style="border: 0;" collapsible="true" size="25%">
-						<p:tree id="testplanTree" animate="false" value="#{dataInstanceTestPlanRequestBean.testplanRoot}" draggable="true" droppable="true" var="node" selectionMode="single" selection="#{dataInstanceTestPlanRequestBean.selectedNode}" dynamic="true" style="border-width:0;">
-							<p:ajax event="expand" listener="#{dataInstanceTestPlanRequestBean.onNodeExpand}" update=":#{p:component('growl_DataInstanceTest')}"/>
-        					<p:ajax event="collapse" listener="#{dataInstanceTestPlanRequestBean.onNodeCollapse}" update=":#{p:component('growl_DataInstanceTest')}"/>
-							<p:ajax event="select" listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
-							<p:ajax event="dragdrop" listener="#{dataInstanceTestPlanRequestBean.onDragDrop}" update=":#{p:component('testplanTree')} :#{p:component('growl_DataInstanceTest')}" />
+					<p:layoutUnit position="west" header="TestPlan Structure" resizable="true" style="border: 0;height:1000px;" collapsible="true" size="20%">
+						<p:scrollPanel style="width:100%;height:900px; border: none;" mode="native">
+						<p:tree id="testplanTree" animate="false"
+							value="#{dataInstanceTestPlanRequestBean.testplanRoot}"
+							draggable="true" droppable="true" var="node"
+							selectionMode="single"
+							selection="#{dataInstanceTestPlanRequestBean.selectedNode}"
+							dynamic="true" style="border-width:0;">
+							<p:ajax event="expand"
+								listener="#{dataInstanceTestPlanRequestBean.onNodeExpand}"
+								update=":#{p:component('growl_DataInstanceTest')}" />
+							<p:ajax event="collapse"
+								listener="#{dataInstanceTestPlanRequestBean.onNodeCollapse}"
+								update=":#{p:component('growl_DataInstanceTest')}" />
+							<p:ajax event="select"
+								listener="#{dataInstanceTestPlanRequestBean.onNodeSelect}"
+								update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
+							<p:ajax event="dragdrop"
+								listener="#{dataInstanceTestPlanRequestBean.onDragDrop}"
+								update=":#{p:component('testplanTree')} :#{p:component('growl_DataInstanceTest')}" />
 
 							<p:treeNode expandedIcon="ui-icon-folder-open"
 								collapsedIcon="ui-icon-folder-collapsed">
 								<h:outputText value="#{node.name}" />
 							</p:treeNode>
 							<p:treeNode type="plan" icon="ui-icon-home">
-								<h:outputText rendered="#{not node.changed}" value="#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="*#{node.name}" style="font-style:italic;" />
+								<h:outputText rendered="#{not node.changed}"
+									value="#{node.name}" />
+								<h:outputText rendered="#{node.changed}" value="*#{node.name}"
+									style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="group" icon="ui-icon-cart">
-								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
+								<h:outputText rendered="#{not node.changed}"
+									value="[#{node.position}]#{node.name}" />
+								<h:outputText rendered="#{node.changed}"
+									value="*[#{node.position}]#{node.name}"
+									style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="case" icon="ui-icon-note">
-								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
+								<h:outputText rendered="#{not node.changed}"
+									value="[#{node.position}]#{node.name}" />
+								<h:outputText rendered="#{node.changed}"
+									value="*[#{node.position}]#{node.name}"
+									style="font-style:italic;" />
 							</p:treeNode>
 							<p:treeNode type="step" icon="ui-icon-document">
-								<h:outputText rendered="#{not node.changed}" value="[#{node.position}]#{node.name}" />
-								<h:outputText rendered="#{node.changed}" value="*[#{node.position}]#{node.name}" style="font-style:italic;" />
+								<h:outputText rendered="#{not node.changed}"
+									value="[#{node.position}]#{node.name}" />
+								<h:outputText rendered="#{node.changed}"
+									value="*[#{node.position}]#{node.name}"
+									style="font-style:italic;" />
 							</p:treeNode>
 						</p:tree>
 						<p:contextMenu for="testplanTree" nodeType="plan">
@@ -191,402 +220,566 @@
 								actionListener="#{dataInstanceTestPlanRequestBean.deleteTestStep}"
 								icon="ui-icon-minus" />
 						</p:contextMenu>
+						</p:scrollPanel>
 					</p:layoutUnit>
-					<p:layoutUnit position="center" style="border: 0;">
+					<p:layoutUnit position="center" style="border: 0;height:1000px;">
+						<p:scrollPanel style="width:100%;height:900px; border: none;" mode="native">
 						<p:outputPanel id="dashboard">
-							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep != null}" activeIndex="#{dataInstanceTestPlanRequestBean.activeIndexOfMessageInstancePanel}">
-								<p:ajax event="tabChange" listener="#{dataInstanceTestPlanRequestBean.onTabChange}" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"/>
+							<p:tabView
+								rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep != null}"
+								activeIndex="#{dataInstanceTestPlanRequestBean.activeIndexOfMessageInstancePanel}">
+								<p:ajax event="tabChange"
+									listener="#{dataInstanceTestPlanRequestBean.onTabChange}"
+									update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}" />
 								<p:tab title="Test Step MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
 										<p:inplace emptyLabel="No Name" editor="true">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.name}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.name}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
-										
-										<h:outputText rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}" value="TestStep Type: " />
-										<p:inplace rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}" editor="true" emptyLabel="No TestStep Type">
-											<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.selectedTestStep.type}">
+
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											value="TestStep Type: " />
+										<p:inplace
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											editor="true" emptyLabel="No TestStep Type">
+											<p:selectOneMenu
+												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.type}">
 												<f:selectItem itemLabel="Select One" itemValue="" />
-												<f:selectItem itemLabel="TA_INITIATOR" itemValue="TA_INITIATOR" />
-												<f:selectItem itemLabel="TA_RESPONDER" itemValue="TA_RESPONDER" />
-												<f:selectItem itemLabel="SUT_INITIATOR" itemValue="SUT_INITIATOR" />
-												<f:selectItem itemLabel="SUT_RESPONDER" itemValue="SUT_RESPONDER" />
+												<f:selectItem itemLabel="TA_INITIATOR"
+													itemValue="TA_INITIATOR" />
+												<f:selectItem itemLabel="TA_RESPONDER"
+													itemValue="TA_RESPONDER" />
+												<f:selectItem itemLabel="SUT_INITIATOR"
+													itemValue="SUT_INITIATOR" />
+												<f:selectItem itemLabel="SUT_RESPONDER"
+													itemValue="SUT_RESPONDER" />
 												<f:selectItem itemLabel="SUT_MANUAL" itemValue="SUT_MANUAL" />
 												<f:selectItem itemLabel="TA_MANUAL" itemValue="TA_MANUAL" />
 											</p:selectOneMenu>
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
-										
+
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-    										<f:facet name="output">
-        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}" escape="false" />
-    										</f:facet>
-    										<f:facet name="input">
-    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}" style="width:100%;" />
-    										</f:facet>
-    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
+											<f:facet name="output">
+												<h:outputText
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}"
+													escape="false" />
+											</f:facet>
+											<f:facet name="input">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.longDescription}"
+													style="width:100%;" />
+											</f:facet>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
-										
+
 										<h:outputText value="Message: " />
-										<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.messageId}" effect="fade" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name == null}">
-											<p:ajax event="change" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.updateMessageTestStep}" />
+										<p:selectOneMenu
+											value="#{dataInstanceTestPlanRequestBean.messageId}"
+											effect="fade"
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name == null}">
+											<p:ajax event="change"
+												update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.updateMessageTestStep}" />
 											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItems value="#{messageRequestBean.messages}" var="message" itemLabel="#{message.name}(#{message.version})" itemValue="#{message.id}" />
+											<f:selectItems value="#{messageRequestBean.messages}"
+												var="message"
+												itemLabel="#{message.name}(#{message.version})"
+												itemValue="#{message.id}" />
 										</p:selectOneMenu>
-										<h:outputText rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name}" />
-										
-										<h:outputText rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}" value="Conformance Profile: " />
-										<h:outputText rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}" value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.conformanceProfile.name}" />
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
+											value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name}" />
+
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
+											value="Conformance Profile: " />
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
+											value="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.conformanceProfile.name}" />
 									</h:panelGrid>
-									
+
 									<table width="100%">
 										<tr>
 											<td align="right"><p:commandButton value="Reset Message"
-												rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
-												actionListener="#{dataInstanceTestPlanRequestBean.resetMessage}"
-												update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
-												icon="ui-icon-close" title="Reset Message" /></td>
-											</tr>
+													rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}"
+													actionListener="#{dataInstanceTestPlanRequestBean.resetMessage}"
+													update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')}"
+													icon="ui-icon-close" title="Reset Message" /></td>
+										</tr>
 									</table>
 								</p:tab>
 								<p:tab title="Test Step Story">
 									<p:accordionPanel dynamic="true" cache="true">
-        								<p:tab title="Description">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+										<p:tab title="Description">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" width="100%">
 			 										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}" onpaste="myFunction()" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Comments">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.teststorydesc}"
+													onpaste="myFunction()" style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Comments">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Pre-Condition">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.comments}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Pre-Condition">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Post-Condition">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.preCondition}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Post-Condition">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Test Objectives">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.postCondition}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Test Objectives">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Evaluation Criteria">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.testObjectives}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Evaluation Criteria">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Notes">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.evaluationCriteria}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Notes">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-    								</p:accordionPanel>
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestStep.testStepStory.notes}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestStep}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+									</p:accordionPanel>
 								</p:tab>
 
-								<p:tab title="HL7 Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="HL7 Encoded Message"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:sampleMessage hl7EndcodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.hl7EndcodedMessage}" bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('testplanTree')}" />
+										<tcamt:sampleMessage
+											hl7EndcodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.hl7EndcodedMessage}"
+											bean="#{dataInstanceTestPlanRequestBean}"
+											panelId=":#{p:component('testplanTree')}" />
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="Segments List" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="Segments List"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:segmentList bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
+										<tcamt:segmentList bean="#{dataInstanceTestPlanRequestBean}"
+											panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedInstanceSegment != null}">
+								<p:tab title="TestData of Selected Segment"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedInstanceSegment != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:testDataOfSegment bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
+										<tcamt:testDataOfSegment
+											bean="#{dataInstanceTestPlanRequestBean}"
+											panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
 									</p:scrollPanel>
 								</p:tab>
-								
-								<p:tab title="TestData of Selected Segment" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.selectedInstanceSegment == null}">
+
+								<p:tab title="TestData of Selected Segment"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.selectedInstanceSegment == null}">
 									Segment Unselected!
 								</p:tab>
 
-								<p:tab title="List Constraints" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="List Constraints"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
-										<tcamt:constraintsTable bean="#{dataInstanceTestPlanRequestBean}" />
+										<tcamt:constraintsTable
+											bean="#{dataInstanceTestPlanRequestBean}" />
 									</p:scrollPanel>
 								</p:tab>
-								
-								<p:tab title="STD XML Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedSTDMessage}" />
+
+								<p:tab title="STD XML Encoded Message"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:hl7XMLMessage
+										xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedSTDMessage}" />
 								</p:tab>
-								
-								<p:tab title="NIST XML Encoded Message" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<tcamt:hl7XMLMessage xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
+
+								<p:tab title="NIST XML Encoded Message"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:hl7XMLMessage
+										xmlEncodedMessage="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.xmlEncodedNISTMessage}" />
 								</p:tab>
-								
-								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.messageContentHTML == null}">
+
+								<p:tab title="Message Contents"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.messageContentHTML == null}">
 									No Message Contents
 								</p:tab>
-								
-								<p:tab title="Message Contents" rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
-									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
+
+								<p:tab title="Message Contents"
+									rendered="#{dataInstanceTestPlanRequestBean.messageContentHTML != null}">
+									<tcamt:htmlViewer
+										htmlCode="#{dataInstanceTestPlanRequestBean.messageContentHTML}" />
 								</p:tab>
-								
-								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.testDataSpecificationHTML == null}">
+
+								<p:tab title="Test Data Specification"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.testDataSpecificationHTML == null}">
 									No Test Data Specification
 								</p:tab>
-								
-								<p:tab title="Test Data Specification" rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
-									<tcamt:htmlViewer htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
+
+								<p:tab title="Test Data Specification"
+									rendered="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML != null}">
+									<tcamt:htmlViewer
+										htmlCode="#{dataInstanceTestPlanRequestBean.testDataSpecificationHTML}" />
 								</p:tab>
-								
-								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName == null}">
+
+								<p:tab title="Juror Document"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null and dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName == null}">
 									No Juror Document
 								</p:tab>
 
-								<p:tab title="Juror Document" rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName != null}">
-									<tcamt:pdfViewer fileName="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName}" />
+								<p:tab title="Juror Document"
+									rendered="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName != null}">
+									<tcamt:pdfViewer
+										fileName="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName}" />
 								</p:tab>
-								
-								<p:tab title="Validation" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
-									<tcamt:htmlValidationReportViewer bean="#{dataInstanceTestPlanRequestBean}" panelId=":#{p:component('dashboard')}" />
+
+								<p:tab title="Validation"
+									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+									<tcamt:htmlValidationReportViewer
+										bean="#{dataInstanceTestPlanRequestBean}"
+										panelId=":#{p:component('dashboard')}" />
 								</p:tab>
 							</p:tabView>
-							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">
+							<p:tabView
+								rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">
 								<p:tab title="Test Case MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
 										<p:inplace emptyLabel="No Name" editor="true">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestCase.name}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.name}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
 										</p:inplace>
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-    										<f:facet name="output">
-        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" escape="false" />
-    										</f:facet>
-    										<f:facet name="input">
-    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}" style="width:100%;" />
-    										</f:facet>
-    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
+											<f:facet name="output">
+												<h:outputText
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}"
+													escape="false" />
+											</f:facet>
+											<f:facet name="input">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}"
+													style="width:100%;" />
+											</f:facet>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
 										</p:inplace>
 									</h:panelGrid>
 								</p:tab>
 								<p:tab title="Test Case Story">
 									<p:accordionPanel dynamic="true" cache="true">
-        								<p:tab title="Description">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+										<p:tab title="Description">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 			 										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Comments">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.teststorydesc}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Comments">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Pre-Condition">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.comments}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Pre-Condition">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Post-Condition">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.preCondition}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Post-Condition">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" />
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Test Objectives">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.postCondition}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Test Objectives">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Evaluation Criteria">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.testObjectives}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Evaluation Criteria">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-        								<p:tab title="Notes">
-            								<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.evaluationCriteria}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+										<p:tab title="Notes">
+											<h:panelGrid columns="1" cellpadding="10" style="width:100%;">
 												<!-- <pe:ckEditor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" width="100%"
 													toolbar="[['Save','Source','Preview', '-' , 'Undo','Redo', 'Cut', 'Copy', 'Paste', '-', 'Bold', 'Italic', '-', 'NumberedList','BulletedList','-','Outdent','Indent','-','Blockquote','CreateDiv', '-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','-','BidiLtr','BidiRtl', '-', 'Image', 'Table', '-', 'Maximize','SpellChecker', 'Scayt']]">
 													<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"/>
 												</pe:ckEditor> -->
-												<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}" style="width:100%;" />
-        										<p:commandButton value="Save" update=":#{p:component('testplanTree')}" actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" icon="ui-icon-disk" />
-            								</h:panelGrid>
-        								</p:tab>
-    								</p:accordionPanel>
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.testCaseStory.notes}"
+													style="width:100%;" />
+												<p:commandButton value="Save"
+													update=":#{p:component('testplanTree')}"
+													actionListener="#{dataInstanceTestPlanRequestBean.modifyTestCase}"
+													icon="ui-icon-disk" />
+											</h:panelGrid>
+										</p:tab>
+									</p:accordionPanel>
 								</p:tab>
 							</p:tabView>
-							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup != null}">
+							<p:tabView
+								rendered="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup != null}">
 								<p:tab title="Test Case Group MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
 										<p:inplace emptyLabel="No Name" editor="true">
-											<p:inputText value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.name}" required="true" label="text" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}"/>
+											<p:inputText
+												value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.name}"
+												required="true" label="text" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}" />
 										</p:inplace>
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-    										<f:facet name="output">
-        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" escape="false" />
-    										</f:facet>
-    										<f:facet name="input">
-    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}" style="width:100%;" />
-    										</f:facet>
-    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}" />
+											<f:facet name="output">
+												<h:outputText
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}"
+													escape="false" />
+											</f:facet>
+											<f:facet name="input">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestCaseGroup.longDescription}"
+													style="width:100%;" />
+											</f:facet>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestCaseGroup}" />
 										</p:inplace>
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>
-							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep == null and dataInstanceTestPlanRequestBean.selectedTestCaseGroup == null and dataInstanceTestPlanRequestBean.selectedTestCase == null}">
+							<p:tabView
+								rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep == null and dataInstanceTestPlanRequestBean.selectedTestCaseGroup == null and dataInstanceTestPlanRequestBean.selectedTestCase == null}">
 								<p:tab title="Test Plan MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
-										<h:outputText value="Name: "/>
+										<h:outputText value="Name: " />
 										<p:inplace editor="true" emptyLabel="No Name">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.name}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.name}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
-										
-										<h:outputText value="TestPlan Type: "/>
-										<p:inplace editor="true" emptyLabel="No TestPlan, but default type is DataInstance">
-											<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type}">
-												<f:selectItem itemLabel="DataInstance" itemValue="DataInstance" />
+
+										<h:outputText value="TestPlan Type: " />
+										<p:inplace editor="true"
+											emptyLabel="No TestPlan, but default type is DataInstance">
+											<p:selectOneMenu
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type}">
+												<f:selectItem itemLabel="DataInstance"
+													itemValue="DataInstance" />
 												<f:selectItem itemLabel="Isolated" itemValue="Isolated" />
 											</p:selectOneMenu>
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}"/>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
-										
-										<h:outputText value="Juror Document: "/>
-										<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.jurorDocumentId}" effect="fade">
-											<p:ajax event="change" update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.updateSpecificJurorDocument}" />
+
+										<h:outputText value="Juror Document: " />
+										<p:selectOneMenu
+											value="#{dataInstanceTestPlanRequestBean.jurorDocumentId}"
+											effect="fade">
+											<p:ajax event="change"
+												update=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.updateSpecificJurorDocument}" />
 											<f:selectItem itemLabel="Default One" itemValue="0" />
 											<f:selectItem itemLabel="None" itemValue="-1" />
-											<f:selectItems value="#{conformanceProfileRequestBean.jurorDocuments}" var="juror" itemLabel="#{juror.name}" itemValue="#{juror.id}" />
+											<f:selectItems
+												value="#{conformanceProfileRequestBean.jurorDocuments}"
+												var="juror" itemLabel="#{juror.name}"
+												itemValue="#{juror.id}" />
 										</p:selectOneMenu>
-										
+
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
-    										<f:facet name="output">
-        										<h:outputText value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}" escape="false" />
-    										</f:facet>
-    										<f:facet name="input">
-    											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}" style="width:100%;" />
-    										</f:facet>
-    										<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+											<f:facet name="output">
+												<h:outputText
+													value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}"
+													escape="false" />
+											</f:facet>
+											<f:facet name="input">
+												<p:editor
+													value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.longDescription}"
+													style="width:100%;" />
+											</f:facet>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
-										
+
 										<h:outputText value="Version: " />
 										<p:inplace editor="true" emptyLabel="No Version Info">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteVersion}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteVersion}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 
 										<h:outputText value="Domain: " />
 										<p:inplace editor="true" emptyLabel="No Domain Info">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteDomain}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteDomain}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 
 										<h:outputText value="Email: " />
 										<p:inplace editor="true" emptyLabel="No Email Info">
-											<p:inputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteAdminEmail}" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteAdminEmail}" />
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 
-										<!-- <h:outputText value="Test Suite Title: " />
-										<p:inplace editor="true" emptyLabel="No Header Info">
-											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteHomeTitle}" style="width:100%;" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
-										</p:inplace>
 
-										<h:outputText value="Test Suite Header: " />
-										<p:inplace editor="true" emptyLabel="No Header Info">
-											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteHeader}" style="width:100%;" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
-										</p:inplace>
-
-										<h:outputText value="Test Suite Content: " />
-										<p:inplace editor="true" emptyLabel="No Header Info">
-											<p:editor value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.metadata.testSuiteHomeContent}" style="width:100%;" />
-											<p:ajax event="save" update=":#{p:component('testplanTree')}" listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
-										</p:inplace> -->
 
 										<h:outputText value="Author: " />
-										<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.author.userId}" />
-										
+										<h:outputText style="width:500px;"
+											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.author.userId}" />
+
 										<h:outputText value="Last Updated: " />
-										<h:outputText style="width:500px;" value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
+										<h:outputText style="width:500px;"
+											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>
 						</p:outputPanel>
+						</p:scrollPanel>
 					</p:layoutUnit>
 				</p:layout>
 			</p:tab>
@@ -596,8 +789,10 @@
 
 
 	<h:form id="shareDataInstanceTestPlanForm">
-		<p:dialog id="shareDataInstanceTestPlanDialog" header="Share TestPlan" widgetVar="shareDataInstanceTestPlan">
-			<h:panelGrid id="shareDataInstanceTestPlanPanel" columns="2" cellpadding="5">
+		<p:dialog id="shareDataInstanceTestPlanDialog" header="Share TestPlan"
+			widgetVar="shareDataInstanceTestPlan">
+			<h:panelGrid id="shareDataInstanceTestPlanPanel" columns="2"
+				cellpadding="5">
 				<h:outputText value="To: " />
 				<p:selectOneMenu value="#{dataInstanceTestPlanRequestBean.shareTo}"
 					effect="fade">

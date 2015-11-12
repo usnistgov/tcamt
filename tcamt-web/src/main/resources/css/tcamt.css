@@ -1078,6 +1078,13 @@ input[type=text].maker-validation-noerror {
 }
 
 .rUsageRow {
-	font-weight:bold;
 	color: DarkBlue;
+}
+
+.CodeMirror-scroll {
+     height: auto;
+     outline: 0px none;
+     overflow-x: hidden;
+  	 overflow-y: hidden;
+     position: relative;
 }

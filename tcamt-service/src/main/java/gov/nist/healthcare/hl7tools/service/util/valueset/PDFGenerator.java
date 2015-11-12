@@ -12,7 +12,7 @@ public class PDFGenerator {
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Isolated");
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Contextbased");
 		
-		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Certification");
+		gen.subDirList("/Users/jungyubw/Downloads/TESTPLAN");
 		
 		
 	}
@@ -33,6 +33,20 @@ public class PDFGenerator {
 							String pdfFileName = file.getAbsolutePath().replace("PDF.html", ".pdf");
 							genPDF(htmlFileName, pdfFileName);
 							file.delete();
+						}else if(file.getName().equals("MessageContentPDF.html")){
+							String htmlFileName = file.getAbsolutePath();
+							String pdfFileName = file.getAbsolutePath().replace("PDF.html", ".pdf");
+							genPDF(htmlFileName, pdfFileName);
+							file.delete();
+						}else if(file.getName().equals("TestDataSpecificationPDF.html")){
+							String htmlFileName = file.getAbsolutePath();
+							String pdfFileName = file.getAbsolutePath().replace("PDF.html", ".pdf");
+							genPDF(htmlFileName, pdfFileName);
+							file.delete();
+						}else if(file.getName().equals("TestPackage.html")){
+							String htmlFileName = file.getAbsolutePath();
+							String pdfFileName = file.getAbsolutePath().replace(".html", ".pdf");
+							genTOCPDF(htmlFileName, pdfFileName);
 						}else{
 							String htmlFileName = file.getAbsolutePath();
 							String pdfFileName = file.getAbsolutePath().replace(".html", ".pdf");
@@ -49,8 +63,23 @@ public class PDFGenerator {
 		}
 	}
 	
-	public void genPDF(String htmlFileName, String pdfFileName) throws IOException{
+	private void genPDF(String htmlFileName, String pdfFileName) throws IOException{
 		ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/wkhtmltopdf" , htmlFileName , pdfFileName);
+        pb.redirectErrorStream(true);
+        Process process = pb.start();
+        BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+       
+        String line = inStreamReader.readLine();
+       
+        while(line != null)
+        {
+        	System.out.println(line);
+            line = inStreamReader.readLine();
+        }
+	}
+	
+	private void genTOCPDF(String htmlFileName, String pdfFileName) throws IOException{
+		ProcessBuilder pb = new ProcessBuilder("/usr/local/bin/wkhtmltopdf" , "toc" , htmlFileName , pdfFileName);
         pb.redirectErrorStream(true);
         Process process = pb.start();
         BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()));

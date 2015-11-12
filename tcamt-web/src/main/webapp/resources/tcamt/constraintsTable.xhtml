@@ -27,7 +27,7 @@
 		</p:column>
 		<p:column headerText="Description" style="width:25%;">
 			<h:outputText value="-" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}" />
-			<h:outputText value="#{c.description}" rendered="#{c['class'].simpleName == 'Constraint'}"/>
+			<p:inputTextarea rendered="#{c['class'].simpleName == 'Constraint'}" rows="3" style="width:100%;" readonly="true" value="#{c.description}" />
 		</p:column>
 		<p:column headerText="Data" style="width:20%;">
 			<h:outputText value="-" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}"/>
