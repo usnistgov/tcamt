@@ -14,7 +14,7 @@
 
 <composite:implementation>
 	<h:form id="DataInstanceTestForm">
-		<p:growl id="growl_DataInstanceTest" />
+		<p:growl for="dataInstanceTestMessage" id="growl_DataInstanceTest" />
 		<p:accordionPanel widgetVar="DataInstanceTestPanel"
 			activeIndex="#{sessionBeanTCAMT.ditActiveIndex}">
 			<p:tab id="DataInstanceTestPanel_List"
@@ -67,20 +67,20 @@
 							<f:attribute name="testplan" value="#{testplan}" />
 						</p:commandButton>
 						<p:commandButton value="Export ResourceBundle" ajax="false"
-							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, false)}"
+							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan)}"
 							icon="ui-icon-print"
 							update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
 						</p:commandButton>
-						<p:commandButton value="Export ResourceBundle with PDF"
+<!-- 						<p:commandButton value="Export ResourceBundle with PDF"
 							ajax="false"
 							actionListener="#{dataInstanceTestPlanRequestBean.downloadResourceBundleForTestPlan(testplan, true)}"
 							icon="ui-icon-print"
 							update=":#{p:component('growl_DataInstanceTest')}">
 							<p:fileDownload
-								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" />
-						</p:commandButton>
+								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" /> 
+						</p:commandButton> -->
 						<p:commandButton value="Delete"
 							actionListener="#{dataInstanceTestPlanRequestBean.deleteTestPlan}"
 							update=":#{p:component('DataInstanceTestForm')}"

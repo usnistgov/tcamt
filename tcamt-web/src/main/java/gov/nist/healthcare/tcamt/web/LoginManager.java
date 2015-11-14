@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
@@ -31,8 +33,7 @@ public class LoginManager implements HttpSessionBindingListener {
 	public void valueBound(HttpSessionBindingEvent event) {
 		loginUsers.put(event.getSession(), event.getName());
 		System.out.println(event.getName() + " is logged.");
-		System.out.println("The number of logged users : "
-				+ this.getUserCount());
+		System.out.println("The number of logged users : " + this.getUserCount());
 	}
 
 	/*
@@ -52,14 +53,26 @@ public class LoginManager implements HttpSessionBindingListener {
 		HttpSession session = null;
 		while (e.hasMoreElements()) {
 			session = (HttpSession) e.nextElement();
-			if (loginUsers.get(session).equals(userId)) {
+			if (loginUsers.get(session).equals(userId + "[" + this.getRemoteAddr() + "]")) {
 				session.invalidate();
 			}
 		}
 	}
 
 	public boolean isUsing(String userId) {
-		return loginUsers.containsValue(userId);
+		Enumeration<HttpSession> e = loginUsers.keys();
+		HttpSession session = null;
+		while (e.hasMoreElements()) {
+			session = (HttpSession) e.nextElement();
+			if (loginUsers.get(session).contains(userId)) {
+				if(loginUsers.get(session).equals(userId+ "[" + this.getRemoteAddr() + "]")){
+					this.removeSession(userId);
+					return false;
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public HttpSession findSession(String userId){
@@ -67,7 +80,7 @@ public class LoginManager implements HttpSessionBindingListener {
 		HttpSession session = null;
 		while (e.hasMoreElements()) {
 			session = (HttpSession) e.nextElement();
-			if (loginUsers.get(session).equals(userId)) {
+			if (loginUsers.get(session).contains(userId)) {
 				return session;
 			}
 		}
@@ -76,7 +89,7 @@ public class LoginManager implements HttpSessionBindingListener {
 	}
 
 	public void setSession(HttpSession session, String userId) {
-		session.setAttribute(userId, this);
+		session.setAttribute(userId + "[" + this.getRemoteAddr() + "]", this);
 	}
 
 	public String getUserID(HttpSession session) {
@@ -102,6 +115,31 @@ public class LoginManager implements HttpSessionBindingListener {
 	public Collection<String> getUsers() {
 		Collection<String> collection = loginUsers.values();
 		return collection;
+	}
+	
+	private String getRemoteAddr() {
+		HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+		String ipAddress = request.getHeader("X-FORWARDED-FOR");  
+		if (ipAddress == null) {  
+			ipAddress = request.getRemoteAddr();  
+		}
+		
+		return ipAddress;
+		   
+	}
+
+	public String getLoggedIP(String userId) {
+		Enumeration<HttpSession> e = loginUsers.keys();
+		HttpSession session = null;
+		while (e.hasMoreElements()) {
+			session = (HttpSession) e.nextElement();
+			if (loginUsers.get(session).contains(userId)) {
+				String result = loginUsers.get(session).replaceAll(userId, "");
+				
+				return result.substring(1, result.length()-1);
+			}
+		}
+		return null;
 	}
 
 }

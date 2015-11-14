@@ -14,7 +14,7 @@
 
 <composite:implementation>
 	<h:form id="messageForm">
-		<p:growl id="growl_Message" showDetail="true" sticky="true" />  
+		<p:growl for="messageMessage" id="growl_Message" showDetail="true" sticky="true" />  
 		<p:remoteCommand name="ctrls" update="messageForm" actionListener="#{messageRequestBean.saveMessage}" />
 		<p:accordionPanel widgetVar="MessageLibPanel" activeIndex="#{sessionBeanTCAMT.mActiveIndex}">
 			<p:tab title="Message List">

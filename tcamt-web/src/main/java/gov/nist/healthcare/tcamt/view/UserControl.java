@@ -31,43 +31,49 @@ public class UserControl {
 		if (this.user != null) {
 			
 			if(loginManager.isUsing(this.user.getUserId())){
+				this.killUserId = this.user.getUserId();
 				this.user = new User();
 				sessionBeanTCAMT.setLoggedUser(null);
-				addMessage("Login Error: ID is currently used.");
-				
-				
+				FacesContext.getCurrentInstance().addMessage("userMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, 
+						"Login Error!", 
+						"ID is currently used at IP_<a target='_blank' href='https://db-ip.com/"
+						+ loginManager.getLoggedIP(killUserId) 
+						+ "'>"+loginManager.getLoggedIP(killUserId) 
+						+ "</a>."));				
 			}else {
-				addMessage("Hello " + this.user.getUserId());
 				sessionBeanTCAMT.setLoggedUser(user);
 				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage("userMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Hello, " + this.user.getUserId()  + ".", "You have susscessfully logged in."));
 				loginManager.setSession((HttpSession)context.getExternalContext().getSession(true), this.user.getUserId());
+				this.killUserId = null;
 			}
 			loginManager.printloginUsers();
 		} else {
 			this.user = new User();
 			sessionBeanTCAMT.setLoggedUser(null);
-			addMessage("Login Error: Invalid User ID or password.");
+			FacesContext.getCurrentInstance().addMessage("userMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login Error!", "Invalid User ID or password."));
+			this.killUserId = null;
 		}
 		
 		sessionBeanTCAMT.retriveAllData();
 	}
 
 	public void logoutAction(ActionEvent actionEvent) {
+		FacesContext.getCurrentInstance().addMessage("userMessage", new FacesMessage(FacesMessage.SEVERITY_INFO, "Bye, " + this.user.getUserId() + ".", "You have susscessfully logged out."));
 		LoginManager loginManager = LoginManager.getInstance();
 		loginManager.removeSession(this.user.getUserId());
 		loginManager.printloginUsers();
 		this.user = new User();
 		sessionBeanTCAMT.setLoggedUser(null);
-		addMessage("Bye");
-		
 		sessionBeanTCAMT.retriveAllData();
+		this.killUserId = null;
 	}
 	
 	public void killUserIdAction(ActionEvent actionEvent) {
 		LoginManager loginManager = LoginManager.getInstance();
 		HttpSession session = loginManager.findSession(killUserId);
 		if(session != null) session.invalidate();
-		this.killUserId = "";
+		this.killUserId = null;
 	}
 	
 	public void editUser(){
@@ -91,11 +97,6 @@ public class UserControl {
 	public void addUser() {
 		this.sessionBeanTCAMT.getDbManager().addUser(this.newUser);
 		this.newUser = new User();
-	}
-
-	public void addMessage(String summary) {
-		FacesMessage msgs = new FacesMessage(FacesMessage.SEVERITY_INFO, summary, null);
-		FacesContext.getCurrentInstance().addMessage(null, msgs);
 	}
 
 	public SessionBeanTCAMT getSessionBeanTCAMT() {

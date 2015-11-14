@@ -178,7 +178,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestPlan = (DataInstanceTestPlan) event.getComponent().getAttributes().get("testplan");
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -194,10 +194,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("New TestPlan",  "New TestPlan has been created.") );
+	        context.addMessage("dataInstanceTestMessage", new FacesMessage("New TestPlan",  "New TestPlan has been created.") );
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -221,10 +221,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.setDitActiveIndex(1);
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("Clone TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been clonned.") );
+	        context.addMessage("dataInstanceTestMessage", new FacesMessage("Clone TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been clonned.") );
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -278,7 +278,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -292,10 +292,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 		
 			FacesContext context = FacesContext.getCurrentInstance();
-			context.addMessage(null, new FacesMessage("Delete TestPlan",  "TestPlan: " + deletedTestPlanName + " has been created.") );
+			context.addMessage("dataInstanceTestMessage", new FacesMessage("Delete TestPlan",  "TestPlan: " + deletedTestPlanName + " has been created.") );
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -310,14 +310,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.sessionBeanTCAMT.updateDataInstanceTestPlans();
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("Share TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been sented to " + this.selectedTestPlan.getAuthor().getUserId()) );
+	        context.addMessage("dataInstanceTestMessage", new FacesMessage("Share TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been sented to " + this.selectedTestPlan.getAuthor().getUserId()) );
 	        
 	        this.init();
 	        
 	        this.sessionBeanTCAMT.setDitActiveIndex(0);
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -369,10 +369,10 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 			
 			FacesContext context = FacesContext.getCurrentInstance();
-	        context.addMessage(null, new FacesMessage("Save TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
+	        context.addMessage("dataInstanceTestMessage", new FacesMessage("Save TestPlan",  "TestPlan: " + this.selectedTestPlan.getName() + " has been saved.") );
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -397,11 +397,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestCaseGroup();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -424,11 +424,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestCaseGroup();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -450,11 +450,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestPlan();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage( FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -490,11 +490,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -530,11 +530,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}		
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -564,11 +564,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.updatePositionForPlanAndTree();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}		
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -599,11 +599,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestStep();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -636,11 +636,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestStep();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}		
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -672,11 +672,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				this.modifyTestCase();
 			}else{
 				FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
+                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "SelectedNode is null."));
 			}			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -723,7 +723,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			event.getTreeNode().setSelected(true);			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -743,7 +743,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}	
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -763,7 +763,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}	
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -789,7 +789,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.updateFilteredInstanceSegments();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -804,7 +804,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -819,7 +819,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.updateFilteredSegmentTree();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -832,7 +832,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 //			this.readHL7Message();			
 //		}catch(Exception e){
 //			FacesContext context = FacesContext.getCurrentInstance();
-//            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+//            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 //			e.printStackTrace();
 //			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 //			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -867,7 +867,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -896,7 +896,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		    this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -934,7 +934,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1236,7 +1236,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1266,7 +1266,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}  
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1282,7 +1282,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1296,7 +1296,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1317,7 +1317,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1342,7 +1342,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.modifyTestPlan();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1358,19 +1358,19 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        if(dragNode.getData() instanceof DataInstanceTestPlan){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have another Test Plan. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have another Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Plan. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Plan. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Plan. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Plan. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestCaseGroup){
@@ -1378,15 +1378,15 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have another Test Group. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have another Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Group. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Group. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Group. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestCase){
@@ -1396,27 +1396,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have another Test Case. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Case cannot have another Test Case. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Case. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have Test Case. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }else if(dragNode.getData() instanceof DataInstanceTestStep){
 	        	if(dropNode.getData() instanceof DataInstanceTestPlan){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have Test Step. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Plan cannot have Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCaseGroup){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Step. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Group cannot have Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestCase){
 	        		this.updateTestPlanByTree(dragNode, dropNode, dropIndex);
 	        	}else if(dropNode.getData() instanceof DataInstanceTestStep){
 	        		FacesContext context = FacesContext.getCurrentInstance();
-	                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have another Test Step. Have been reverted."));
+	                context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Test Step cannot have another Test Step. Have been reverted."));
 	        		this.createTestPlanTree(this.selectedTestPlan);
 	        	}
 	        }
@@ -1424,7 +1424,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	        this.modifyTestPlan();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
@@ -1441,7 +1441,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.modifyTestStep();
 		}catch(Exception e){
 			FacesContext context = FacesContext.getCurrentInstance();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);

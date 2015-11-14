@@ -192,6 +192,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
 		<dependency>
 			<groupId>gov.nist.healthcare.hl7tools</groupId>
 			<artifactId>umlD</artifactId>
@@ -247,6 +248,12 @@
 					<artifactId>primefaces</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.primefaces</groupId>
+			<artifactId>primefaces</artifactId>
+			<version>5.3</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>org.primefaces.extensions</groupId> <artifactId>primefaces-extensions</artifactId> 
@@ -322,6 +329,7 @@
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 					</configuration>
 				</plugin>
+
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>tomcat-maven-plugin</artifactId>
@@ -337,6 +345,7 @@
 					<configuration>
 						<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
 						<packagingExcludes>WEB-INF/lib/primefaces-4.0.jar</packagingExcludes>
+						<packagingExcludes>WEB-INF/lib/primefaces-5.2.RC3.jar</packagingExcludes>
 						<packagingExcludes>WEB-INF/lib/primefaces-extensions-1.1.0.jar</packagingExcludes>
 						<packagingExcludes>WEB-INF/lib/resources-ckeditor-1.1.0.jar</packagingExcludes>
 					</configuration>
