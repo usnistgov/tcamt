@@ -1953,11 +1953,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		ValidationMessage vm = new ValidationMessage();
 		
-		this.hL7V2MessageValidationReport = vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
+//		this.hL7V2MessageValidationReport = vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
 	}
 	
 	private void selectTestStep() throws Exception {
