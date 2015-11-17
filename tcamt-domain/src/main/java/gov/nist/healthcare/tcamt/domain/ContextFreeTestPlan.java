@@ -1,6 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,12 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table
-public class ContextFreeTestPlan implements Cloneable, Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 8324105895492403073L;
+public class ContextFreeTestPlan implements Cloneable{
 
 	@JsonIgnore
 	@Id

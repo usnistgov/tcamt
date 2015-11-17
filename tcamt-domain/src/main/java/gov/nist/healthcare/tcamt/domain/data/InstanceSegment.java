@@ -2,14 +2,8 @@ package gov.nist.healthcare.tcamt.domain.data;
 
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
 
-import java.io.Serializable;
+public class InstanceSegment {
 
-public class InstanceSegment implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3923342579339897927L;
 	private String ipath;
 	private String path;
 	private String messageName;

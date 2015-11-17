@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,11 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class Actor implements Cloneable, Serializable {
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 5815768987412850270L;
+public class Actor implements Cloneable {
 	
 	@Id
     @GeneratedValue

@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,12 +8,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class JurorDocument implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4728437163851527856L;
+public class JurorDocument {
 
 	@Id
     @GeneratedValue

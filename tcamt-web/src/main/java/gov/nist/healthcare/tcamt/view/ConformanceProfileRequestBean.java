@@ -52,11 +52,12 @@ import org.primefaces.model.StreamedContent;
 @SessionScoped
 public class ConformanceProfileRequestBean implements Serializable {
 
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 432938680402529031L;
-	
+	private static final long serialVersionUID = -5192242809821036541L;
+
 	@ManagedProperty("#{sessionBeanTCAMT}")
 	private SessionBeanTCAMT sessionBeanTCAMT;
 	

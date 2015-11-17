@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,12 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table
-public class ConformanceProfile implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6466212787282447458L;
+public class ConformanceProfile {
 
 	@Id
     @GeneratedValue

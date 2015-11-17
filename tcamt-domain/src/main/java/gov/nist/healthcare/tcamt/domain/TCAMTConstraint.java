@@ -1,8 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,13 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+
 @Entity
 @Table
-public class TCAMTConstraint implements Serializable, Cloneable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3926211483462954685L;
+public class TCAMTConstraint implements Cloneable{
+
 	
 	@Id
     @GeneratedValue

@@ -23,7 +23,6 @@
         	</h:panelGrid>
         	
         	<h:panelGrid rendered="#{sessionBeanTCAMT.loggedUser != null}" columns="1" cellpadding="5">
-        		<p>Hello </p> <h:outputText value="#{sessionBeanTCAMT.loggedUser.userId}" />
         		 <p:commandButton value="Logout" update=":#{p:component('panel')} :#{p:component('actorForm')} :#{p:component('messageForm')} :#{p:component('DataInstanceTestForm')}" actionListener="#{userControl.logoutAction}"/>
         	</h:panelGrid>
         	

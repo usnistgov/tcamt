@@ -1,20 +1,15 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-public class ComponentModel implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5288642864545218785L;
+public class ComponentModel {
 	private String messageName;
 	private String path;
 	private String ipath;

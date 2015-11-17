@@ -24,11 +24,13 @@ import org.primefaces.event.TabChangeEvent;
 @SessionScoped
 public class SessionBeanTCAMT implements Serializable {
 
+	
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 432938680402529031L;
-	
+	private static final long serialVersionUID = -5786030616811284258L;
+
 	private DBImpl dbManager = new DBImpl();
 	
 	private List<JurorDocument> jurorDocuments;

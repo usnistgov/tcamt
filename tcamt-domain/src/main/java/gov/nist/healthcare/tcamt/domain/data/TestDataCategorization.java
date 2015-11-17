@@ -1,8 +1,6 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-import java.io.Serializable;
-
-public enum TestDataCategorization implements Serializable {
+public enum TestDataCategorization {
 	Indifferent("Indifferent"),
 	
 	Presence_ContentIndifferent("Presence-Content Indifferent"),

@@ -43,11 +43,12 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
 public class ManageInstance implements Serializable {
+	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 574095903906379334L;
-	
+	private static final long serialVersionUID = 9012806540944439204L;
+
 	public void loadMessage(Message m) {
 		if(m.getMessageObj() == null){
 			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message mp = null;

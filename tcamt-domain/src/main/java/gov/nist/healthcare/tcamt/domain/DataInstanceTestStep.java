@@ -1,6 +1,5 @@
 package gov.nist.healthcare.tcamt.domain;
 
-import java.io.Serializable;
 import java.util.Comparator;
 
 import javax.persistence.CascadeType;
@@ -20,13 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table
-public class DataInstanceTestStep implements Cloneable, Serializable, Comparable<DataInstanceTestStep>{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5928301465572845004L;
-	
+public class DataInstanceTestStep implements Cloneable, Comparable<DataInstanceTestStep>{
 	
 	@Id
     @GeneratedValue
