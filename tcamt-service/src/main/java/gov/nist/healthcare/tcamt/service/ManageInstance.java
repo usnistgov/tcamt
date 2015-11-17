@@ -289,7 +289,7 @@ public class ManageInstance implements Serializable {
 			rootElement.appendChild(segmentElement);
 
 			for (Field field : segment.getFields()) {
-				if (field.getUsage().equals(Usage.R) || field.getUsage().equals(Usage.RE) || field.getUsage().equals(Usage.C)) {
+				if (!this.isHideForMessageContent(segment, field)) {
 					String wholeFieldStr = this.getFieldStrFromSegment(segName, instanceSegment, field.getPosition());
 					int fieldRepeatIndex = 0;
 
@@ -329,7 +329,7 @@ public class ManageInstance implements Serializable {
 
 							for (Component c : fieldDT.getComponents()) {
 								String componentiPath = "." + c.getPosition() + "[1]";
-								if (c.getUsage().equals(Usage.R) || c.getUsage().equals(Usage.RE) || c.getUsage().equals(Usage.C)) {
+								if (!this.isHideForMessageContent(fieldDT, c)) {
 									String componentStr = this .getComponentStrFromField(fieldStr, c.getPosition());
 									if (m.getDatatypes().findOne(c.getDatatype()).getComponents() == null || m.getDatatypes().findOne(c.getDatatype()).getComponents().size() == 0) {
 										Element componentElement = doc.createElement("Component");
@@ -343,17 +343,19 @@ public class ManageInstance implements Serializable {
 										componentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition());
 										componentElement.setAttribute("DataElement", c.getName());
 										fieldElement.appendChild(componentElement);
-
+											
 										for (Component sc : m.getDatatypes().findOne(c.getDatatype()).getComponents()) {
-											String subcomponentiPath = "." + sc.getPosition() + "[1]";
-											String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
+											if (!this.isHideForMessageContent(m.getDatatypes().findOne(c.getDatatype()), sc)) {
+												String subcomponentiPath = "." + sc.getPosition() + "[1]";
+												String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
 
-											Element subComponentElement = doc.createElement("SubComponent");
-											subComponentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition());
-											subComponentElement.setAttribute("DataElement", sc.getName());
-											subComponentElement.setAttribute("Data", subcomponentStr);
-											subComponentElement.setAttribute("Categrization", this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath, subcomponentStr));
-											componentElement.appendChild(subComponentElement);
+												Element subComponentElement = doc.createElement("SubComponent");
+												subComponentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition());
+												subComponentElement.setAttribute("DataElement", sc.getName());
+												subComponentElement.setAttribute("Data", subcomponentStr);
+												subComponentElement.setAttribute("Categrization", this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath, subcomponentStr));
+												componentElement.appendChild(subComponentElement);
+											}
 										}
 									}
 								}
@@ -369,6 +371,48 @@ public class ManageInstance implements Serializable {
 //		System.out.println(m.getXmlEncodedMessageContent());
 	}
 	
+	private boolean isHideForMessageContent(Datatype fieldDT, Component c) {
+		if(c.isHide()) return true;
+		
+		if(c.getUsage().equals(Usage.R)) return false;
+		if(c.getUsage().equals(Usage.RE)) return false;
+		
+		if(c.getUsage().equals(Usage.C)){
+			Predicate p = this.findPreficate(fieldDT.getPredicates(), c.getPosition() + "[1]");
+			
+			if(p != null){
+				if(p.getTrueUsage().equals(Usage.R)) return false;
+				if(p.getTrueUsage().equals(Usage.RE)) return false;
+				if(p.getFalseUsage().equals(Usage.R)) return false;
+				if(p.getFalseUsage().equals(Usage.RE)) return false;
+			}
+
+		}
+		
+		return true;
+	}
+
+	private boolean isHideForMessageContent(Segment segment, Field field) {
+		if(field.isHide()) return true;
+		
+		if(field.getUsage().equals(Usage.R)) return false;
+		if(field.getUsage().equals(Usage.RE)) return false;
+		
+		if(field.getUsage().equals(Usage.C)){
+			Predicate p = this.findPreficate(segment.getPredicates(), field.getPosition() + "[1]");
+			
+			if(p != null){
+				if(p.getTrueUsage().equals(Usage.R)) return false;
+				if(p.getTrueUsage().equals(Usage.RE)) return false;
+				if(p.getFalseUsage().equals(Usage.R)) return false;
+				if(p.getFalseUsage().equals(Usage.RE)) return false;
+			}
+
+		}
+		
+		return true;
+	}
+
 	private void modifyIPath(List<String> ipathList) {
 		String previousSegName = "";
 		int segIndex = 1;
@@ -1859,7 +1903,7 @@ public class ManageInstance implements Serializable {
 
 	public TreeNode genRestrictedTree(TreeNode segmentTreeRoot) {
 		TreeNode result = new DefaultTreeNode("root", null);
-
+		
 		for (TreeNode fieldTN : segmentTreeRoot.getChildren()) {
 			FieldModel fm = (FieldModel) fieldTN.getData();
 
@@ -1881,12 +1925,12 @@ public class ManageInstance implements Serializable {
 				for (TreeNode componentTN : fieldTN.getChildren()) {
 					ComponentModel cm = (ComponentModel) componentTN.getData();
 					if (cm.getNode().getUsage().value().equals("R") || cm.getNode().getUsage().value().equals("RE") || cm.getNode().getUsage().value().equals("C")) {
-						if(!cm.getNode().isHide()){
+						if(!cm.getNode().isHide() && !this.isConditonalHide(cm.getUsage())){
 							TreeNode compomnentNode = new DefaultTreeNode(cm, fieldNode);
 							for (TreeNode subComponentTN : componentTN.getChildren()) {
 								ComponentModel scm = (ComponentModel) subComponentTN.getData();
 								if (scm.getNode().getUsage().value().equals("R") || scm.getNode().getUsage().value().equals("RE") || scm.getNode().getUsage().value().equals("C")) {
-									if(!scm.getNode().isHide()){
+									if(!scm.getNode().isHide() && !this.isConditonalHide(scm.getUsage())){
 										new DefaultTreeNode(scm, compomnentNode);
 									}
 								}
@@ -1899,6 +1943,29 @@ public class ManageInstance implements Serializable {
 
 		return result;
 
+	}
+	
+	
+	private boolean isConditonalHide(String usage){
+		if(usage.startsWith("C")){
+			int seperatorPosition = usage.indexOf("/") + 1;
+			if(seperatorPosition > 0){
+				String firstCharTrueUsage = usage.substring(2, 3);
+				String firstCharFalseUsage = usage.substring(seperatorPosition, seperatorPosition + 1);
+				
+				if(!firstCharTrueUsage.equals("R") && !firstCharFalseUsage.equals("R")){
+					return true;
+				}else {
+					return false;
+				}
+				
+			}else{
+				return false;
+			}
+			
+		}else {
+			return false;
+		}
 	}
 	
 	private Predicate findPreficate(List<Predicate> predicates, String path){

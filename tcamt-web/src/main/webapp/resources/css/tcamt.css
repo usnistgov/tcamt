@@ -39,6 +39,14 @@ a img {
   	overflow-x: auto;
 }
 
+.CodeMirror {
+     font-family: monospace;
+  	 font-size:10pt;
+     line-height: 1.3em;
+     overflow: hidden;
+     position: relative;
+}
+
 #appheader {
     background-color: #021a4c;
     float: none;
