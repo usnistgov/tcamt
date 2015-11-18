@@ -919,6 +919,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			ZipOutputStream out = new ZipOutputStream(outputStream);
 			
 			this.generateTestPackage(out, tp);
+			this.generateQuickTestCaseReferenceGuide(out, tp);
 			
 			if(tp.getType() != null && tp.getType().equals("Isolated")){
 				this.generateIsolatedRB(out, tp);
@@ -938,6 +939,126 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
+	}
+	
+	
+	private void generateQuickTestCaseReferenceGuide(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException{
+		ClassLoader classLoader = getClass().getClassLoader();
+		String quickTestCaseReferenceGuideStr = IOUtils.toString(classLoader.getResourceAsStream("QuickTestCaseReferenceGuide.html"));
+		
+		quickTestCaseReferenceGuideStr = quickTestCaseReferenceGuideStr.replace("?TestPlanName?", tp.getName());
+		
+		
+		HashMap<Integer, Object>  testPlanMap = new HashMap<Integer, Object>();
+		for(DataInstanceTestCaseGroup tcg:tp.getTestcasegroups()){
+			testPlanMap.put(tcg.getPosition(), tcg);
+		}
+		for(DataInstanceTestCase tc:tp.getTestcases()){
+			testPlanMap.put(tc.getPosition(), tc);
+		}
+		
+		String contentsHTML= "";
+		
+		
+		for(int i=0; i< testPlanMap.keySet().size(); i++){
+			Object child = testPlanMap.get(i+1);
+			
+			if(child instanceof DataInstanceTestCaseGroup){
+				DataInstanceTestCaseGroup group = (DataInstanceTestCaseGroup)child;
+				contentsHTML = contentsHTML + "<h2>Test Case Group: " + group.getName() + "</h2>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + group.getLongDescription() + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<br/>" + System.getProperty("line.separator");
+				
+				HashMap<Integer, DataInstanceTestCase>  testCaseMap = new HashMap<Integer, DataInstanceTestCase>();
+				for(DataInstanceTestCase tc:group.getTestcases()){
+					testCaseMap.put(tc.getPosition(), tc);
+				}
+				
+				for(int j=0; j<testCaseMap.keySet().size(); j++){
+					DataInstanceTestCase tc = testCaseMap.get(j+1);
+					contentsHTML = contentsHTML + "<table>" + System.getProperty("line.separator");
+					
+					contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<th>Test Case</th>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<th>" + tc.getName() + "</th>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+					
+					contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<td colspan='2'><p>Description:</p>" + tc.getTestCaseStory().getTeststorydesc() + "</td>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+					
+					contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<th colspan='2'>Test Steps</th>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+					
+					HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
+					for(DataInstanceTestStep ts:tc.getTeststeps()){
+						testStepMap.put(ts.getPosition(), ts);
+					}
+					for(int k=0; k < testStepMap.keySet().size(); k++){
+						DataInstanceTestStep ts = testStepMap.get(k+1);
+						
+						contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+						contentsHTML = contentsHTML + "<th>" + ts.getName() + "</th>" + System.getProperty("line.separator");
+						contentsHTML = contentsHTML + "<td><p>Description:</p>" + ts.getTestStepStory().getTeststorydesc() + "<br/>" + "<p>Test Objectives:</p>" + ts.getTestStepStory().getTestObjectives() + "</td>" + System.getProperty("line.separator");
+						contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+						
+					}
+					contentsHTML = contentsHTML + "</table>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<br/>" + System.getProperty("line.separator");
+				}
+				
+			}else if(child instanceof DataInstanceTestCase){
+				DataInstanceTestCase tc = (DataInstanceTestCase)child;
+				
+				contentsHTML = contentsHTML + "<h2>Test Case non-associated of Test Group</h2>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<br/>" + System.getProperty("line.separator");
+				
+				contentsHTML = contentsHTML + "<table>" + System.getProperty("line.separator");
+				
+				contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<th>Test Case</th>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<th>" + tc.getName() + "</th>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+				
+				contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<td colspan='2'><p>Description:</p>" + tc.getTestCaseStory().getTeststorydesc() + "</td>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+				
+				contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<th colspan='2'>Test Steps</th>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+				
+				HashMap<Integer, DataInstanceTestStep>  testStepMap = new HashMap<Integer, DataInstanceTestStep>();
+				for(DataInstanceTestStep ts:tc.getTeststeps()){
+					testStepMap.put(ts.getPosition(), ts);
+				}
+				for(int k=0; k < testStepMap.keySet().size(); k++){
+					DataInstanceTestStep ts = testStepMap.get(k+1);
+					
+					contentsHTML = contentsHTML + "<tr>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<th>" + ts.getName() + "</th>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "<td><p>Description:</p>" + ts.getTestStepStory().getTeststorydesc() + "<br/>" + "<p>Test Objectives:</p>" + ts.getTestStepStory().getTestObjectives() + "</td>" + System.getProperty("line.separator");
+					contentsHTML = contentsHTML + "</tr>" + System.getProperty("line.separator");
+					
+				}
+				contentsHTML = contentsHTML + "</table>" + System.getProperty("line.separator");
+				contentsHTML = contentsHTML + "<br/>" + System.getProperty("line.separator");
+			}
+		}
+		
+		quickTestCaseReferenceGuideStr = quickTestCaseReferenceGuideStr.replace("?contentsHTML?", contentsHTML);
+		
+		byte[] buf = new byte[1024];
+		out.putNextEntry(new ZipEntry("QuickTestCaseReferenceGuide.html"));
+		InputStream inQuickTestCaseReferenceGuide = IOUtils.toInputStream(quickTestCaseReferenceGuideStr);
+		int lenQuickTestCaseReferenceGuide;
+        while ((lenQuickTestCaseReferenceGuide = inQuickTestCaseReferenceGuide.read(buf)) > 0) {
+            out.write(buf, 0, lenQuickTestCaseReferenceGuide);
+        }
+        out.closeEntry();
+        inQuickTestCaseReferenceGuide.close();
+		
 	}
 	
 	private void generateTestPackage(ZipOutputStream out, DataInstanceTestPlan tp) throws Exception {

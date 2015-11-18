@@ -1629,11 +1629,10 @@ public class ManageInstance implements Serializable {
 		return root;
 	}
 	
-	//Expected profile fixed content is missing. The $value at $location ($element_name) does not match one of the expected values $expected_value_list.
 	private void createStringListTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("Expected profile fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + data);
+		c.setDescription("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + data);
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1654,7 +1653,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected profile fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + values));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + values));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
 		elmStringList.setAttribute("Path", iPositionPath);
@@ -1669,7 +1668,6 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 	
-	//Content does not meet the minimum length requirement. The value at $location ($element_name) is expected to be at minimum $length characters.
 	private void createLengthTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
@@ -1705,11 +1703,10 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 	
-	//Expected test case fixed content is missing. The $value at $location ($element_name) does not match the expected value $expected_value.
 	private void createPlainTextTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("Expected test case fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + data + "'.");
+		c.setDescription("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + data + "'.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1730,7 +1727,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected test case fixed content is missing. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + value + "'."));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + value + "'."));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
 		elmPlainText.setAttribute("Path", iPositionPath);
@@ -1742,7 +1739,6 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 	
-	//Unexpected content found. The $value at $location ($element_name) is not expected to be valued for test case.
 	private void createNonPresenceTree(String iPositionPath, String iPath, TreeNode parent, Message m){
 		Constraint c = new Constraint();
 		c.setDescription("Unexpected content found. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case.");
@@ -1777,8 +1773,6 @@ public class ManageInstance implements Serializable {
 		parent.appendChild(elmConstraint);
 	}
 	
-	//Expected content is missing. A descendent of $location ($element_name) is expected to be present.
-	//Expected content is missing. The empty value at $location ($element_name) is expected to be present.
 	private void createPresenceTree(String usageList, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		boolean usageCheck = true;
 		

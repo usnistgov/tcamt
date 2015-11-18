@@ -12,7 +12,7 @@ public class PDFGenerator {
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Isolated");
 //		gen.subDirList("/Users/jungyubw/Documents/Works/Projects/hit-iz-tool/hit-iz-resource/src/main/resources/Contextbased");
 		
-		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Certification");
+		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Test Plan");
 		
 		
 	}
