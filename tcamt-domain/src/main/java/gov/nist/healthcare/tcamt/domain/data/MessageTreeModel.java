@@ -1,7 +1,13 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-public class MessageTreeModel implements Cloneable{
+import java.io.Serializable;
 
+public class MessageTreeModel implements Serializable, Cloneable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5863808218529956347L;
 	private Object node;
 	private String messageId;
 	private String path;

@@ -1598,7 +1598,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	public void updateTDC() throws Exception {
 		this.resetAllTestDataCategorizations();
-		if(this.defaultTDCId != null){
+		if(this.defaultTDCId != null && this.defaultTDCId > -1){
 			DefaultTestDataCategorizationSheet sheet = this.sessionBeanTCAMT.getDbManager().getDefaultTestDataCategorizationSheetById(this.defaultTDCId);
 			for(InstanceSegment is:this.instanceSegments){
 				this.segmentTreeRoot = new DefaultTreeNode("root", null);
@@ -2819,6 +2819,17 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		return ipath.replace(this.selectedInstanceSegment.getIpath() + ".", "");
 	}
 	
+	
+	public void expandAll(){
+		this.expandTree(this.filtedSegmentTreeRoot);
+	}
+	
+	private void expandTree(TreeNode current){
+		current.setExpanded(true);
+		for(TreeNode child:current.getChildren()){
+			this.expandTree(child);
+		}
+	}
 	
 	/*
 	 * 

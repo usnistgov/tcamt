@@ -1,5 +1,7 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,7 +16,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table
-public class TestObject implements Cloneable {
+public class TestObject implements Serializable, Cloneable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6761499469482867140L;
 
 	@JsonIgnore
 	@Id

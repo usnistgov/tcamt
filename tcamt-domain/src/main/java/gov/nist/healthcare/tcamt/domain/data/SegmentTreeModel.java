@@ -1,9 +1,15 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
+import java.io.Serializable;
+
 import gov.nist.healthcare.hl7tools.domain.Field;
 
-public class SegmentTreeModel extends MessageTreeModel implements Cloneable{
+public class SegmentTreeModel extends MessageTreeModel implements Serializable, Cloneable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7957736254494020971L;
 	private String data;
 	private TestDataCategorization tdc;
 	private String ca;

@@ -1,5 +1,12 @@
 package gov.nist.healthcare.tcamt.domain.report;
 
-public class MetaData {
+import java.io.Serializable;
+
+public class MetaData implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5335016953701267137L;
 
 }

@@ -525,13 +525,17 @@ public class ManageInstance implements Serializable {
 
 					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
 						// TODO OBX Dynamic mapping needed
-						Datatype dynamicFieldDT = m.getDatatypes().findOne(obx5DTStr+"_IZ");
+						
+						Datatype dynamicFieldDT = m.getDatatypes().findOneDatatypeByLabel(obx5DTStr+"_IZ");
+						
 						if(dynamicFieldDT == null){
 							dynamicFieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
 						}
 						if(dynamicFieldDT != null){
 							fieldDT = dynamicFieldDT;
 						}
+						
+						
 					}
 					
 

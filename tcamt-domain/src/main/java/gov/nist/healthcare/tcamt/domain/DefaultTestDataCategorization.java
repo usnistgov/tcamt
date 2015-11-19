@@ -1,5 +1,7 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -9,8 +11,13 @@ import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 
 @Entity
 @Table
-public class DefaultTestDataCategorization {
+public class DefaultTestDataCategorization implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1144934354500662296L;
+
 	@Id
     @GeneratedValue
 	private long id;

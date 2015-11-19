@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table
-public class DefaultTestDataCategorizationSheet {
+public class DefaultTestDataCategorizationSheet implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6480663897927527382L;
 
 	@Id
     @GeneratedValue

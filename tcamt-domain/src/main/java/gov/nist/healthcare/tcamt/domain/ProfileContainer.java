@@ -1,7 +1,13 @@
 package gov.nist.healthcare.tcamt.domain;
 
-public class ProfileContainer {
+import java.io.Serializable;
 
+public class ProfileContainer implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4140673604136313536L;
 	private String messageId;
 	private String constraintId;
 	private String valueSetLibraryId;

@@ -1,13 +1,19 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 
 @Embeddable
-public class TestStory implements Cloneable {
+public class TestStory implements Serializable, Cloneable {
 
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7659851766583195273L;
 	@Column(columnDefinition="longtext")
 	private String teststorydesc;
 	@Column(columnDefinition="longtext")

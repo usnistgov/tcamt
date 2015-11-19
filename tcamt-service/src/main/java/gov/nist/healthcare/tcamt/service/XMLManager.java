@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.CharBuffer;
@@ -34,7 +35,12 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class XMLManager {
+public class XMLManager implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3560268822893128944L;
 
 	public static Document stringToDom(String xmlSource) throws SAXException,
 			ParserConfigurationException, IOException {

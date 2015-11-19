@@ -1,9 +1,15 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 
-public class InstanceTestDataType  implements Cloneable {
+public class InstanceTestDataType  implements Serializable, Cloneable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1267318785285693607L;
 	private String iPath;
 	private TestDataCategorization type;
 	

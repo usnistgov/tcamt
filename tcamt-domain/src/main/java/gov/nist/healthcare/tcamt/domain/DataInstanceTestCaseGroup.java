@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +22,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table
-public class DataInstanceTestCaseGroup implements Cloneable, Comparable<DataInstanceTestCaseGroup> {
+public class DataInstanceTestCaseGroup implements Serializable, Cloneable, Comparable<DataInstanceTestCaseGroup> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8254402250986054606L;
 
 	@JsonIgnore
 	@Id

@@ -17,20 +17,18 @@
 <composite:implementation>
     <table width="100%">
 		<tr>
-			<td align="right">
+			<td align="left">
 				<p:selectOneButton value="#{cc.attrs.bean.usageViewOption}">
 					<p:ajax listener="#{cc.attrs.bean.updateFilteredInstanceSegments}" update="#{cc.attrs.panelId}" />
             		<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
             		<f:selectItem itemLabel="All" itemValue="all" />
         		</p:selectOneButton>
 			</td>
-		</tr>
-		<tr>
 			<td align="right">
-				<p:commandButton value="Reset TestDataCategorization" actionListener="#{cc.attrs.bean.resetAllTestDataCategorizations}" update="#{cc.attrs.panelId}" icon="ui-icon-close" title="Remove All"/>
 				<p:selectOneMenu value="#{cc.attrs.bean.defaultTDCId}" effect="fade">
 					<f:selectItem itemLabel="Select Default TestData Categorization template" itemValue="" />
 					<f:selectItems value="#{conformanceProfileRequestBean.defaultTestDataCategorizationSheets}" var="sheet" itemLabel="#{sheet.sheetName}" itemValue="#{sheet.id}" />
+					<f:selectItem itemLabel="Delete all of Test Data Categorization" itemValue="-1" />
 					<p:ajax event="change" update="#{cc.attrs.panelId}" listener="#{cc.attrs.bean.updateTDC}" />
 				</p:selectOneMenu>
 			</td>

@@ -1,6 +1,12 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-public class TestDataFromCS {
+import java.io.Serializable;
+
+public class TestDataFromCS implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7640774594146008502L;
 	private String path;
 	private String data;
 	private TestDataCategorization tdc;

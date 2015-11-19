@@ -1,8 +1,13 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
 
-public class ManualTestStep {
+public class ManualTestStep implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2380448743873287608L;
 	private String name;
 	private String description;
 	private String type;

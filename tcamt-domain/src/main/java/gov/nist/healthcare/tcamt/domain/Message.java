@@ -1,5 +1,6 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,8 +25,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 property = "@id")
 @Entity
 @Table
-public class Message implements Cloneable {
+public class Message implements Serializable, Cloneable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5059047349842226726L;
 	@Id
     @GeneratedValue
 	private long id;

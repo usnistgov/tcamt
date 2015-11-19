@@ -1,5 +1,7 @@
 package gov.nist.healthcare.tcamt.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -7,7 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 @Embeddable
-public class Metadata implements Cloneable {
+public class Metadata implements Serializable, Cloneable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5727631810729646337L;
 
 	@JsonProperty("version")
 	private String testSuiteVersion;

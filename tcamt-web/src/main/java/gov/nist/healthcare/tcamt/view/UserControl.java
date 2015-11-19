@@ -3,6 +3,7 @@ package gov.nist.healthcare.tcamt.view;
 import gov.nist.healthcare.tcamt.domain.User;
 import gov.nist.healthcare.tcamt.web.LoginManager;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -15,8 +16,12 @@ import javax.servlet.http.HttpSession;
 
 @ManagedBean
 @SessionScoped
-public class UserControl {
+public class UserControl implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5719566433011463506L;
 	private User user = new User();
 	private User newUser = new User();
 	

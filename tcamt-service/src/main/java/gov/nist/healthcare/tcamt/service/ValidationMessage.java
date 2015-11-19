@@ -1,6 +1,13 @@
 package gov.nist.healthcare.tcamt.service;
 
-public class ValidationMessage {
+import java.io.Serializable;
+
+public class ValidationMessage implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5216453472380955109L;
 
 	public void er7MessageValidation(String er7Message, String profile, String constraints, String valueSets, String oid) throws Exception {
 //		ValidationProxy vp = new ValidationProxy("TCAMT Instant Testing", "NIST");

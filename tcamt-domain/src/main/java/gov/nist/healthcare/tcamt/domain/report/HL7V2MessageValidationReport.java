@@ -1,7 +1,13 @@
 package gov.nist.healthcare.tcamt.domain.report;
 
-public class HL7V2MessageValidationReport {
+import java.io.Serializable;
 
+public class HL7V2MessageValidationReport implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7840304317044556623L;
 	private HeaderReport headerReport;
 	private SpecificReport specificReport;
 	

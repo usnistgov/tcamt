@@ -1,6 +1,12 @@
 package gov.nist.healthcare.tcamt.domain.report;
 
-public class HeaderReport {
+import java.io.Serializable;
+
+public class HeaderReport implements Serializable {
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 68108141431964724L;
 /*
  		<ns5:ServiceName>Unified Report Test Application</ns5:ServiceName>
         <ns5:ServiceProvider>NIST</ns5:ServiceProvider>

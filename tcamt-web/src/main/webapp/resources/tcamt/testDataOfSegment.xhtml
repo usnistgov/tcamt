@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:composite="http://java.sun.com/jsf/composite"
 	xmlns:tcamt="http://java.sun.com/jsf/composite/tcamt">
@@ -25,17 +26,28 @@
 				</h:panelGrid>
 			</td>
 			<td align="right">
-				<h:panelGrid columns="2" cellpadding="5">
+				<h:panelGrid columns="3" cellpadding="5">
+					<p:commandButton value="Expand All" icon="ui-icon-plus" update="#{cc.attrs.panelId}" actionListener="#{cc.attrs.bean.expandAll}"/>
+					
         			<p:selectCheckboxMenu id="columnMenu" value="#{cc.attrs.bean.selectedDisplayColumns}" label="Display Column" filter="true" filterMatchMode="startsWith" panelStyle="width:250px">
             			<p:ajax event="change" update="testDataTable" />
             			<f:selectItems value="#{cc.attrs.bean.displayColumns}" />
         			</p:selectCheckboxMenu>
+        			
         			<p:selectOneButton value="#{cc.attrs.bean.usageViewOption2}">
 						<p:ajax listener="#{cc.attrs.bean.updateFilteredSegmentTree}" update="#{cc.attrs.panelId}" />
             			<f:selectItem itemLabel="R/RE/C" itemValue="partial" />
             			<f:selectItem itemLabel="All" itemValue="all" />
         			</p:selectOneButton>
     			</h:panelGrid>
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+				<h:panelGrid columns="2" cellpadding="5">
+					<h:outputText value="Segment Preview: " style="font-weight:bold" />
+					<h:outputText value="#{cc.attrs.bean.selectedInstanceSegment.lineStr}"/>
+				</h:panelGrid>
 			</td>
 		</tr>
 	</table>

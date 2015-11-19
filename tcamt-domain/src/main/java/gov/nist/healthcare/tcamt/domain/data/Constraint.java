@@ -1,6 +1,12 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-public class Constraint {
+import java.io.Serializable;
+
+public class Constraint implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7915202533970618230L;
 	private String id;
 	private String type;
 	private String description;
