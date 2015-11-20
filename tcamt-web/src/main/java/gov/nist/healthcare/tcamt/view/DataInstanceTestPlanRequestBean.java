@@ -1,5 +1,51 @@
 package gov.nist.healthcare.tcamt.view;
 
+import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.ManualTestStep;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestStory;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tcamt.service.ValidationMessage;
+import gov.nist.healthcare.tcamt.service.XMLManager;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
+import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -43,52 +89,6 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
-
-import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.ManualTestStep;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.Metadata;
-import gov.nist.healthcare.tcamt.domain.ProfileContainer;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.TestStory;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.report.HL7V2MessageValidationReport;
-import gov.nist.healthcare.tcamt.service.ManageInstance;
-import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
-import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
 
 @ManagedBean
 @SessionScoped
@@ -139,7 +139,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private DataInstanceTestCaseConverter tcConverter;
 	private DataInstanceTestGroupConverter tgConverter;
 	private DataInstanceTestPlanConverter tpConverter;
-	private HL7V2MessageValidationReport hL7V2MessageValidationReport;
 	
 	private String testDataSpecificationHTML;
 	private String jurorDocumentHTML;
@@ -2072,13 +2071,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	public void er7MessageValidation() throws Exception {
 		
-//		ValidationMessage vm = new ValidationMessage();
+		ValidationMessage vm = new ValidationMessage();
 		
-//		this.hL7V2MessageValidationReport = vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
-//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
-//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
-//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
-//								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
+		vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
+								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
 	}
 	
 	private void selectTestStep() throws Exception {
@@ -2096,7 +2095,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.instanceSegments = new ArrayList<InstanceSegment>();
 		this.filteredInstanceSegments =  new ArrayList<InstanceSegment>();
 		this.manageInstanceService = new ManageInstance();
-		this.hL7V2MessageValidationReport = null;
 		
 		if(this.selectedTestStep.getMessage() != null && this.selectedTestStep.getMessage().getConformanceProfile() != null && this.selectedTestStep.getMessage().getName() != null){
 //			this.messageTreeRoot = this.manageInstanceService.loadMessage(this.selectedTestStep.getMessage());
@@ -3127,15 +3125,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setDefaultTDCId(Long defaultTDCId) {
 		this.defaultTDCId = defaultTDCId;
-	}
-
-	public HL7V2MessageValidationReport gethL7V2MessageValidationReport() {
-		return hL7V2MessageValidationReport;
-	}
-
-	public void sethL7V2MessageValidationReport(
-			HL7V2MessageValidationReport hL7V2MessageValidationReport) {
-		this.hL7V2MessageValidationReport = hL7V2MessageValidationReport;
 	}
 
 	public DataInstanceTestCaseGroup getParentTestGroup() {

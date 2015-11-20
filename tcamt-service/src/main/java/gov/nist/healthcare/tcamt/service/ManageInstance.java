@@ -9,10 +9,13 @@ import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Case;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.DynamicMapping;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Mapping;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
@@ -280,13 +283,39 @@ public class ManageInstance implements Serializable {
 			String segName = segment.getName();
 			String segDesc = segment.getDescription();
 			String segmentiPath = instanceSegment.getIpath();
-			String obx5DTStr = "";
 
 			Element segmentElement = doc.createElement("Segment");
 			segmentElement.setAttribute("Name", segName);
 			segmentElement.setAttribute("Description", segDesc);
 			segmentElement.setAttribute("InstancePath", instanceSegment.getIpath());
 			rootElement.appendChild(segmentElement);
+			
+			
+			
+			if(segment.getDynamicMappings() != null && segment.getDynamicMappings().size() > 0){
+				for(DynamicMapping dm:segment.getDynamicMappings()){
+					for(Mapping mapping:dm.getMappings()){
+						Integer position = mapping.getPosition();
+						Integer reference = mapping.getReference();
+						
+						String refereceValue =  this.getFieldStrFromSegment(segName, instanceSegment, reference);
+						
+						for(Case c:mapping.getCases()){
+							if(c.getValue().equals(refereceValue)){
+								
+								for(Field field:segment.getFields()){
+									if(field.getPosition().equals(position)){
+										field.setDatatype(c.getDatatype());
+									}
+								}
+							}
+						}
+						
+					}
+				}
+			}
+			
+			
 
 			for (Field field : segment.getFields()) {
 				if (!this.isHideForMessageContent(segment, field)) {
@@ -295,14 +324,6 @@ public class ManageInstance implements Serializable {
 
 					for (String fieldStr : wholeFieldStr.split("\\~")) {
 						Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
-						if (segName.equals("OBX") && field.getPosition() == 2) {
-							obx5DTStr = fieldStr;
-						}
-
-						if (segName.equals("OBX") && field.getPosition() == 5) {
-							// TODO OBX Dynamic mapping needed
-							fieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
-						}
 						
 						if (segName.equals("MSH") && field.getPosition() == 1) {
 							fieldStr = "|";
@@ -474,20 +495,39 @@ public class ManageInstance implements Serializable {
 		return null;
 	}
 
-	public void genSegmentTree(TreeNode segmentTreeRoot,
-			InstanceSegment selectedInstanceSegment, Message m) {
+	public void genSegmentTree(TreeNode segmentTreeRoot, InstanceSegment selectedInstanceSegment, Message m) {
 		String segmentStr = selectedInstanceSegment.getLineStr();
-		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = m
-				.getSegments().findOneSegmentById(
-						selectedInstanceSegment.getSegmentRef().getRef());
+		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = m.getSegments().findOneSegmentById(selectedInstanceSegment.getSegmentRef().getRef());
 
 		if (segment.getName().equals("MSH")) {
-			segmentStr = "MSH|FieldSeperator|Encoding|"
-					+ segmentStr.substring(9);
+			segmentStr = "MSH|FieldSeperator|Encoding|" + segmentStr.substring(9);
 		}
-
+		
 		String[] wholeFieldStr = segmentStr.split("\\|");
-		String obx5DTStr = "";
+		
+		
+		if(segment.getDynamicMappings() != null && segment.getDynamicMappings().size() > 0){
+			for(DynamicMapping dm:segment.getDynamicMappings()){
+				for(Mapping mapping:dm.getMappings()){
+					Integer position = mapping.getPosition();
+					Integer reference = mapping.getReference();
+					
+					String refereceValue = wholeFieldStr[reference];
+					for(Case c:mapping.getCases()){
+						if(c.getValue().equals(refereceValue)){
+							
+							for(Field field:segment.getFields()){
+								if(field.getPosition().equals(position)){
+									field.setDatatype(c.getDatatype());
+								}
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		
 		if (wholeFieldStr.length > 0) {
 			for (int i = 0; i < segment.getFields().size(); i++) {
 				String[] fieldStr;
@@ -506,6 +546,10 @@ public class ManageInstance implements Serializable {
 
 					Field field = segment.getFields().get(i);
 					
+					
+					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
+						System.out.println(field.getDatatype());
+					}
 					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
 					Table fieldTable = m.getTables().findOneTableById(field.getTable());
 					
@@ -517,25 +561,6 @@ public class ManageInstance implements Serializable {
 					
 					if(fieldPredicate != null && fieldUsage.equals("C")){
 						fieldUsage = fieldUsage + "(" + fieldPredicate.getTrueUsage().name() + "/" + fieldPredicate.getFalseUsage().name() +")";
-					}
-					
-					if (segment.getName().equals("OBX") && field.getPosition() == 2) {
-						obx5DTStr = fieldStr[j];
-					}
-
-					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
-						// TODO OBX Dynamic mapping needed
-						
-						Datatype dynamicFieldDT = m.getDatatypes().findOneDatatypeByLabel(obx5DTStr+"_IZ");
-						
-						if(dynamicFieldDT == null){
-							dynamicFieldDT = m.getDatatypes().findOneDatatypeByBase(obx5DTStr);
-						}
-						if(dynamicFieldDT != null){
-							fieldDT = dynamicFieldDT;
-						}
-						
-						
 					}
 					
 
