@@ -167,7 +167,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		displayColumns.add("Predicate");
 		displayColumns.add("Conf.Statements");
 		
-		selectedDisplayColumns = new String[]{"DT", "Usage", "Cardi.", "Value Set"};
+		selectedDisplayColumns = new String[]{"DT", "Usage"};
 	}
 		
 	public void shareInit(ActionEvent event){
