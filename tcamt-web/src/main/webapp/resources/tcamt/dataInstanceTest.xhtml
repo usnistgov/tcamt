@@ -511,12 +511,12 @@
 										fileName="#{dataInstanceTestPlanRequestBean.jurorDocumentPDFFileName}" />
 								</p:tab>
 
-								<p:tab title="Validation"
+								<!-- <p:tab title="Validation"
 									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<tcamt:htmlValidationReportViewer
 										bean="#{dataInstanceTestPlanRequestBean}"
 										panelId=":#{p:component('dashboard')}" />
-								</p:tab>
+								</p:tab> -->
 							</p:tabView>
 							<p:tabView
 								rendered="#{dataInstanceTestPlanRequestBean.selectedTestCase != null}">

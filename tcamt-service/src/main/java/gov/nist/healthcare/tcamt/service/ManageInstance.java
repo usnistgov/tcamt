@@ -38,6 +38,7 @@ import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.w3c.dom.Document;
@@ -545,11 +546,6 @@ public class ManageInstance implements Serializable {
 					String usageList = selectedInstanceSegment.getUsageList() + "-" + segment.getFields().get(i).getUsage().name();
 
 					Field field = segment.getFields().get(i);
-					
-					
-					if (segment.getName().equals("OBX") && field.getPosition() == 5) {
-						System.out.println(field.getDatatype());
-					}
 					Datatype fieldDT = m.getDatatypes().findOne(field.getDatatype());
 					Table fieldTable = m.getTables().findOneTableById(field.getTable());
 					
@@ -1549,6 +1545,46 @@ public class ManageInstance implements Serializable {
 
 	}
 	
+	public String modifyFormIPath(String iPath){
+		String result = "";
+		
+		if(iPath == null || iPath.equals("")) return result;
+		
+		
+		String[] pathList = iPath.split("\\.");
+
+		String currentType = "GroupOrSegment";
+		String previousType = "GroupOrSegment";
+		
+		for(String p:pathList){
+			String path = p.substring(0,p.indexOf("["));
+			int instanceNum =Integer.parseInt(p.substring(p.indexOf("[") + 1 , p.indexOf("]")));
+			
+			if(StringUtils.isNumeric(path)){
+				currentType = "FieldOrComponent";
+			}else {
+				currentType = "GroupOrSegment";
+			}
+			
+			if(instanceNum == 1){
+				if(currentType.equals("FieldOrComponent") && previousType.equals("GroupOrSegment")){
+					result = result + "-" + path;
+				}else{
+					result = result + "." + path;
+				}
+			}else {
+				if(currentType.equals("FieldOrComponent") && previousType.equals("GroupOrSegment")){
+					result = result + "-" + path + "[" + instanceNum + "]";
+				}else{
+					result = result + "." + path + "[" + instanceNum + "]";
+				}
+			}
+			
+			previousType = currentType;
+		}
+		return result.substring(1);
+	}
+	
 	private String findNodeNameByIPath(Message m, String iPositionPath){
 		
 		List<?> currentChildren = m.getMessageObj().getChildren();
@@ -1661,7 +1697,7 @@ public class ManageInstance implements Serializable {
 	private void createStringListTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + data);
+		c.setDescription("Invalid content (based on test case fixed data). The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + data);
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1682,7 +1718,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + values));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match one of the expected values: " + values));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmStringList = parent.getOwnerDocument().createElement("StringList");
 		elmStringList.setAttribute("Path", iPositionPath);
@@ -1700,7 +1736,7 @@ public class ManageInstance implements Serializable {
 	private void createLengthTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("Content does not meet the minimum length requirement. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + data.length() + "' characters.");
+		c.setDescription("Content does not meet the minimum length requirement. The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + data.length() + "' characters.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1721,7 +1757,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Content does not meet the minimum length requirement. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + value.length() + "' characters."));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Content does not meet the minimum length requirement. The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be at minimum '" + value.length() + "' characters."));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmFormat = parent.getOwnerDocument().createElement("Format");
 		elmFormat.setAttribute("Path", iPositionPath);
@@ -1735,7 +1771,7 @@ public class ManageInstance implements Serializable {
 	private void createPlainTextTree(String data, String iPositionPath, String iPath, TreeNode parent, Message m) {
 		Constraint c = new Constraint();
 		c.setData(data);
-		c.setDescription("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + data + "'.");
+		c.setDescription("Invalid content (based on test case fixed data). The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + data + "'.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1756,7 +1792,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + value + "'."));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Invalid content (based on test case fixed data). The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") does not match the expected value: '" + value + "'."));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
 		elmPlainText.setAttribute("Path", iPositionPath);
@@ -1770,7 +1806,7 @@ public class ManageInstance implements Serializable {
 	
 	private void createNonPresenceTree(String iPositionPath, String iPath, TreeNode parent, Message m){
 		Constraint c = new Constraint();
-		c.setDescription("Unexpected content found. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case.");
+		c.setDescription("Unexpected content found. The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case.");
 		c.setId("TCAMT");
 		c.setIpath(iPath);
 		c.setiPositionPath(iPositionPath);
@@ -1790,7 +1826,7 @@ public class ManageInstance implements Serializable {
 		elmConstraint.setAttribute("ID", "TCA-" + counter);
 		elmConstraint.setAttribute("Target", iPositionPath);
 		Element elmDescription = parent.getOwnerDocument().createElement("Description");
-		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Unexpected content found. The value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case."));
+		elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Unexpected content found. The value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is not expected to be valued for test case."));
 		Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 		Element elmPresence = parent.getOwnerDocument().createElement("Presence");
 		Element elmNOT = parent.getOwnerDocument().createElement("NOT");
@@ -1813,7 +1849,7 @@ public class ManageInstance implements Serializable {
 		}
 		if(!usageCheck){
 			Constraint c = new Constraint();
-			c.setDescription("Expected content is missing. The empty value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present.");
+			c.setDescription("Expected content is missing. The empty value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present.");
 			c.setId("TCAMT");
 			c.setIpath(iPath);
 			c.setiPositionPath(iPositionPath);
@@ -1874,7 +1910,7 @@ public class ManageInstance implements Serializable {
 			elmConstraint.setAttribute("ID", "TCA-" + counter);
 			elmConstraint.setAttribute("Target", iPositionPath);
 			Element elmDescription = parent.getOwnerDocument().createElement("Description");
-			elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + iPath + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present."));
+			elmDescription.appendChild(parent.getOwnerDocument().createTextNode("Expected content is missing. The empty value at " + this.modifyFormIPath(iPath) + "("+ this.findNodeNameByIPath(m, iPositionPath) +") is expected to be present."));
 			Element elmAssertion = parent.getOwnerDocument().createElement("Assertion");
 			Element elmPresence = parent.getOwnerDocument().createElement("Presence");
 			elmPresence.setAttribute("Path", iPositionPath);

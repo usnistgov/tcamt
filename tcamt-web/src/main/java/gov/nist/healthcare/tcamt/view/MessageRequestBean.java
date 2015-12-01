@@ -893,5 +893,7 @@ public class MessageRequestBean implements Serializable {
 		this.displayColumns = displayColumns;
 	}
 	
-	
+	public String modifyFormIPath(String iPath){
+		return this.manageInstanceService.modifyFormIPath(iPath);
+	}
 }

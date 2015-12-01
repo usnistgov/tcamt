@@ -15,7 +15,7 @@
 <composite:implementation>
 	<p:treeTable var="c" value="#{cc.attrs.bean.constraintTreeRoot}" resizableColumns="true" liveResize="true">
 		<p:column headerText="Path" style="width:30%;">
-			<h:outputText value="#{c.ipath}" />
+			<h:outputText value="#{cc.attrs.bean.modifyFormIPath(c.ipath)}" />
 		</p:column>
 		<p:column headerText="Level" style="width:10%;">
 			<h:outputText value="#{c.level}" rendered="#{c['class'].simpleName == 'TCAMTConstraint'}"/>

@@ -45,7 +45,7 @@
 		
 		<p:ajax event="rowSelect" listener="#{cc.attrs.bean.onInstanceSegmentSelect}" update="#{cc.attrs.panelId}" />
 		<p:column headerText="Path">
-			<h:outputText value="#{instanceSegment.ipath}" width="40%"/>
+			<h:outputText value="#{cc.attrs.bean.modifyFormIPath(instanceSegment.ipath)}" width="40%"/>
 		</p:column>
 		<p:column headerText="Line">
 			<h:outputText value="#{instanceSegment.lineStr}" width="45%"/>

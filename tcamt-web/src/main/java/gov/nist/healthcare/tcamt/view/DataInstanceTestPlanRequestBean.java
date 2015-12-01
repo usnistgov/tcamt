@@ -2814,7 +2814,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			return ipath;
 		}
 		
-		return ipath.replace(this.selectedInstanceSegment.getIpath() + ".", "");
+		return this.modifyFormIPath(ipath.replace(this.selectedInstanceSegment.getIpath() + ".", ""));
 	}
 	
 	
@@ -3158,4 +3158,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	public void setDisplayColumns(List<String> displayColumns) {
 		this.displayColumns = displayColumns;
 	}	
+	
+	public String modifyFormIPath(String iPath){
+		return this.manageInstanceService.modifyFormIPath(iPath);
+	}
 }
