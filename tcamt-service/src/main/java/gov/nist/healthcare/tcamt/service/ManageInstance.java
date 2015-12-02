@@ -1088,6 +1088,10 @@ public class ManageInstance implements Serializable {
 						this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
 					}
 				}
+			}else if(c.getCategorization().equals(TestDataCategorization.NonPresence)){
+				if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
+					this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
+				}
 			}
 				
 			
@@ -1687,6 +1691,10 @@ public class ManageInstance implements Serializable {
 						this.createPresenceTree(usageList, iPositionPath, iPath, cTreeNode, m);
 						this.createStringListTree(c.getData(), iPositionPath, iPath, cTreeNode, m);
 					}
+				}
+			}else if(c.getCategorization().equals(TestDataCategorization.NonPresence)){
+				if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
+					this.createNonPresenceTree(iPositionPath, iPath, cTreeNode, m);
 				}
 			}
 		}
