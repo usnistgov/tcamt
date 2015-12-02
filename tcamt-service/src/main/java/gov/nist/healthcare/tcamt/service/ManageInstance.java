@@ -319,7 +319,7 @@ public class ManageInstance implements Serializable {
 			
 
 			for (Field field : segment.getFields()) {
-				if (!this.isHideForMessageContent(segment, field)) {
+				if (!this.isHideForMessageContentByUsage(segment, field)) {
 					String wholeFieldStr = this.getFieldStrFromSegment(segName, instanceSegment, field.getPosition());
 					int fieldRepeatIndex = 0;
 
@@ -337,11 +337,12 @@ public class ManageInstance implements Serializable {
 						fieldRepeatIndex = fieldRepeatIndex + 1;
 						String fieldiPath = "." + field.getPosition() + "[" + fieldRepeatIndex + "]";
 						if (fieldDT == null || fieldDT.getComponents() == null || fieldDT.getComponents().size() == 0) {
+							String tdcstrOfField = this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath, fieldStr);
 							Element fieldElement = doc.createElement("Field");
 							fieldElement.setAttribute("Location", segName + "." + field.getPosition());
 							fieldElement.setAttribute("DataElement", field.getName());
 							fieldElement.setAttribute("Data", fieldStr);
-							fieldElement.setAttribute("Categrization", this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath, fieldStr));
+							fieldElement.setAttribute("Categrization", tdcstrOfField);
 							segmentElement.appendChild(fieldElement);
 						} else {
 							Element fieldElement = doc.createElement("Field");
@@ -351,14 +352,15 @@ public class ManageInstance implements Serializable {
 
 							for (Component c : fieldDT.getComponents()) {
 								String componentiPath = "." + c.getPosition() + "[1]";
-								if (!this.isHideForMessageContent(fieldDT, c)) {
+								if (!this.isHideForMessageContentByUsage(fieldDT, c)) {
 									String componentStr = this .getComponentStrFromField(fieldStr, c.getPosition());
 									if (m.getDatatypes().findOne(c.getDatatype()).getComponents() == null || m.getDatatypes().findOne(c.getDatatype()).getComponents().size() == 0) {
+										String tdcstrOfComponent = this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath, componentStr);
 										Element componentElement = doc.createElement("Component");
 										componentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition());
 										componentElement.setAttribute("DataElement", c.getName());
 										componentElement.setAttribute("Data", componentStr);
-										componentElement.setAttribute("Categrization", this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath, componentStr));
+										componentElement.setAttribute("Categrization", tdcstrOfComponent);
 										fieldElement.appendChild(componentElement);
 									} else {
 										Element componentElement = doc.createElement("Component");
@@ -367,15 +369,16 @@ public class ManageInstance implements Serializable {
 										fieldElement.appendChild(componentElement);
 											
 										for (Component sc : m.getDatatypes().findOne(c.getDatatype()).getComponents()) {
-											if (!this.isHideForMessageContent(m.getDatatypes().findOne(c.getDatatype()), sc)) {
+											if (!this.isHideForMessageContentByUsage(m.getDatatypes().findOne(c.getDatatype()), sc)) {
 												String subcomponentiPath = "." + sc.getPosition() + "[1]";
 												String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
 
+												String tdcstrOfSubComponent = this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath, subcomponentStr);
 												Element subComponentElement = doc.createElement("SubComponent");
 												subComponentElement.setAttribute("Location", segName + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition());
 												subComponentElement.setAttribute("DataElement", sc.getName());
 												subComponentElement.setAttribute("Data", subcomponentStr);
-												subComponentElement.setAttribute("Categrization", this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath + subcomponentiPath, subcomponentStr));
+												subComponentElement.setAttribute("Categrization", tdcstrOfSubComponent);
 												componentElement.appendChild(subComponentElement);
 											}
 										}
@@ -393,7 +396,7 @@ public class ManageInstance implements Serializable {
 //		System.out.println(m.getXmlEncodedMessageContent());
 	}
 	
-	private boolean isHideForMessageContent(Datatype fieldDT, Component c) {
+	private boolean isHideForMessageContentByUsage(Datatype fieldDT, Component c) {
 		if(c.isHide()) return true;
 		
 		if(c.getUsage().equals(Usage.R)) return false;
@@ -414,7 +417,7 @@ public class ManageInstance implements Serializable {
 		return true;
 	}
 
-	private boolean isHideForMessageContent(Segment segment, Field field) {
+	private boolean isHideForMessageContentByUsage(Segment segment, Field field) {
 		if(field.isHide()) return true;
 		
 		if(field.getUsage().equals(Usage.R)) return false;
@@ -1520,6 +1523,13 @@ public class ManageInstance implements Serializable {
 		for (TCAMTConstraint c : m.getTcamtConstraints()) {
 			if (c.getIpath().equals(iPath)){
 				c.setData(data);
+				if(c.getCategorization().getValue().equals("NonPresence")){
+					c.setData("");
+				}else {
+					if(c.getData() == null || c.getData().equals("")){
+						c.setCategorization(TestDataCategorization.Indifferent);
+					}
+				}
 				return c.getCategorization().getValue();	
 			}
 		}
