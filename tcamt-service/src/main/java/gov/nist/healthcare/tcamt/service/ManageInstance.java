@@ -1599,6 +1599,57 @@ public class ManageInstance implements Serializable {
 		return result.substring(1);
 	}
 	
+	
+	//TODO Will be used for Case Sensitive Setting
+	private String findDTByIPath(Message m, String iPositionPath){
+		
+		List<?> currentChildren = m.getMessageObj().getChildren();
+		Object currentObject = null;
+		
+		String[] pathList = iPositionPath.split("\\.");
+		for(String p:pathList){
+			int position = Integer.parseInt(p.substring(0,p.indexOf("[")));
+			
+			Object o = this.findChildByPosition(position, currentChildren, m);
+			
+			if(o instanceof Group){
+				Group group = (Group)o;
+				currentObject = group;
+				currentChildren = group.getChildren();
+				
+				
+			}else if(o instanceof Segment){
+				Segment s = (Segment)o;
+				currentObject = s;
+				currentChildren = s.getFields();
+			}else if(o instanceof Field){
+				Field f = (Field)o;
+				currentObject = f;
+				currentChildren = m.getDatatypes().findOne(f.getDatatype()).getComponents();
+			}else if(o instanceof Component){
+				Component c = (Component)o;
+				currentObject = c;
+				currentChildren = m.getDatatypes().findOne(c.getDatatype()).getComponents();
+			}
+			
+		}
+		
+		if(currentObject == null){
+			return null;
+		}else if(currentObject instanceof Group){
+			return null;
+		}else if(currentObject instanceof Segment){
+			return null;
+		}else if(currentObject instanceof Field){
+			return m.getDatatypes().findOne(((Field)currentObject).getDatatype()).getName();
+		}else if(currentObject instanceof Component){
+			return m.getDatatypes().findOne(((Component)currentObject).getDatatype()).getName();
+		}
+		
+		return null;
+	}
+
+	
 	private String findNodeNameByIPath(Message m, String iPositionPath){
 		
 		List<?> currentChildren = m.getMessageObj().getChildren();
@@ -1815,7 +1866,7 @@ public class ManageInstance implements Serializable {
 		Element elmPlainText = parent.getOwnerDocument().createElement("PlainText");
 		elmPlainText.setAttribute("Path", iPositionPath);
 		elmPlainText.setAttribute("Text", value);
-		elmPlainText.setAttribute("IgnoreCase", "false");
+		elmPlainText.setAttribute("IgnoreCase", "true");
 		elmAssertion.appendChild(elmPlainText);
 		elmConstraint.appendChild(elmDescription);
 		elmConstraint.appendChild(elmAssertion);
