@@ -1066,7 +1066,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		packageBodyHTML = packageBodyHTML + tp.getLongDescription() + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + "<p>Domain : " + tp.getMetadata().getTestSuiteDomain() + "</p>" + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + "<p>Version : " + tp.getMetadata().getTestSuiteVersion() + "</p>" + System.getProperty("line.separator");
-		packageBodyHTML = packageBodyHTML + "<p>Contact : " + tp.getMetadata().getTestSuiteAdminEmail() + "</p>" + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + "<p>Date : " + tp.getLastUpdateDate() + "</p>" + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
 		
