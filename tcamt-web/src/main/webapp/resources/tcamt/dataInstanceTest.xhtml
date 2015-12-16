@@ -21,7 +21,9 @@
 				title="Data Instance Test Plan List">
 				<table width="100%">
 					<tr>
-						<td align="right"><p:commandButton
+						<td align="right">
+							<p:commandButton value="Import TestPlanJson" icon="ui-icon-plus" oncomplete="PF('importTestPlanJSON').show();" />
+							<p:commandButton
 								update=":#{p:component('DataInstanceTestForm')}"
 								value="Create New TestPlan" icon="ui-icon-plus"
 								actionListener="#{dataInstanceTestPlanRequestBean.createTestPlan}" />
@@ -81,6 +83,12 @@
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" /> 
 						</p:commandButton> -->
+						<p:commandButton value="Export Json" ajax="false"
+							actionListener="#{dataInstanceTestPlanRequestBean.downloadTestPlanJSON(testplan)}"
+							icon="ui-icon-print"
+							update=":#{p:component('growl_DataInstanceTest')}">
+							<p:fileDownload value="#{dataInstanceTestPlanRequestBean.testplanJsonFile}" />
+						</p:commandButton>
 						<p:commandButton value="Delete"
 							actionListener="#{dataInstanceTestPlanRequestBean.deleteTestPlan}"
 							update=":#{p:component('DataInstanceTestForm')}"
@@ -811,6 +819,18 @@
 							onclick="PF('shareDataInstanceTestPlan').hide();" /></td>
 				</tr>
 			</table>
+		</p:dialog>
+	</h:form>
+	
+	
+	<h:form id="importTestPlanJSONForm">
+		<p:dialog id="importTestPlanJSONDialog" header="Import Test Plan Json" widgetVar="importTestPlanJSON">
+			<h:panelGrid columns="2" cellpadding="5">				
+				<h:outputText value="Test Plan JSON file: " />
+				<p:fileUpload fileUploadListener="#{dataInstanceTestPlanRequestBean.importTestPlanJSON}"
+						update=":#{p:component('testplanTable')}" mode="advanced" auto="true" 
+						sizeLimit="100000000" allowTypes="/(\.|\/)(json)$/" oncomplete="PF('importTestPlanJSON').hide();" />
+			</h:panelGrid>
 		</p:dialog>
 	</h:form>
 </composite:implementation>

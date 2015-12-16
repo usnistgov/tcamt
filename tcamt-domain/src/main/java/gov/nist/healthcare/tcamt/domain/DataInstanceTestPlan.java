@@ -18,7 +18,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -32,7 +31,7 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 
 	@Id
     @GeneratedValue
-    @JsonIgnore
+    
 	private long id;
 	
 	private String name;
@@ -41,50 +40,50 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 	@JsonProperty("description")
 	private String longDescription;
 	
-	@JsonIgnore
+	
 	private String lastUpdateDate;
 	
-	@JsonIgnore
+	
 	private Integer version;
 	
-	@JsonIgnore
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditc", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcase_id")} )
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
 	
-	@JsonIgnore
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
     @JoinTable(name = "ditp_ditcg", joinColumns = {@JoinColumn(name="testplan_id")}, inverseJoinColumns = {@JoinColumn(name="testcasegroup_id")} )
 	private Set<DataInstanceTestCaseGroup> testcasegroups = new HashSet<DataInstanceTestCaseGroup>();
 	
-	@JsonIgnore
+	
 	@ManyToOne
     @JoinColumn(name="author_id")
 	private User author;
 	
 	private String type;
 	
-	@JsonIgnore
+	
 	private boolean expanded;
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean selected;
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean changed;
 	
-	@JsonIgnore
+	
 	@Embedded
 	private Metadata metadata = new Metadata();
 	
-	@JsonIgnore
+	
 	@ManyToOne
     @JoinColumn(name="specific_juror_document_id")
 	private JurorDocument specificJurorDocument;
 	
-	@JsonIgnore
+	
 	private boolean jurorDocumentEnable;
 	
 	public long getId() {

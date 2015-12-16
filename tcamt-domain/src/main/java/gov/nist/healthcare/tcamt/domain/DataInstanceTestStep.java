@@ -15,7 +15,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -30,7 +29,7 @@ public class DataInstanceTestStep implements Serializable, Cloneable, Comparable
 
 	@Id
     @GeneratedValue
-    @JsonIgnore
+    
 	private long id;
 	
 	
@@ -43,17 +42,17 @@ public class DataInstanceTestStep implements Serializable, Cloneable, Comparable
 	
 	@OneToOne(fetch=FetchType.EAGER, cascade = {CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="message_id")
-	@JsonIgnore
+	
 	private Message message;
 	
-	@JsonIgnore
+	
 	private Integer version;
 	
 	private int position;
 	
 	
 	@Embedded
-	@JsonIgnore
+	
 	private TestStory testStepStory = new TestStory();
 	
 	
@@ -62,12 +61,12 @@ public class DataInstanceTestStep implements Serializable, Cloneable, Comparable
 	
 	private String type;
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean selected;
 	
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean changed;
 	

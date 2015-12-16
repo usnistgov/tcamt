@@ -42,49 +42,49 @@ public class Message implements Serializable, Cloneable {
 	private String lastUpdateDate;
 	private Integer version;
 
-	@JsonIgnore
+	
 	@Column(columnDefinition="longtext")
 	private String hl7EndcodedMessage;
 	
-	@JsonIgnore
+	
 	@Transient
 	private String xmlEncodedSTDMessage;
 	
-	@JsonIgnore
+	
 	@Transient
 	private String xmlEncodedNISTMessage;
 	
-	@JsonIgnore
+	
 	@Transient
 	private String xmlEncodedMessageContent;
 	
-	@JsonIgnore
+	
 	@ManyToOne
     @JoinColumn(name="conformance_profile_id")
 	private ConformanceProfile conformanceProfile;
 	
-	@JsonIgnore
+	
 	@Transient
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj;
 	
-	@JsonIgnore
+	
 	@Transient
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments segments;
 	
-	@JsonIgnore
+	
 	@Transient
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes datatypes;
 	
-	@JsonIgnore
+	
 	@Transient
 	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables;
 	
-	@JsonIgnore
+	
 	@ManyToOne
     @JoinColumn(name="author_id")
 	private User author;	
 	
-	@JsonIgnore
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "message_tcamtconstraint", joinColumns = {@JoinColumn(name="message_id")}, inverseJoinColumns = {@JoinColumn(name="tcamtConstraint_id")} )
 	private Set<TCAMTConstraint> tcamtConstraints = new HashSet<TCAMTConstraint>();
