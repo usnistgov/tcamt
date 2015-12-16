@@ -319,6 +319,54 @@
 					</tr>
 				</table>
 			</p:tab>
+			<p:tab title="Manage CodeList for Value-Test Case Fixed">
+				<table width="100%">
+					<tr>
+						<td align="right">
+							<p:commandButton
+								value="Create new TestCaseCodeList" icon="ui-icon-plus"
+								update=":#{p:component('editTestCaseCodeListForm')}"
+								actionListener="#{conformanceProfileRequestBean.initNewTestCaseCodeList}"
+								oncomplete="PF('editTestCaseCodeList').show();" />
+						</td>
+					</tr>
+				</table>
+				
+				<p:dataTable var="codeList" value="#{conformanceProfileRequestBean.testCaseCodeLists}">
+					<p:column headerText="Name">
+						<h:outputText value="#{codeList.name}" />
+					</p:column>
+					
+					<p:column headerText="Description">
+						<h:outputText value="#{codeList.description}" />
+					</p:column>
+
+					<p:column headerText="Last Updated">
+						<h:outputText value="#{codeList.lastUpdateDate}" />
+					</p:column>
+
+					<p:column headerText="Action">
+						<p:commandButton value="Edit"
+							actionListener="#{conformanceProfileRequestBean.editTestCaseCodeList}"
+							update=":#{p:component('editTestCaseCodeListForm')}" 
+							icon="ui-icon-pencle"
+							oncomplete="PF('editTestCaseCodeList').show();" 
+							title="Edit">
+							<f:attribute name="codeList" value="#{codeList}" />	
+						</p:commandButton>
+						
+						<p:commandButton value="Del"
+							actionListener="#{conformanceProfileRequestBean.delTestCaseCodeList}"
+							update=":#{p:component('profileForm')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="codeList" value="#{codeList}" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			
+			
+			
+			</p:tab>
 		</p:accordionPanel>
 	</h:form>
 
@@ -701,6 +749,60 @@
 				<tr>
 					<td align="right">
 						<p:commandButton value="Edit" icon="ui-icon-plus" update=":#{p:component('profileForm')}" actionListener="#{conformanceProfileRequestBean.updateJurorDocument}" onclick="PF('editJurorDocument').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="editTestCaseCodeListForm">
+		<p:dialog id="editTestCaseCodeListDialog" header="Edit TestCaseCodeList" widgetVar="editTestCaseCodeList" width="80%" >
+			<h:panelGrid columns="2" cellpadding="5">
+				<h:outputText value="Name: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newTestCaseCodeList.name}" />
+				
+				<h:outputText value="Description: " />
+				<p:inputText value="#{conformanceProfileRequestBean.newTestCaseCodeList.description}" />
+			</h:panelGrid>
+			
+			<p:dataTable id="newTestCaseCodeListTable" var="code" value="#{conformanceProfileRequestBean.newTestCaseCodeList.codes}">
+					<p:column headerText="Name">
+						<h:outputText value="#{code.code}" />
+						
+						<f:facet name="footer">
+                			<p:inputText value="#{conformanceProfileRequestBean.newTestCaseCode.code}" />
+          		 		</f:facet>
+					</p:column>
+					
+					<p:column headerText="Description">
+						<h:outputText value="#{code.description}" />
+						<f:facet name="footer">
+                			<p:inputText value="#{conformanceProfileRequestBean.newTestCaseCode.description}" />
+          		 		</f:facet>
+					</p:column>
+
+					<p:column headerText="Action">						
+						<p:commandButton value="Del"
+							actionListener="#{conformanceProfileRequestBean.delTestCaseCode}"
+							update=":#{p:component('newTestCaseCodeListTable')}" icon="ui-icon-close"
+							title="Del">
+							<f:attribute name="code" value="#{code}" />
+						</p:commandButton>
+						<f:facet name="footer">
+                			<p:commandButton value="Add"
+								actionListener="#{conformanceProfileRequestBean.addTestCaseCode}"
+								update=":#{p:component('newTestCaseCodeListTable')}" icon="ui-icon-plus"
+								title="Del" />
+          		 		</f:facet>
+					</p:column>
+			</p:dataTable>
+			
+			
+			
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Edit" icon="ui-icon-plus" update=":#{p:component('profileForm')}" actionListener="#{conformanceProfileRequestBean.updateTestCaseCodeList}" onclick="PF('editTestCaseCodeList').hide();" />
 					</td>
 				</tr>
 			</table>

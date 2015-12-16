@@ -22,6 +22,7 @@ import gov.nist.healthcare.tcamt.domain.TestStory;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
 import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.TDCGlobalSettingData;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 import gov.nist.healthcare.tcamt.service.ValidationMessage;
@@ -163,6 +164,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private String[] selectedDisplayColumns;   
     private List<String> displayColumns;
+    
+    private TDCGlobalSettingData tdcGlobalSettingData;
     
 	public DataInstanceTestPlanRequestBean() {
 		super();
@@ -688,6 +691,20 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.sessionBeanTCAMT.getDbManager().logInsert(log);
 		}
+	}
+	
+	public void initGlobalTDCSetting(){
+		//TODO
+		System.out.println("SETTING init!!!");
+		this.tdcGlobalSettingData = new TDCGlobalSettingData();
+		System.out.println(this.tdcGlobalSettingData.toString());
+	}
+	
+	public void processGlobalTDCSetting(){
+		//TODO
+		System.out.println("SETTING!!!");
+		System.out.println(this.tdcGlobalSettingData.toString());
+		this.tdcGlobalSettingData = new TDCGlobalSettingData();
 	}
 	
 	public void onNodeSelect(NodeSelectEvent event) {
@@ -3241,6 +3258,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 
 	public void setTestplanJsonFile(StreamedContent testplanJsonFile) {
 		this.testplanJsonFile = testplanJsonFile;
+	}
+
+	public TDCGlobalSettingData getTdcGlobalSettingData() {
+		return tdcGlobalSettingData;
+	}
+
+	public void setTdcGlobalSettingData(TDCGlobalSettingData tdcGlobalSettingData) {
+		this.tdcGlobalSettingData = tdcGlobalSettingData;
 	}
 	
 	
