@@ -1,9 +1,9 @@
 package gov.nist.healthcare.tcamt.service.converter;
 
 import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
+import gov.nist.healthcare.tcamt.domain.TestPlan;
 
-public interface DataInstanceTestCaseConverter {
+public interface TestPlanConverter {
 
 	/**
 	 * 
@@ -11,7 +11,7 @@ public interface DataInstanceTestCaseConverter {
 	 * @return
 	 * @throws ConversionException
 	 */
-	public String toString(DataInstanceTestCase tc) throws ConversionException;
+	public String toString(TestPlan tp) throws ConversionException;
 	
 	/**
 	 * 
@@ -19,5 +19,5 @@ public interface DataInstanceTestCaseConverter {
 	 * @return
 	 * @throws ConversionException
 	 */
-	public DataInstanceTestCase fromString(String tc) throws ConversionException;
+	public TestPlan fromString(String tp) throws ConversionException;
 }

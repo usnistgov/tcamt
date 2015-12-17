@@ -14,27 +14,34 @@ import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.Metadata;
 import gov.nist.healthcare.tcamt.domain.ProfileContainer;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestCase;
+import gov.nist.healthcare.tcamt.domain.TestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.TestPlan;
+import gov.nist.healthcare.tcamt.domain.TestStep;
 import gov.nist.healthcare.tcamt.domain.TestStory;
 import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
 import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.TDCGlobalSettingData;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
 //import gov.nist.healthcare.tcamt.service.ValidationMessage;
 import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestGroupConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
 import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestStepConverter;
 import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
 import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
@@ -79,6 +86,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeCollapseEvent;
 import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -131,14 +139,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private ManageInstance manageInstanceService = new ManageInstance();
 	
 	private transient StreamedContent zipResourceBundleFile;
+	private transient StreamedContent testplanJsonFile;
 	
 	private TestStoryConverter testStoryConverter;
 	private MetadataConverter metadataConverter;
 	private ManualTestStepConverter mtsConverter;
-	private DataInstanceTestStepConverter tsConverter;
-	private DataInstanceTestCaseConverter tcConverter;
-	private DataInstanceTestGroupConverter tgConverter;
-	private DataInstanceTestPlanConverter tpConverter;
+	private TestStepConverter tsConverter;
+	private TestCaseConverter tcConverter;
+	private TestGroupConverter tgConverter;
+	private TestPlanConverter tpConverter;
+	private DataInstanceTestPlanConverter ditpConverter;
 	
 	private String testDataSpecificationHTML;
 	private String jurorDocumentHTML;
@@ -154,6 +164,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	
 	private String[] selectedDisplayColumns;   
     private List<String> displayColumns;
+    
+    private TDCGlobalSettingData tdcGlobalSettingData;
     
 	public DataInstanceTestPlanRequestBean() {
 		super();
@@ -681,6 +693,20 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	public void initGlobalTDCSetting(){
+		//TODO
+		System.out.println("SETTING init!!!");
+		this.tdcGlobalSettingData = new TDCGlobalSettingData();
+		System.out.println(this.tdcGlobalSettingData.toString());
+	}
+	
+	public void processGlobalTDCSetting(){
+		//TODO
+		System.out.println("SETTING!!!");
+		System.out.println(this.tdcGlobalSettingData.toString());
+		this.tdcGlobalSettingData = new TDCGlobalSettingData();
+	}
+	
 	public void onNodeSelect(NodeSelectEvent event) {
 		try{
 			if(event.getTreeNode().getData() instanceof DataInstanceTestPlan){
@@ -901,13 +927,38 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
+	
+	public void importTestPlanJSON(FileUploadEvent event) throws IOException, ConversionException{
+		this.setDitpConverter(new JsonDataInstanceTestPlanConverter());
+		
+		DataInstanceTestPlan importedTestPlan = this.ditpConverter.fromString(IOUtils.toString(event.getFile().getInputstream()));
+		importedTestPlan.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+		
+		this.sessionBeanTCAMT.getDbManager().dataInstanceTestPlanInsert(importedTestPlan);
+		this.sessionBeanTCAMT.updateDataInstanceTestPlans();
+	}
+	
+	public void downloadTestPlanJSON(DataInstanceTestPlan tp) {
+		try{
+			this.setDitpConverter(new JsonDataInstanceTestPlanConverter());
+			String outFilename = tp.getName() + "_" + tp.getLastUpdateDate() + ".json";
+			this.setTestplanJsonFile(new DefaultStreamedContent(this.generateTestPlanJsonRB(tp.clone()), "application/plain", outFilename));
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+	}
+	
 	public void downloadResourceBundleForTestPlan(DataInstanceTestPlan tp) {
 		try{
 			this.setTestStoryConverter(new JsonTestStoryConverter());
-			this.setTpConverter(new JsonDataInstanceTestPlanConverter());
-			this.setTgConverter(new JsonDataInstanceTestGroupConverter());
-			this.setTcConverter(new JsonDataInstanceTestCaseConverter());
-			this.setTsConverter(new JsonDataInstanceTestStepConverter());
+			this.setTpConverter(new JsonTestPlanConverter());
+			this.setTgConverter(new JsonTestGroupConverter());
+			this.setTcConverter(new JsonTestCaseConverter());
+			this.setTsConverter(new JsonTestStepConverter());
 			this.setMtsConverter(new JsonManualTestStepConverter());
 			this.setMetadataConverter(new JsonMetadataConverter());
 			
@@ -2159,7 +2210,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private void generateIsolatedRB(ZipOutputStream out, DataInstanceTestPlan tp) throws Exception {
-		this.generateTestPlanJsonRB(out, tp);
+		TestPlan jsonTestPlan = new TestPlan();
+		jsonTestPlan.setDescription(tp.getLongDescription());
+		jsonTestPlan.setName(tp.getName());
+		jsonTestPlan.setType(tp.getType());
+		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "TestGroup_" + ditg.getPosition();
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
@@ -2224,7 +2279,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	private void generateContextBasedRB(ZipOutputStream out, DataInstanceTestPlan tp) throws Exception {
-		this.generateTestPlanJsonRB(out, tp);
+		TestPlan jsonTestPlan = new TestPlan();
+		jsonTestPlan.setDescription(tp.getLongDescription());
+		jsonTestPlan.setName(tp.getName());
+		jsonTestPlan.setType(tp.getType());
+		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "TestGroup_" + ditg.getPosition();
@@ -2311,7 +2370,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			mts.setPosition(dits.getPosition());
 			inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
 		}else {
-			inTP = IOUtils.toInputStream(this.tsConverter.toString(dits));
+			TestStep jsonTestStep = new TestStep();
+			jsonTestStep.setDescription(dits.getLongDescription());
+			jsonTestStep.setHl7v2(dits.getHl7v2());
+			jsonTestStep.setName(dits.getName());
+			jsonTestStep.setPosition(dits.getPosition());
+			jsonTestStep.setType(dits.getType());
+			
+			inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
 		}
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
@@ -2324,8 +2390,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private void generateTestCaseJsonRB(ZipOutputStream out, DataInstanceTestCase ditc, String testcasePath) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(testcasePath + File.separator + "TestCase.json"));
+		
+		TestCase jsonTestCase = new TestCase();
+		jsonTestCase.setDescription(ditc.getLongDescription());
+		jsonTestCase.setName(ditc.getName());
+		jsonTestCase.setPosition(ditc.getPosition());
 
-		InputStream inTP = IOUtils.toInputStream(this.tcConverter.toString(ditc));
+		InputStream inTP = IOUtils.toInputStream(this.tcConverter.toString(jsonTestCase));
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
             out.write(buf, 0, lenTP);
@@ -2337,7 +2408,13 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	private void generateTestGroupJsonRB(ZipOutputStream out, DataInstanceTestCaseGroup ditg, String groupPath) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(groupPath + File.separator + "TestCaseGroup.json"));
-		InputStream inTP = IOUtils.toInputStream(this.tgConverter.toString(ditg));
+		
+		TestCaseGroup jsonTestCaseGroup = new TestCaseGroup();
+		jsonTestCaseGroup.setDescription(ditg.getLongDescription());
+		jsonTestCaseGroup.setName(ditg.getName());
+		jsonTestCaseGroup.setPosition(ditg.getPosition());
+		
+		InputStream inTP = IOUtils.toInputStream(this.tgConverter.toString(jsonTestCaseGroup));
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
             out.write(buf, 0, lenTP);
@@ -2688,7 +2765,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		return XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 	}
 	
-	private void generateTestPlanJsonRB(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException, ConversionException {
+	private InputStream generateTestPlanJsonRB(DataInstanceTestPlan tp) throws IOException, ConversionException {
+		tp.setAuthor(null);
+		return IOUtils.toInputStream(this.ditpConverter.toString(tp));
+	}
+	
+	private void generateTestPlanJsonRB(ZipOutputStream out, TestPlan tp) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry("TestPlan.json"));
 		InputStream inTP = IOUtils.toInputStream(this.tpConverter.toString(tp));
@@ -2946,22 +3028,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.testStoryConverter = testStoryConverter;
 	}
 
-	public DataInstanceTestCaseConverter getTcConverter() {
-		return tcConverter;
-	}
-
-	public void setTcConverter(DataInstanceTestCaseConverter tcConverter) {
-		this.tcConverter = tcConverter;
-	}
-
-	public DataInstanceTestPlanConverter getTpConverter() {
-		return tpConverter;
-	}
-
-	public void setTpConverter(DataInstanceTestPlanConverter tpConverter) {
-		this.tpConverter = tpConverter;
-	}
-
 	public void setTestplanRoot(TreeNode testplanRoot) {
 		this.testplanRoot = testplanRoot;
 	}
@@ -3070,22 +3136,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		this.metadataConverter = metadataConverter;
 	}
 
-	public DataInstanceTestGroupConverter getTgConverter() {
-		return tgConverter;
-	}
-
-	public void setTgConverter(DataInstanceTestGroupConverter tgConverter) {
-		this.tgConverter = tgConverter;
-	}
-
-	public DataInstanceTestStepConverter getTsConverter() {
-		return tsConverter;
-	}
-
-	public void setTsConverter(DataInstanceTestStepConverter tsConverter) {
-		this.tsConverter = tsConverter;
-	}
-
 	public ManualTestStepConverter getMtsConverter() {
 		return mtsConverter;
 	}
@@ -3161,4 +3211,62 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	public String modifyFormIPath(String iPath){
 		return this.manageInstanceService.modifyFormIPath(iPath);
 	}
+
+	public TestStepConverter getTsConverter() {
+		return tsConverter;
+	}
+
+	public void setTsConverter(TestStepConverter tsConverter) {
+		this.tsConverter = tsConverter;
+	}
+
+	public TestCaseConverter getTcConverter() {
+		return tcConverter;
+	}
+
+	public void setTcConverter(TestCaseConverter tcConverter) {
+		this.tcConverter = tcConverter;
+	}
+
+	public TestGroupConverter getTgConverter() {
+		return tgConverter;
+	}
+
+	public void setTgConverter(TestGroupConverter tgConverter) {
+		this.tgConverter = tgConverter;
+	}
+
+	public TestPlanConverter getTpConverter() {
+		return tpConverter;
+	}
+
+	public void setTpConverter(TestPlanConverter tpConverter) {
+		this.tpConverter = tpConverter;
+	}
+
+	public DataInstanceTestPlanConverter getDitpConverter() {
+		return ditpConverter;
+	}
+
+	public void setDitpConverter(DataInstanceTestPlanConverter ditpConverter) {
+		this.ditpConverter = ditpConverter;
+	}
+
+	public StreamedContent getTestplanJsonFile() {
+		return testplanJsonFile;
+	}
+
+	public void setTestplanJsonFile(StreamedContent testplanJsonFile) {
+		this.testplanJsonFile = testplanJsonFile;
+	}
+
+	public TDCGlobalSettingData getTdcGlobalSettingData() {
+		return tdcGlobalSettingData;
+	}
+
+	public void setTdcGlobalSettingData(TDCGlobalSettingData tdcGlobalSettingData) {
+		this.tdcGlobalSettingData = tdcGlobalSettingData;
+	}
+	
+	
 }

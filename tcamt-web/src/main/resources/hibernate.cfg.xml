@@ -38,5 +38,8 @@
 		<mapping class="gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.TestObject"></mapping>
 		<mapping class="gov.nist.healthcare.tcamt.domain.JurorDocument"></mapping>
+		
+		<mapping class="gov.nist.healthcare.tcamt.domain.TestCaseCodeList"></mapping>
+		<mapping class="gov.nist.healthcare.tcamt.domain.TestCaseCode"></mapping>
 	</session-factory>
 </hibernate-configuration>

@@ -9,6 +9,8 @@ import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Metadata;
 import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TestCaseCode;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.TestObject;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.XMLManager;
@@ -63,6 +65,8 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	private IntegratedProfile newIntegratedProfile = new IntegratedProfile();
 	private JurorDocument newJurorDocument = new JurorDocument();
+	private TestCaseCodeList newTestCaseCodeList = new TestCaseCodeList();
+	private TestCaseCode newTestCaseCode = new TestCaseCode();
 	private ContextFreeTestPlan selectedContextFreeTestPlan = new ContextFreeTestPlan();
 	private ConformanceProfile selectedProfile = null;
 	private IntegratedProfile selectedIntegratedProfile = null;
@@ -109,6 +113,11 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	public void initNewJurorDocument() {
 		this.newJurorDocument = new JurorDocument();
+	}
+	
+	public void initNewTestCaseCodeList() {
+		this.newTestCaseCodeList = new TestCaseCodeList();
+		this.newTestCaseCode = new TestCaseCode();
 	}
 	
 	private void updateConformanceProfile(IntegratedProfile ip) {
@@ -275,6 +284,21 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.newJurorDocument.setJurorDocumentJSON(IOUtils.toString(event.getFile().getInputstream(), "UTF-8"));
 	}
 	
+	public void updateTestCaseCodeList() {
+		if(this.newTestCaseCodeList.getId() == 0){
+			this.newTestCaseCodeList.setAuthor(this.sessionBeanTCAMT.getLoggedUser());
+			this.sessionBeanTCAMT.getDbManager().testCaseCodeListInsert(this.newTestCaseCodeList);
+		}else {
+			this.sessionBeanTCAMT.getDbManager().testCaseCodeListUpdate(this.newTestCaseCodeList);
+		}
+		this.sessionBeanTCAMT.updateTestCaseCodeLists();
+	}
+	
+	public void addTestCaseCode() {
+		this.newTestCaseCodeList.getCodes().add(this.newTestCaseCode);
+		this.newTestCaseCode = new TestCaseCode();
+	}
+	
 	public void addProfile() throws CloneNotSupportedException, IOException {
 		ProfileSerialization ps = new ProfileSerializationImpl();
 		Profile p = ps.deserializeXMLToProfile(this.newIntegratedProfile.getProfile(), this.newIntegratedProfile.getValueSet(), this.newIntegratedProfile.getConstraints());
@@ -400,6 +424,15 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.selectedContextFreeTestPlan.getTestObjects().remove((TestObject) event.getComponent().getAttributes().get("testobject"));
 	}
 	
+	public void delTestCaseCodeList(ActionEvent event) {
+		this.sessionBeanTCAMT.getDbManager().testCaseCodeListDelete((TestCaseCodeList) event.getComponent().getAttributes().get("codeList"));
+		this.sessionBeanTCAMT.updateTestCaseCodeLists();
+	}
+	
+	public void delTestCaseCode(ActionEvent event) {
+		this.newTestCaseCodeList.getCodes().remove((TestCaseCode) event.getComponent().getAttributes().get("code"));
+	}
+	
 	
 	public void delIntegratedProfile(ActionEvent event) {
 		this.sessionBeanTCAMT.getDbManager().integratedProfileDelete((IntegratedProfile) event.getComponent().getAttributes().get("profile"));
@@ -413,6 +446,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	public void editJurorDocument(ActionEvent event) {
 		this.newJurorDocument = (JurorDocument) event.getComponent().getAttributes().get("juror");
+	}
+	
+	public void editTestCaseCodeList(ActionEvent event) {
+		this.newTestCaseCodeList = (TestCaseCodeList)event.getComponent().getAttributes().get("codeList");
 	}
 	
 	public void updateConformanceProfile() {
@@ -649,6 +686,10 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public List<JurorDocument> getJurorDocuments(){
 		return this.sessionBeanTCAMT.getJurorDocuments();
 	}
+	
+	public List<TestCaseCodeList> getTestCaseCodeLists(){
+		return this.sessionBeanTCAMT.getTestCaseCodeLists();
+	}
 
 	public ConformanceProfile getSelectedProfile() {
 		return selectedProfile;
@@ -743,6 +784,22 @@ public class ConformanceProfileRequestBean implements Serializable {
 	
 	public List<DefaultTestDataCategorizationSheet> getDefaultTestDataCategorizationSheets(){
 		return this.sessionBeanTCAMT.getDbManager().getAllDefaultTestDataCategorizationSheets();
+	}
+
+	public TestCaseCodeList getNewTestCaseCodeList() {
+		return newTestCaseCodeList;
+	}
+
+	public void setNewTestCaseCodeList(TestCaseCodeList newTestCaseCodeList) {
+		this.newTestCaseCodeList = newTestCaseCodeList;
+	}
+
+	public TestCaseCode getNewTestCaseCode() {
+		return newTestCaseCode;
+	}
+
+	public void setNewTestCaseCode(TestCaseCode newTestCaseCode) {
+		this.newTestCaseCode = newTestCaseCode;
 	}
 	
 }

@@ -17,7 +17,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
@@ -29,7 +28,7 @@ public class DataInstanceTestCaseGroup implements Serializable, Cloneable, Compa
 	 */
 	private static final long serialVersionUID = -8254402250986054606L;
 
-	@JsonIgnore
+	
 	@Id
 	@GeneratedValue
 	private long id;
@@ -41,25 +40,25 @@ public class DataInstanceTestCaseGroup implements Serializable, Cloneable, Compa
 	private String longDescription;
 	
 	
-	@JsonIgnore
+	
 	private Integer version;
 	
 	private int position;
 
-	@JsonIgnore
+	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
 	@JoinTable(name = "ditcg_ditc", joinColumns = { @JoinColumn(name = "testcasegroup_id") }, inverseJoinColumns = { @JoinColumn(name = "testcase_id") })
 	private Set<DataInstanceTestCase> testcases = new HashSet<DataInstanceTestCase>();
 	
 	
-	@JsonIgnore
+	
 	private boolean expanded;
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean selected;
 	
-	@JsonIgnore
+	
 	@Transient
 	private boolean changed;
 

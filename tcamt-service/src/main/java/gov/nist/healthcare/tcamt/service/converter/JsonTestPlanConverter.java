@@ -2,7 +2,7 @@ package gov.nist.healthcare.tcamt.service.converter;
 
 
 import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.TestPlan;
 
 import java.io.IOException;
 
@@ -10,9 +10,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class JsonDataInstanceTestGroupConverter extends JsonConverter implements DataInstanceTestGroupConverter {
+public class JsonTestPlanConverter extends JsonConverter implements TestPlanConverter {
 
-	public JsonDataInstanceTestGroupConverter() {
+	public JsonTestPlanConverter() {
 		super();
 	}
 
@@ -22,9 +22,9 @@ public class JsonDataInstanceTestGroupConverter extends JsonConverter implements
 	/**
 	 * 
 	 */
-	public String toString(DataInstanceTestCaseGroup group) throws ConversionException {
+	public String toString(TestPlan tp) throws ConversionException {
 		try {
-			String value = mapper.writeValueAsString(group);
+			String value = mapper.writeValueAsString(tp);
 			return value;
 		} catch (JsonProcessingException e) {
 			throw new ConversionException(e);
@@ -35,11 +35,11 @@ public class JsonDataInstanceTestGroupConverter extends JsonConverter implements
 	/**
 	 * 
 	 */
-	public DataInstanceTestCaseGroup fromString(String s) throws ConversionException {
+	public TestPlan fromString(String s) throws ConversionException {
 
 		try {
-			DataInstanceTestCaseGroup group = mapper.readValue(s, DataInstanceTestCaseGroup.class);
-			return group;
+			TestPlan tp = mapper.readValue(s, TestPlan.class);
+			return tp;
 		} catch (JsonParseException e) {
 			throw new ConversionException(e);
 		} catch (JsonMappingException e) {

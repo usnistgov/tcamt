@@ -26,6 +26,7 @@ import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.User;
 
 public class DBImpl implements DBInterface, Serializable {
@@ -844,6 +845,84 @@ public class DBImpl implements DBInterface, Serializable {
 			System.out.println(constraint.getId() + " is using.");
 		}
 		
+	}
+
+	public void testCaseCodeListInsert(TestCaseCodeList t) {
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			t.setLastUpdateDate(dateFormat.format(date));
+			
+			this.currentSession.save(t);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+	}
+
+	public void testCaseCodeListUpdate(TestCaseCodeList t) {
+		try{
+			this.openCurrentSession();
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date = new Date();
+			t.setLastUpdateDate(dateFormat.format(date));
+			this.currentSession.update(t);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		
+	}
+
+	public void testCaseCodeListDelete(TestCaseCodeList t) {
+		try{
+			this.openCurrentSession();
+			this.currentSession.delete(t);
+			this.closeCurrentSession();
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<TestCaseCodeList> getAllTestCaseCodeLists(User author) {
+		try{
+			if (author == null) return null;
+			this.openCurrentSession();
+			Criteria criteria = this.currentSession.createCriteria(TestCaseCodeList.class);
+			criteria.add(Restrictions.eq("author", author));
+			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+			List<TestCaseCodeList> results = (List<TestCaseCodeList>) criteria.list();
+			this.closeCurrentSession();
+			return results;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
+	}
+
+	public TestCaseCodeList getTestCaseCodeListById(long id) {
+		try{
+			this.openCurrentSession();
+			TestCaseCodeList codelist = (TestCaseCodeList)this.currentSession.get(TestCaseCodeList.class, id);
+			this.closeCurrentSession();
+			return codelist;
+		}catch(Exception e){
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.logInsert(log);
+		}
+		return null;
 	}
 	
 }

@@ -2,7 +2,7 @@ package gov.nist.healthcare.tcamt.service.converter;
 
 
 import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
+import gov.nist.healthcare.tcamt.domain.TestStep;
 
 import java.io.IOException;
 
@@ -10,9 +10,9 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-public class JsonDataInstanceTestStepConverter extends JsonConverter implements DataInstanceTestStepConverter {
+public class JsonTestStepConverter extends JsonConverter implements TestStepConverter {
 
-	public JsonDataInstanceTestStepConverter() {
+	public JsonTestStepConverter() {
 		super();
 	}
 
@@ -22,7 +22,7 @@ public class JsonDataInstanceTestStepConverter extends JsonConverter implements 
 	/**
 	 * 
 	 */
-	public String toString(DataInstanceTestStep ts) throws ConversionException {
+	public String toString(TestStep ts) throws ConversionException {
 		try {
 			String value = mapper.writeValueAsString(ts);
 			return value;
@@ -35,10 +35,10 @@ public class JsonDataInstanceTestStepConverter extends JsonConverter implements 
 	/**
 	 * 
 	 */
-	public DataInstanceTestStep fromString(String s) throws ConversionException {
+	public TestStep fromString(String s) throws ConversionException {
 
 		try {
-			DataInstanceTestStep ts = mapper.readValue(s, DataInstanceTestStep.class);
+			TestStep ts = mapper.readValue(s, TestStep.class);
 			return ts;
 		} catch (JsonParseException e) {
 			throw new ConversionException(e);

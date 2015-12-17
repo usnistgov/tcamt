@@ -21,7 +21,9 @@
 				title="Data Instance Test Plan List">
 				<table width="100%">
 					<tr>
-						<td align="right"><p:commandButton
+						<td align="right">
+							<p:commandButton value="Import TestPlanJson" icon="ui-icon-plus" oncomplete="PF('importTestPlanJSON').show();" />
+							<p:commandButton
 								update=":#{p:component('DataInstanceTestForm')}"
 								value="Create New TestPlan" icon="ui-icon-plus"
 								actionListener="#{dataInstanceTestPlanRequestBean.createTestPlan}" />
@@ -81,6 +83,12 @@
 							<p:fileDownload
 								value="#{dataInstanceTestPlanRequestBean.zipResourceBundleFile}" /> 
 						</p:commandButton> -->
+						<p:commandButton value="Export Json" ajax="false"
+							actionListener="#{dataInstanceTestPlanRequestBean.downloadTestPlanJSON(testplan)}"
+							icon="ui-icon-print"
+							update=":#{p:component('growl_DataInstanceTest')}">
+							<p:fileDownload value="#{dataInstanceTestPlanRequestBean.testplanJsonFile}" />
+						</p:commandButton>
 						<p:commandButton value="Delete"
 							actionListener="#{dataInstanceTestPlanRequestBean.deleteTestPlan}"
 							update=":#{p:component('DataInstanceTestForm')}"
@@ -436,9 +444,20 @@
 									</p:scrollPanel>
 								</p:tab>
 
-								<p:tab title="Segments List"
-									rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
+								<p:tab title="Segments List" rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep.message.name != null}">
 									<p:scrollPanel style="width:100%;" mode="native">
+										<table width="100%">
+											<tr>
+												<td align="right">
+													<p:commandButton value="Global TestData Categorization Setting"
+														actionListener="#{dataInstanceTestPlanRequestBean.initGlobalTDCSetting}"
+														update=":#{p:component('globalTDCSettingForm')}" 
+														icon="ui-icon-pencil"
+														oncomplete="PF('globalTDCSetting').show();" 
+														title="Global TestData Categorization Setting"/>
+												</td>
+											</tr>
+										</table>
 										<tcamt:segmentList bean="#{dataInstanceTestPlanRequestBean}"
 											panelId=":#{p:component('dashboard')} :#{p:component('growl_DataInstanceTest')} :#{p:component('testplanTree')}" />
 									</p:scrollPanel>
@@ -811,6 +830,70 @@
 							onclick="PF('shareDataInstanceTestPlan').hide();" /></td>
 				</tr>
 			</table>
+		</p:dialog>
+	</h:form>
+	
+	<h:form id="globalTDCSettingForm">
+		<p:dialog id="globalTDCSettingDialog" header="Set Global TestData Categorization" widgetVar="globalTDCSetting">
+			<h:panelGrid id="globalTDCSettingPanel" columns="2" cellpadding="5">
+				<h:outputText value="Path: " />
+				<p:inputText value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.path}" />
+				
+				<h:outputText value="TestDataCategorization: " />
+				<h:selectOneMenu value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc}" effect="fade" style="width:95%;" >
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Indifferent" itemValue="Indifferent" />
+				
+					<f:selectItem itemLabel="Presence-Content Indifferent" itemValue="Presence_ContentIndifferent" />
+					<f:selectItem itemLabel="Presence-Configuration" itemValue="Presence_Configuration" />
+					<f:selectItem itemLabel="Presence-System Generated" itemValue="Presence_SystemGenerated" />
+					<f:selectItem itemLabel="Presence-Test Case Proper" itemValue="Presence_TestCaseProper" />
+				
+					<f:selectItem itemLabel="Presence Length-Content Indifferent" itemValue="PresenceLength_ContentIndifferent" />
+					<f:selectItem itemLabel="Presence Length-Configuration" itemValue="PresenceLength_Configuration" />
+					<f:selectItem itemLabel="Presence Length-System Generated" itemValue="PresenceLength_SystemGenerated" />
+					<f:selectItem itemLabel="Presence Length-Test Case Proper" itemValue="PresenceLength_TestCaseProper" />
+				
+					<f:selectItem itemLabel="Value-Profile Fixed" itemValue="Value_ProfileFixed" />
+					<f:selectItem itemLabel="Value-Profile Fixed List" itemValue="Value_ProfileFixedList" />
+					<f:selectItem itemLabel="Value-Test Case Fixed" itemValue="Value_TestCaseFixed" />
+					<f:selectItem itemLabel="Value-Test Case Fixed List" itemValue="Value_TestCaseFixedList" />
+				
+					<f:selectItem itemLabel="NonPresence" itemValue="NonPresence" />
+				
+ 					<p:ajax event="change" update=":#{p:component('globalTDCSettingPanel')}" />
+				</h:selectOneMenu>
+				
+				<h:outputText rendered="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc == 'Value_TestCaseFixedList'}" value="CodeList Data: " />
+				<h:selectOneMenu rendered="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc == 'Value_TestCaseFixedList'}" value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.codeList}" effect="fade" style="width:95%;" >
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItems value="#{conformanceProfileRequestBean.testCaseCodeLists}" var="tccl" itemLabel="#{tccl.name}" itemValue="#{tccl}" />
+				</h:selectOneMenu>
+			</h:panelGrid>
+
+			<table width="100%">
+				<tr>
+					<td align="right">
+						<p:commandButton value="Set"
+							icon="ui-icon-plus"
+							update=":#{p:component('DataInstanceTestForm')}"
+							actionListener="#{dataInstanceTestPlanRequestBean.processGlobalTDCSetting}"
+							onclick="PF('globalTDCSetting').hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+	</h:form>
+	
+	
+	<h:form id="importTestPlanJSONForm">
+		<p:dialog id="importTestPlanJSONDialog" header="Import Test Plan Json" widgetVar="importTestPlanJSON">
+			<h:panelGrid columns="2" cellpadding="5">				
+				<h:outputText value="Test Plan JSON file: " />
+				<p:fileUpload fileUploadListener="#{dataInstanceTestPlanRequestBean.importTestPlanJSON}"
+						update=":#{p:component('testplanTable')}" mode="advanced" auto="true" 
+						sizeLimit="100000000" allowTypes="/(\.|\/)(json)$/" oncomplete="PF('importTestPlanJSON').hide();" />
+			</h:panelGrid>
 		</p:dialog>
 	</h:form>
 </composite:implementation>

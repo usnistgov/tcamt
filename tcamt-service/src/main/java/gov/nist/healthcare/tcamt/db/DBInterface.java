@@ -1,7 +1,5 @@
 package gov.nist.healthcare.tcamt.db;
 
-import java.util.List;
-
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
@@ -12,7 +10,10 @@ import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.User;
+
+import java.util.List;
 
 public interface DBInterface {
 	public User isValidUser(User user);
@@ -45,6 +46,12 @@ public interface DBInterface {
 	public void actorDelete(Actor a);
 	public List<Actor> getAllActors(User author);
 	public Actor getActorById(long id);
+	
+	public void testCaseCodeListInsert(TestCaseCodeList t);
+	public void testCaseCodeListUpdate(TestCaseCodeList t);
+	public void testCaseCodeListDelete(TestCaseCodeList t);
+	public List<TestCaseCodeList> getAllTestCaseCodeLists(User author);
+	public TestCaseCodeList getTestCaseCodeListById(long id);
 	
 	public void messageInsert(Message m);
 	public void messageUpdate(Message m);

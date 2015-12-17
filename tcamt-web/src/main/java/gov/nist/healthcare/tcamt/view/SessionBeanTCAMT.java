@@ -9,6 +9,7 @@ import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.User;
 
 import java.io.Serializable;
@@ -40,6 +41,7 @@ public class SessionBeanTCAMT implements Serializable {
 	private List<Actor> actors;
 	private List<Message> messages;
 	private List<DataInstanceTestPlan> dataInstanceTestPlans;
+	private List<TestCaseCodeList> testCaseCodeLists;
 	
 	private int mActiveIndex = 0;
 	private int ditActiveIndex = 0;
@@ -58,6 +60,7 @@ public class SessionBeanTCAMT implements Serializable {
 			this.updateConformanceProfiles();
 			this.updateContextFreeTestPlans();
 			this.updateJurorDocuments();
+			this.updateTestCaseCodeLists();
 		}else if(tabTitle.equals("Actor")){
 			this.updateActors();
 		}else if(tabTitle.equals("Message")){
@@ -102,6 +105,10 @@ public class SessionBeanTCAMT implements Serializable {
 		this.dataInstanceTestPlans = this.dbManager.getAllDataInstanceTestPlans(this.loggedUser);
 	}
 	
+	public void updateTestCaseCodeLists(){
+		this.testCaseCodeLists = this.dbManager.getAllTestCaseCodeLists(this.loggedUser);
+	}
+	
 	public void retriveAllData() {
 		this.updateJurorDocuments();
 		this.updateIntegratedProfiles();
@@ -110,6 +117,7 @@ public class SessionBeanTCAMT implements Serializable {
 		this.updateActors();
 		this.updateMessages();
 		this.updateDataInstanceTestPlans();
+		this.updateTestCaseCodeLists();
 	}
 
 	public List<Actor> getActors() {
@@ -218,6 +226,14 @@ public class SessionBeanTCAMT implements Serializable {
 
 	public void setJurorDocuments(List<JurorDocument> jurorDocuments) {
 		this.jurorDocuments = jurorDocuments;
+	}
+
+	public List<TestCaseCodeList> getTestCaseCodeLists() {
+		return testCaseCodeLists;
+	}
+
+	public void setTestCaseCodeLists(List<TestCaseCodeList> testCaseCodeLists) {
+		this.testCaseCodeLists = testCaseCodeLists;
 	}
 	
 }
