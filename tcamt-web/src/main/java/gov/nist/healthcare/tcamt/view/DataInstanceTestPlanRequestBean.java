@@ -20,7 +20,7 @@ import gov.nist.healthcare.tcamt.domain.data.FieldModel;
 import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
 import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
 import gov.nist.healthcare.tcamt.service.ManageInstance;
-import gov.nist.healthcare.tcamt.service.ValidationMessage;
+//import gov.nist.healthcare.tcamt.service.ValidationMessage;
 import gov.nist.healthcare.tcamt.service.XMLManager;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestCaseConverter;
 import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestGroupConverter;
@@ -2069,14 +2069,14 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	public void er7MessageValidation() throws Exception {
-		
-		ValidationMessage vm = new ValidationMessage();
-		
-		vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
-								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
+//		
+//		ValidationMessage vm = new ValidationMessage();
+//		
+//		vm.er7MessageValidation(this.selectedTestStep.getMessage().getHl7EndcodedMessage(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getProfile(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getConstraints(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getIntegratedProfile().getValueSet(),
+//								this.selectedTestStep.getMessage().getConformanceProfile().getConformanceProfileId());
 	}
 	
 	private void selectTestStep() throws Exception {
