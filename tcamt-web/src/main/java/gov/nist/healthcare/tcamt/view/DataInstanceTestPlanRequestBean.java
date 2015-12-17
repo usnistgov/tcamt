@@ -1,58 +1,5 @@
 package gov.nist.healthcare.tcamt.view;
 
-import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.ManualTestStep;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.Metadata;
-import gov.nist.healthcare.tcamt.domain.ProfileContainer;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.TestCase;
-import gov.nist.healthcare.tcamt.domain.TestCaseGroup;
-import gov.nist.healthcare.tcamt.domain.TestPlan;
-import gov.nist.healthcare.tcamt.domain.TestStep;
-import gov.nist.healthcare.tcamt.domain.TestStory;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.TDCGlobalSettingData;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.service.ManageInstance;
-//import gov.nist.healthcare.tcamt.service.ValidationMessage;
-import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
-import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestCaseConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestGroupConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestStepConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
-
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -97,6 +44,61 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+
+import gov.nist.healthcare.hl7tools.v2.maker.core.ConversionException;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCase;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.DataInstanceTestStep;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.ManualTestStep;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.TestCase;
+import gov.nist.healthcare.tcamt.domain.TestCaseCode;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
+import gov.nist.healthcare.tcamt.domain.TestCaseGroup;
+import gov.nist.healthcare.tcamt.domain.TestPlan;
+import gov.nist.healthcare.tcamt.domain.TestStep;
+import gov.nist.healthcare.tcamt.domain.TestStory;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.TDCGlobalSettingData;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.service.ManageInstance;
+//import gov.nist.healthcare.tcamt.service.ValidationMessage;
+import gov.nist.healthcare.tcamt.service.XMLManager;
+import gov.nist.healthcare.tcamt.service.converter.DataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonDataInstanceTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestStoryConverter;
+import gov.nist.healthcare.tcamt.service.converter.ManualTestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestCaseConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestGroupConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestStepConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestStoryConverter;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments;
 
 @ManagedBean
 @SessionScoped
@@ -694,16 +696,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	public void initGlobalTDCSetting(){
-		//TODO
-		System.out.println("SETTING init!!!");
-		this.tdcGlobalSettingData = new TDCGlobalSettingData();
-		System.out.println(this.tdcGlobalSettingData.toString());
-	}
-	
-	public void processGlobalTDCSetting(){
-		//TODO
-		System.out.println("SETTING!!!");
-		System.out.println(this.tdcGlobalSettingData.toString());
 		this.tdcGlobalSettingData = new TDCGlobalSettingData();
 	}
 	
@@ -1339,6 +1331,84 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		return "" + generateTestStory.subSequence(beginIndex + "<body>".length() , endIndex);
 	}
+	
+	private void createTCAMTConstraint(Object model, long codeListId) {
+		try{
+			String ipath = null;
+			String data = null;
+			String level = "TestCase";
+			String iPosition = null;
+			String messageName = null;
+			String usageList = null;
+			TestDataCategorization tdc = null;
+			
+			if(model instanceof FieldModel){
+				FieldModel fModel = (FieldModel)model;
+				ipath = fModel.getIpath();
+				data = fModel.getData();
+				tdc = fModel.getTdc();
+				iPosition = fModel.getiPositionPath();
+				messageName = fModel.getMessageName();
+				usageList = fModel.getUsageList();
+			}else if(model instanceof ComponentModel){
+				ComponentModel cModel = (ComponentModel)model;
+				ipath = cModel.getIpath();
+				data = cModel.getData();
+				tdc = cModel.getTdc();
+				iPosition = cModel.getiPositionPath();
+				messageName = cModel.getMessageName();
+				usageList = cModel.getUsageList();
+			}
+			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(ipath);
+
+			if(tdc != null && !tdc.getValue().equals("")){
+				TCAMTConstraint tcamtConstraint = new TCAMTConstraint();
+				tcamtConstraint.setCategorization(tdc);
+				if(tdc.equals(TestDataCategorization.Value_TestCaseFixedList)){
+					
+					TestCaseCodeList tccl = this.sessionBeanTCAMT.getDbManager().getTestCaseCodeListById(codeListId);
+					
+					if(tccl != null){
+						String listValueStr = "";
+						
+						for(TestCaseCode tcc:tccl.getCodes()){
+							if(listValueStr.equals("")){
+								listValueStr = listValueStr + "'" + tcc.getCode() + "'";
+							}else{
+								listValueStr = listValueStr + ",'" + tcc.getCode() + "'";
+							}
+						}
+						
+						System.out.println(listValueStr);
+						tcamtConstraint.setData(listValueStr);
+					}else {
+						tcamtConstraint.setData(data);
+					}
+				}else {
+					tcamtConstraint.setData(data);
+				}
+				tcamtConstraint.setIpath(ipath);
+				tcamtConstraint.setLevel(level);
+				tcamtConstraint.setiPosition(iPosition);
+				tcamtConstraint.setMessageName(messageName);
+				tcamtConstraint.setUsageList(usageList);
+				this.selectedTestStep.getMessage().addTCAMTConstraint(tcamtConstraint);
+			}
+			this.constraintTreeRoot = this.manageInstanceService.generateConstraintTree(this.selectedTestStep.getMessage(), this.instanceSegments);
+			this.generateMessageContentHTML();	
+			
+			this.activeIndexOfMessageInstancePanel = 4;
+			
+			this.modifyTestStep();
+		}catch(Exception e){
+			FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage("dataInstanceTestMessage", new FacesMessage(FacesMessage.SEVERITY_FATAL, "FATAL Error", e.toString()));
+			e.printStackTrace();
+			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
+			this.sessionBeanTCAMT.getDbManager().logInsert(log);
+		}
+		
+	}
 
 	public void createTCAMTConstraint(Object model) {
 		try{
@@ -1643,6 +1713,57 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.selectedTestStep.getMessage().deleteTCAMTConstraintByIPath(cModel.getIpath());
 			cModel.setTdc(null);
 		}
+	}
+	
+	public void processGlobalTDCSetting(){
+		String segmentName = this.tdcGlobalSettingData.getPath().substring(0, 3);
+		for(InstanceSegment is:this.instanceSegments){
+			if(segmentName.equals(is.getPath().substring(is.getPath().length() - 3))){
+				String path = this.tdcGlobalSettingData.getPath().replace("-", ".");
+				String[] paths = path.split("\\.");
+				
+				this.segmentTreeRoot = new DefaultTreeNode("root", null);
+				this.manageInstanceService.genSegmentTree(this.segmentTreeRoot, is, this.selectedTestStep.getMessage());
+				
+				for(TreeNode fNode:this.segmentTreeRoot.getChildren()){					
+					if(paths.length == 2){	
+						FieldModel fModel = (FieldModel)fNode.getData();
+						if(fModel.getPath().contains(path)){
+							if(this.tdcGlobalSettingData.getTdc() != null){
+								fModel.setTdc(this.tdcGlobalSettingData.getTdc());
+								this.createTCAMTConstraint(fModel, this.tdcGlobalSettingData.getCodeListId());
+							}
+						}
+					}else if(paths.length > 2){
+						for(TreeNode cNode:fNode.getChildren()){
+							if(paths.length == 3){	
+								ComponentModel cModel = (ComponentModel)cNode.getData();
+								if(cModel.getPath().contains(path)){
+									if(this.tdcGlobalSettingData.getTdc() != null){
+										System.out.println(cModel.getPath());
+										cModel.setTdc(this.tdcGlobalSettingData.getTdc());
+										this.createTCAMTConstraint(cModel, this.tdcGlobalSettingData.getCodeListId());
+									}
+								}
+							}else if(paths.length == 4) {
+								for(TreeNode scNode:cNode.getChildren()){
+									ComponentModel scModel = (ComponentModel)scNode.getData();
+									if(scModel.getPath().contains(path)){
+										if(this.tdcGlobalSettingData.getTdc() != null){
+											scModel.setTdc(this.tdcGlobalSettingData.getTdc());
+											this.createTCAMTConstraint(scModel, this.tdcGlobalSettingData.getCodeListId());
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
+		this.tdcGlobalSettingData = new TDCGlobalSettingData();
 	}
 	
 	public void updateTDC() throws Exception {

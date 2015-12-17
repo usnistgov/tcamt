@@ -1,12 +1,11 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
-
 public class TDCGlobalSettingData {
 
 	private String path;
 	private TestDataCategorization tdc;
-	private TestCaseCodeList codeList;
+	private long codeListId;
+	
 	
 	public String getPath() {
 		return path;
@@ -20,17 +19,14 @@ public class TDCGlobalSettingData {
 	public void setTdc(TestDataCategorization tdc) {
 		this.tdc = tdc;
 	}
-	public TestCaseCodeList getCodeList() {
-		return codeList;
+	public long getCodeListId() {
+		return codeListId;
 	}
-	public void setCodeList(TestCaseCodeList codeList) {
-		this.codeList = codeList;
+	public void setCodeListId(long codeListId) {
+		this.codeListId = codeListId;
 	}
 	@Override
 	public String toString() {
-		return "TDCGlobalSettingData [path=" + path + ", tdc=" + tdc
-				+ ", codeList=" + codeList + "]";
+		return "TDCGlobalSettingData [path=" + path + ", tdc=" + tdc + ", codeListId=" + codeListId + "]";
 	}
-	
-	
 }

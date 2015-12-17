@@ -451,7 +451,7 @@
 												<td align="right">
 													<p:commandButton value="Global TestData Categorization Setting"
 														actionListener="#{dataInstanceTestPlanRequestBean.initGlobalTDCSetting}"
-														update=":#{p:component('globalTDCSettingForm')}" 
+														update=":#{p:component('globalTDCSettingPanel')}" 
 														icon="ui-icon-pencil"
 														oncomplete="PF('globalTDCSetting').show();" 
 														title="Global TestData Categorization Setting"/>
@@ -837,7 +837,9 @@
 		<p:dialog id="globalTDCSettingDialog" header="Set Global TestData Categorization" widgetVar="globalTDCSetting">
 			<h:panelGrid id="globalTDCSettingPanel" columns="2" cellpadding="5">
 				<h:outputText value="Path: " />
-				<p:inputText value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.path}" />
+				<p:inputText value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.path}" >
+					<p:ajax event="blur"/>
+				</p:inputText>
 				
 				<h:outputText value="TestDataCategorization: " />
 				<h:selectOneMenu value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc}" effect="fade" style="width:95%;" >
@@ -865,9 +867,10 @@
 				</h:selectOneMenu>
 				
 				<h:outputText rendered="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc == 'Value_TestCaseFixedList'}" value="CodeList Data: " />
-				<h:selectOneMenu rendered="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc == 'Value_TestCaseFixedList'}" value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.codeList}" effect="fade" style="width:95%;" >
+				<h:selectOneMenu rendered="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.tdc == 'Value_TestCaseFixedList'}" value="#{dataInstanceTestPlanRequestBean.tdcGlobalSettingData.codeListId}" effect="fade" style="width:95%;" >
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{conformanceProfileRequestBean.testCaseCodeLists}" var="tccl" itemLabel="#{tccl.name}" itemValue="#{tccl}" />
+					<f:selectItems value="#{conformanceProfileRequestBean.testCaseCodeLists}" var="tccl" itemLabel="#{tccl.name}" itemValue="#{tccl.id}" />
+					<p:ajax event="change" />
 				</h:selectOneMenu>
 			</h:panelGrid>
 
@@ -876,7 +879,6 @@
 					<td align="right">
 						<p:commandButton value="Set"
 							icon="ui-icon-plus"
-							update=":#{p:component('DataInstanceTestForm')}"
 							actionListener="#{dataInstanceTestPlanRequestBean.processGlobalTDCSetting}"
 							onclick="PF('globalTDCSetting').hide();" />
 					</td>
