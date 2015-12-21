@@ -1370,17 +1370,25 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 					
 					if(tccl != null){
 						String listValueStr = "";
-						
+						List<String> listValues = new ArrayList<String>();
 						for(TestCaseCode tcc:tccl.getCodes()){
 							if(listValueStr.equals("")){
 								listValueStr = listValueStr + "'" + tcc.getCode() + "'";
 							}else{
 								listValueStr = listValueStr + ",'" + tcc.getCode() + "'";
 							}
+							
+							listValues.add(tcc.getCode());
 						}
 						
-						System.out.println(listValueStr);
 						tcamtConstraint.setData(listValueStr);
+						if(model instanceof FieldModel){
+							FieldModel fModel = (FieldModel)model;
+							fModel.setListValues(listValues);
+						}else if(model instanceof ComponentModel){
+							ComponentModel cModel = (ComponentModel)model;
+							cModel.setListValues(listValues);
+						}
 					}else {
 						tcamtConstraint.setData(data);
 					}
@@ -1455,6 +1463,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							listValueStr = listValueStr + ",'" + v + "'";
 						}
 					}
+					
+					System.out.println(listValueStr);
 					tcamtConstraint.setData(listValueStr);
 					
 				}else {
@@ -1740,7 +1750,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 								ComponentModel cModel = (ComponentModel)cNode.getData();
 								if(cModel.getPath().contains(path)){
 									if(this.tdcGlobalSettingData.getTdc() != null){
-										System.out.println(cModel.getPath());
 										cModel.setTdc(this.tdcGlobalSettingData.getTdc());
 										this.createTCAMTConstraint(cModel, this.tdcGlobalSettingData.getCodeListId());
 									}
