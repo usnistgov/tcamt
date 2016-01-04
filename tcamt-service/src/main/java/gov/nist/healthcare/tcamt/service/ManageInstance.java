@@ -1522,10 +1522,12 @@ public class ManageInstance implements Serializable {
 	private String findTestDataCategorizationAndUpdateTestData(Message m, String iPath, String data) {
 		for (TCAMTConstraint c : m.getTcamtConstraints()) {
 			if (c.getIpath().equals(iPath)){
-				c.setData(data);
 				if(c.getCategorization().getValue().equals("NonPresence")){
 					c.setData("");
+				}else if(c.getCategorization().getValue().equals("Value-Test Case Fixed List")){
+					
 				}else {
+					c.setData(data);
 					if(c.getData() == null || c.getData().equals("")){
 						c.setCategorization(TestDataCategorization.Indifferent);
 					}
@@ -1601,8 +1603,8 @@ public class ManageInstance implements Serializable {
 	
 	
 	//TODO Will be used for Case Sensitive Setting
+	@SuppressWarnings("unused")
 	private String findDTByIPath(Message m, String iPositionPath){
-		
 		List<?> currentChildren = m.getMessageObj().getChildren();
 		Object currentObject = null;
 		

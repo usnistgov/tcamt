@@ -1464,7 +1464,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 						}
 					}
 					
-					System.out.println(listValueStr);
+					System.out.println("1111: " + listValueStr);
 					tcamtConstraint.setData(listValueStr);
 					
 				}else {
