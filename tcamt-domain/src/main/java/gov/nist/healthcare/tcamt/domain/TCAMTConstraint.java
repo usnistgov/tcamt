@@ -145,14 +145,6 @@ public class TCAMTConstraint implements Serializable, Cloneable{
 	public void setiPosition(String iPosition) {
 		this.iPosition = iPosition;
 	}
-	
-	public List<String> getTestConstraints(){
-		List<String> result = new ArrayList<String>();
-		result.add("AAAAA");
-		result.add("BBBBB");
-		return result;
-		
-	}
 
 	@Override
 	public String toString() {
@@ -175,7 +167,4 @@ public class TCAMTConstraint implements Serializable, Cloneable{
 			return listData;
 		}
 	}
-	
-	
-	
 }

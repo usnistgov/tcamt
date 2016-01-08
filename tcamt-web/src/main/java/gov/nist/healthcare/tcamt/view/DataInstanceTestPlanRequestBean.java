@@ -2344,6 +2344,8 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setDescription(tp.getLongDescription());
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
+		jsonTestPlan.setTransport(true);
+		
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
 			String groupPath = "TestGroup_" + ditg.getPosition();
@@ -2413,6 +2415,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setDescription(tp.getLongDescription());
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
+		jsonTestPlan.setTransport(false);
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){

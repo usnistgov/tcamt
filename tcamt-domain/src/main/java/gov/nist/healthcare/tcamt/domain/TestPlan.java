@@ -4,6 +4,7 @@ public class TestPlan {
 	private String name;
 	private String description;
 	private String type;
+	private boolean transport;
 	
 	public String getName() {
 		return name;
@@ -22,6 +23,12 @@ public class TestPlan {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public boolean isTransport() {
+		return transport;
+	}
+	public void setTransport(boolean transport) {
+		this.transport = transport;
 	}
 	
 	
