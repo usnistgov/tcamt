@@ -553,6 +553,10 @@ public class ManageInstance implements Serializable {
 					Table fieldTable = m.getTables().findOneTableById(field.getTable());
 					
 					Predicate fieldPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]");
+					if(fieldPredicate == null) {
+						fieldPredicate = this.findPreficateForMessageAndGroup(m.getMessageObj(), path, iPositionPath);
+					}
+					
 					List<ConformanceStatement> fieldConformanceStatements = this.findConformanceStatements(segment.getConformanceStatements(), (i+1) + "[1]");
 					
 					
@@ -581,6 +585,16 @@ public class ManageInstance implements Serializable {
 							Datatype componentDT = m.getDatatypes().findOne(component.getDatatype());
 							Table componentTable = m.getTables().findOneTableById(component.getTable());
 							Predicate componentPredicate = this.findPreficate(fieldDT.getPredicates(), (k+1) + "[1]");
+							
+							if(componentPredicate == null){
+								componentPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]." + (k+1) + "[1]");
+							}
+							
+							if(componentPredicate == null) {
+								componentPredicate = this.findPreficateForMessageAndGroup(m.getMessageObj(), componentPath, componentIPositionPath);
+							}
+							
+							
 							List<ConformanceStatement> componentConformanceStatements = this.findConformanceStatements(fieldDT.getConformanceStatements(), (k+1) + "[1]");
 							if(componentPredicate != null && componentUsage.equals("C")){
 								componentUsage = componentUsage + "(" + componentPredicate.getTrueUsage().name() + "/" + componentPredicate.getFalseUsage().name() +")";
@@ -672,6 +686,20 @@ public class ManageInstance implements Serializable {
 								Datatype subComponentDT = m.getDatatypes().findOne(subComponent.getDatatype());
 								Table subComponentTable = m.getTables().findOneTableById(subComponent.getTable());
 								Predicate subComponentPredicate = this.findPreficate(componentDT.getPredicates(), (l+1) + "[1]");
+								
+								if(subComponentPredicate == null){
+									subComponentPredicate = this.findPreficate(fieldDT.getPredicates(), (k+1) + "[1]." + (l+1) + "[1]");
+								}
+								
+								if(subComponentPredicate == null){
+									subComponentPredicate = this.findPreficate(segment.getPredicates(), (i+1) + "[1]." + (k+1) + "[1]." + (l+1) + "[1]");
+								}
+								
+								if(subComponentPredicate == null) {
+									subComponentPredicate = this.findPreficateForMessageAndGroup(m.getMessageObj(), subComponentPath, subComponentIPositionPath);
+								}
+								
+								
 								List<ConformanceStatement> subComponentConformanceStatements = this.findConformanceStatements(componentDT.getConformanceStatements(), (l+1) + "[1]");
 								
 								if(subComponentPredicate != null && subComponentUsage.equals("C")){
@@ -748,6 +776,53 @@ public class ManageInstance implements Serializable {
 			}
 		}
 
+	}
+
+	private Predicate findPreficateForMessageAndGroup(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj, String path, String iPositionPath) {
+		String groupPath = messageObj.getStructID();
+		String[] paths = path.split("\\.");
+		
+		for(String pathData:paths){
+			groupPath = groupPath + "." + pathData;
+			Group group = this.findGroup(messageObj.getChildren(), groupPath);
+			int depth = groupPath.split("\\.").length -1;
+			String partIPositionPath = "";
+			for(int i=depth; i<paths.length; i++){
+				String s = iPositionPath.split("\\.")[i];
+				s = s.subSequence(0, s.indexOf("[")) + "[1]";
+				partIPositionPath = partIPositionPath + "." + s;
+			}
+			if(group != null){
+				for(Predicate p:group.getPredicates()){
+					if(p.getConstraintTarget().equals(partIPositionPath.substring(1))) return p;
+				}
+			}
+		}
+		for(Predicate p:messageObj.getPredicates()){
+			String partIPositionPath = "";
+			for(int i=0; i<paths.length; i++){
+				String s = iPositionPath.split("\\.")[i];
+				s = s.subSequence(0, s.indexOf("[")) + "[1]";
+				partIPositionPath = partIPositionPath + "." + s;
+			}
+			if(p.getConstraintTarget().equals(partIPositionPath.substring(1))) return p;
+		}
+		return null;
+	}
+
+	private Group findGroup(List<SegmentRefOrGroup> children, String groupPath) {
+		for(SegmentRefOrGroup sog : children){
+			if(sog instanceof Group){
+				Group group = (Group)sog;
+				
+				if(group.getName().equals(groupPath)) return group;
+				
+				if(groupPath.startsWith(group.getName())) {
+					return this.findGroup(group.getChildren(), groupPath);
+				}
+			}
+		}
+		return null;
 	}
 
 	public String generateLineStr(TreeNode segmentTreeRoot) {
@@ -1028,15 +1103,14 @@ public class ManageInstance implements Serializable {
 		doc.appendChild(rootElement);
 
 		Element constraintsElement = doc.createElement("Constraints");
-		Element groupElement = doc.createElement("Group");
-		constraintsElement.appendChild(groupElement);
+		Element messageElement = doc.createElement("Message");
+		constraintsElement.appendChild(messageElement);
 
-		Element elmByName = doc.createElement("ByName");
-		String messageName = null;
+		Element elmByID = doc.createElement("ByID");
+		elmByID.setAttribute("ID", m.getMessageObj().getIdentifier());
 		int counter = 0;
 		
 		for (TCAMTConstraint c : m.getTcamtConstraints()) {
-			messageName = c.getMessageName();
 			String usageList = c.getUsageList();
 			String iPositionPath = c.getiPosition();
 			String iPath = c.getIpath();
@@ -1058,53 +1132,50 @@ public class ManageInstance implements Serializable {
 
 					if (c.getCategorization().equals(TestDataCategorization.Indifferent)) {
 					} else if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-						this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Presence_Configuration)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Presence_ContentIndifferent)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Presence_SystemGenerated)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Presence_TestCaseProper)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_Configuration)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_ContentIndifferent)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_SystemGenerated)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.PresenceLength_TestCaseProper)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createLengthCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixed)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Value_ProfileFixedList)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixed)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createPlainTextCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					} else if (c.getCategorization().equals(TestDataCategorization.Value_TestCaseFixedList)) {
-						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByName, level, counter, m);
-						this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByName, level, counter, m);
+						this.createPresenceCheck(usageList, iPositionPath, iPath, tdc, elmByID, level, counter, m);
+						this.createStringListCheck(c.getData(), iPositionPath, iPath, tdc, elmByID, level, counter, m);
 					}
 				}
 			}else if(c.getCategorization().equals(TestDataCategorization.NonPresence)){
 				if (c.getCategorization().equals(TestDataCategorization.NonPresence)) {
-					this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByName, level, counter, m);
+					this.createNonPresenceCheck(iPositionPath, iPath, tdc, elmByID, level, counter, m);
 				}
 			}
 				
 			
 			
 		}
-		if (messageName != null) {
-			elmByName.setAttribute("Name", messageName);
-			rootElement.appendChild(constraintsElement);
-		}
-		groupElement.appendChild(elmByName);
+		rootElement.appendChild(constraintsElement);
+		messageElement.appendChild(elmByID);
 
 		return XMLManager.docToString(doc);
 	}
