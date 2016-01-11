@@ -319,7 +319,7 @@ public class ManageInstance implements Serializable {
 			
 
 			for (Field field : segment.getFields()) {
-				if (!this.isHideForMessageContentByUsage(segment, field)) {
+				if (!this.isHideForMessageContentByUsage(segment, field, instanceSegment.getPath() + "." + field.getPosition() , instanceSegment.getiPositionPath() + "." + field.getPosition() + "[1]", m.getMessageObj())) {
 					String wholeFieldStr = this.getFieldStrFromSegment(segName, instanceSegment, field.getPosition());
 					int fieldRepeatIndex = 0;
 
@@ -352,7 +352,7 @@ public class ManageInstance implements Serializable {
 
 							for (Component c : fieldDT.getComponents()) {
 								String componentiPath = "." + c.getPosition() + "[1]";
-								if (!this.isHideForMessageContentByUsage(fieldDT, c)) {
+								if (!this.isHideForMessageContentByUsage(fieldDT, c, instanceSegment.getPath() + "." + field.getPosition() + "." + c.getPosition() , instanceSegment.getiPositionPath() + "." + field.getPosition() + "[1]." + c.getPosition() + "[1]", m.getMessageObj())) {
 									String componentStr = this .getComponentStrFromField(fieldStr, c.getPosition());
 									if (m.getDatatypes().findOne(c.getDatatype()).getComponents() == null || m.getDatatypes().findOne(c.getDatatype()).getComponents().size() == 0) {
 										String tdcstrOfComponent = this.findTestDataCategorizationAndUpdateTestData(m, segmentiPath + fieldiPath + componentiPath, componentStr);
@@ -369,7 +369,8 @@ public class ManageInstance implements Serializable {
 										fieldElement.appendChild(componentElement);
 											
 										for (Component sc : m.getDatatypes().findOne(c.getDatatype()).getComponents()) {
-											if (!this.isHideForMessageContentByUsage(m.getDatatypes().findOne(c.getDatatype()), sc)) {
+											if (!this.isHideForMessageContentByUsage(m.getDatatypes().findOne(c.getDatatype()), sc, instanceSegment.getPath() + "." + field.getPosition() + "." + c.getPosition() + "." + sc.getPosition(), instanceSegment.getiPositionPath() + "." + field.getPosition() + "[1]." + c.getPosition() + "[1]." + sc.getPosition() + "[1]", m.getMessageObj())) {
+												
 												String subcomponentiPath = "." + sc.getPosition() + "[1]";
 												String subcomponentStr = this.getSubComponentStrFromField(componentStr, sc.getPosition());
 
@@ -396,7 +397,7 @@ public class ManageInstance implements Serializable {
 //		System.out.println(m.getXmlEncodedMessageContent());
 	}
 	
-	private boolean isHideForMessageContentByUsage(Datatype fieldDT, Component c) {
+	private boolean isHideForMessageContentByUsage(Datatype fieldDT, Component c, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
 		if(c.isHide()) return true;
 		
 		if(c.getUsage().equals(Usage.R)) return false;
@@ -404,6 +405,9 @@ public class ManageInstance implements Serializable {
 		
 		if(c.getUsage().equals(Usage.C)){
 			Predicate p = this.findPreficate(fieldDT.getPredicates(), c.getPosition() + "[1]");
+			if(p == null) {
+				p = this.findPreficateForMessageAndGroup(messageObj, path , iPositionPath);
+			}
 			
 			if(p != null){
 				if(p.getTrueUsage().equals(Usage.R)) return false;
@@ -417,7 +421,7 @@ public class ManageInstance implements Serializable {
 		return true;
 	}
 
-	private boolean isHideForMessageContentByUsage(Segment segment, Field field) {
+	private boolean isHideForMessageContentByUsage(Segment segment, Field field, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
 		if(field.isHide()) return true;
 		
 		if(field.getUsage().equals(Usage.R)) return false;
@@ -425,6 +429,11 @@ public class ManageInstance implements Serializable {
 		
 		if(field.getUsage().equals(Usage.C)){
 			Predicate p = this.findPreficate(segment.getPredicates(), field.getPosition() + "[1]");
+			
+			if(p == null) {
+				p = this.findPreficateForMessageAndGroup(messageObj, path , iPositionPath);
+			}
+			
 			
 			if(p != null){
 				if(p.getTrueUsage().equals(Usage.R)) return false;
