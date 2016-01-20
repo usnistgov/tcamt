@@ -2345,6 +2345,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
 		jsonTestPlan.setTransport(true);
+		jsonTestPlan.setPosition(tp.getPosition());
 		
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
@@ -2352,12 +2353,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
-				this.generateTestCaseJsonRB(out, ditc, testcasePath);
+				this.generateTestCaseJsonRB(out, ditc, testcasePath, tp.getMetadata().getTestSuiteDomain());
 				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-					this.generateTestStepJsonRB(out, dits, teststepPath);
+					this.generateTestStepJsonRB(out, dits, teststepPath, true);
 					this.instanceSegments = new ArrayList<InstanceSegment>();
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2383,11 +2384,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
 			String testcasePath = "TestCase_" +  ditc.getPosition();
 			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
-			this.generateTestCaseJsonRB(out, ditc, testcasePath);
+			this.generateTestCaseJsonRB(out, ditc, testcasePath, tp.getMetadata().getTestSuiteDomain());
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-				this.generateTestStepJsonRB(out, dits, teststepPath);
+				this.generateTestStepJsonRB(out, dits, teststepPath, true);
 				this.instanceSegments = new ArrayList<InstanceSegment>();
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2416,6 +2417,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
 		jsonTestPlan.setTransport(false);
+		jsonTestPlan.setPosition(tp.getPosition());
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
@@ -2423,12 +2425,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			this.generateTestGroupJsonRB(out, ditg, groupPath);
 			for(DataInstanceTestCase ditc:ditg.getTestcases()){
 				String testcasePath = groupPath + File.separator + "TestCase_" + ditc.getPosition();
-				this.generateTestCaseJsonRB(out, ditc, testcasePath);
+				this.generateTestCaseJsonRB(out, ditc, testcasePath, tp.getMetadata().getTestSuiteDomain());
 				this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-					this.generateTestStepJsonRB(out, dits, teststepPath);
+					this.generateTestStepJsonRB(out, dits, teststepPath, false);
 					this.instanceSegments = new ArrayList<InstanceSegment>();
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2454,11 +2456,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		for(DataInstanceTestCase ditc:tp.getTestcases()){
 			String testcasePath = "TestCase_" +  ditc.getPosition();
 			this.generateTestStoryRB(out, ditc.getTestCaseStory(), testcasePath);
-			this.generateTestCaseJsonRB(out, ditc, testcasePath);
+			this.generateTestCaseJsonRB(out, ditc, testcasePath, tp.getMetadata().getTestSuiteDomain());
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-				this.generateTestStepJsonRB(out, dits, teststepPath);
+				this.generateTestStepJsonRB(out, dits, teststepPath, false);
 				this.instanceSegments = new ArrayList<InstanceSegment>();
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2481,7 +2483,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateTestStepJsonRB(ZipOutputStream out, DataInstanceTestStep dits, String teststepPath) throws IOException, ConversionException {
+	private void generateTestStepJsonRB(ZipOutputStream out, DataInstanceTestStep dits, String teststepPath, boolean isIsolated) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(teststepPath + File.separator + "TestStep.json"));
 		
@@ -2495,23 +2497,42 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		InputStream inTP = null;
 		
-		if(dits.getType() != null && dits.getType().contains("MANUAL")){
+		if(isIsolated){
+			if(dits.getType() == null || dits.getType().equals("") || dits.getType().contains("MANUAL")){
+				ManualTestStep mts = new ManualTestStep();
+				mts.setDescription(dits.getLongDescription());
+				mts.setName(dits.getName());
+				if(dits.getType() == null || dits.getType().equals("")){
+					mts.setType("SUT_MANUAL");
+				}else{
+					mts.setType(dits.getType());
+				}
+				mts.setPosition(dits.getPosition());
+				inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
+			}else {
+				TestStep jsonTestStep = new TestStep();
+				jsonTestStep.setDescription(dits.getLongDescription());
+				jsonTestStep.setHl7v2(dits.getHl7v2());
+				jsonTestStep.setName(dits.getName());
+				jsonTestStep.setPosition(dits.getPosition());	
+				jsonTestStep.setType(dits.getType());
+				if(dits.getProtocol() == null || dits.getProtocol().equals("")){
+					jsonTestStep.setProtocol("soap");
+				}else {
+					jsonTestStep.setProtocol(dits.getProtocol());
+				}
+				
+				inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
+			}
+		}else {
 			ManualTestStep mts = new ManualTestStep();
 			mts.setDescription(dits.getLongDescription());
 			mts.setName(dits.getName());
 			mts.setType(dits.getType());
 			mts.setPosition(dits.getPosition());
 			inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
-		}else {
-			TestStep jsonTestStep = new TestStep();
-			jsonTestStep.setDescription(dits.getLongDescription());
-			jsonTestStep.setHl7v2(dits.getHl7v2());
-			jsonTestStep.setName(dits.getName());
-			jsonTestStep.setPosition(dits.getPosition());
-			jsonTestStep.setType(dits.getType());
-			
-			inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
 		}
+		
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
             out.write(buf, 0, lenTP);
@@ -2520,7 +2541,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         inTP.close();
 	}
 
-	private void generateTestCaseJsonRB(ZipOutputStream out, DataInstanceTestCase ditc, String testcasePath) throws IOException, ConversionException {
+	private void generateTestCaseJsonRB(ZipOutputStream out, DataInstanceTestCase ditc, String testcasePath, String domain) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(testcasePath + File.separator + "TestCase.json"));
 		
@@ -2528,6 +2549,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestCase.setDescription(ditc.getLongDescription());
 		jsonTestCase.setName(ditc.getName());
 		jsonTestCase.setPosition(ditc.getPosition());
+		jsonTestCase.setDomain(domain);
 
 		InputStream inTP = IOUtils.toInputStream(this.tcConverter.toString(jsonTestCase));
 		int lenTP;

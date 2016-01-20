@@ -61,6 +61,8 @@ public class DataInstanceTestStep implements Serializable, Cloneable, Comparable
 	
 	private String type;
 	
+	private String protocol;
+	
 	
 	@Transient
 	private boolean selected;
@@ -204,6 +206,14 @@ public class DataInstanceTestStep implements Serializable, Cloneable, Comparable
 	public static void setTestCasePositionComparator(
 			Comparator<DataInstanceTestStep> testCasePositionComparator) {
 		DataInstanceTestStep.testCasePositionComparator = testCasePositionComparator;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 
 	public static Comparator<DataInstanceTestStep> testCasePositionComparator = new Comparator<DataInstanceTestStep>() {

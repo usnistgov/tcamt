@@ -272,6 +272,22 @@
 											<p:ajax event="save" update=":#{p:component('testplanTree')}"
 												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
+										
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											value="Protocol Type: " />
+										<p:inplace
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											editor="true" emptyLabel="No Protocol">
+											<p:selectOneMenu
+												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.protocol}">
+												<f:selectItem itemLabel="Select One" itemValue="" />
+												<f:selectItem itemLabel="SOAP" itemValue="soap" />
+												<f:selectItem itemLabel="REST" itemValue="rest" />
+											</p:selectOneMenu>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
+										</p:inplace>
 
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
@@ -785,8 +801,6 @@
 												listener="#{dataInstanceTestPlanRequestBean.modifyTestPlan}" />
 										</p:inplace>
 
-
-
 										<h:outputText value="Author: " />
 										<h:outputText style="width:500px;"
 											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.author.userId}" />
@@ -794,6 +808,12 @@
 										<h:outputText value="Last Updated: " />
 										<h:outputText style="width:500px;"
 											value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.lastUpdateDate}" />
+
+										<h:outputText value="Display Position: " />
+										<p:inplace editor="true" emptyLabel="No Position">
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.position}" />
+										</p:inplace>
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>

@@ -3,6 +3,7 @@ package gov.nist.healthcare.tcamt.domain;
 public class TestCase {
 	private String name;
 	private String description;
+	private String domain;
 	private int position;
 	
 	public String getName() {
@@ -22,5 +23,11 @@ public class TestCase {
 	}
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	public String getDomain() {
+		return domain;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 }

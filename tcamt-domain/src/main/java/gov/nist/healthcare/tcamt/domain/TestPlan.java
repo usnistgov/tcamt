@@ -5,6 +5,7 @@ public class TestPlan {
 	private String description;
 	private String type;
 	private boolean transport;
+	private int position;
 	
 	public String getName() {
 		return name;
@@ -29,6 +30,12 @@ public class TestPlan {
 	}
 	public void setTransport(boolean transport) {
 		this.transport = transport;
+	}
+	public int getPosition() {
+		return position;
+	}
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
 	

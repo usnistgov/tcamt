@@ -86,6 +86,8 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 	
 	private boolean jurorDocumentEnable;
 	
+	private Integer position;
+	
 	public long getId() {
 		return id;
 	}
@@ -214,5 +216,11 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 	}
 	public void setChanged(boolean changed) {
 		this.changed = changed;
+	}
+	public Integer getPosition() {
+		return position;
+	}
+	public void setPosition(Integer position) {
+		this.position = position;
 	}
 }
