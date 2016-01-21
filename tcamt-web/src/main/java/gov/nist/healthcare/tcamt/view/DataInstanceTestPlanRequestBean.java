@@ -2497,19 +2497,22 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		
 		InputStream inTP = null;
 		
-		if(isIsolated){
-			if(dits.getType() == null || dits.getType().equals("") || dits.getType().contains("MANUAL")){
+		if(isIsolated){				
+			if(dits.getType() == null || dits.getType().equals("")){
 				ManualTestStep mts = new ManualTestStep();
 				mts.setDescription(dits.getLongDescription());
 				mts.setName(dits.getName());
-				if(dits.getType() == null || dits.getType().equals("")){
-					mts.setType("SUT_MANUAL");
-				}else{
-					mts.setType(dits.getType());
-				}
+				mts.setType("SUT_MANUAL");
 				mts.setPosition(dits.getPosition());
 				inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
-			}else {
+			}else if(dits.getType().contains("MANUAL")){
+				ManualTestStep mts = new ManualTestStep();
+				mts.setDescription(dits.getLongDescription());
+				mts.setName(dits.getName());
+				mts.setType(dits.getType());
+				mts.setPosition(dits.getPosition());
+				inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
+			}else{
 				TestStep jsonTestStep = new TestStep();
 				jsonTestStep.setDescription(dits.getLongDescription());
 				jsonTestStep.setHl7v2(dits.getHl7v2());
@@ -2521,17 +2524,27 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				}else {
 					jsonTestStep.setProtocol(dits.getProtocol());
 				}
-				
 				inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
 			}
 		}else {
-			ManualTestStep mts = new ManualTestStep();
-			mts.setDescription(dits.getLongDescription());
-			mts.setName(dits.getName());
-			mts.setType(dits.getType());
-			mts.setPosition(dits.getPosition());
-			inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
+			if(dits.getType() != null && dits.getType().contains("MANUAL")){
+				ManualTestStep mts = new ManualTestStep();
+				mts.setDescription(dits.getLongDescription());
+				mts.setName(dits.getName());
+				mts.setType(dits.getType());
+				mts.setPosition(dits.getPosition());
+				inTP = IOUtils.toInputStream(this.mtsConverter.toString(mts));
+			}else {
+				TestStep jsonTestStep = new TestStep();
+				jsonTestStep.setDescription(dits.getLongDescription());
+				jsonTestStep.setHl7v2(dits.getHl7v2());
+				jsonTestStep.setName(dits.getName());
+				jsonTestStep.setPosition(dits.getPosition());
+				jsonTestStep.setType(dits.getType());
+				inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
+			}
 		}
+
 		
 		int lenTP;
         while ((lenTP = inTP.read(buf)) > 0) {
