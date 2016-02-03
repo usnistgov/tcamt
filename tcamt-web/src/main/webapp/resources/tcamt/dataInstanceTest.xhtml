@@ -721,8 +721,7 @@
 									</h:panelGrid>
 								</p:tab>
 							</p:tabView>
-							<p:tabView
-								rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep == null and dataInstanceTestPlanRequestBean.selectedTestCaseGroup == null and dataInstanceTestPlanRequestBean.selectedTestCase == null}">
+							<p:tabView rendered="#{dataInstanceTestPlanRequestBean.selectedTestStep == null and dataInstanceTestPlanRequestBean.selectedTestCaseGroup == null and dataInstanceTestPlanRequestBean.selectedTestCase == null}">
 								<p:tab title="Test Plan MetaData">
 									<h:panelGrid columns="2" cellpadding="10">
 										<h:outputText value="Name: " />
@@ -813,6 +812,28 @@
 										<p:inplace editor="true" emptyLabel="No Position">
 											<p:inputText style="width:500px;"
 												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.position}" />
+										</p:inplace>
+									</h:panelGrid>
+								</p:tab>
+								
+								<p:tab title="Cover Page Design">
+									<h:panelGrid columns="2" cellpadding="10">
+										<h:outputText value="Title: " />
+										<p:inplace editor="true" emptyLabel="No Title">
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.coverPageTitle}" />
+										</p:inplace>
+										
+										<h:outputText value="Publish Version: " />
+										<p:inplace editor="true" emptyLabel="No Version info">
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.coverPageVersion}" />
+										</p:inplace>
+										
+										<h:outputText value="Published Date " />
+										<p:inplace editor="true" emptyLabel="No Date">
+											<p:inputText style="width:500px;"
+												value="#{dataInstanceTestPlanRequestBean.selectedTestPlan.coverPageDate}" />
 										</p:inplace>
 									</h:panelGrid>
 								</p:tab>

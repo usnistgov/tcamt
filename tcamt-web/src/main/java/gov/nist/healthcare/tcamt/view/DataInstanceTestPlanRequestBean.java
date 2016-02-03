@@ -961,7 +961,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			ZipOutputStream out = new ZipOutputStream(outputStream);
 			
 			this.generateTestPackage(out, tp);
-			this.generateQuickTestCaseReferenceGuide(out, tp);
+			this.generateTestPlanSummary(out, tp);
 			
 			if(tp.getType() != null && tp.getType().equals("Isolated")){
 				this.generateIsolatedRB(out, tp);
@@ -984,11 +984,11 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 	}
 	
 	
-	private void generateQuickTestCaseReferenceGuide(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException{
+	private void generateTestPlanSummary(ZipOutputStream out, DataInstanceTestPlan tp) throws IOException{
 		ClassLoader classLoader = getClass().getClassLoader();
-		String quickTestCaseReferenceGuideStr = IOUtils.toString(classLoader.getResourceAsStream("QuickTestCaseReferenceGuide.html"));
+		String testPlanSummaryStr = IOUtils.toString(classLoader.getResourceAsStream("TestPlanSummary.html"));
 		
-		quickTestCaseReferenceGuideStr = quickTestCaseReferenceGuideStr.replace("?TestPlanName?", tp.getName());
+		testPlanSummaryStr = testPlanSummaryStr.replace("?TestPlanName?", tp.getName());
 		
 		
 		HashMap<Integer, Object>  testPlanMap = new HashMap<Integer, Object>();
@@ -1089,17 +1089,17 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			}
 		}
 		
-		quickTestCaseReferenceGuideStr = quickTestCaseReferenceGuideStr.replace("?contentsHTML?", contentsHTML);
+		testPlanSummaryStr = testPlanSummaryStr.replace("?contentsHTML?", contentsHTML);
 		
 		byte[] buf = new byte[1024];
-		out.putNextEntry(new ZipEntry("QuickTestCaseReferenceGuide.html"));
-		InputStream inQuickTestCaseReferenceGuide = IOUtils.toInputStream(quickTestCaseReferenceGuideStr);
-		int lenQuickTestCaseReferenceGuide;
-        while ((lenQuickTestCaseReferenceGuide = inQuickTestCaseReferenceGuide.read(buf)) > 0) {
-            out.write(buf, 0, lenQuickTestCaseReferenceGuide);
+		out.putNextEntry(new ZipEntry("TestPlanSummary.html"));
+		InputStream inTestPlanSummary = IOUtils.toInputStream(testPlanSummaryStr);
+		int lenTestPlanSummary;
+        while ((lenTestPlanSummary = inTestPlanSummary.read(buf)) > 0) {
+            out.write(buf, 0, lenTestPlanSummary);
         }
         out.closeEntry();
-        inQuickTestCaseReferenceGuide.close();
+        inTestPlanSummary.close();
 		
 	}
 	
@@ -1107,9 +1107,9 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		String packageBodyHTML= "";
 		packageBodyHTML = packageBodyHTML + "<h1>" + tp.getName() + "</h1>" + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + tp.getLongDescription() + System.getProperty("line.separator");
-		packageBodyHTML = packageBodyHTML + "<p>Domain : " + tp.getMetadata().getTestSuiteDomain() + "</p>" + System.getProperty("line.separator");
-		packageBodyHTML = packageBodyHTML + "<p>Version : " + tp.getMetadata().getTestSuiteVersion() + "</p>" + System.getProperty("line.separator");
-		packageBodyHTML = packageBodyHTML + "<p>Date : " + tp.getLastUpdateDate() + "</p>" + System.getProperty("line.separator");
+//		packageBodyHTML = packageBodyHTML + "<p>Domain : " + tp.getMetadata().getTestSuiteDomain() + "</p>" + System.getProperty("line.separator");
+//		packageBodyHTML = packageBodyHTML + "<p>Version : " + tp.getMetadata().getTestSuiteVersion() + "</p>" + System.getProperty("line.separator");
+//		packageBodyHTML = packageBodyHTML + "<p>Date : " + tp.getLastUpdateDate() + "</p>" + System.getProperty("line.separator");
 		packageBodyHTML = packageBodyHTML + "<p style=\"page-break-after:always;\"></p>";
 		
 		HashMap<Integer, Object>  testPlanMap = new HashMap<Integer, Object>();
@@ -1310,6 +1310,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 		ClassLoader classLoader = getClass().getClassLoader();
 		String testPackageStr = IOUtils.toString(classLoader.getResourceAsStream("TestPackage.html"));
+		String coverpageStr = IOUtils.toString(classLoader.getResourceAsStream("CoverPage.html"));
 		testPackageStr = testPackageStr.replace("?bodyContent?", packageBodyHTML);
 		
 		byte[] buf = new byte[1024];
@@ -1321,6 +1322,16 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
         }
         out.closeEntry();
         inTestPackage.close();
+        
+        buf = new byte[1024];
+		out.putNextEntry(new ZipEntry("CoverPage.html"));
+		InputStream inCoverPage = IOUtils.toInputStream(coverpageStr);
+		int lenCoverPage;
+        while ((lenCoverPage = inCoverPage.read(buf)) > 0) {
+            out.write(buf, 0, lenCoverPage);
+        }
+        out.closeEntry();
+        inCoverPage.close();
 	}
 
 	private String retrieveBodyContent(String generateTestStory) {
