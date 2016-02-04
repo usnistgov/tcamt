@@ -1313,10 +1313,31 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		String coverpageStr = IOUtils.toString(classLoader.getResourceAsStream("CoverPage.html"));
 		
 		testPackageStr = testPackageStr.replace("?bodyContent?", packageBodyHTML);
-		coverpageStr = coverpageStr.replace("?title?", tp.getCoverPageTitle());
-		coverpageStr = coverpageStr.replace("?version?", tp.getCoverPageVersion());
-		coverpageStr = coverpageStr.replace("?date?", tp.getCoverPageDate());
 		
+		if(tp.getCoverPageTitle() == null || tp.getCoverPageTitle().equals("")){
+			coverpageStr = coverpageStr.replace("?title?", "No Title");
+		}else{
+			coverpageStr = coverpageStr.replace("?title?", tp.getCoverPageTitle());
+		}
+		
+		if(tp.getCoverPageSubTitle() == null || tp.getCoverPageSubTitle().equals("")){
+			coverpageStr = coverpageStr.replace("?subtitle?", "No SubTitle");
+		}else{
+			coverpageStr = coverpageStr.replace("?subtitle?", tp.getCoverPageSubTitle());
+		}
+		
+		
+		if(tp.getCoverPageVersion() == null || tp.getCoverPageVersion().equals("")){
+			coverpageStr = coverpageStr.replace("?version?", "No Version");
+		}else{
+			coverpageStr = coverpageStr.replace("?version?", tp.getCoverPageVersion());
+		}
+		
+		if(tp.getCoverPageDate() == null || tp.getCoverPageDate().equals("")){
+			coverpageStr = coverpageStr.replace("?date?", "No Date");
+		}else{
+			coverpageStr = coverpageStr.replace("?date?", tp.getCoverPageDate());
+		}
 		
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry("TestPackage.html"));
@@ -2361,7 +2382,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
 		jsonTestPlan.setTransport(true);
-		jsonTestPlan.setPosition(tp.getPosition());
+		if(tp.getPosition() == null){
+			jsonTestPlan.setPosition(0);
+		}else {
+			jsonTestPlan.setPosition(tp.getPosition());
+		}
+		
 		
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){
@@ -2433,7 +2459,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestPlan.setName(tp.getName());
 		jsonTestPlan.setType(tp.getType());
 		jsonTestPlan.setTransport(false);
-		jsonTestPlan.setPosition(tp.getPosition());
+		
+		if(tp.getPosition() == null){
+			jsonTestPlan.setPosition(0);
+		}else {
+			jsonTestPlan.setPosition(tp.getPosition());
+		}
 		this.generateTestPlanJsonRB(out, jsonTestPlan);
 		
 		for(DataInstanceTestCaseGroup ditg:tp.getTestcasegroups()){

@@ -45,6 +45,7 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 	
 	
 	private String coverPageTitle;
+	private String coverPageSubTitle;
 	private String coverPageVersion;
 	private String coverPageDate;
 	
@@ -245,5 +246,11 @@ public class DataInstanceTestPlan implements Serializable, Cloneable {
 	}
 	public void setCoverPageDate(String coverPageDate) {
 		this.coverPageDate = coverPageDate;
+	}
+	public String getCoverPageSubTitle() {
+		return coverPageSubTitle;
+	}
+	public void setCoverPageSubTitle(String coverPageSubTitle) {
+		this.coverPageSubTitle = coverPageSubTitle;
 	}
 }
