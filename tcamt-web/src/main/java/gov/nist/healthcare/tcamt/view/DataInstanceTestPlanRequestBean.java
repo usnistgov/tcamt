@@ -1311,7 +1311,12 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		ClassLoader classLoader = getClass().getClassLoader();
 		String testPackageStr = IOUtils.toString(classLoader.getResourceAsStream("TestPackage.html"));
 		String coverpageStr = IOUtils.toString(classLoader.getResourceAsStream("CoverPage.html"));
+		
 		testPackageStr = testPackageStr.replace("?bodyContent?", packageBodyHTML);
+		coverpageStr = coverpageStr.replace("?title?", tp.getCoverPageTitle());
+		coverpageStr = coverpageStr.replace("?version?", tp.getCoverPageVersion());
+		coverpageStr = coverpageStr.replace("?date?", tp.getCoverPageDate());
+		
 		
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry("TestPackage.html"));
