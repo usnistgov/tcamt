@@ -159,7 +159,7 @@ public class TCAMTConstraint implements Serializable, Cloneable{
 	public List<String> getListData() {
 		if(this.data == null || data.equals("")) return new ArrayList<String>();
 		
-		if(this.data.contains("','")) return Arrays.asList(this.data.substring(1, this.data.length()-1).split("','"));
+		if(this.data.contains("','")) return new ArrayList<String>(Arrays.asList(this.data.substring(1, this.data.length()-1).split("','")));
 		else {
 			List<String> listData = new ArrayList<String>();
 			listData.add(this.data);
