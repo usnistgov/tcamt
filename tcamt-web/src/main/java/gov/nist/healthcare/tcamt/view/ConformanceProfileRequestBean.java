@@ -127,7 +127,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 					ProfileSerialization ps = new ProfileSerializationImpl();
 					Profile p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(), ip.getConstraints());
 					
-					ip.setProfileIdentifier(p.getMetaData().getIdentifier());
+					ip.setProfileIdentifier(p.getMetaData().getProfileID());
 					
 					for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message:p.getMessages().getChildren()){
 						ConformanceProfile cp = this.findConformanceProfile(message.getIdentifier());
@@ -302,14 +302,14 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void addProfile() throws CloneNotSupportedException, IOException {
 		ProfileSerialization ps = new ProfileSerializationImpl();
 		Profile p = ps.deserializeXMLToProfile(this.newIntegratedProfile.getProfile(), this.newIntegratedProfile.getValueSet(), this.newIntegratedProfile.getConstraints());
-		this.newIntegratedProfile.setProfileIdentifier(p.getMetaData().getIdentifier());
+		this.newIntegratedProfile.setProfileIdentifier(p.getMetaData().getProfileID());
 		
 		this.sessionBeanTCAMT.getDbManager().integratedProfileInsert(this.newIntegratedProfile);
 		for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message:p.getMessages().getChildren()){
 			ConformanceProfile newCP = new ConformanceProfile();
 			
 			newCP.setIntegratedProfile(this.newIntegratedProfile);
-			newCP.setConformanceProfileId(message.getIdentifier());
+			newCP.setConformanceProfileId(message.getMessageID());
 			newCP.setValueSetLibraryId(p.getTables().getValueSetLibraryIdentifier());
 			newCP.setConstraintId(p.getConstraintId());
 			newCP.setName(message.getStructID() + "[" + this.newIntegratedProfile.getName() + "]" + "[" + message.getIdentifier() + "]");
@@ -455,7 +455,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 	public void updateConformanceProfile() {
 		ProfileSerialization ps = new ProfileSerializationImpl();
 		Profile p = ps.deserializeXMLToProfile(this.selectedProfile.getIntegratedProfile().getProfile(), this.selectedProfile.getIntegratedProfile().getValueSet(), this.selectedProfile.getIntegratedProfile().getConstraints());
-		this.selectedProfile.getIntegratedProfile().setProfileIdentifier(p.getMetaData().getIdentifier());
+		this.selectedProfile.getIntegratedProfile().setProfileIdentifier(p.getMetaData().getProfileID());
 		
 		this.selectedProfile.setConformanceProfileId(conformanceProfileId);
 		this.selectedProfile.setConstraintId(p.getConstraintId());
