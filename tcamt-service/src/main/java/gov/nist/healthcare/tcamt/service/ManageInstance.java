@@ -1,32 +1,5 @@
 package gov.nist.healthcare.tcamt.service;
 
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.Constraint;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Case;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.DynamicMapping;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Mapping;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -45,6 +18,32 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.Constraint;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Case;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Mapping;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
+import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
 
 public class ManageInstance implements Serializable {
 	
@@ -290,33 +289,26 @@ public class ManageInstance implements Serializable {
 			segmentElement.setAttribute("Description", segDesc);
 			segmentElement.setAttribute("InstancePath", instanceSegment.getIpath());
 			rootElement.appendChild(segmentElement);
-			
-			
-			
-			if(segment.getDynamicMappings() != null && segment.getDynamicMappings().size() > 0){
-				for(DynamicMapping dm:segment.getDynamicMappings()){
-					for(Mapping mapping:dm.getMappings()){
-						Integer position = mapping.getPosition();
-						Integer reference = mapping.getReference();
-						
-						String refereceValue =  this.getFieldStrFromSegment(segName, instanceSegment, reference);
-						
-						for(Case c:mapping.getCases()){
-							if(c.getValue().equals(refereceValue)){
-								
-								for(Field field:segment.getFields()){
-									if(field.getPosition().equals(position)){
-										field.setDatatype(c.getDatatype());
-									}
+
+			if(segment.getDynamicMapping() != null){
+				for(Mapping mapping:segment.getDynamicMapping().getMappings()){
+					Integer position = mapping.getPosition();
+					Integer reference = mapping.getReference();
+					
+					String refereceValue =  this.getFieldStrFromSegment(segName, instanceSegment, reference);
+					
+					for(Case c:mapping.getCases()){
+						if(c.getValue().equals(refereceValue)){
+							
+							for(Field field:segment.getFields()){
+								if(field.getPosition().equals(position)){
+									field.setDatatype(c.getDatatype());
 								}
 							}
 						}
-						
 					}
 				}
 			}
-			
-			
 
 			for (Field field : segment.getFields()) {
 				if (!this.isHideForMessageContentByUsage(segment, field, instanceSegment.getPath() + "." + field.getPosition() , instanceSegment.getiPositionPath() + "." + field.getPosition() + "[1]", m.getMessageObj())) {
@@ -519,24 +511,21 @@ public class ManageInstance implements Serializable {
 		String[] wholeFieldStr = segmentStr.split("\\|");
 		
 		
-		if(segment.getDynamicMappings() != null && segment.getDynamicMappings().size() > 0){
-			for(DynamicMapping dm:segment.getDynamicMappings()){
-				for(Mapping mapping:dm.getMappings()){
-					Integer position = mapping.getPosition();
-					Integer reference = mapping.getReference();
-					
-					String refereceValue = wholeFieldStr[reference];
-					for(Case c:mapping.getCases()){
-						if(c.getValue().equals(refereceValue)){
-							
-							for(Field field:segment.getFields()){
-								if(field.getPosition().equals(position)){
-									field.setDatatype(c.getDatatype());
-								}
+		if(segment.getDynamicMapping() != null){
+			for(Mapping mapping:segment.getDynamicMapping().getMappings()){
+				Integer position = mapping.getPosition();
+				Integer reference = mapping.getReference();
+				
+				String refereceValue = wholeFieldStr[reference];
+				for(Case c:mapping.getCases()){
+					if(c.getValue().equals(refereceValue)){
+						
+						for(Field field:segment.getFields()){
+							if(field.getPosition().equals(position)){
+								field.setDatatype(c.getDatatype());
 							}
 						}
 					}
-					
 				}
 			}
 		}
