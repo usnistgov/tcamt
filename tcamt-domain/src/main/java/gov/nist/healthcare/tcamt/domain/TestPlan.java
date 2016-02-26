@@ -6,6 +6,7 @@ public class TestPlan {
 	private String type;
 	private boolean transport;
 	private int position;
+	private String domain;
 	
 	public String getName() {
 		return name;
@@ -36,6 +37,12 @@ public class TestPlan {
 	}
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	public String getDomain() {
+		return domain;
+	}
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 	
 	

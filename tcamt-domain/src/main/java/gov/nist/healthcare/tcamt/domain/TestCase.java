@@ -3,8 +3,8 @@ package gov.nist.healthcare.tcamt.domain;
 public class TestCase {
 	private String name;
 	private String description;
-	private String domain;
 	private int position;
+	private String protocol;
 	
 	public String getName() {
 		return name;
@@ -24,10 +24,10 @@ public class TestCase {
 	public void setPosition(int position) {
 		this.position = position;
 	}
-	public String getDomain() {
-		return domain;
+	public String getProtocol() {
+		return protocol;
 	}
-	public void setDomain(String domain) {
-		this.domain = domain;
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 }

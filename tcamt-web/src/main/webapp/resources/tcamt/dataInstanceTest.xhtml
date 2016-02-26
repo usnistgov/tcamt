@@ -273,22 +273,6 @@
 												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
 										</p:inplace>
 										
-										<h:outputText
-											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
-											value="Protocol Type: " />
-										<p:inplace
-											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
-											editor="true" emptyLabel="No Protocol">
-											<p:selectOneMenu
-												value="#{dataInstanceTestPlanRequestBean.selectedTestStep.protocol}">
-												<f:selectItem itemLabel="Select One" itemValue="" />
-												<f:selectItem itemLabel="SOAP" itemValue="soap" />
-												<f:selectItem itemLabel="REST" itemValue="rest" />
-											</p:selectOneMenu>
-											<p:ajax event="save" update=":#{p:component('testplanTree')}"
-												listener="#{dataInstanceTestPlanRequestBean.modifyTestStep}" />
-										</p:inplace>
-
 										<h:outputText value="Description &amp; Purpose: " />
 										<p:inplace emptyLabel="No Description" editor="true">
 											<f:facet name="output">
@@ -576,6 +560,22 @@
 													value="#{dataInstanceTestPlanRequestBean.selectedTestCase.longDescription}"
 													style="width:100%;" />
 											</f:facet>
+											<p:ajax event="save" update=":#{p:component('testplanTree')}"
+												listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
+										</p:inplace>
+										
+										<h:outputText
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											value="Protocol Type: " />
+										<p:inplace
+											rendered="#{dataInstanceTestPlanRequestBean.selectedTestPlan.type == 'Isolated'}"
+											editor="true" emptyLabel="No Protocol">
+											<p:selectOneMenu
+												value="#{dataInstanceTestPlanRequestBean.selectedTestCase.protocol}">
+												<f:selectItem itemLabel="Select One" itemValue="" />
+												<f:selectItem itemLabel="SOAP" itemValue="soap" />
+												<f:selectItem itemLabel="REST" itemValue="rest" />
+											</p:selectOneMenu>
 											<p:ajax event="save" update=":#{p:component('testplanTree')}"
 												listener="#{dataInstanceTestPlanRequestBean.modifyTestCase}" />
 										</p:inplace>
