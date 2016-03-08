@@ -45,6 +45,8 @@ public class DataInstanceTestCase implements Serializable, Cloneable, Comparable
 	private Integer version;
 	
 	private int position;
+	private String protocol;
+	
 	
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval=true)
@@ -168,6 +170,13 @@ public class DataInstanceTestCase implements Serializable, Cloneable, Comparable
 	public static void setTestCasePositionComparator(
 			Comparator<DataInstanceTestCase> testCasePositionComparator) {
 		DataInstanceTestCase.testCasePositionComparator = testCasePositionComparator;
+	}
+
+	public String getProtocol() {
+		return protocol;
+	}
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 
 	public static Comparator<DataInstanceTestCase> testCasePositionComparator = new Comparator<DataInstanceTestCase>() {

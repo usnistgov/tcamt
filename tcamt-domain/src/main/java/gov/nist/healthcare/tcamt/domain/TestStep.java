@@ -6,7 +6,6 @@ public class TestStep {
 	private String type;
 	private int position;
 	private ProfileContainer hl7v2;
-	private String protocol;
 	
 	public String getName() {
 		return name;
@@ -37,12 +36,6 @@ public class TestStep {
 	}
 	public void setHl7v2(ProfileContainer hl7v2) {
 		this.hl7v2 = hl7v2;
-	}
-	public String getProtocol() {
-		return protocol;
-	}
-	public void setProtocol(String protocol) {
-		this.protocol = protocol;
 	}
 	
 }

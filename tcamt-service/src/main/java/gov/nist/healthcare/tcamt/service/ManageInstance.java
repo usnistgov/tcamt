@@ -62,7 +62,7 @@ public class ManageInstance implements Serializable {
 				ProfileSerialization ps = new ProfileSerializationImpl();
 				p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(), ip.getConstraints());
 				for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p.getMessages().getChildren()) {
-					if (message.getIdentifier().equals(m.getConformanceProfile().getConformanceProfileId())) {
+					if (message.getMessageID().equals(m.getConformanceProfile().getConformanceProfileId())) {
 						mp = message;
 					}
 				}
@@ -89,7 +89,7 @@ public class ManageInstance implements Serializable {
 			p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(),
 					ip.getConstraints());
 			for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p.getMessages().getChildren()) {
-				if (message.getIdentifier().equals(m.getConformanceProfile().getConformanceProfileId())) {
+				if (message.getMessageID().equals(m.getConformanceProfile().getConformanceProfileId())) {
 					mp = message;
 				}
 			}
@@ -1105,7 +1105,7 @@ public class ManageInstance implements Serializable {
 		constraintsElement.appendChild(messageElement);
 
 		Element elmByID = doc.createElement("ByID");
-		elmByID.setAttribute("ID", m.getMessageObj().getIdentifier());
+		elmByID.setAttribute("ID", m.getMessageObj().getMessageID());
 		int counter = 0;
 		
 		for (TCAMTConstraint c : m.getTcamtConstraints()) {

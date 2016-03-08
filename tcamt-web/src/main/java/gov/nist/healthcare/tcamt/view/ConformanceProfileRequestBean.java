@@ -312,7 +312,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 			newCP.setConformanceProfileId(message.getMessageID());
 			newCP.setValueSetLibraryId(p.getTables().getValueSetLibraryIdentifier());
 			newCP.setConstraintId(p.getConstraintId());
-			newCP.setName(message.getStructID() + "[" + this.newIntegratedProfile.getName() + "]" + "[" + message.getIdentifier() + "]");
+			newCP.setName(message.getStructID() + "[" + this.newIntegratedProfile.getName() + "]" + "[" + message.getMessageID() + "]");
 			
 			this.sessionBeanTCAMT.getDbManager().conformanceProfileInsert(newCP);
 		}
