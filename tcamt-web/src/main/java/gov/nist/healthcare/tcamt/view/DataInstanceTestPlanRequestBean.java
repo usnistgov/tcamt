@@ -1179,7 +1179,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 								String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 								packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
 								packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
-								packageBodyHTML = packageBodyHTML + messageContentHTMLStr;
 							}
 							
 							if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
@@ -1194,7 +1193,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 								String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 								packageBodyHTML = packageBodyHTML + "<h3>" + "Test Data Specification" + "</h3>" + System.getProperty("line.separator");
 								packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(testDataSpecificationHTMLStr);
-								packageBodyHTML = packageBodyHTML + testDataSpecificationHTMLStr;
 							}
 							if(tp.isJurorDocumentEnable()){
 								if(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
@@ -1265,7 +1263,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							String messageContentHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 							packageBodyHTML = packageBodyHTML + "<h3>" + "Message Contents" + "</h3>" + System.getProperty("line.separator");
 							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(messageContentHTMLStr);
-							packageBodyHTML = packageBodyHTML + messageContentHTMLStr;
 						}
 						
 						if(ts.getMessage().getConformanceProfile().getTestDataSpecificationXSLT() != null){
@@ -1280,7 +1277,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 							String testDataSpecificationHTMLStr = XMLManager.parseXmlByXSLT(sourceStr, xsltStr);
 							packageBodyHTML = packageBodyHTML + "<h3>" + "Test Data Specification" + "</h3>" + System.getProperty("line.separator");
 							packageBodyHTML = packageBodyHTML + this.retrieveBodyContent(testDataSpecificationHTMLStr);
-							packageBodyHTML = packageBodyHTML + testDataSpecificationHTMLStr;
 						}
 						if(tp.isJurorDocumentEnable()){
 							if(ts.getMessage().getConformanceProfile().getJurorDocumentXSLT() != null){
