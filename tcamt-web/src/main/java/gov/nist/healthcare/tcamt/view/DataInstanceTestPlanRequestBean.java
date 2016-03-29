@@ -2397,7 +2397,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-					this.generateTestStepJsonRB(out, dits, teststepPath, true);
+					this.generateTestStepJsonRB(out, dits, teststepPath, true, ditc.getProtocol());
 					this.instanceSegments = new ArrayList<InstanceSegment>();
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2427,7 +2427,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-				this.generateTestStepJsonRB(out, dits, teststepPath, true);
+				this.generateTestStepJsonRB(out, dits, teststepPath, true, ditc.getProtocol());
 				this.instanceSegments = new ArrayList<InstanceSegment>();
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2475,7 +2475,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				for(DataInstanceTestStep dits:ditc.getTeststeps()){
 					String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 					this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-					this.generateTestStepJsonRB(out, dits, teststepPath, false);
+					this.generateTestStepJsonRB(out, dits, teststepPath, false, ditc.getProtocol());
 					this.instanceSegments = new ArrayList<InstanceSegment>();
 					if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 						if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2505,7 +2505,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 			for(DataInstanceTestStep dits:ditc.getTeststeps()){
 				String teststepPath = testcasePath + File.separator + "TestStep_" + dits.getPosition();
 				this.generateTestStoryRB(out, dits.getTestStepStory(), teststepPath);
-				this.generateTestStepJsonRB(out, dits, teststepPath, false);
+				this.generateTestStepJsonRB(out, dits, teststepPath, false, ditc.getProtocol());
 				this.instanceSegments = new ArrayList<InstanceSegment>();
 				if(dits != null && dits.getMessage() != null && dits.getMessage().getConformanceProfile() != null){
 					if(dits.getMessage().getHl7EndcodedMessage() != null && !dits.getMessage().getHl7EndcodedMessage().equals("")){
@@ -2528,7 +2528,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		}
 	}
 	
-	private void generateTestStepJsonRB(ZipOutputStream out, DataInstanceTestStep dits, String teststepPath, boolean isIsolated) throws IOException, ConversionException {
+	private void generateTestStepJsonRB(ZipOutputStream out, DataInstanceTestStep dits, String teststepPath, boolean isIsolated, String protocol) throws IOException, ConversionException {
 		byte[] buf = new byte[1024];
 		out.putNextEntry(new ZipEntry(teststepPath + File.separator + "TestStep.json"));
 		
@@ -2564,6 +2564,7 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 				jsonTestStep.setName(dits.getName());
 				jsonTestStep.setPosition(dits.getPosition());	
 				jsonTestStep.setType(dits.getType());
+				if(protocol != null) jsonTestStep.addProtocols(protocol);
 				inTP = IOUtils.toInputStream(this.tsConverter.toString(jsonTestStep));
 			}
 		}else {
@@ -2602,10 +2603,6 @@ public class DataInstanceTestPlanRequestBean implements Serializable {
 		jsonTestCase.setDescription(ditc.getLongDescription());
 		jsonTestCase.setName(ditc.getName());
 		jsonTestCase.setPosition(ditc.getPosition());
-
-		if(isIsolated){
-			jsonTestCase.setProtocol(ditc.getProtocol());
-		}
 		
 		InputStream inTP = IOUtils.toInputStream(this.tcConverter.toString(jsonTestCase));
 		int lenTP;

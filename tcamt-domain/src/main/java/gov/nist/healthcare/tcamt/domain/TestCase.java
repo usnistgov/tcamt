@@ -4,7 +4,6 @@ public class TestCase {
 	private String name;
 	private String description;
 	private int position;
-	private String protocol;
 	
 	public String getName() {
 		return name;
@@ -23,11 +22,5 @@ public class TestCase {
 	}
 	public void setPosition(int position) {
 		this.position = position;
-	}
-	public String getProtocol() {
-		return protocol;
-	}
-	public void setProtocol(String protocol) {
-		this.protocol = protocol;
 	}
 }
