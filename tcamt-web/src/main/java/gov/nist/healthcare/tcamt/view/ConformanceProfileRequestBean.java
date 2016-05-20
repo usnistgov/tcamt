@@ -20,9 +20,9 @@ import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.JsonTestObjectConverter;
 import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
 import gov.nist.healthcare.tcamt.service.converter.TestObjectConverter;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Profile;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerialization;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerializationImpl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -129,7 +129,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 					
 					ip.setProfileIdentifier(p.getMetaData().getProfileID());
 					
-					for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message:p.getMessages().getChildren()){
+					for(gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message message:p.getMessages().getChildren()){
 						ConformanceProfile cp = this.findConformanceProfile(message.getIdentifier());
 						
 						if(cp == null){
@@ -305,7 +305,7 @@ public class ConformanceProfileRequestBean implements Serializable {
 		this.newIntegratedProfile.setProfileIdentifier(p.getMetaData().getProfileID());
 		
 		this.sessionBeanTCAMT.getDbManager().integratedProfileInsert(this.newIntegratedProfile);
-		for(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message:p.getMessages().getChildren()){
+		for(gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message message:p.getMessages().getChildren()){
 			ConformanceProfile newCP = new ConformanceProfile();
 			
 			newCP.setIntegratedProfile(this.newIntegratedProfile);

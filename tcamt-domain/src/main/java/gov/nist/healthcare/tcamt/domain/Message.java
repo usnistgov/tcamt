@@ -64,19 +64,19 @@ public class Message implements Serializable, Cloneable {
 	
 	
 	@Transient
-	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj;
+	private gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message messageObj;
 	
 	
 	@Transient
-	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments segments;
+	private gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Segments segments;
 	
 	
 	@Transient
-	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes datatypes;
+	private gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Datatypes datatypes;
 	
 	
 	@Transient
-	private gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables;
+	private gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Tables tables;
 	
 	
 	@ManyToOne
@@ -154,11 +154,11 @@ public class Message implements Serializable, Cloneable {
 		this.author = author;
 	}
 
-	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message getMessageObj() {
+	public gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message getMessageObj() {
 		return messageObj;
 	}
 
-	public void setMessageObj(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
+	public void setMessageObj(gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message messageObj) {
 		this.messageObj = messageObj;
 	}
 
@@ -217,30 +217,30 @@ public class Message implements Serializable, Cloneable {
 		this.lastUpdateDate = lastUpdateDate;
 	}
 
-	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments getSegments() {
+	public gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Segments getSegments() {
 		return segments;
 	}
 
 	public void setSegments(
-			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segments segments) {
+			gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Segments segments) {
 		this.segments = segments;
 	}
 
-	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes getDatatypes() {
+	public gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Datatypes getDatatypes() {
 		return datatypes;
 	}
 
 	public void setDatatypes(
-			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatypes datatypes) {
+			gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Datatypes datatypes) {
 		this.datatypes = datatypes;
 	}
 
-	public gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables getTables() {
+	public gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Tables getTables() {
 		return tables;
 	}
 
 	public void setTables(
-			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Tables tables) {
+			gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Tables tables) {
 		this.tables = tables;
 	}
 

@@ -4,11 +4,11 @@ import gov.nist.healthcare.tcamt.db.DBImpl;
 import gov.nist.healthcare.tcamt.domain.Actor;
 import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
 import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
-import gov.nist.healthcare.tcamt.domain.DataInstanceTestPlan;
 import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.SimpleDataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.SimpleMessage;
 import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.User;
 
@@ -39,8 +39,8 @@ public class SessionBeanTCAMT implements Serializable {
 	private List<ConformanceProfile> conformanceProfiles;
 	private List<ContextFreeTestPlan> contextFreeTestPlans;
 	private List<Actor> actors;
-	private List<Message> messages;
-	private List<DataInstanceTestPlan> dataInstanceTestPlans;
+	private List<SimpleMessage> messages;
+	private List<SimpleDataInstanceTestPlan> dataInstanceTestPlans;
 	private List<TestCaseCodeList> testCaseCodeLists;
 	
 	private int mActiveIndex = 0;
@@ -98,11 +98,11 @@ public class SessionBeanTCAMT implements Serializable {
 	}
 	
 	public void updateMessages(){
-		this.messages = this.dbManager.getAllMessages(this.loggedUser);
+		this.messages = this.dbManager.getAllSimpleMessages(this.loggedUser);
 	}
 	
 	public void updateDataInstanceTestPlans(){
-		this.dataInstanceTestPlans = this.dbManager.getAllDataInstanceTestPlans(this.loggedUser);
+		this.dataInstanceTestPlans = this.dbManager.getAllSimpleDataInstanceTestPlans(this.loggedUser);
 	}
 	
 	public void updateTestCaseCodeLists(){
@@ -128,11 +128,11 @@ public class SessionBeanTCAMT implements Serializable {
 		this.actors = actors;
 	}
 
-	public List<Message> getMessages() {
+	public List<SimpleMessage> getMessages() {
 		return messages;
 	}
 
-	public void setMessages(List<Message> messages) {
+	public void setMessages(List<SimpleMessage> messages) {
 		this.messages = messages;
 	}
 
@@ -144,11 +144,11 @@ public class SessionBeanTCAMT implements Serializable {
 		this.loggedUser = loggedUser;
 	}
 
-	public List<DataInstanceTestPlan> getDataInstanceTestPlans() {
+	public List<SimpleDataInstanceTestPlan> getDataInstanceTestPlans() {
 		return dataInstanceTestPlans;
 	}
 
-	public void setDataInstanceTestPlans(List<DataInstanceTestPlan> dataInstanceTestPlans) {
+	public void setDataInstanceTestPlans(List<SimpleDataInstanceTestPlan> dataInstanceTestPlans) {
 		this.dataInstanceTestPlans = dataInstanceTestPlans;
 	}
 	

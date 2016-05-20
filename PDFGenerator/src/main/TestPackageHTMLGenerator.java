@@ -161,6 +161,8 @@ public class TestPackageHTMLGenerator {
 				}else if(file.getName().equals("TestCase.json")){
 					String jsonString = FileUtils.readFileToString(file);
 					Gson gson = new Gson();
+//					System.out.println(file.getAbsolutePath());
+					
 					TestCase tc = gson.fromJson(jsonString,TestCase.class);
 					
 					return tc;

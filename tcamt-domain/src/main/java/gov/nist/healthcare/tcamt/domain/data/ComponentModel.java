@@ -1,14 +1,14 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Component;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Table;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.constraints.ConformanceStatement;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.constraints.Predicate;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
 
 public class ComponentModel implements Serializable {
 	/**

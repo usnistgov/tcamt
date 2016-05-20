@@ -3,9 +3,6 @@
 	<name>tcamt-web</name>
 	<comment></comment>
 	<projects>
-		<project>igamt-lite-repo</project>
-		<project>igamt-lite-service</project>
-		<project>igamt-lite-domain</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

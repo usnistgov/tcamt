@@ -1,5 +1,20 @@
 package gov.nist.healthcare.tcamt.view;
 
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.Log;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.SimpleMessage;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.data.TestDataFromCS;
+import gov.nist.healthcare.tcamt.service.ManageInstance;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.SegmentRefOrGroup;
+
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.StringWriter;
@@ -20,20 +35,6 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.Log;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.data.TestDataFromCS;
-import gov.nist.healthcare.tcamt.service.ManageInstance;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
 
 @ManagedBean
 @SessionScoped
@@ -114,8 +115,11 @@ public class MessageRequestBean implements Serializable {
 	
 	public void delMessage(ActionEvent event) {
 		try{
-			String deletedMessageName = ((Message) event.getComponent().getAttributes().get("message")).getName();
-			this.sessionBeanTCAMT.getDbManager().messageDelete((Message) event.getComponent().getAttributes().get("message"));
+			SimpleMessage simple = (SimpleMessage) event.getComponent().getAttributes().get("message");
+			Message m = this.sessionBeanTCAMT.getDbManager().getMessageById(simple.getId());
+			
+			String deletedMessageName = m.getName();
+			this.sessionBeanTCAMT.getDbManager().messageDelete(m);
 			this.sessionBeanTCAMT.updateMessages();
 			
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -133,7 +137,8 @@ public class MessageRequestBean implements Serializable {
 	
 	public void cloneMessage(ActionEvent event) {
 		try{
-			Message m = (Message)((Message)event.getComponent().getAttributes().get("message")).clone();
+			SimpleMessage simple = (SimpleMessage) event.getComponent().getAttributes().get("message");
+			Message m = this.sessionBeanTCAMT.getDbManager().getMessageById(simple.getId()).clone();
 			m.setName("(Copy)" + m.getName());
 			m.setVersion(1);
 			this.sessionBeanTCAMT.getDbManager().messageInsert(m);
@@ -219,8 +224,8 @@ public class MessageRequestBean implements Serializable {
 	public void selectEditMessage(ActionEvent event) {
 		try{
 			this.init();
-			this.editMessage = (Message) event.getComponent().getAttributes().get("message");
-			this.editMessage = this.sessionBeanTCAMT.getDbManager().getMessageById(this.editMessage.getId());
+			SimpleMessage simple = (SimpleMessage) event.getComponent().getAttributes().get("message");
+			this.editMessage = this.sessionBeanTCAMT.getDbManager().getMessageById(simple.getId());
 			if(this.editMessage.getConformanceProfile() == null) this.conformanceProfileId = null;
 			else this.conformanceProfileId = this.editMessage.getConformanceProfile().getId();
 			
@@ -809,7 +814,7 @@ public class MessageRequestBean implements Serializable {
 		this.selectedNode = selectedNode;
 	}
 
-	public List<Message> getMessages(){
+	public List<SimpleMessage> getMessages(){
 		return this.sessionBeanTCAMT.getMessages();
 	}
 

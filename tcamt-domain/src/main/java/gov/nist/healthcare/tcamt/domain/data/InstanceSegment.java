@@ -1,8 +1,8 @@
 package gov.nist.healthcare.tcamt.domain.data;
 
-import java.io.Serializable;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.SegmentRef;
 
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
+import java.io.Serializable;
 
 public class InstanceSegment implements Serializable {
 

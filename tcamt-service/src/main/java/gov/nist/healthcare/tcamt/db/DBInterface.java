@@ -9,6 +9,8 @@ import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
 import gov.nist.healthcare.tcamt.domain.JurorDocument;
 import gov.nist.healthcare.tcamt.domain.Log;
 import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.SimpleDataInstanceTestPlan;
+import gov.nist.healthcare.tcamt.domain.SimpleMessage;
 import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
 import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
 import gov.nist.healthcare.tcamt.domain.User;
@@ -58,6 +60,7 @@ public interface DBInterface {
 	public void messageDelete(Message m);
 	public List<Message> getAllMessages(User author);
 	public Message getMessageById(long id);
+	public List<SimpleMessage> getAllSimpleMessages(User author);
 	
 	public void dataInstanceTestPlanInsert(DataInstanceTestPlan ditp);
 	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp);
@@ -65,6 +68,7 @@ public interface DBInterface {
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author);
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans();
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id);
+	public List<SimpleDataInstanceTestPlan> getAllSimpleDataInstanceTestPlans(User author);
 	
 	public void logInsert(Log l);
 	public void logDelete(Log l);

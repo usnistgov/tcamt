@@ -1,5 +1,31 @@
 package gov.nist.healthcare.tcamt.service;
 
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.Message;
+import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
+import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
+import gov.nist.healthcare.tcamt.domain.data.Constraint;
+import gov.nist.healthcare.tcamt.domain.data.FieldModel;
+import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
+import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Case;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Component;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Datatype;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Field;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Group;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Mapping;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Profile;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Segment;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.SegmentRef;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.SegmentRefOrGroup;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Table;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Usage;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.constraints.ConformanceStatement;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.constraints.Predicate;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerialization;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerializationImpl;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -19,32 +45,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
-import gov.nist.healthcare.tcamt.domain.Message;
-import gov.nist.healthcare.tcamt.domain.TCAMTConstraint;
-import gov.nist.healthcare.tcamt.domain.data.ComponentModel;
-import gov.nist.healthcare.tcamt.domain.data.Constraint;
-import gov.nist.healthcare.tcamt.domain.data.FieldModel;
-import gov.nist.healthcare.tcamt.domain.data.InstanceSegment;
-import gov.nist.healthcare.tcamt.domain.data.MessageTreeModel;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Case;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Component;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Datatype;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Field;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Group;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Mapping;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Profile;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRef;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.SegmentRefOrGroup;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Table;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Usage;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.ConformanceStatement;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.constraints.Predicate;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerialization;
-import gov.nist.healthcare.tools.hl7.v2.igamt.lite.service.impl.ProfileSerializationImpl;
-
 public class ManageInstance implements Serializable {
 	
 	/**
@@ -54,14 +54,14 @@ public class ManageInstance implements Serializable {
 
 	public void loadMessage(Message m) {
 		if(m.getMessageObj() == null){
-			gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message mp = null;
+			gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message mp = null;
 			Profile p = null;
 
 			if (m.getConformanceProfile() != null) {
 				IntegratedProfile ip = m.getConformanceProfile().getIntegratedProfile();
 				ProfileSerialization ps = new ProfileSerializationImpl();
 				p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(), ip.getConstraints());
-				for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p.getMessages().getChildren()) {
+				for (gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message message : p.getMessages().getChildren()) {
 					if (message.getMessageID().equals(m.getConformanceProfile().getConformanceProfileId())) {
 						mp = message;
 					}
@@ -79,7 +79,7 @@ public class ManageInstance implements Serializable {
 
 	public TreeNode loadMessageAndCreateTreeNode(Message m) {
 		TreeNode treeNode = new DefaultTreeNode("root", null);
-		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message mp = null;
+		gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message mp = null;
 		Profile p = null;
 
 		if (m.getConformanceProfile() != null) {
@@ -88,7 +88,7 @@ public class ManageInstance implements Serializable {
 			ProfileSerialization ps = new ProfileSerializationImpl();
 			p = ps.deserializeXMLToProfile(ip.getProfile(), ip.getValueSet(),
 					ip.getConstraints());
-			for (gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message message : p.getMessages().getChildren()) {
+			for (gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message message : p.getMessages().getChildren()) {
 				if (message.getMessageID().equals(m.getConformanceProfile().getConformanceProfileId())) {
 					mp = message;
 				}
@@ -389,7 +389,7 @@ public class ManageInstance implements Serializable {
 //		System.out.println(m.getXmlEncodedMessageContent());
 	}
 	
-	private boolean isHideForMessageContentByUsage(Datatype fieldDT, Component c, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
+	private boolean isHideForMessageContentByUsage(Datatype fieldDT, Component c, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message messageObj) {
 		if(c.isHide()) return true;
 		
 		if(c.getUsage().equals(Usage.R)) return false;
@@ -413,7 +413,7 @@ public class ManageInstance implements Serializable {
 		return true;
 	}
 
-	private boolean isHideForMessageContentByUsage(Segment segment, Field field, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj) {
+	private boolean isHideForMessageContentByUsage(Segment segment, Field field, String path, String iPositionPath, gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message messageObj) {
 		if(field.isHide()) return true;
 		
 		if(field.getUsage().equals(Usage.R)) return false;
@@ -502,7 +502,7 @@ public class ManageInstance implements Serializable {
 
 	public void genSegmentTree(TreeNode segmentTreeRoot, InstanceSegment selectedInstanceSegment, Message m) {
 		String segmentStr = selectedInstanceSegment.getLineStr();
-		gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Segment segment = m.getSegments().findOneSegmentById(selectedInstanceSegment.getSegmentRef().getRef());
+		gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Segment segment = m.getSegments().findOneSegmentById(selectedInstanceSegment.getSegmentRef().getRef());
 
 		if (segment.getName().equals("MSH")) {
 			segmentStr = "MSH|FieldSeperator|Encoding|" + segmentStr.substring(9);
@@ -776,7 +776,7 @@ public class ManageInstance implements Serializable {
 
 	}
 
-	private Predicate findPreficateForMessageAndGroup(gov.nist.healthcare.tools.hl7.v2.igamt.lite.domain.Message messageObj, String path, String iPositionPath) {
+	private Predicate findPreficateForMessageAndGroup(gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Message messageObj, String path, String iPositionPath) {
 		String groupPath = messageObj.getStructID();
 		String[] paths = path.split("\\.");
 		
