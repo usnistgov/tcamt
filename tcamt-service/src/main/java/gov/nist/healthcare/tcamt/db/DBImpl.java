@@ -22,9 +22,11 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -40,21 +42,24 @@ public class DBImpl implements DBInterface, Serializable {
 	private SessionFactory sessionFactory;
 	private Session currentSession;
 	private Transaction currentTransaction;
-	
+
 	public DBImpl() {
 		super();
 		sessionFactory = DBImpl.getSessionFactory();
 		this.currentSession = sessionFactory.openSession();
 	}
-	
-	private void init(){
+
+	private void init() {
 		sessionFactory = DBImpl.getSessionFactory();
-		if(!currentSession.isOpen()) this.currentSession = sessionFactory.openSession();
+		if (!currentSession.isOpen())
+			this.currentSession = sessionFactory.openSession();
 	}
-	
+
 	public void finalize() {
-		if(currentSession.isOpen()) this.currentSession.close();
-		if(!this.sessionFactory.isClosed()) this.sessionFactory.close();		
+		if (currentSession.isOpen())
+			this.currentSession.close();
+		if (!this.sessionFactory.isClosed())
+			this.sessionFactory.close();
 	}
 
 	public Session openCurrentSession() {
@@ -74,7 +79,7 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public User isValidUser(User user) {
-		try{
+		try {
 			this.openCurrentSession();
 			Criteria criteria = this.currentSession.createCriteria(User.class);
 			criteria.add(Restrictions.eq("userId", user.getUserId()));
@@ -86,7 +91,7 @@ public class DBImpl implements DBInterface, Serializable {
 				return null;
 			if (users.get(0).getPassword().equals(user.getPassword()))
 				return users.get(0);
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -95,12 +100,12 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public User getUserById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			User u = (User)this.currentSession.get(User.class, id);
+			User u = (User) this.currentSession.get(User.class, id);
 			this.closeCurrentSession();
 			return u;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -110,14 +115,14 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<User> getAllUsers() {
-		try{
+		try {
 			this.openCurrentSession();
 			Criteria criteria = this.currentSession.createCriteria(User.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<User> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -126,11 +131,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void addUser(User user) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.save(user);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -138,11 +143,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void updateUser(User user) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.update(user);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -150,26 +155,26 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void deleteUser(User user) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(user);
-			this.closeCurrentSession();	
-		}catch(Exception e){
+			this.closeCurrentSession();
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
 	}
-	
+
 	public void integratedProfileInsert(IntegratedProfile ip) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			ip.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.save(ip);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -177,14 +182,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void integratedProfileUpdate(IntegratedProfile ip) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			ip.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(ip);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -192,11 +197,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void integratedProfileDelete(IntegratedProfile ip) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(ip);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -205,14 +210,15 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<IntegratedProfile> getAllIntegratedProfiles() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(IntegratedProfile.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(IntegratedProfile.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<IntegratedProfile> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -221,28 +227,29 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public IntegratedProfile getIntegratedProfileById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			IntegratedProfile ip = (IntegratedProfile)this.currentSession.get(IntegratedProfile.class, id);
+			IntegratedProfile ip = (IntegratedProfile) this.currentSession.get(
+					IntegratedProfile.class, id);
 			this.closeCurrentSession();
 			return ip;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
 		return null;
 	}
-	
+
 	public void conformanceProfileInsert(ConformanceProfile cp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			cp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.save(cp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -250,14 +257,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void conformanceProfileUpdate(ConformanceProfile cp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			cp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(cp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -265,11 +272,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void conformanceProfileDelete(ConformanceProfile cp) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(cp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -278,14 +285,15 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<ConformanceProfile> getAllConformanceProfiles() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(ConformanceProfile.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(ConformanceProfile.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<ConformanceProfile> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -294,12 +302,13 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public ConformanceProfile getConformanceProfileById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			ConformanceProfile cp = (ConformanceProfile)this.currentSession.get(ConformanceProfile.class, id);
+			ConformanceProfile cp = (ConformanceProfile) this.currentSession
+					.get(ConformanceProfile.class, id);
 			this.closeCurrentSession();
 			return cp;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -308,11 +317,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void actorInsert(Actor a) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.save(a);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -320,11 +329,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void actorUpdate(Actor a) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.update(a);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -332,11 +341,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void actorDelete(Actor a) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(a);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -345,8 +354,9 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<Actor> getAllActors(User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
 			Criteria criteria = this.currentSession.createCriteria(Actor.class);
 			criteria.add(Restrictions.eq("author", author));
@@ -354,7 +364,7 @@ public class DBImpl implements DBInterface, Serializable {
 			List<Actor> results = (List<Actor>) criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -363,12 +373,12 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public Actor getActorById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			Actor a = (Actor)this.currentSession.get(Actor.class, id);
+			Actor a = (Actor) this.currentSession.get(Actor.class, id);
 			this.closeCurrentSession();
 			return a;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -377,15 +387,15 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void messageInsert(Message m) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			m.setLastUpdateDate(dateFormat.format(date));
-			
+
 			this.currentSession.save(m);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -393,14 +403,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void messageUpdate(Message m) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			m.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(m);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -408,11 +418,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void messageDelete(Message m) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(m);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -421,16 +431,18 @@ public class DBImpl implements DBInterface, Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<Message> getAllMessages(User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(Message.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(Message.class);
 			criteria.add(Restrictions.eq("author", author));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			List<Message> results = (List<Message>) criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -439,12 +451,12 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public Message getMessageById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			Message m = (Message)this.currentSession.get(Message.class, id);
+			Message m = (Message) this.currentSession.get(Message.class, id);
 			this.closeCurrentSession();
 			return m;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -453,14 +465,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void dataInstanceTestPlanInsert(DataInstanceTestPlan ditp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			ditp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.save(ditp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -468,14 +480,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void dataInstanceTestPlanUpdate(DataInstanceTestPlan ditp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			ditp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(ditp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -483,11 +495,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void dataInstanceTestPlanDelete(DataInstanceTestPlan ditp) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(ditp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -495,34 +507,38 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans(User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(DataInstanceTestPlan.class);
 			criteria.add(Restrictions.eq("author", author));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
-			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
+			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria
+					.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
 		return null;
 	}
-	
+
 	public List<DataInstanceTestPlan> getAllDataInstanceTestPlans() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(DataInstanceTestPlan.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
-			List<DataInstanceTestPlan> results =  criteria.list();
+			List<DataInstanceTestPlan> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -531,21 +547,23 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public DataInstanceTestPlan getDataInstanceTestPlanById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(DataInstanceTestPlan.class);
 			criteria.add(Restrictions.eq("id", id));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
-			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
+			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria
+					.list();
 			this.closeCurrentSession();
-			
-			if(results == null || results.size() == 0){
+
+			if (results == null || results.size() == 0) {
 				return null;
-			}else {
+			} else {
 				return results.get(0);
 			}
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -554,14 +572,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void contextFreeTestPlanInsert(ContextFreeTestPlan cftp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			cftp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.save(cftp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -569,14 +587,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void contextFreeTestPlanUpdate(ContextFreeTestPlan cftp) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			cftp.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(cftp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -584,11 +602,11 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void contextFreeTestPlanDelete(ContextFreeTestPlan cftp) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(cftp);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -596,15 +614,16 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public List<ContextFreeTestPlan> getAllContextFreeTestPlans() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(ContextFreeTestPlan.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(ContextFreeTestPlan.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
 			List<ContextFreeTestPlan> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -613,12 +632,13 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public ContextFreeTestPlan getContextFreeTestPlanById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			ContextFreeTestPlan cftp = (ContextFreeTestPlan)this.currentSession.get(ContextFreeTestPlan.class, id);
+			ContextFreeTestPlan cftp = (ContextFreeTestPlan) this.currentSession
+					.get(ContextFreeTestPlan.class, id);
 			this.closeCurrentSession();
 			return cftp;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -629,7 +649,7 @@ public class DBImpl implements DBInterface, Serializable {
 	public void logInsert(Log l) {
 		this.finalize();
 		this.init();
-		
+
 		this.openCurrentSession();
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date = new Date();
@@ -644,11 +664,11 @@ public class DBImpl implements DBInterface, Serializable {
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		@SuppressWarnings("unchecked")
 		List<Log> results = criteria.list();
-		
-		for(Log l:results){
+
+		for (Log l : results) {
 			this.currentSession.delete(l);
 		}
-		
+
 		this.closeCurrentSession();
 
 	}
@@ -662,20 +682,20 @@ public class DBImpl implements DBInterface, Serializable {
 		this.closeCurrentSession();
 		return results;
 	}
-	
+
 	private String getStackTrace(final Throwable throwable) {
-	     final StringWriter sw = new StringWriter();
-	     final PrintWriter pw = new PrintWriter(sw, true);
-	     throwable.printStackTrace(pw);
-	     return sw.getBuffer().toString();
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw, true);
+		throwable.printStackTrace(pw);
+		return sw.getBuffer().toString();
 	}
 
 	public void logDelete(Log l) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(l);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -683,14 +703,14 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void jurorDocumentInsert(JurorDocument jd) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			jd.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.save(jd);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -698,44 +718,45 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void jurorDocumentUpdate(JurorDocument jd) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			jd.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(jd);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
-		
+
 	}
 
 	public void jurorDocumentDelete(JurorDocument jd) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(jd);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
-		
+
 	}
 
 	public List<JurorDocument> getAllJurorDocuments() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(JurorDocument.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(JurorDocument.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
 			List<JurorDocument> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -744,12 +765,13 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public JurorDocument getJurorDocumentById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			JurorDocument jd = (JurorDocument)this.currentSession.get(JurorDocument.class, id);
+			JurorDocument jd = (JurorDocument) this.currentSession.get(
+					JurorDocument.class, id);
 			this.closeCurrentSession();
 			return jd;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -757,12 +779,13 @@ public class DBImpl implements DBInterface, Serializable {
 		return null;
 	}
 
-	public void defaultTestDataCategorizationSheetInsert(DefaultTestDataCategorizationSheet sheet) {
-		try{
+	public void defaultTestDataCategorizationSheetInsert(
+			DefaultTestDataCategorizationSheet sheet) {
+		try {
 			this.openCurrentSession();
 			this.currentSession.save(sheet);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -770,37 +793,37 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void defaultTestDataCategorizationSheetAllDelete() {
-		
-		List<DefaultTestDataCategorizationSheet> sets = this.getAllDefaultTestDataCategorizationSheets();
-		if(sets != null && !sets.isEmpty()){
-			try{
+
+		List<DefaultTestDataCategorizationSheet> sets = this
+				.getAllDefaultTestDataCategorizationSheets();
+		if (sets != null && !sets.isEmpty()) {
+			try {
 				this.openCurrentSession();
-				
-				
-				
-				for(DefaultTestDataCategorizationSheet sheet:sets){
-					this.currentSession.delete(sheet);	
+
+				for (DefaultTestDataCategorizationSheet sheet : sets) {
+					this.currentSession.delete(sheet);
 				}
 				this.closeCurrentSession();
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 				this.logInsert(log);
-			}	
+			}
 		}
-		
+
 	}
 
 	public List<DefaultTestDataCategorizationSheet> getAllDefaultTestDataCategorizationSheets() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(DefaultTestDataCategorizationSheet.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(DefaultTestDataCategorizationSheet.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
 			List<DefaultTestDataCategorizationSheet> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -808,13 +831,15 @@ public class DBImpl implements DBInterface, Serializable {
 		return null;
 	}
 
-	public DefaultTestDataCategorizationSheet getDefaultTestDataCategorizationSheetById(long id) {
-		try{
+	public DefaultTestDataCategorizationSheet getDefaultTestDataCategorizationSheetById(
+			long id) {
+		try {
 			this.openCurrentSession();
-			DefaultTestDataCategorizationSheet sheet = (DefaultTestDataCategorizationSheet)this.currentSession.get(DefaultTestDataCategorizationSheet.class, id);
+			DefaultTestDataCategorizationSheet sheet = (DefaultTestDataCategorizationSheet) this.currentSession
+					.get(DefaultTestDataCategorizationSheet.class, id);
 			this.closeCurrentSession();
 			return sheet;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -823,15 +848,16 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public List<TCAMTConstraint> getAllTCAMTConstraints() {
-		try{
+		try {
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(TCAMTConstraint.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(TCAMTConstraint.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
 			List<TCAMTConstraint> results = criteria.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -840,26 +866,26 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void tcamtConstraintDelete(TCAMTConstraint constraint) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(constraint);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			System.out.println(constraint.getId() + " is using.");
 		}
-		
+
 	}
 
 	public void testCaseCodeListInsert(TestCaseCodeList t) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			t.setLastUpdateDate(dateFormat.format(date));
-			
+
 			this.currentSession.save(t);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -867,46 +893,49 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public void testCaseCodeListUpdate(TestCaseCodeList t) {
-		try{
+		try {
 			this.openCurrentSession();
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date = new Date();
 			t.setLastUpdateDate(dateFormat.format(date));
 			this.currentSession.update(t);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
-		
+
 	}
 
 	public void testCaseCodeListDelete(TestCaseCodeList t) {
-		try{
+		try {
 			this.openCurrentSession();
 			this.currentSession.delete(t);
 			this.closeCurrentSession();
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
-		
+
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<TestCaseCodeList> getAllTestCaseCodeLists(User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(TestCaseCodeList.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(TestCaseCodeList.class);
 			criteria.add(Restrictions.eq("author", author));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-			List<TestCaseCodeList> results = (List<TestCaseCodeList>) criteria.list();
+			List<TestCaseCodeList> results = (List<TestCaseCodeList>) criteria
+					.list();
 			this.closeCurrentSession();
 			return results;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -915,12 +944,13 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public TestCaseCodeList getTestCaseCodeListById(long id) {
-		try{
+		try {
 			this.openCurrentSession();
-			TestCaseCodeList codelist = (TestCaseCodeList)this.currentSession.get(TestCaseCodeList.class, id);
+			TestCaseCodeList codelist = (TestCaseCodeList) this.currentSession
+					.get(TestCaseCodeList.class, id);
 			this.closeCurrentSession();
 			return codelist;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -929,29 +959,74 @@ public class DBImpl implements DBInterface, Serializable {
 	}
 
 	public List<SimpleMessage> getAllSimpleMessages(User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(Message.class);
-			criteria.add(Restrictions.eq("author", author));
-			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-			List<Message> results = (List<Message>) criteria.list();
-			this.closeCurrentSession();
 			
+			
+			
+			
+			Query q1 = this.currentSession.createQuery("Select id, lastUpdateDate, longDescription, name, version from Message where author_id = '" + author.getId() +  "'");
+			
+//			Criteria criteria = this.currentSession
+//					.createCriteria(Message.class);
+//			criteria.add(Restrictions.eq("author", author));
+//			criteria.setProjection(Projections
+//					.projectionList()
+//					.add(Projections.property("id"), "id")
+//					.add(Projections.property("lastUpdateDate"),
+//							"lastUpdateDate")
+//					.add(Projections.property("longDescription"),
+//							"longDescription")
+//					.add(Projections.property("name"), "name")
+//					.add(Projections.property("version"), "version"));
+//
+//			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+//			List<Message> results = (List<Message>) criteria.list();
+			
+			List results;
 			List<SimpleMessage> simpleResults = new ArrayList<SimpleMessage>();
-			for(Message m : results){
-				SimpleMessage sm = new SimpleMessage();
-				sm.setId(m.getId());
-				sm.setLastUpdateDate(m.getLastUpdateDate());
-				sm.setLongDescription(m.getLongDescription());
-				sm.setName(m.getName());
-				sm.setVersion(m.getVersion());
-				
-				simpleResults.add(sm);
-			}
 			
+			results = q1.list();
+			
+			
+			for (Iterator it = results.iterator(); it.hasNext(); ) {
+	               Object[] myResult = (Object[]) it.next();
+	               Long id = (Long) myResult[0];
+	               String lastUpdateDate = (String) myResult[1];
+	               String longDescription = (String) myResult[2];
+	               String name = (String) myResult[3];
+	               Integer version = (Integer) myResult[4];
+	               
+	               System.out.println(id + "::" + lastUpdateDate + "::" + longDescription + "::" + name + "::" +version);
+	               
+	               SimpleMessage sm = new SimpleMessage();
+					sm.setId(id);
+					sm.setLastUpdateDate(lastUpdateDate);
+					sm.setLongDescription(longDescription);
+					sm.setName(name);
+					sm.setVersion(version);
+
+					simpleResults.add(sm);
+	            }
+			
+			this.closeCurrentSession();
+
+//			List<SimpleMessage> simpleResults = new ArrayList<SimpleMessage>();
+//			for (Message m : results) {
+//				SimpleMessage sm = new SimpleMessage();
+//				sm.setId(m.getId());
+//				sm.setLastUpdateDate(m.getLastUpdateDate());
+//				sm.setLongDescription(m.getLongDescription());
+//				sm.setName(m.getName());
+//				sm.setVersion(m.getVersion());
+//
+//				simpleResults.add(sm);
+//			}
+
 			return simpleResults;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
@@ -961,35 +1036,38 @@ public class DBImpl implements DBInterface, Serializable {
 
 	public List<SimpleDataInstanceTestPlan> getAllSimpleDataInstanceTestPlans(
 			User author) {
-		try{
-			if (author == null) return null;
+		try {
+			if (author == null)
+				return null;
 			this.openCurrentSession();
-			Criteria criteria = this.currentSession.createCriteria(DataInstanceTestPlan.class);
+			Criteria criteria = this.currentSession
+					.createCriteria(DataInstanceTestPlan.class);
 			criteria.add(Restrictions.eq("author", author));
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 			@SuppressWarnings("unchecked")
-			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria.list();
+			List<DataInstanceTestPlan> results = (List<DataInstanceTestPlan>) criteria
+					.list();
 			this.closeCurrentSession();
-			
+
 			List<SimpleDataInstanceTestPlan> simpleResults = new ArrayList<SimpleDataInstanceTestPlan>();
-			for(DataInstanceTestPlan m : results){
+			for (DataInstanceTestPlan m : results) {
 				SimpleDataInstanceTestPlan sm = new SimpleDataInstanceTestPlan();
 				sm.setId(m.getId());
 				sm.setLastUpdateDate(m.getLastUpdateDate());
 				sm.setLongDescription(m.getLongDescription());
 				sm.setName(m.getName());
 				sm.setType(m.getType());
-				
+
 				simpleResults.add(sm);
 			}
-			
+
 			return simpleResults;
-		}catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			Log log = new Log(e.toString(), "Error", this.getStackTrace(e));
 			this.logInsert(log);
 		}
 		return null;
 	}
-	
+
 }
