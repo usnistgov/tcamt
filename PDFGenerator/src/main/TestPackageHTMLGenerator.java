@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils;
 import com.google.gson.Gson;
 
 public class TestPackageHTMLGenerator {
-	private String rbPath = "/Users/jungyubw/Downloads/ONC_Certification";
+	private String rbPath = "/Users/jungyubw/Downloads/GIT/src/main/resources/Contextbased/ONC_Certification";
 	private String packageBodyHTML = "";
 
 	public static void main(String[] args) throws Exception {
@@ -267,8 +267,8 @@ public class TestPackageHTMLGenerator {
 			
 		}
 			
-		File fileTestPackageTemplate= new File("/Users/jungyubw/Documents/Works/Projects/tcamt/tcamt-web/src/main/resources/TestPackage.html");
-		File fileCoverPageTemplate= new File("/Users/jungyubw/Documents/Works/Projects/tcamt/tcamt-web/src/main/resources/CoverPage.html");
+		File fileTestPackageTemplate= new File("/Users/jungyubw/Documents/Works/Projects/oldTCAMT/tcamt-web/src/main/resources/TestPackage.html");
+		File fileCoverPageTemplate= new File("/Users/jungyubw/Documents/Works/Projects/oldTCAMT/tcamt-web/src/main/resources/CoverPage.html");
 		
 		String stringTestPackage = FileUtils.readFileToString(fileTestPackageTemplate);
 		String stringCoverPage = FileUtils.readFileToString(fileCoverPageTemplate);
@@ -277,7 +277,7 @@ public class TestPackageHTMLGenerator {
 		stringCoverPage = stringCoverPage.replace("?title?", "ONC Certification Test Plan");
 		stringCoverPage = stringCoverPage.replace("?subtitle?", "NIST HealthCare Test");
 		stringCoverPage = stringCoverPage.replace("?version?", "1.0.0");
-		stringCoverPage = stringCoverPage.replace("?date?", "March 10nd, 2016");
+		stringCoverPage = stringCoverPage.replace("?date?", "August 1st, 2016");
 		
 		
 		File testPackagefile = new File(this.rbPath + "/TestPackage.html");
