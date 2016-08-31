@@ -1,29 +1,6 @@
 package gov.nist.healthcare.tcamt.view;
 
 
-import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
-import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
-import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
-import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
-import gov.nist.healthcare.tcamt.domain.JurorDocument;
-import gov.nist.healthcare.tcamt.domain.Metadata;
-import gov.nist.healthcare.tcamt.domain.ProfileContainer;
-import gov.nist.healthcare.tcamt.domain.TestCaseCode;
-import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
-import gov.nist.healthcare.tcamt.domain.TestObject;
-import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
-import gov.nist.healthcare.tcamt.service.XMLManager;
-import gov.nist.healthcare.tcamt.service.converter.ContextFreeTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonContextFreeTestPlanConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.JsonTestObjectConverter;
-import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
-import gov.nist.healthcare.tcamt.service.converter.TestObjectConverter;
-import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Profile;
-import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerialization;
-import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.service.serialization.ProfileSerializationImpl;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -49,6 +26,29 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+
+import gov.nist.healthcare.tcamt.domain.ConformanceProfile;
+import gov.nist.healthcare.tcamt.domain.ContextFreeTestPlan;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorization;
+import gov.nist.healthcare.tcamt.domain.DefaultTestDataCategorizationSheet;
+import gov.nist.healthcare.tcamt.domain.IntegratedProfile;
+import gov.nist.healthcare.tcamt.domain.JurorDocument;
+import gov.nist.healthcare.tcamt.domain.Metadata;
+import gov.nist.healthcare.tcamt.domain.ProfileContainer;
+import gov.nist.healthcare.tcamt.domain.TestCaseCode;
+import gov.nist.healthcare.tcamt.domain.TestCaseCodeList;
+import gov.nist.healthcare.tcamt.domain.TestObject;
+import gov.nist.healthcare.tcamt.domain.data.TestDataCategorization;
+import gov.nist.healthcare.tcamt.service.ProfileSerialization;
+import gov.nist.healthcare.tcamt.service.ProfileSerializationImpl;
+import gov.nist.healthcare.tcamt.service.XMLManager;
+import gov.nist.healthcare.tcamt.service.converter.ContextFreeTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonContextFreeTestPlanConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonMetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.JsonTestObjectConverter;
+import gov.nist.healthcare.tcamt.service.converter.MetadataConverter;
+import gov.nist.healthcare.tcamt.service.converter.TestObjectConverter;
+import gov.nist.healthcare.tools.hl7.v2.tcamt.lite.domain.profile.Profile;
 
 @ManagedBean
 @SessionScoped
