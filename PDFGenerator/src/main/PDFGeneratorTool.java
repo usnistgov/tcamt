@@ -9,7 +9,7 @@ public class PDFGeneratorTool {
 
 	public static void main(String[] args) {
 		PDFGeneratorTool gen = new PDFGeneratorTool();
-		gen.subDirList("/Users/jungyubw/Downloads");
+		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Certification");
 	}
 
 	public void subDirList(String source) {

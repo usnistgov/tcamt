@@ -17,7 +17,7 @@ import org.apache.commons.io.FileUtils;
 import com.google.gson.Gson;
 
 public class TestPackageHTMLGenerator {
-	private String rbPath = "/Users/jungyubw/Downloads/Contextbased/ONC_Certification";
+	private String rbPath = "/Volumes/PUBLIC/GIT/src/main/resources/Contextbased/SUT_Simulator";
 	private String packageBodyHTML = "";
 
 	public static void main(String[] args) throws Exception {
