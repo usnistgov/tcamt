@@ -134,6 +134,10 @@
 					<groupId>javax.servlet</groupId>
 					<artifactId>servlet-api</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate.javax.persistence</groupId>
+					<artifactId>hibernate-jpa-2.0-api</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -157,6 +161,10 @@
 				<exclusion>
 					<artifactId>log4j</artifactId>
 					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.hibernate.javax.persistence</groupId>
+					<artifactId>hibernate-jpa-2.0-api</artifactId>
 				</exclusion>
 			</exclusions>
 		</dependency>
