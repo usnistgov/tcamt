@@ -9,7 +9,7 @@ public class PDFGeneratorTool {
 
 	public static void main(String[] args) {
 		PDFGeneratorTool gen = new PDFGeneratorTool();
-		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Certification");
+		gen.subDirList("/Users/jungyubw/Downloads/CDC Immunization Related Requirements Test Plan (CNI) v5.2");
 	}
 
 	public void subDirList(String source) {

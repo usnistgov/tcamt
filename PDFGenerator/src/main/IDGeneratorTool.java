@@ -12,7 +12,7 @@ public class IDGeneratorTool {
 
 	public static void main(String[] args) {
 		IDGeneratorTool gen = new IDGeneratorTool();
-		gen.subDirList("/Users/jungyubw/Downloads/ONC 2015 Certification");
+		gen.subDirList("/Users/jungyubw/Downloads/CDC Immunization Related Requirements Test Plan (CNI) v5.2");
 	}
 
 	public void subDirList(String source) {
